@@ -412,6 +412,10 @@ INSERT INTO `geo_country_reference` VALUES (236, 'Yugoslavia', 'YU', 'YUG');
 INSERT INTO `geo_country_reference` VALUES (237, 'Zaire', 'ZR', 'ZAR');
 INSERT INTO `geo_country_reference` VALUES (238, 'Zambia', 'ZM', 'ZMB');
 INSERT INTO `geo_country_reference` VALUES (239, 'Zimbabwe', 'ZW', 'ZWE');
+INSERT INTO `geo_country_reference` VALUES (239, 'Aruba', 'AW', 'ABW');
+INSERT INTO `geo_country_reference` VALUES (239, 'Curacao', 'CW', 'CUW');
+INSERT INTO `geo_country_reference` VALUES (239, 'BES Bonaire_ Saba_ St Eustatius_', 'BQ', 'BES');
+INSERT INTO `geo_country_reference` VALUES (239, 'Sint Maarten Dutch-side', 'SX', 'SXM');
 
 INSERT INTO `categories` VALUES (1, 'Categories', '', 0, 0, 1);
 UPDATE `categories_seq` SET id=id+1;
