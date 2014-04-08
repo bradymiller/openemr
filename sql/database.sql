@@ -1559,7 +1559,7 @@ CREATE TABLE `geo_country_reference` (
   `countries_iso_code_3` char(3) NOT NULL default '',
   PRIMARY KEY  (`countries_id`),
   KEY `IDX_COUNTRIES_NAME` (`countries_name`)
-) ENGINE=MyISAM AUTO_INCREMENT=240 ;
+) ENGINE=MyISAM AUTO_INCREMENT=244 ;
 
 -- 
 -- Dumping data for table `geo_country_reference`
@@ -1804,6 +1804,10 @@ INSERT INTO `geo_country_reference` VALUES (236, 'Yugoslavia', 'YU', 'YUG');
 INSERT INTO `geo_country_reference` VALUES (237, 'Zaire', 'ZR', 'ZAR');
 INSERT INTO `geo_country_reference` VALUES (238, 'Zambia', 'ZM', 'ZMB');
 INSERT INTO `geo_country_reference` VALUES (239, 'Zimbabwe', 'ZW', 'ZWE');
+INSERT INTO `geo_country_reference` VALUES (240, 'Aruba', 'AW', 'ABW');
+INSERT INTO `geo_country_reference` VALUES (241, 'Curacao', 'CW', 'CUW');
+INSERT INTO `geo_country_reference` VALUES (242, 'BES: Bonaire-, St Eustatius-, Saba-,', 'BQ', 'SXM');
+INSERT INTO `geo_country_reference` VALUES (243, 'Sint Maarten Dutch', 'SX', 'SXM');
 
 -- --------------------------------------------------------
 
