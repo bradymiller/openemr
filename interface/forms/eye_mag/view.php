@@ -55,9 +55,18 @@ include_once("../../forms/".$form_folder."/php/".$form_folder."_functions.php");
 @extract($_REQUEST); 
 @extract($_SESSION);
 $form_id = $id;
+/*$action = $_REQUEST['action'];
+$final  = $_REQUEST['final'];
+$encounter = $_REQUEST['encounter'];
+$id = $_REQUEST['id'];
+$display = $_REQUEST['display'];
+$pid = $_REQUEST['pid'];
+$refresh = $_REQUEST['display'];
+
+*/
 // Get user preferences, for this user ,
 // If a fresh install or new user, get the default user preferences
-$query  = "SELECT * FROM form_eye_mag_prefs where PEZONE='PREFS' AND (id=? or id=2048)ORDER BY id,ZONE_ORDER,ordering";
+$query  = "SELECT * FROM form_eye_mag_prefs where PEZONE='PREFS' AND (id=? or id=2048) ORDER BY id,ZONE_ORDER,ordering";
 $result = sqlStatement($query,array($_SESSION['authUserID']));
 while ($prefs= sqlFetchArray($result))   {    
     @extract($prefs);    
@@ -72,7 +81,7 @@ if ($url) {
 // get pat_data and user_data
 $query = "SELECT * FROM patient_data where pid='$pid'";
 $pat_data =  sqlQuery($query);
-@extract($pat_data);
+//@extract($pat_data);
 
 $query = "SELECT * FROM users where id = '".$_SESSION['authUserID']."'";
 $prov_data =  sqlQuery($query);
@@ -88,11 +97,11 @@ $query="select form_encounter.date as encounter_date,form_encounter.*, form_eye_
                   
 $encounter_data =sqlQuery($query,array($encounter,$pid));
 @extract($encounter_data);
-
+$encounter = $encounter_data['encounter'];
 $dated = new DateTime($encounter_date);
 $visit_date = $dated->format('m/d/Y'); 
 
-if (!$form_id or !$encounter) { echo $encounter.$form_id."No encounter..."; exit;}
+if (!$form_id or !$encounter) { echo $encounter."-".$form_id." No encounter..."; exit;}
 /*
 There a global setting for displaying dates... Incorporate it here.
 formHeader("Chart: ".$pat_data['fname']." ".$pat_data['lname']." ".$visit_date);
@@ -122,7 +131,7 @@ if ($refresh) {
   <script language="JavaScript">         
   function dopclick(id) {
     <?php if ($thisauth != 'write'): ?>
-    dlgopen('../../patient_file/summary/add_edit_issue.php?issue=0&thistype=' + id, '_blank', 550, 400);
+    dlgopen('../../patient_file/summary/a_issue.php?issue=0&thistype=' + id, '_blank', 550, 400);
     <?php else: ?>
     alert("<?php xl('You are not authorized to add/edit issues','e'); ?>");
     <?php endif; ?>
@@ -144,6 +153,7 @@ if ($refresh) {
     <link rel="stylesheet" href="../../forms/<?php echo $form_folder; ?>/style.css" type="text/css">    
     <link rel="stylesheet" href="<?php echo $GLOBALS['webroot'] ?>/library/css/font-awesome-4.2.0/css/font-awesome.min.css">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+
 
   </head>
   <body>
@@ -206,26 +216,83 @@ if ($refresh) {
                   <i class="closeButton_2 fa fa-database" id="BUTTON_QP_HPI" name="BUTTON_QP_HPI"></i>
                   
                   <b><?php echo xlt('HPI'); ?>:</b> <i class="fa fa-help"></i><br />
-                  <table border="0" width="100%" cellspacing="0" cellpadding="0" 
-                         style="font-size:0.8em;min-height: 2.0in;text-align:left;">
-                    <tr>
-                      <td class="" style="vertical-align:top;padding:10px;" colspan="2">
-                        <b><span title="<?php echo xla('In the patient\'s words'); ?>"><?php echo xlt('Chief Complaint'); ?>:
-                        </span>  </b>
-                        <br />
-                        <textarea name="CC1" id="CC1" class="HPI_text" tabindex="10"><?php echo text($CC1); ?></textarea>
-                      </td>
-                    </tr> 
-                    <tr>
-                      <td class="" style="vertical-align:top;padding:10px;">
-                        <span title="<?php echo xla('History of Present Illness:  A detailed HPI may be completed by using either four or more HPI elements OR the status of three chronic or inactive problems.'); ?>" style="height:1in;font-weight:600;vertical-align:text-top;"><?php echo xlt('HPI'); ?>:
-                        </span>
-                        <br />
-                        <textarea name="HPI1" id="HPI1" class="HPI_text" tabindex="21" style="min-height:1.5in;max-height:2.0in;width:4.2in;"><?php echo text($HPI1); ?></textarea>
-                        <br />
-                      </td>
-                    </tr> 
-                  </table>
+                  
+
+                    <div id="tabs_wrapper">
+                      <div id="tabs_container" style="z-index:-3;">
+                        <ul id="tabs">
+                          <li style="z-index:2;" class="active" ><a type="button" <?php if ($CC1 >'') echo 'class="fa fa-check" '; ?> href="#tab1"> <?php echo xlt('CC 1'); ?></a></li>
+                          <li><a <?php if ($CC2 >'') echo 'class="fa fa-check"'; ?> href="#tab2">CC 2</a></li>
+                          <li><a <?php if ($CC3 >'') echo 'class="fa fa-check"'; ?> href="#tab3">CC 3</a></li>
+                        </ul>
+                      </div>
+                      <div id="tabs_content_container" style="z-index:1;" class="borderShadow">
+                        <div id="tab1" class="tab_content" style="display: block;">
+                          <table border="0" width="100%" cellspacing="0" cellpadding="0" style="font-size:1.1em;min-height: 2.0in;text-align:left;">
+                                            <tr>
+                                              <td class="" style="vertical-align:top;padding:10px;" colspan="2">
+                                                <b><span title="<?php echo xla('In the patient\'s words'); ?>"><?php echo xlt('Chief Complaint 1'); ?>:
+                                                </span>  </b>
+                                                <br />
+                                                <textarea name="CC1" id="CC1" class="HPI_text" tabindex="10"><?php echo text($CC1); ?></textarea>
+                                              </td>
+                                            </tr> 
+                                            <tr>
+                                              <td class="" style="vertical-align:top;padding:10px;">
+                                                <span title="<?php echo xla('History of Present Illness:  A detailed HPI may be completed by using either four or more HPI elements OR the status of three chronic or inactive problems.'); ?>" style="height:1in;font-weight:600;vertical-align:text-top;"><?php echo xlt('HPI'); ?>:
+                                                </span>
+                                                <br />
+                                                <textarea name="HPI1" id="HPI1" class="HPI_text" tabindex="21" style="min-height:1.5in;max-height:2.0in;width:4.2in;"><?php echo text($HPI1); ?></textarea>
+                                                <br />
+                                              </td>
+                                            </tr> 
+                          </table> 
+                        </div>
+                        <div id="tab2" class="tab_content">
+                             <table border="0" width="100%" cellspacing="0" cellpadding="0" style="font-size:1.1em;min-height: 2.0in;text-align:left;">
+                              <tr>
+                                <td class="" style="vertical-align:top;padding:10px;" colspan="2">
+                                  <b><span title="<?php echo xla('In the patient\'s words'); ?>"><?php echo xlt('Chief Complaint 2'); ?>:
+                                  </span>  </b>
+                                  <br />
+                                  <textarea name="CC2" id="CC2" class="HPI_text" tabindex="10"><?php echo text($CC2); ?></textarea>
+                                </td>
+                              </tr> 
+                              <tr>
+                                <td class="" style="vertical-align:top;padding:10px;">
+                                  <span title="<?php echo xla('History of Present Illness:  A detailed HPI may be completed by using either four or more HPI elements OR the status of three chronic or inactive problems.'); ?>" style="height:1in;font-weight:600;vertical-align:text-top;"><?php echo xlt('HPI'); ?>:
+                                  </span>
+                                  <br />
+                                  <textarea name="HPI2" id="HPI2" class="HPI_text" tabindex="21" style="min-height:1.5in;max-height:2.0in;width:4.2in;"><?php echo text($HPI2); ?></textarea>
+                                  <br />
+                                </td>
+                              </tr> 
+                              </table>
+                        </div>
+                        <div id="tab3" class="tab_content">
+                            <table border="0" width="100%" cellspacing="0" cellpadding="0" style="font-size:1.1em;min-height: 2.0in;text-align:left;">
+                                            <tr>
+                                              <td class="" style="vertical-align:top;padding:10px;" colspan="2">
+                                                <b><span title="<?php echo xla('In the patient\'s words'); ?>"><?php echo xlt('Chief Complaint 3'); ?>:
+                                                </span>  </b>
+                                                <br />
+                                                <textarea name="CC3" id="CC3" class="HPI_text" tabindex="10"><?php echo text($CC3); ?></textarea>
+                                              </td>
+                                            </tr> 
+                                            <tr>
+                                              <td class="" style="vertical-align:top;padding:10px;">
+                                                <span title="<?php echo xla('History of Present Illness:  A detailed HPI may be completed by using either four or more HPI elements OR the status of three chronic or inactive problems.'); ?>" style="height:1in;font-weight:600;vertical-align:text-top;"><?php echo xlt('HPI'); ?>:
+                                                </span>
+                                                <br />
+                                                <textarea name="HPI3" id="HPI3" class="HPI_text" tabindex="21" style="min-height:1.5in;max-height:2.0in;width:4.2in;"><?php echo text($HPI3); ?></textarea>
+                                                <br />
+                                              </td>
+                                            </tr> 
+                                          </table>
+                                       </div>
+                      </div>
+                    </div>
+                   
                   <?php ($HPI_VIEW !=2) ? ($display_HPI_view = "wide_textarea") : ($display_HPI_view= "narrow_textarea");?>                                 
                   <?php ($display_HPI_view == "wide_textarea") ? ($marker ="fa-minus-square-o") : ($marker ="fa-plus-square-o");?>
                 </div>
@@ -293,8 +360,8 @@ if ($refresh) {
                       </tr>
                     </table>
                   <center>
-                    <span style="font-size:0.8em;text-align:center;width:100%;">A detailed HPI may be completed by using either <br />
-                        four or more HPI elements OR the status of three chronic or inactive problems.</span>
+                    <span style="font-size:0.8em;text-align:center;width:75%;"><?php echo xlt('A detailed HPI may be completed by using either 
+                        four or more HPI elements OR the status of three chronic or inactive problems.'); ?></span>
                       </center>
                   </div>
                 </div>  
@@ -550,7 +617,6 @@ if ($refresh) {
                               $bad='';
                               for ($z=1; $z <5; $z++) {
                                   $ODzone = "ODVF".$z;
-                                 // echo $ODzone ." is ".$$ODzone."<br />";
                                   if ($$ODzone =='1') {
                                       $ODVF[$z] = 'checked value="true"';
                                       $bad++;
@@ -736,7 +802,7 @@ if ($refresh) {
                             <?php ($W ==1) ? ($display_W = "display") : ($display_W = "nodisplay"); ?>
                             <div id="LayerVision_W" class="refraction borderShadow <?php echo $display_W; ?>">
                             <span class="closeButton fa fa-close" id="Close_W" name="Close_W"></span>
-                            <a class="closeButton2 fa fa-print" onclick="top.restoreSession();  return false;" href="../../forms/<?php echo $form_folder; ?>/SpectacleRx.php?target=W&id=<?php echo attr($pid); ?>"></a>
+                            <a class="closeButton2 fa fa-print" onclickX="top.restoreSession();  return false;" href="../../forms/<?php echo $form_folder; ?>/SpectacleRx.php?target=W&id=<?php echo attr($pid); ?>"></a>
                             
                                 <table id="wearing" >
                                     <tr>
@@ -765,7 +831,7 @@ if ($refresh) {
                                         </td>
                                     </tr>
                                     <tr>
-                                        <td rowspan="2">Dist</td>    
+                                        <td rowspan="2"><?php echo xlt('Dist'); ?></td>    
                                         <td><b><?php echo xlt('OD'); ?>:</b></td>
                                         <td><input type=text id="WODSPH" name="WODSPH"  value="<?php echo attr($WODSPH); ?>"></td>
                                         <td><input type=text id="WODCYL" name="WODCYL"  value="<?php echo attr($WODCYL); ?>"></td>
@@ -782,7 +848,7 @@ if ($refresh) {
                                         <td><input type=text id="WOSVA" name="WOSVA" value="<?php echo attr($WOSVA); ?>"></td>
                                     </tr>
                                     <tr class="WNEAR">
-                                        <td rowspan=2><span style="text-decoration:none;">Mid/<br />Near</span></td>    
+                                        <td rowspan=2><span style="text-decoration:none;"><?php echo xlt('Mid'); ?>/<br /><?php echo xlt('Near'); ?></span></td>    
                                         <td><b><?php echo xlt('OD'); ?>:</b></td>
                                         <td class="WMid nodisplay"><input type=text id="WODADD1" name="WODADD1" value="<?php echo attr($WODADD1); ?>"></td>
                                         <td class="WAdd2"><input type=text id="WODADD2" name="WODADD2" value="<?php echo attr($WODADD2); ?>"></td>
@@ -813,9 +879,9 @@ if ($refresh) {
                                     </tr>
                                     <tr id="signature_W" class="nodisplay">
                                         <td colspan="5">
-                                            <span style="font-size:0.7em;font-weight:bold;">e-signature:</span> <i><?php echo text($providerID); ?></i>
+                                            <span style="font-size:0.7em;font-weight:bold;"><?php echo xlt('e-signature'); ?>:</span> <i><?php echo text($providerID); ?></i>
                                         </td>
-                                        <td colspan="3" style="text-align:right;text-decoration:underline;font-size:0.8em;font-weight:bold;">DATE: <?php echo $date; ?></td>
+                                        <td colspan="3" style="text-align:right;text-decoration:underline;font-size:0.8em;font-weight:bold;"><?php echo xlt('DATE'); ?>: <?php echo $date; ?></td>
                                     </tr>
                                 </table>
                             </div>

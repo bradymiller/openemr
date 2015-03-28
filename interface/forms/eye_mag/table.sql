@@ -654,3 +654,10 @@ INSERT INTO `form_eye_mag_prefs` (`PEZONE`, `LOCATION`, `LOCATION_text`, `id`, `
 ('PREFS', 'RETINA_VIEW', 'Retina View', 1, 'RETINA_VIEW', 62, '', 12),
 ('PREFS', 'NEURO_VIEW', 'Neuro View', 1, 'NEURO_VIEW', 63, '', 13);
 
+INSERT INTO `openemr`.`list_options` (`list_id`, `option_id`, `title`, `seq`, `is_default`, `option_value`, `mapping`, `notes`, `codes`) VALUES ('lists', 'eye_issues_list', 'Past Ocular Issues list', '0', '0', '0', '', '', '');
+INSERT INTO `openemr`.`list_options` (`list_id`, `option_id`, `title`, `seq`, `is_default`, `option_value`, `mapping`, `notes`, `codes`) VALUES
+    ('eye_issue_list', 'stye', 'stye', '30', '0', '0', '', '', ''),
+    ('eye_issue_list', 'BCC', 'BCC', '40', '0', '0', '', '', ''),
+    ('eye_issue_list', 'SCC', 'SCC', '50', '0', '0', '', '', ''),
+    ('eye_issue_list', 'keratoconus', 'keratoconus', '30', '0', '0', '', '', ''),
+    ('eye_issue_list', 'dry eye', 'dry eye', '70', '0', '0', '', '', '');

@@ -353,7 +353,7 @@ background: #C0C0C0;
   display: block;
   -moz-box-sizing: border-box;
   box-sizing: border-box;
-  background: url(http://www.oculoplasticsllc.com/b/openemr/interface/forms/eye_mag/images/Amsler_2.jpg) no-repeat;
+  background: url(images/Amsler_2.jpg) no-repeat;
   width: 180px; /* Width of new image */
   height: 236px; /* Height of new image */
   padding-left: 180px; /* Equal to width of new image */
@@ -566,6 +566,76 @@ textarea {
     width: 2in;
     height: 16px;
 }
+.button {
+    background-color: #E3E1B8; 
+    padding: 2px 4px;
+    font: 13px sans-serif;
+    text-decoration: none;
+    color:#050;   
+    font: bold 84% Fontawesome, 'trebuchet ms',helvetica,sans-serif; 
+}
+
+#tabs_wrapper {
+  font-size:0.9em;
+}
+#tabs_container {
+ border-bottom: none;
+}
+#tabs {
+  list-style: none;
+  margin: 0 0 0 10px;
+}
+#tabs li {
+  display: inline;
+}
+#tabs li a {
+  border: 2px solid #ccc;
+  padding: 4px 6px;
+  text-decoration: none;
+  background-color: #eeeeee;
+  border-bottom: none;
+  outline: none;
+  color:navy;
+  box-shadow: 0px 5px 9px #888;
+  font-size:1.4em;
+  border-radius: 5px 5px 0 0;
+  -moz-border-radius: 5px 5px 0 0;
+  -webkit-border-top-left-radius: 5px;
+  -webkit-border-top-right-radius: 5px;
+}
+#tabs li a:hover {
+  background-color: #dddddd;
+
+}
+#tabs li.active a {
+  background-color: #fff;
+  padding: 4px 6px 5px 6px;
+  border-bottom: none;
+}
+#tabs li.active a:hover {
+  background-color: #eeeeee;
+  border-bottom: none;
+}
+
+#tabs li a.icon_accept {
+  background-image: url(accept.png);
+  background-position: 5px;
+  background-repeat: no-repeat;
+  padding-left: 24px;
+}
+#tabs li a.icon_accept:hover {
+  padding-left: 24px;
+}
+
+#tabs_content_container {
+  border-top: none;
+  padding: 10px;
+  width: 100%;
+}
+.tab_content {
+  display: none;
+}
+
 .button-success {
             background: rgb(240, 240, 0); /* this is a green */
             box-shadow: 2px 2px 2px #888888;
@@ -686,9 +756,9 @@ h1 {
 */
 #tabs {
     float:middle;
-    width:100%;
+    width:95%;
     font-size:0.55em;
-    border-bottom:1px solid #2763A5;
+    Xborder-bottom:1px dashed #2763A5;
     line-height:normal;
     }
 
@@ -697,19 +767,6 @@ h1 {
     padding:4px 2px 0 5px;
     list-style:none;
     float:right;
-    }
-
-#tabs li {
-    display:inline;
-    margin:0;
-    padding:0;
-    }
-
-#tabs li  {
-    
-   /* background:url("../../forms/eye_mag/images/tabright.gif") no-repeat right top;
-    padding:5px 15px 4px 6px;*/
-    color:#000;
     }
 
 /* End IE5-Mac hack */
