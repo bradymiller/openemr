@@ -29,13 +29,11 @@ $sanitize_all_escapes=true;
 include_once("../../globals.php");
 include_once($GLOBALS["srcdir"]."/api.inc");
 
-//@extract($_REQUEST);
-
 if ($_REQUEST['target']) {
     $target = $_REQUEST['target'];
     $table_name = "form_eye_mag";
     if (!$_REQUEST['encounter']) $encounter = $_SESSION['encounter'];
-    $query = "SELECT * FROM form_eye_mag JOIN forms on forms.form_id = form_eye_mag.id where forms.encounter=?";
+    $query = "SELECT * FROM form_eye_mag JOIN forms on forms.form_id = form_eye_mag.id where forms.encounter=? and forms.deleted !='1'";
     $data =  sqlQuery($query, array($encounter) );
    
     if ($target =="W") {
@@ -94,6 +92,7 @@ if ($_REQUEST['target']) {
             $OSPRISM = $data['CROSPRISM'];
             $COMMENTS = $data['CRCOMMENTS']; 
     }
+    //got to dd in CTL form too...
 }
 
 $form_name = "eye_mag";
@@ -105,8 +104,8 @@ $pat_data =  sqlQuery($query,array($data['pid']));
 
 $query = "SELECT * FROM users where id = ?";
 $prov_data =  sqlQuery($query,array($_SESSION['authUserID']));
-$query = "SELECT * FROM facility where id = ?";
-$practice_data = sqlQuery($query,array('3')); //need to point this at the actual facility here...
+$query = "SELECT * FROM facility WHERE primary_business_entity='1'";
+$practice_data = sqlQuery($query); 
 
 ?><html>
     <head>
@@ -177,10 +176,10 @@ $practice_data = sqlQuery($query,array('3')); //need to point this at the actual
                 <th colspan="3">
                     <br>
                     <?php echo text($prov_data[facility]); ?><br />
-                    <?php echo text($prov_data[street]); ?><br />
-                    <?php echo text($prov_data[city]); ?>, <?php echo text($prov_data[state]); ?> &nbsp;&nbsp;<?php echo text($prov_data[zip]); ?><br />
-                    <?php echo xlt("Phone"); ?>: <?php echo text($prov_data[phone]); ?><br />
-                    <?php echo xlt("Fax"); ?>: <?php echo text($prov_data[fax]); ?><br />
+                    <?php echo text($practice_data[street]); ?><br />
+                    <?php echo text($practice_data[city]); ?>, <?php echo text($practice_data[state]); ?> &nbsp;&nbsp;<?php echo text($practice_data[zip]); ?><br />
+                    <?php echo xlt("Phone"); ?>: <?php echo text($practice_data[phone]); ?><br />
+                    <?php echo xlt("Fax"); ?>: <?php echo text($practice_data[fax]); ?><br />
                 </th>
             </tr>
              <tr>
@@ -257,8 +256,7 @@ $practice_data = sqlQuery($query,array('3')); //need to point this at the actual
                             </td>
                             <td> 
                                 <span class="ui-icon ui-icon-clock">&nbsp; </span>
-                                <span href="print.php?target=W" class="ui-icon ui-icon-cancel" onclick="top.restoreSession(); window.print(); return false;" style="display:inline-block"></span>
-                                <span><?php echo xlt("Print"); ?></span> 
+                                <span href="print.php?target=W" class="ui-icon ui-icon-cancel" onclick= "window.print();" Xonclick="top.restoreSession(); window.print(); return false;" style="display:inline-block"><?php echo xlt("Print"); ?></span> 
                             </td>
                         </tr>
                     </table>&nbsp;<br /><br /><br />

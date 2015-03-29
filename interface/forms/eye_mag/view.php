@@ -1011,7 +1011,7 @@ if ($refresh and $refresh != 'fullscreen') {
                             <?php ($W ==1) ? ($display_W = "display") : ($display_W = "nodisplay"); ?>
                             <div id="LayerVision_W" class="refraction borderShadow <?php echo $display_W; ?>">
                               <span class="closeButton fa fa-close" id="Close_W" name="Close_W"></span>
-                              <a class="closeButton2 fa fa-print" onclickX="top.restoreSession();  return false;" href="../../forms/<?php echo $form_folder; ?>/SpectacleRx.php?target=W&id=<?php echo attr($pid); ?>" target="_blank"></a>
+                              <a class="closeButton2 fa fa-print" Xonclick="top.restoreSession();  return false;" href="../../forms/<?php echo $form_folder; ?>/SpectacleRx.php?target=W&id=<?php echo attr($pid); ?>" target="_blank"></a>
                             
                                 <table id="wearing" >
                                     <tr>
@@ -1098,7 +1098,7 @@ if ($refresh and $refresh != 'fullscreen') {
                             <?php ($MR==1) ? ($display_AR = "display") : ($display_AR = "nodisplay");?>
                             <div id="LayerVision_MR" class="refraction borderShadow <?php echo $display_AR; ?>">
                                 <span class="closeButton fa  fa-close" id="Close_MR" name="Close_MR"></span>
-                                <a class="closeButton2 fa fa-print" onclick="top.restoreSession();  return false;" href="../../forms/<?php echo $form_folder; ?>/SpectacleRx.php?target=AR&id=<?php echo attr($pid); ?>"></a>
+                                <a class="closeButton2 fa fa-print" href="../../forms/<?php echo $form_folder; ?>/SpectacleRx.php?target=AR&id=<?php echo attr($pid); ?>"></a>
                                 <table id="autorefraction">
                                     <th colspan=9>Autorefraction Refraction</th>
                                     <tr>
@@ -1132,7 +1132,7 @@ if ($refresh and $refresh != 'fullscreen') {
                                         <td><input type=text id="AROSPRISM" name="AROSPRISM" value="<?php echo attr($AROSPRISM); ?>"></td>
                                     </tr>
                                     <th colspan="7">Manifest (Dry) Refraction</th>
-                                    <th colspan="2" style="text-align:right;"><a class="fa fa-print" style="margin:0 7;" onclick="top.restoreSession();  return false;" href="../../forms/<?php echo attr($form_folder); ?>/SpectacleRx.php?target=MR&id=<?php echo attr($pid); ?>"></a></th>
+                                    <th colspan="2" style="text-align:right;"><a class="fa fa-print" style="margin:0 7;" Xonclick="top.restoreSession();  return false;" href="../../forms/<?php echo attr($form_folder); ?>/SpectacleRx.php?target=MR&id=<?php echo attr($pid); ?>"></a></th>
                                     <tr>
                                         <td></td>
                                         <td><?php echo xlt('Sph'); ?></td>
@@ -1169,7 +1169,7 @@ if ($refresh and $refresh != 'fullscreen') {
                             <?php ($CR==1)  ? ($display_Cyclo = "display") : ($display_Cyclo = "nodisplay"); ?>
                             <div id="LayerVision_CR" class="refraction borderShadow <?php echo $display_Cyclo; ?>">
                                 <span class="closeButton fa  fa-close" id="Close_CR" name="Close_CR"></span>
-                                <a class="closeButton2 fa fa-print" onclick="top.restoreSession();  return false;" href="../../forms/<?php echo $form_folder; ?>/SpectacleRx.php?target=CR&id=<?php echo attr($pid); ?>"></a>
+                                <a class="closeButton2 fa fa-print" Xonclick="top.restoreSession();  return false;" href="../../forms/<?php echo $form_folder; ?>/SpectacleRx.php?target=CR&id=<?php echo attr($pid); ?>"></a>
                                 <table id="cycloplegia">
                                     <th colspan=9><?php echo xlt('Cycloplegic (Wet) Refraction'); ?></th>
                                     <tr>
