@@ -5,7 +5,7 @@
 * 
 * Functions for printing a glasses prescription
 * 
-* Copyright (C) 14 Raymond Magauran <magauran@MedFetch.com> 
+* Copyright (C) 2014 Raymond Magauran <magauran@MedFetch.com> 
 * 
 * LICENSE: This program is free software; you can redistribute it and/or 
 * modify it under the terms of the GNU General Public License 
@@ -29,29 +29,30 @@ $sanitize_all_escapes=true;
 include_once("../../globals.php");
 include_once($GLOBALS["srcdir"]."/api.inc");
 
-@extract($_REQUEST);
+//@extract($_REQUEST);
 
-if ($_GET['target']) {
+if ($_REQUEST['target']) {
+    $target = $_REQUEST['target'];
     $table_name = "form_eye_mag";
-    if (!$encounter) $encounter = $_SESSION['encounter'];
+    if (!$_REQUEST['encounter']) $encounter = $_SESSION['encounter'];
     $query = "SELECT * FROM form_eye_mag JOIN forms on forms.form_id = form_eye_mag.id where forms.encounter=?";
     $data =  sqlQuery($query, array($encounter) );
-    @extract($data);
+   
     if ($target =="W") {
-        $ODSPH = $WODSPH;
-        $ODAXIS = $WODAXIS;
-        $ODCYL = $WODCYL;
-        $ODPRISM = $WODPRISM;
-        $OSSPH = $WOSSPH;
-        $OSCYL = $WOSCYL;
-        $OSAXIS = $WOSAXIS;
-        $OSPRISM = $WOSPRISM;
-        $COMMENTS = $WCOMMENTS; 
-        $ODADD1 = $WODADD1;
-        $ODADD2 = $WODADD2;
-        $OSADD1 = $WODADD1;
-        $OSADD2 = $WODADD2;
-        if ($ODADD1) {
+        $ODSPH = $data['WODSPH'];
+        $ODAXIS = $data['WODAXIS'];
+        $ODCYL = $data['WODCYL'];
+        $ODPRISM = $data['WODPRISM'];
+        $OSSPH = $data['WOSSPH'];
+        $OSCYL = $data['WOSCYL'];
+        $OSAXIS = $data['WODSPH'];
+        $OSPRISM = $data['WODSPH'];
+        $COMMENTS = $data['WCOMMENTS']; 
+        $ODADD1 = $data['WODADD1'];
+        $ODADD2 = $data['WODADD2'];
+        $OSADD1 = $data['WODADD1'];
+        $OSADD2 = $data['WODADD2'];
+        if ($data['ODADD1']) {
             $trifocal ='checked="checked"';
         } else if ($ODADD2){
             $bifocal ='checked="checked"';
@@ -59,39 +60,39 @@ if ($_GET['target']) {
             $single='checked="checked"';
         }
     } else if ($target =="AR") {
-            $ODSPH = $ARODSPH;
-            $ODAXIS = $ARODAXIS;
-            $ODCYL = $ARODCYL;
-            $ODPRISM = $ARODPRISM;
-            $OSSPH = $AROSSPH;
-            $OSCYL = $AROSCYL;
-            $OSAXIS = $AROSAXIS;
-            $OSPRISM = $AROSPRISM;
-            $COMMENTS = $CRCOMMENTS; 
-            $ODADD1 = $ARODADD;
-            $OSADD1 = $AROSADD;
+            $ODSPH = $data['ARODSPH'];
+            $ODAXIS = $data['ARODAXIS'];
+            $ODCYL = $data['ARODCYL'];
+            $ODPRISM = $data['ARODPRISM'];
+            $OSSPH = $data['AROSSPH'];
+            $OSCYL = $data['AROSCYL'];
+            $OSAXIS = $data['AROSAXIS'];
+            $OSPRISM = $data['AROSPRISM'];
+            $COMMENTS = $data['CRCOMMENTS']; 
+            $ODADD1 = $data['ARODADD'];
+            $OSADD1 = $data['AROSADD'];
     } else if ($target =="MR") {
-            $ODSPH = $MRODSPH;
-            $ODAXIS = $MRODAXIS;
-            $ODCYL = $MRODCYL;
-            $ODPRISM = $MRODPRISM;
-            $OSSPH = $MROSSPH;
-            $OSCYL = $MROSCYL;
-            $OSAXIS = $MROSAXIS;
-            $OSPRISM = $MROSPRISM;
-            $COMMENTS = $CRCOMMENTS; 
-            $ODADD1 = $MRODADD;
-            $OSADD1 = $MROSADD;
+            $ODSPH = $data['MRODSPH'];
+            $ODAXIS = $data['MRODAXIS'];
+            $ODCYL = $data['MRODCYL'];
+            $ODPRISM = $data['MRODPRISM'];
+            $OSSPH = $data['MROSSPH'];
+            $OSCYL = $data['MROSCYL'];
+            $OSAXIS = $data['MROSAXIS'];
+            $OSPRISM = $data['MROSPRISM'];
+            $COMMENTS = $data['CRCOMMENTS']; 
+            $ODADD1 = $data['MRODADD'];
+            $OSADD1 = $data['MROSADD'];
     } else if ($target =="CR") {
-            $ODSPH = $CRODSPH;
-            $ODAXIS = $CRODAXIS;
-            $ODCYL = $CRODCYL;
-            $ODPRISM = $CRODPRISM;
-            $OSSPH = $CROSSPH;
-            $OSCYL = $CROSCYL;
-            $OSAXIS = $CROSAXIS;
-            $OSPRISM = $CROSPRISM;
-            $COMMENTS = $CRCOMMENTS; 
+            $ODSPH = $data['CRODSPH'];
+            $ODAXIS = $data['CRODAXIS'];
+            $ODCYL = $data['CRODCYL'];
+            $ODPRISM = $data['CRODPRISM'];
+            $OSSPH = $data['CROSSPH'];
+            $OSCYL = $data['CROSCYL'];
+            $OSAXIS = $data['CROSAXIS'];
+            $OSPRISM = $data['CROSPRISM'];
+            $COMMENTS = $data['CRCOMMENTS']; 
     }
 }
 
@@ -100,12 +101,12 @@ $form_folder = "eye_mag";
 formHeader("Rx Vision: ".$form_name);
 
 $query = "SELECT * FROM patient_data where pid=?";
-$pat_data =  sqlQuery($query,array($pid));
+$pat_data =  sqlQuery($query,array($data['pid']));
 
 $query = "SELECT * FROM users where id = ?";
 $prov_data =  sqlQuery($query,array($_SESSION['authUserID']));
-$query = "SELECT * FROM facilty where id = ?";
-$practice_data = sqlQuery($query,array('3'))
+$query = "SELECT * FROM facility where id = ?";
+$practice_data = sqlQuery($query,array('3')); //need to point this at the actual facility here...
 
 ?><html>
     <head>
@@ -206,10 +207,10 @@ $practice_data = sqlQuery($query,array('3'))
                         <tr style="font-style:bold;">
                             <td></td>
                             <td></td>
-                            <td><?php echo xlt('Sph'); ?></td>
-                            <td><?php echo xlt('Cyl'); ?></td>
-                            <td><?php echo xlt('Axis'); ?></td>
-                            <td><?php echo xlt('Prism') ?></td>
+                            <td><?php echo xlt('Sph{{Sphere setting in a glasses prescription}}'); ?></td>
+                            <td><?php echo xlt('Cyl{{Cylinder setting in a glasses prescription}}'); ?></td>
+                            <td><?php echo xlt('Axis{{Axis setting in a glasses prescription}}'); ?></td>
+                            <td><?php echo xlt('Prism{{Prism setting in a glasses prescription}}') ?></td>
                             <td rowspan="5" class="right" style="width:200px;">
                                 <b style="font-weight:bold;text-decoration:underline;"><?php echo xlt('Rx Type'); ?></b><br /><br />
                                 <b id="SingleVision_span" name="SingleVision_span"><?php echo xlt('Single'); ?>
@@ -218,7 +219,7 @@ $practice_data = sqlQuery($query,array('3'))
                                     <input type="radio" value="1" id="RX1" name="RX1" <?php echo attr($bifocal); ?>></b><br />
                                 <b id="Trifocal_span" name="Trifocal_span"><?php echo xlt('Trifocal'); ?>
                                     <input type=radio value="2" id="RX1" name="RX1" <?php echo attr($trifocal); ?>></b><br />
-                                <b id="Progressive_span"><?php echo xlt('Prog.'); ?>
+                                <b id="Progressive_span"><?php echo xlt('Prog.{{Progressive lenses}}'); ?>
                                     <input type="radio" value="3" id="RX1" name="RX1" <?php echo attr($progressive); ?>></b><br />
                             </td>
                         </tr>
@@ -238,7 +239,7 @@ $practice_data = sqlQuery($query,array('3'))
                             <td><input type=text id="OSPRISM" name="OSPRISM" value="<?php echo attr($OSPRISM); ?>"></td>
                         </tr>
                         <tr class="NEAR">
-                            <td rowspan=2><span style="text-decoration:none;"><?php echo xlt("Mid"); ?>/<br /><?php echo xlt("Near"); ?></span></td>    
+                            <td rowspan=2><span style="text-decoration:none;"><?php echo xlt("Mid{{Middle segment in a trifocal glasses prescription}}"); ?>/<br /><?php echo xlt("Near"); ?></span></td>    
                             <td><b><?php echo xlt('OD'); ?></b></td>
                             <td class="WMid nodisplay"><input type="text" id="ODADD1" name="ODADD1" value="<?php echo attr($ODADD1); ?>"></td>
                             <td class="WAdd2"><input type="text" id="ODADD2" name="ODADD2" value="<?php echo attr($ODADD2); ?>"></td>

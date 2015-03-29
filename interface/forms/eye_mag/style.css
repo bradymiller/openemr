@@ -32,7 +32,7 @@
 .eye_mag {
     z-index:5;
 }
-#sddm li{
+#sddm {
     z-index:31;
 }
     a:link {
@@ -439,13 +439,10 @@ body
     padding-left:5px; //Or whatever value you would like
     padding-right:5px; //Same ^
     text-align:center;
-    background-color: #ffffff;
-    z-index:10;
 }
 
 #form_container {
     border: 0px solid red;
-    background-color: #FFFFFF; 
     padding: 0px;
     margin: 0 auto;
     position:relative;
@@ -457,7 +454,7 @@ body
 
 .nodisplay {
     display:none;
-    /* gets visible when Trofocal selected*/    
+    /* gets visible when Trifocal selected*/    
 }
 
 .clear_both {
@@ -665,7 +662,7 @@ textarea {
 }
 .tools  {
 border: 0pt solid black;
-height: 30px;
+height: 50px;
 width: 50px;
 line-height: 30px;
 padding: 10px;
@@ -1078,7 +1075,7 @@ height: 18px;
     
     #content {
         clear: both;
-        color: white;
+        Xcolor: white;
         background: #c60;
         padding: 1em;
     }
@@ -1299,7 +1296,7 @@ filter: progid:DXImageTransform.Microsoft.BasicImage(rotation=3);
   
 .navbar-custom ,.navbar-nav > li > a {
     color:black; /* just changes the base font color */
-    padding:1 10 0 10;
+    padding:5 10;
     margin:0;
 }
      
@@ -1363,4 +1360,15 @@ a:hover, a:focus {
   height: 20px; /*same height as header*/
   margin-top: -20px; /*same height as header*/
   visibility: hidden;
+}
+.sketch_tools {
+    width: 20px; 
+    height:65px; 
+}
+.sketch_tools:active {
+    color: red;
+    height:100px;
+}
+#sddm div{
+    z-index:100;
 }

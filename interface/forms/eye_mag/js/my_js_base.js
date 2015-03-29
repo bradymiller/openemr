@@ -75,13 +75,8 @@ function submit_form() {
            data 	: formData, // our data object
            success  : function(result)  {
            $("#tellme").html(result);
-           // alert(result);
            }
            });
-        //location.reload();
-        //    refreshme();
-    
-    
 }
 
 /**
@@ -97,6 +92,7 @@ function update_PREFS() {
         'PREFS_CR'              : $('#PREFS_CR').val(),
         'PREFS_CTL'             : $('#PREFS_CTL').val(),
         'PREFS_ADDITIONAL'      : $('#PREFS_ADDITIONAL').val(),
+        'PREFS_IOP'             : $('#PREFS_IOP').val(),
         'PREFS_CLINICAL'        : $('#PREFS_CLINICAL').val(),
         'PREFS_EXAM'            : $('#PREFS_EXAM').val(),
         'PREFS_CYL'             : $('#PREFS_CYL').val(),
@@ -139,29 +135,29 @@ function finalize() {
            });
 }
 function alter_issue(issue_number,issue_type) {
-    
-    result = '<center><iframe src="/openemr/interface/forms/eye_mag/add_edit_issue.php?issue=' + issue_number + '&thistype=' + issue_type +  '" title="MyForm" width="435" height="320" scrolling = "yes" frameBorder = "0" ></iframe></center>';
+    result = '<center><iframe src="/openemr/interface/forms/eye_mag/a_issue.php?issue=' + issue_number + '&thistype=' + issue_type +  '" title="MyForm" width="435" height="320" scrolling = "yes" frameBorder = "0" ></iframe></center>';
     show_QP();
     $("#QP_PMH").html(result);///QP_PMH
 }
 
 function delete_issue(issue_number,issue_type) {
-    result = '<center><iframe src="/openemr/interface/forms/eye_mag/add_edit_issue.php?issue=' + issue_number + '&thistype=' + issue_type +  '" title="MyForm" width="435" height="320" scrolling = "yes" frameBorder = "0" ></iframe></center>';
+    result = '<center><iframe src="/openemr/interface/forms/eye_mag/a_issue.php?issue=' + issue_number + '&thistype=' + issue_type +  '" title="MyForm" width="435" height="320" scrolling = "yes" frameBorder = "0" ></iframe></center>';
     show_QP();
     $("#QP_PMH").html(result);
 }
 
 function refreshIssues() {
-    var url = "../../forms/eye_mag/view.php?refresh=PMSFH&id=" + $("#form_id").val();
+    var url = "../../forms/eye_mag/view.php?display=PMFSH&id=" + $("#form_id").val();
     var formData = {
         'action'           : "finalize",
         'final'            : "1",
         'id'               : $('#id').val(),
         'encounter'        : $('#encounter').val(),
-        'pid'              : $('#pid').val()
+        'pid'              : $('#pid').val(),
+        'refresh'           : 'PMSFH'
     };
     $.ajax({
-           type 		: 'POST',
+           type 		: 'GET',
            url          : url,
            data 		: formData,
            success      : function(result) {
@@ -198,9 +194,9 @@ function hide_right() {
     $("#NEURO_1").removeClass("size100").addClass("size50");
     $("#RETINA_1").removeClass("size100").addClass("size50");
     $("#IMPPLAN_1").removeClass("size100").addClass("size50");
-    $("#HPI_right").hide();
+    $("#HPI_right").hide().css("display","none");
     $("#PMH_right").hide();
-    $("#EXT_right").hide();
+    $("#EXT_right").hide().css("display","none");
     $("#ANTSEG_right").hide();
     $("#NEURO_right").hide();
     $("#RETINA_right").hide();
@@ -216,8 +212,8 @@ function show_DRAW() {
     hide_PRIORS();
     hide_left();
     show_right();
-    $("#LayerTechnical_sections").hide();
-    $("#REFRACTION_sections").hide();
+        //$("#LayerTechnical_sections").hide();
+        //$("#REFRACTION_sections").hide();
     $("#HPI_right").addClass('canvas');
     $("#PMH_right").addClass('canvas');
     $("#EXT_right").addClass('canvas');
@@ -236,7 +232,6 @@ function show_DRAW_section(zone) {
     $("#"+zone+"_1").show();
     $("#"+zone+"_left").show();
     $("#"+zone+"_right").show();
-    
     $("#DRAW_"+zone).addClass('canvas').show();
     
 }
@@ -245,9 +240,8 @@ function show_TEXT() {
     show_left();
     hide_QP();
     hide_DRAW();
-    hide_right(); //this hides the right half
-    
     hide_PRIORS();
+    hide_right(); //this hides the right half
     $("#PMH_1").show();
     $("#NEURO_1").show();
     $("#NIMPPLAN_1").show();
@@ -260,6 +254,8 @@ function show_PRIORS() {
     $("#EXT_right").addClass("PRIORS_color");
     show_TEXT();
     show_right();
+    $("#QP_HPI").show();//no PRIORS yet here, show QP
+    $("#QP_PMH").show();//no PRIORS yet here, show QP
     $("#HPI_right").addClass('canvas');
     $("#PMH_right").addClass('canvas');
     $("#IMPPLAN_right").addClass('canvas');
@@ -268,6 +264,7 @@ function show_PRIORS() {
     $("#RETINA_right").addClass('canvas');
     $("#NEURO_right").addClass('canvas');
     $(".PRIORS_class").show();
+    $(document).scrollTop( $("#clinical_anchor").offset().top );
 }
 
 function hide_left() {
@@ -311,9 +308,13 @@ function show_QP() {
 }
 
 function show_QP_section(zone) {
-    show_left();
+        //show_left();
     $("#"+zone+"_right").addClass('canvas').show();
     $("#QP_"+zone).show();
+        // $(".QP_class").show();
+    if (zone == "PMH") {
+        alter_issue('','');
+    }
 }
 
 function menu_select(zone,che) {
@@ -336,7 +337,7 @@ function hide_DRAW() {
     $("#ANTSEG_right").removeClass('canvas');
 }
 function hide_QP() {
-    $(".QP_class").hide();
+    $(".QP_class").hide(); //addClass('nodisplay');
     $("[name$='_right']").removeClass('canvas');
 }
 function hide_TEXT() {
@@ -344,6 +345,7 @@ function hide_TEXT() {
 }
 function hide_PRIORS() {
     $(".PRIORS_class").hide();
+    $(".PRIORS_class").css("display","none");
     $("#EXT_right").removeClass("PRIORS_color");
     
     $("#PRIORS_EXT_left_text").hide();
@@ -395,7 +397,7 @@ shortcut.add("Meta+Z", function() {
              //undo;
              });
 shortcut.add("Meta+Shift+Z", function() {
-             alert("This will move you forward a step...");
+             ("This will move you forward a step...");
              //redo;
              });
 shortcut.add("Control+S",function() {
@@ -483,8 +485,50 @@ function show_Section(section) {
     $("div[name='_sections']").style.display= "none"; //
     $('#'+section+'_sections').style.display= "block"; //.show().appendTo('form_container');
 }
-
+function show_CC(CC_X) {
+    $("[name^='CC_']").addClass('nodisplay');
+    $("#CC_"+CC_X).removeClass('nodisplay');
+    $("#CC_"+CC_X).index;
+}
 $(document).ready(function() {
+                  $("[id^='sketch_tools_']").click(function() {
+                                                   var zone = this.id.match(/sketch_tools_(.*)/)[1];
+                                                   $("[id^='sketch_tools_"+zone+"']").css("height","30px");
+                                                   $(this).css("height","50px");
+                                                   });
+                  $("[id^='sketch_sizes_']").click(function() {
+                                                   var zone = this.id.match(/sketch_sizes_(.*)/)[1];
+                                                   $("[id^='sketch_sizes_"+zone+"']").css("background","").css("border-bottom","");
+                                                   // $(this).css("background-color","white");
+                                                   $(this).css("border-bottom","2pt solid black");
+                                                   });
+                  
+                  //$("#tabs li").removeClass('active');
+                  //$("#tab1_CC").trigger("click");
+                  alter_issue('',''); // on ready displays the PMH engine.
+                    $("#tabs li").click(function() {
+                            //  First remove class "active" from currently active tab
+                            $("#tabs li").removeClass('active');
+                            
+                            //  Now add class "active" to the selected/clicked tab
+                            $(this).addClass("active");
+                            
+                            //  Hide all tab content
+                            $(".tab_content").hide();
+                            
+                            //  Here we get the href value of the selected tab
+                            var selected_tab = $(this).find("a").attr("href");
+                                        //alert(selected_tab);
+                            //  Show the selected tab content
+                                        
+                            $(selected_tab).show().addClass('active');
+                                        $(selected_tab+"_CC").addClass('active');
+                                        $(selected_tab+"_HPI").addClass('active');
+                                        $(selected_tab+"_HPI_text").show().addClass('active');
+                            
+                            //  At the end, we add return false so that the click on the link is not executed
+                            return false;
+                            });
                   $("[id^='CONSTRUCTION_']").addClass('nodisplay');
                   $("input,select,textarea,text").css("background-color","#FFF8DC");
                   $("#IOPTIME").css("background-color","#FFFFFF");
@@ -609,6 +653,7 @@ $(document).ready(function() {
                                            // a 3 digit format with leading zeroes as needed.
                                            // assume the end user KNOWS there are only numbers presented and
                                            // more than 3 digits is a mistake...
+                                           // (although this may change with topographic answer)
                                            var axis = $(this).val();
                                            // if (!axis.match(/\d/)) return; How do we say this?
                                            var front = this.id.match(/(.*)AXIS$/)[1];
@@ -624,6 +669,10 @@ $(document).ready(function() {
                                            axis = '0' + axis;
                                            }
                                            }
+                                           //we can utilize a phoropter dial feature, we can start them at their age appropriate with/against the rule value.
+                                           //requires touch screen. requires complete touch interface development. Exists in refraction lanes. Would
+                                           //be nice to tie them all together.  Would require manufacturers to publish their APIs to communicate with
+                                           //the devices.
                                            $(this).val(axis);
                                            submit_form('eye_mag');
                                            });
@@ -754,7 +803,6 @@ $(document).ready(function() {
                                                        $("#"+menuitem).css("background-color", "#1C5ECF");
                                                        $("#"+menuitem).css("color","#fff"); /*#262626;*/
                                                        $("#"+menuitem).css("text-decoration","none");
-                                                       // alert($("#menustate").val());
                                                        });
                   
                   
@@ -787,12 +835,10 @@ $(document).ready(function() {
                   $("body").on("change", "select", function(e){
                                var new_section = this.name.match(/PRIOR_(.*)/);
                                var newValue = this.value;
-                               if (new_section[1] =='') new_section[1]='PMH';
                                $("#PRIORS_"+ new_section[1] +"_left_text").show();
                                $("#DRAWS_" + new_section[1] + "_right").hide();
                                $("#QP_" + new_section[1]).hide();
                                
-                               // alert("id_to_show ="+newValue);
                                //now go get the prior page via ajax
                                var url = "../../forms/eye_mag/save.php?mode=retrieve";
                                if (new_section[1] =="ALL") {
@@ -828,10 +874,10 @@ $(document).ready(function() {
                                });
                   $("body").on("click","[id^='Close_PRIORS_']", function() {
                                var new_section = this.id.match(/Close_PRIORS_(.*)$/)[1];
-                               //   alert(new_section);
                                $("#PRIORS_"+ new_section +"_left_text").hide();
                                $("#QP_" + new_section).show();
                                });
+                  
                   $("#pupils").mouseover(function() {
                                          $("#pupils").toggleClass('buttonRefraction_selected').toggleClass('underline');
                                          });
@@ -1044,10 +1090,58 @@ $(document).ready(function() {
                   $("[id^=LayerVision_]").mouseout(function(){
                                                    $(this).toggleClass("borderShadow2");
                                                    });
-                  $("#LayerVision_W_lightswitch, #LayerVision_CR_lightswitch,#LayerVision_MR_lightswitch,#LayerVision_ADDITIONAL_lightswitch,#LayerVision_CTL_lightswitch").mouseover(function() {
+                  $("#LayerVision_W_lightswitch, #LayerVision_CR_lightswitch,#LayerVision_MR_lightswitch,#LayerVision_ADDITIONAL_lightswitch,#LayerVision_CTL_lightswitch,#LayerVision_VAX_lightswitch,#LayerVision_IOP_lightswitch").click(function() {
+                                                                var section = "#"+this.id.match(/(.*)_lightswitch$/)[1];
+                                                                var section2 = this.id.match(/(.*)_(.*)_lightswitch$/)[2];
+                                                                var elem = document.getElementById("PREFS_"+section2);
+                                                                if ($("#PREFS_VA").val() !='1') {
+                                                                    $("#PREFS_VA").val('1');
+                                                                    $("#LayerVision2").show();
+                                                                    elem.value="1";
+                                                                    $(section).removeClass('nodisplay');
+                                                                    if (section2 =="ADDITIONAL") {
+                                                                     $("#LayerVision_ADDITIONAL").removeClass('nodisplay');
+                                                                    }
+                                                                    if (section2 =="VAX") {
+                                                                     $("#LayerVision_ADDITIONAL_VISION").removeClass('nodisplay');
+                                                                    }
+                                                                    if (section2 =="IOP") {
+                                                                     $("#LayerVision_IOP").removeClass('nodisplay');
+                                                                    }
+                                                                   this.addClass("buttonRefraction_selected");
+                                                                } else {
+                                                                                                                                                                                                                                            
+                                                                   if (elem.value == "0" || elem.value =='') {
+                                                                    elem.value='1';
+                                                                    if (section2 =="ADDITIONAL") {
+                                                                     $("#LayerVision_ADDITIONAL").removeClass('nodisplay');
+                                                                    }
+                                                                    if (section2 =="IOP") {
+                                                                     $("#LayerVision_IOP").removeClass('nodisplay');
+                                                                    }
+                                                                     $(section).removeClass('nodisplay');
+                                                                     $(this).addClass("buttonRefraction_selected");
+                                                                   } else {
+                                                                     elem.value='0';
+                                                                     $(section).addClass('nodisplay');
+                                                                     if (section2 =="VAX") {
+                                                                      $("#LayerVision_ADDITIONAL_VISION").addClass('nodisplay');
+                                                                     }
+                                                                     if (section2 =="IOP") {
+                                                                      $("#LayerVision_IOP").addClass('nodisplay');
+                                                                     }
+                                                                     $(this).removeClass("buttonRefraction_selected");
+                                                                  }
+                                                                }
+                                                                   update_PREFS();
+                                                                   $("#tab1").show();
+                                                                   });
+                  
+
+                  $("#LayerVision_W_lightswitch, #LayerVision_CR_lightswitch,#LayerVision_MR_lightswitch,#LayerVision_ADDITIONAL_lightswitch,#LayerVision_CTL_lightswitch,#LayerVision_VAX_lightswitch").mouseover(function() {
                                                                                                                                                                                       $(this).addClass('buttonRefraction_selected');
                                                                                                                                                                                       });
-                  $("#LayerVision_W_lightswitch, #LayerVision_CR_lightswitch,#LayerVision_MR_lightswitch,#LayerVision_ADDITIONAL_lightswitch,#LayerVision_CTL_lightswitch").mouseout(function() {
+                  $("#LayerVision_W_lightswitch, #LayerVision_CR_lightswitch,#LayerVision_MR_lightswitch,#LayerVision_ADDITIONAL_lightswitch,#LayerVision_CTL_lightswitch,#LayerVision_VAX_lightswitch,#LayerVision_IOP_lightswitch").mouseout(function() {
                                                                                                                                                                                      var section2 = this.id.match(/(.*)_(.*)_lightswitch$/)[2];
                                                                                                                                                                                      var elem = document.getElementById("PREFS_"+section2);
                                                                                                                                                                                      
@@ -1055,39 +1149,6 @@ $(document).ready(function() {
                                                                                                                                                                                      } else {
                                                                                                                                                                                      $(this).addClass('buttonRefraction_selected');
                                                                                                                                                                                      }                                                                });
-                  
-                  $("#LayerVision_W_lightswitch, #LayerVision_CR_lightswitch,#LayerVision_MR_lightswitch,#LayerVision_ADDITIONAL_lightswitch,#LayerVision_CTL_lightswitch").click(function() {
-                                                                                                                                                                                  var section = "#"+this.id.match(/(.*)_lightswitch$/)[1];
-                                                                                                                                                                                  var section2 = this.id.match(/(.*)_(.*)_lightswitch$/)[2];
-                                                                                                                                                                                  var elem = document.getElementById("PREFS_"+section2);
-                                                                                                                                                                                  
-                                                                                                                                                                                  if ($("#PREFS_VA").val() !='1') {
-                                                                                                                                                                                  $("#PREFS_VA").val('1');
-                                                                                                                                                                                  $("#LayerVision2").show();
-                                                                                                                                                                                  elem.value="1";
-                                                                                                                                                                                  $(section).removeClass('nodisplay');
-                                                                                                                                                                                  if (section2 =="ADDITIONAL") {
-                                                                                                                                                                                  $("#LayerVision_ADDITIONAL_VISION").removeClass('nodisplay');
-                                                                                                                                                                                  }
-                                                                                                                                                                                  $(this).addClass("buttonRefraction_selected");
-                                                                                                                                                                                  } else {
-                                                                                                                                                                                  if (elem.value == "0") {
-                                                                                                                                                                                  elem.value='1';
-                                                                                                                                                                                  if (section2 =="ADDITIONAL") {
-                                                                                                                                                                                  $("#LayerVision_ADDITIONAL_VISION").removeClass('nodisplay');
-                                                                                                                                                                                  }
-                                                                                                                                                                                  $(section).removeClass('nodisplay');
-                                                                                                                                                                                  $(this).addClass("buttonRefraction_selected");
-                                                                                                                                                                                  } else {
-                                                                                                                                                                                  elem.value='0';
-                                                                                                                                                                                  $(section).addClass('nodisplay');
-                                                                                                                                                                                  if (section2 =="ADDITIONAL") {
-                                                                                                                                                                                  $("#LayerVision_ADDITIONAL_VISION").addClass('nodisplay');
-                                                                                                                                                                                  }
-                                                                                                                                                                                  $(this).removeClass("buttonRefraction_selected");
-                                                                                                                                                                                  }
-                                                                                                                                                                                  }
-                                                                                                                                                                                  update_PREFS();                                                                                                                                                       });
                   
                   
                   //useful to make two VA fields stay in sync
@@ -1122,6 +1183,13 @@ $(document).ready(function() {
                                              $("#Visions_A").toggleClass('nodisplay');
                                              $("#Visions_B").toggleClass('nodisplay');
                                              });
+                  // These defaults can also be set server side and retrieved via an ajax call allowing customization at the DB server level via openEMR,
+                  // rather than here.  Here however the end user would need to manually edit this file.  Perhaps shifting defaults into the DB makes sense.
+                  // FEATURE REQUEST.
+                  // Perfect.  This will go under the framework of starting and modifying the record according to ICD-10 codes, rather than or in addition to
+                  // the other way around.
+                  // Enter the correct ICD-10 code, fill in/addend the field
+                  // Lots of work in getting the last 10 words to work...
                   $("#EXT_defaults").click(function() {
                                            $('#RUL').val('normal lids and lashes').css("background-color","beige");
                                            $('#LUL').val('normal lids and lashes').css("background-color","beige");
@@ -1324,13 +1392,14 @@ $(document).ready(function() {
                                                            update_PREFS();
                                                            }
                                                            if ($("#PREFS_EXAM").value != 'DRAW') {
-                                                           $("#PREFS_EXAM").val('DRAW');
-                                                           show_DRAW();
-                                                           $("#EXAM_QP").removeClass('button_selected');
-                                                           $("#EXAM_DRAW").addClass('button_selected');
-                                                           $("#EXAM_TEXT").removeClass('button_selected');
-                                                           update_PREFS();
+                                                            $("#PREFS_EXAM").val('DRAW');
+                                                            $("#EXAM_QP").removeClass('button_selected');
+                                                            $("#EXAM_DRAW").addClass('button_selected');
+                                                            $("#EXAM_TEXT").removeClass('button_selected');
+                                                            update_PREFS();
                                                            }
+                                                           show_DRAW();
+                                                           $(document).scrollTop( $("#clinical_anchor").offset().top );
                                                            });
                   $("#EXAM_QP").click(function() {
                                       if ($("#PREFS_CLINICAL").value !='0') {
@@ -1338,46 +1407,87 @@ $(document).ready(function() {
                                       update_PREFS();
                                       }
                                       if ($("#PREFS_EXAM").value != 'QP') {
-                                      show_QP();
                                       $("#PREFS_EXAM").val('QP');
                                       $("#EXAM_QP").addClass('button_selected');
                                       $("#EXAM_DRAW").removeClass('button_selected');
                                       $("#EXAM_TEXT").removeClass('button_selected');
                                       update_PREFS();
                                       }
+                                      show_QP();
+                                      $(document).scrollTop( $("#clinical_anchor").offset().top );
                                       });
                   
                   $("#EXAM_TEXT").click(function() {
                                         if ($("#PREFS_CLINICAL").val() !='1') {
-                                        //we want to show text_only which are found on left half
-                                        $("#PREFS_CLINICAL").val('1');
-                                        $("#PREFS_EXAM").val('TEXT');
-                                        // also hide QP, DRAWs, and PRIORS
-                                        hide_PRIORS();
-                                        hide_DRAW();
-                                        hide_QP();
-                                        show_TEXT();
-                                        update_PREFS();
+                                            // we want to show text_only which are found on left half
+                                            $("#PREFS_CLINICAL").val('1');
+                                            $("#PREFS_EXAM").val('TEXT');
+                                            // also hide QP, DRAWs, and PRIORS
+                                            hide_DRAW();
+                                            hide_QP();
+                                            hide_PRIORS();
+                                        hide_right();
+                                            show_TEXT();
+                                            update_PREFS();
                                         }
                                         $("#EXAM_DRAW").removeClass('button_selected');
                                         $("#EXAM_QP").removeClass('button_selected');
                                         $("#EXAM_TEXT").addClass('button_selected');
+                                        // document.getElementById("LayerTechnical_sections").scrollIntoView();
+                                        $(document).scrollTop( $("#clinical_anchor").offset().top );
                                         });
                   $("[id^='BUTTON_TEXT_']").click(function() {
                                                   var zone = this.id.match(/BUTTON_TEXT_(.*)/)[1];
                                                   if (zone != "menu") {
-                                                  $("#"+zone+"_right").hide();
+                                                  $("#"+zone+"_right").css("display","none");
+                                                  $("#"+zone+"_left").css("display","block");
+                                                  $("#"+zone+"_left_text").css("display","block");
+                                                  
                                                   }
                                                   });
+                  $("[id^='BUTTON_TEXTD_']").click(function() {
+                                                  var zone = this.id.match(/BUTTON_TEXTD_(.*)/)[1];
+                                                  if (zone != "menu") {
+                                                  $("#"+zone+"_right").css("display","none");
+                                                  }
+                                                  });
+                  // In this function, we are scrolling back through the prior exam IMAGES
+                  // Images cannot be viewed directly on the web, but need to be processed by the
+                  // controller.php file.
+                  // eg. /openemr/default/documents/3/eye_mag/102/OU_HPI_DRAW_12.png
+                  // Each image thus has an ID.  We need to find the ID for the previous image
+                  // for this section's DRAWings.
                   $("[id^='BUTTON_BACK_']").click(function() {
                                                   var zone = this.id.match(/BUTTON_BACK_(.*)/)[1];
                                                   if (zone != "menu") {
                                                   var css = $("#"+zone+"_counter").val();
-                                                  //show this in the background
-                                                  $("#Sketch_"+zone).css("background","url('"+css+"')");
+                                                  var prior = css-1;
+                                                  
+                                                  // now change the value to the next prior image/drawing...
+                                                  //have to clear the last sketch
                                                   //replace this with prior image
                                                   //var counter =$("#"+zone+"_counter").val();
-                                                  //counter--;
+                                                  // what is the previous image?
+                                                  // ask the server
+                                                  
+                                                  $.ajax({
+                                                         type           : 'POST',
+                                                         url            : "../../forms/eye_mag/save.php?canvas="+zone+"&id="+$("#form_id").val(),
+                                                         data           :  {
+                                                         'css'          : css,
+                                                         'prior'        : prior,
+                                                         'encounter'    : $("#encounter").val(),
+                                                         'zone'         : zone,
+                                                         'zone_counter' : $("#"+zone+"_counter").val()
+                                                         },
+                                                         success   : function(result) {
+                                                            $("#Sketch_"+zone).css("background","url('"+result+"')");
+                                                            $("#"+zone+"_counter").val(prior);
+                                                            $("#tellme").html(result);
+                                                         }
+                                                         });
+
+                                                  // need to do an ajax call to find out what is the next prior and later draws...
                                                   //$("#"+zone+"_counter").val(counter);
                                                   //change the image shown in the back ground?
                                                   //Sketch_<?php echo attr($zone); ?> style background
@@ -1386,6 +1496,7 @@ $(document).ready(function() {
                                                   //in order to retrieve this through the controller
                                                   // it must be a registered document...
                                                   // which means when finalized, these references must be deleted also.
+                                                  //or just hide the arrows
                                                   
                                                   //$("#Sketch_"+zone).css("background",")
                                                   //$("#"+zone+"_right").hide();
@@ -1393,12 +1504,10 @@ $(document).ready(function() {
                                                   });
                   $("#EXAM_TEXT").addClass('button_selected');
                   if ($("#PREFS_CLINICAL").val() !='1') {
-                  var actionQ = "#EXAM_"+$("#PREFS_EXAM").val();
-                  // alert(actionQ);
-                  $(actionQ).trigger('click');
-                  //$("#EXAM_QP").val("1").trigger('click');
+                    var actionQ = "#EXAM_"+$("#PREFS_EXAM").val();
+                    $(actionQ).trigger('click');
                   } else {
-                  $("#EXAM_TEXT").addClass('button_selected');
+                    $("#EXAM_TEXT").addClass('button_selected');
                   }
                   if ($("#ANTSEG_prefix").val() > '') {
                   $("#ANTSEG_prefix_"+$("#ANTSEG_prefix").val()).addClass('button_selected');
@@ -1428,7 +1537,6 @@ $(document).ready(function() {
                   $("#ACTNORMAL_CHECK").toggleClass('nodisplay');
                   $("#ACTTRIGGER").toggleClass('underline');
                   var show = $("#PREFS_ACT_SHOW").val();
-                  //alert($("#PREFS_ACT_SHOW").val());
                   $("#ACT_tab_"+show).trigger('click');
                   }
                   $("#ACTTRIGGER").click(function() {
@@ -1484,6 +1592,7 @@ $(document).ready(function() {
                   $("[id^='Sketch_']").mouseout(function() {
                                                 var zone = this.id.match(/Sketch_(.*)/)[1];
                                                 var dataURL = this.toDataURL();
+                                             
                                                 $.ajax({
                                                        type: "POST",
                                                        url: "../../forms/eye_mag/save.php?canvas="+zone+"&id="+$("#form_id").val(),
@@ -1491,14 +1600,17 @@ $(document).ready(function() {
                                                        imgBase64     : dataURL,
                                                        'zone'        : zone,
                                                        'visit_date'  : $("#visit_date").val(),
-                                                       'encounter'   : $("#encounter").val()
+                                                       'encounter'   : $("#encounter").val(),
+                                                       'zone_counter': $("#"+zone+"_counter").val()
                                                        },
                                                        success      : function(result) {
-                                                       //alert(result);
-                                                       // var zone_counter = result--;
+                                                       // var prior = new String(result.match(/document_id=(.*)\&as_file/)[1]);
+                                                       // prior2 = prior - 1;
+                                                       //var regexp = new RegExp("DRAW_"+prior, 'g');
+                                                       //var count = result.replace(regexp,"DRAW_"+prior2);
                                                        //change value for back button
-                                                       // $("#"+zone+"_counter").val(zone_counter);
-                                                       //alert($(this).val());
+                                                       $("#"+zone+"_counter").val(result);
+                                                       // $("#BUTTON_BACK_"+zone).val('test');
                                                        $("#tellme").html(result);
                                                        }
                                                        }).done(function(o) {
@@ -1510,7 +1622,6 @@ $(document).ready(function() {
                   
                   
                   $("#COPY_SECTION").change(function() {
-                                            //  alert($("#COPY_SECTION").val());
                                             var start = $("#COPY_SECTION").val();
                                             var value = start.match(/(\w*)-(\w*)/);
                                             var zone = value[1];
@@ -1557,14 +1668,14 @@ $(document).ready(function() {
                   
                   $("[id^='BUTTON_DRAW_']").click(function() {
                                                   var zone =this.id.match(/BUTTON_DRAW_(.*)$/)[1];
-                                                  hide_PRIORS();
+                                                  //hide_PRIORS();
                                                   if (zone =="ALL") {
                                                   //show_DRAW();
                                                   } else {
                                                   $("#"+zone+"_1").show();
                                                   $("#"+zone+"_right").addClass('canvas').show();
                                                   $("#QP_"+zone).hide();
-                                                  $("#PRIORS_"+zone).hide();
+                                                  $("#PRIORS_"+zone+"_left_text").hide();
                                                   $("#Draw_"+zone).show();
                                                   
                                                   }
@@ -1582,28 +1693,23 @@ $(document).ready(function() {
                                            });
                   window.addEventListener("beforeunload", function () {
                                           $("#final").val('1');
-                                          //submit_form("final");
-                                          //location.reload();
-                                          //refreshme();
-                                          //parent.frames['RBot'].location.reload();
-                                          // alert("the url of the top is" + top.location.href + "\nand not the url of this one is " + window.location.href );
                                           });
                   $("[name$='_loading']").hide();
                   $("[name$='_sections']").show();
-                  $('#sidebar').affix({
+                 $('#sidebar').affix({
                                       offset: {
                                       top: 245
                                       }
                                       });
-                  
+                
                   var $body   = $(document.body);
                   var navHeight = $('.navbar').outerHeight(true) + 10;
                   
-                  $body.scrollspy({
+                  /*$body.scrollspy({
                                   target: '#leftCol',
                                   offset: navHeight
                                   });
-                  
+                  */
                   });
 
 

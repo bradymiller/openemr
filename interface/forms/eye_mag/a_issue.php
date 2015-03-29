@@ -36,6 +36,7 @@ require_once($GLOBALS['srcdir'].'/csv_like_join.php');
 require_once($GLOBALS['srcdir'].'/htmlspecialchars.inc.php');
 require_once($GLOBALS['srcdir'].'/formdata.inc.php');
 require_once($GLOBALS['srcdir'].'/log.inc');
+//require_once($GLOBALS['srcdir'].'/restoreSession.php");
 
 $thispid = 0 + (empty($_REQUEST['thispid']) ? $pid : $_REQUEST['thispid']);
 $info_msg = "";
@@ -49,7 +50,7 @@ $issue = $_REQUEST['issue'];
 $thispid = $_REQUEST['thispid'];
 $delete = $_REQUEST['delete'];
 $form_save = $_REQUEST['form_save'];
-$pid = $_REQUEST['pid'];
+$pid = $_SESSION['pid'];
 if ($thispid=='') $thispid = $pid;
 
 if ($issue && !acl_check('patients','med','','write') ) die(xlt("Edit is not authorized!"));
@@ -140,11 +141,11 @@ if ($_REQUEST['form_save']) {
   // we want to update it, not add a new one.
   $query = "SELECT id,pid from lists where title = ? and type = ? and pid = ?";
   $issue2 = sqlQuery($query,array($_REQUEST['form_title'],$_REQUEST['form_type'],$pid));
-  var_dump($issue2);
+  //var_dump($issue2);
   $issue = $issue2['id'];
-  echo $pid;
-  $pid = $issue2['pid'];
-  echo $pid;
+  //echo $pid;
+  //$pid = $issue2['pid'];
+ // echo $pid;
   if ($issue) { //orif there is an issue with this title already...
 
    $query = "UPDATE lists SET " .
@@ -292,6 +293,9 @@ div.section {
 <script type="text/javascript" src="<?php echo $GLOBALS['webroot']; ?>/library/dynarch_calendar_setup.js"></script>
 <script type="text/javascript" src="<?php echo $GLOBALS['webroot']; ?>/library/textformat.js"></script>
 <script type="text/javascript" src="<?php echo $GLOBALS['webroot']; ?>/library/dialog.js"></script>
+
+
+
 <script language="JavaScript">
  var mypcc = '<?php echo $GLOBALS['phone_country_code'] ?>';
  var aitypes = new Array(); // issue type attributes
@@ -406,7 +410,7 @@ function submit_this_form() {
 }
  // Process click on Delete link.
 function deleteme() {
-    var url = "../../forms/eye_mag/a_issue.php?issue=<?php echo attr($issue) ?>&delete=1";
+    var url = "../../forms/eye_mag/a_issue.php?issue=<?php echo attr($issue); ?>&delete=1";
     var formData = $("form#theform").serialize();
    $.ajax({
            type    : 'POST',   // define the type of HTTP verb we want to use (POST for our form)

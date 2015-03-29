@@ -19,30 +19,22 @@
  * along with this program. If not, see <http://opensource.org/licenses/gpl-license.php>;. 
  * 
  * @package OpenEMR 
- * @category forms
- * @subpackage eye_mag 
- * @version 0.8 (will be 1.0 when acceptted in code base) 
- * @filesource openemr/interface/forms/eye_maga/php/eye_mag_functions.php
  * @author Ray Magauran <magauran@MedFetch.com> 
  * @link http://www.open-emr.org 
  */
 
-$fake_register_globals=false;
-$sanitize_all_escapes=true;
-
 /**
- *  This function returns HTML old record selector widget when needed (3 input values)
+ *  This function returns HTML old record selector widget when needed (4 input values)
  * 
  * @param string $zone options ALL,EXT,ANTSEG,RETINA,NEURO, DRAW_PRIORS_$zone 
  * @param string $visit_date Future functionality to limit result set. UTC DATE Formatted 
  * @param string $pid value = patient id
- * @return string returns the HTML old record selector widget for the desired zone 
+ * @param string $type options text(default) image 
+ * @return string returns the HTML old record/image selector widget for the desired zone and type
  */ 
 
-//error_reporting(E_ALL & ~E_NOTICE);
-
 $form_folder = "eye_mag";
-function priors_select($zone,$orig_id,$id_to_show,$pid) {
+function priors_select($zone,$orig_id,$id_to_show,$pid,$type='text') {
     global $form_folder;
     global $visit_date;
 
@@ -63,10 +55,10 @@ function priors_select($zone,$orig_id,$id_to_show,$pid) {
                     where 
                     form_encounter.encounter = forms.encounter and 
                     form_eye_mag.id=forms.form_id and
-                    forms.form_name ='".$form_folder."' and 
+                    forms.form_name =? and 
                     forms.deleted != '1' and 
                     forms.pid =form_eye_mag.pid and form_eye_mag.pid=? ORDER BY encounter_date DESC";
-        $result = sqlStatement($query,array($pid));
+        $result = sqlStatement($query,array($form_folder,$pid));
         $counter = sqlNumRows($result);
         global $priors;
         global $current;
@@ -85,7 +77,7 @@ function priors_select($zone,$orig_id,$id_to_show,$pid) {
                 $selected = 'selected="selected"';
                 $current = $i;
             }
-           $output .= "<option value='".attr($prior['id'])."' ".attr($selected).">".xlt($priors[$i]['exam_date'])."</option>";
+           $output .= "<option value='".attr($prior['id'])."' ".attr($selected).">".$priors[$i]['exam_date']."</option>";
            $selected ='';
            $i++;
         }
@@ -177,24 +169,27 @@ function priors_select($zone,$orig_id,$id_to_show,$pid) {
  * @param string $pid value = patient id
  * @return true : when called directly outputs the ZONE specific HTML for a prior record + widget for the desired zone 
  */ 
+
 function display_section ($zone,$orig_id,$id_to_show,$pid,$report = '0') {
     global $form_folder;
     global $id;
     global $ISSUE_TYPES;
     global $ISSUE_TYPE_STYLES;
+
+   // echo "<pre>".$zone. " - ". $orig_id. " - ".$id_to_show. " - ".$pid;
     $query  = "SELECT * FROM form_eye_mag_prefs 
                 where PEZONE='PREFS' AND id=? 
                 ORDER BY ZONE_ORDER,ordering";
+
     $result = sqlStatement($query,array($_SESSION['authUserID']));
-    while ($prefs= sqlFetchArray($result))   {    
+    while ($prefs= sqlFetchArray($result))   {   
         @extract($prefs);    
         $$LOCATION = $VALUE; 
     }
     $query = "SELECT * FROM form_".$form_folder." where pid =? and id = ?";
     $result = sqlQuery($query, array($pid,$id_to_show));
     @extract($result); 
-   
-
+  
     if ($zone == "EXT") {
         if ($report =='0') $output = priors_select($zone,$orig_id,$id_to_show,$pid);
         ?> 
@@ -1364,7 +1359,7 @@ function display_section ($zone,$orig_id,$id_to_show,$pid,$report = '0') {
                 
                 $counter++; //at 19 lines we make a new row
                 $pres = sqlStatement("SELECT * FROM lists WHERE pid = ? AND type = ? " .
-                    "ORDER BY begdate", array($pid,$focustype) );
+                    "ORDER BY begdate DESC", array($pid,$focustype) );
                 $counter_previous = $counter;
                 $counter = $counter + sqlNumRows($pres);
                
@@ -1438,13 +1433,13 @@ function display_section ($zone,$orig_id,$id_to_show,$pid,$report = '0') {
                     // calculate the status
                     if ($row['outcome'] == "1" && $row['enddate'] != NULL) {
                       // Resolved
-                    //  $statusCompute = generate_display_field(array('data_type'=>'1','list_id'=>'outcome'), $row['outcome']);
+                     $statusCompute = generate_display_field(array('data_type'=>'1','list_id'=>'outcome'), $row['outcome']);
                     }
                     else if($row['enddate'] == NULL) {
-                   //   $statusCompute = htmlspecialchars( xl("Active") ,ENT_NOQUOTES);
+                     $statusCompute = htmlspecialchars( xl("Active") ,ENT_NOQUOTES);
                     }
                     else {
-                   //   $statusCompute = htmlspecialchars( xl("Inactive") ,ENT_NOQUOTES);
+                      $statusCompute = htmlspecialchars( xl("Inactive") ,ENT_NOQUOTES);
                     }
                     $click_class='statrow';
                     if($row['erx_source']==1 && $focustype=='allergy')
@@ -1452,9 +1447,9 @@ function display_section ($zone,$orig_id,$id_to_show,$pid,$report = '0') {
                     elseif($row['erx_uploaded']==1 && $focustype=='medication')
                     $click_class='';
                     // output the TD row of info
-                   
-                    echo "<span name='BUTTON_QP_PMH_".$rowid."' href='#PMH_anchor' id='BUTTON_QP_PMH_".$rowid."' onclick=\"alter_issue('".$rowid."','".$row[type]."');\">".xlt($disptitle)."</span>";
-                      //  echo "  <td>" . htmlspecialchars($row['begdate'],ENT_NOQUOTES) . "&nbsp;</td>\n";
+                   if ($focustype == "surgery")    echo "  <span style='text-align:right'>" . htmlspecialchars($row['begdate'],ENT_NOQUOTES) . "&nbsp;</span>\n";
+                    
+                    echo "<span name='QP_PMH_".$rowid."' href='#PMH_anchor' id='QP_PMH_".$rowid."' onclick=\"alter_issue('".$rowid."','".$row[type]."');\">".xlt($disptitle)."</span>";
                       //  echo "  <td>" . htmlspecialchars($row['enddate'],ENT_NOQUOTES) . "&nbsp;</td>\n";
                         // both codetext and statusCompute have already been escaped above with htmlspecialchars)
                      //   echo "  <td>" . $codetext . "</td>\n";
@@ -1636,15 +1631,15 @@ function display_section ($zone,$orig_id,$id_to_show,$pid,$report = '0') {
 }
 
 /**
- *  This function returns display the sketch diagram for a zone (4 input values)
+ *  This function returns display the draw/sketch diagram for a zone (4 input values)
  * 
  *  If there is already a drawing for this zone in this encounter, it is pulled from
  *  from its stored location:
  *  $GLOBALS['web_root']."/sites/".$_SESSION['site_id']."/eye_mag/".$pid."/".$encounter."/".$side."_".$zone."_VIEW.png?".rand();
  *  
- *  Otherwise a "BASE" image is pulled from:
+ *  Otherwise a "BASE" image is pulled from the images directory of the form...  Customizable.
  *  
- *  The user can replace the given BASE images if they wish.  For Skeych.js and the format we employ, the image 
+ *  The user can replace the given BASE images if they wish.  For Sketch.js and the format we employ, the image 
  *  created must be  in png format and have the dimensions of 432px x 250px.  It is possible to modify the source code to 
  *  accept any image by employing imagecopyresampled but we ran into problems... See more about the image names in save.php
  *
@@ -1654,34 +1649,99 @@ function display_section ($zone,$orig_id,$id_to_show,$pid,$report = '0') {
  * @param string OU by default.  Future functionality will allow OD and OS values- not implemented yet.
  * @return true : when called directly outputs the ZONE specific HTML for a prior record + widget for the desired zone 
  */ 
-function display_draw_section ($zone,$encounter,$pid,$side ='OU') {
+function display_draw_section ($zone,$encounter,$pid,$side ='OU',$counter='') {
     global $form_folder;
+    $storage = $GLOBALS["OE_SITES_BASE"]."/".$_SESSION['site_id']."/documents/".$pid."/".$form_folder."/".$encounter;
+    $file_history = $storage."/OU_".$zone."_DRAW_1";
+    $file_store= $file_history.".png";
+    $additional = '1';
+    //limit it to 10 for now...
+  
+  while (file_exists($file_history.".png")) {
+        $file_history = $storage."/OU_".$zone."_DRAW_". $additional++;
+        $file_store= $file_history.".png";
+  }
+
     ?>
     <div id="Draw_<?php echo attr($zone); ?>" name="Draw_<?php echo attr($zone); ?>" style="text-align:center;height: 2.5in;" class="Draw_class canvas">
         <span class="closeButton fa fa-file-text-o" id="BUTTON_TEXT_<?php echo attr($zone); ?>" name="BUTTON_TEXT_<?php echo attr($zone); ?>"></span>
-        <span class="closeButton_2 fa fa-fast-backward fa-sm" id="BUTTON_BACK_<?php echo attr($zone); ?>" name="BUTTON_BACK_<?php echo attr($zone); ?>"></span>
-        <input type="hidden" id="<?php echo attr($zone); ?>_counter" name="<?php echo attr($zone); ?>_counter"  value="">
-        <div class="tools" style="text-align:center;width:95%;">
-            <a href="#Sketch_<?php echo attr($zone); ?>" data-color="#f00" > &nbsp;&nbsp;</a>
-            <a style="width: 5px; background: yellow;" data-color="#ff0" href="#Sketch_<?php echo attr($zone); ?>"> &nbsp;&nbsp;</a>
-            <a style="width: 5px; background: red;" data-color="red" href="#Sketch_<?php echo attr($zone); ?>"> &nbsp;&nbsp;</a>
-            <a style="width: 5px; background: #FF5C5C;" data-color="#FF5C5C" href="#Sketch_<?php echo attr($zone); ?>"> &nbsp;&nbsp;</a>
-            <a style="width: 5px; background: brown;" data-color="#AC8359" href="#Sketch_<?php echo attr($zone); ?>"> &nbsp;&nbsp;</a>
-            <a style="width: 5px; background: fuchsia;" data-color="#f0f" href="#Sketch_<?php echo attr($zone); ?>"> &nbsp;&nbsp;</a>
-            <a style="width: 5px; background: black;" data-color="#000" href="#Sketch_<?php echo attr($zone); ?>"> &nbsp;&nbsp;</a>
-            <a style="width: 5px; background: white;" data-color="#fff" href="#Sketch_<?php echo attr($zone); ?>"> &nbsp;&nbsp;</a>
-            <a style="background: #CCC" data-size="1" href="#Sketch_<?php echo attr($zone); ?>"><?php echo xlt('1'); ?></a>
-            <a style="background: #CCC" data-size="3" href="#Sketch_<?php echo attr($zone); ?>"><?php echo xlt('3'); ?></a>
-            <a style="background: #CCC" data-size="5" href="#Sketch_<?php echo attr($zone); ?>"><?php echo xlt('5'); ?></a>
-            <a style="background: #CCC" data-size="10" href="#Sketch_<?php echo attr($zone); ?>"><?php echo xlt('10'); ?></a>
-            <a style="background: #CCC" data-size="15" href="#Sketch_<?php echo attr($zone); ?>"><?php echo xlt('15'); ?></a>  
+        <!--
+        
+        <?php  
+            /* This will provide a way to scroll back through prior visit images. 
+             * Will need to do a lot of coding to create this.  Jist is alax call to server for image retrieval.
+             * To get this to work we need a way to select an old image to work from, use current or return to baseline.
+             * This will require a global BACK button like above (BUTTON_BACK_<?php echo attr($zone); ?>). 
+             * The button above scrolls through current encounter zone images as they are incrementally added, to "Undo" a mishap.  
+             * If we look back at a prior encounter's saved final image, 
+             * we should store a copy of this image in today's directory and give it a new number, 
+             * just like we had drawn new stuff and stored the changes. 
+             * Thus the Undo feature will only retrieve images from today's encounter directory
+             * Need to think about how to display this visually so it's intuitive to all, without cluttering the page...
+             */
+        $output = priors_select($zone,$orig_id,$id_to_show,$pid); echo $output; ?>
+        -->
+        <input type="hidden" id="<?php echo attr($zone); ?>_counter" name="<?php echo attr($zone); ?>_counter"  value="<?php echo attr($additional); ?>">
+        <div class="tools" style="text-align:center;width:100%;">
+            <!--
+            <div class="fa fa-fast-backward fa-sm" value="" id="BUTTON_BACK_<?php echo attr($zone); ?>" name="BUTTON_BACK_<?php echo attr($zone); ?>" title="Prior Visits"></div>
+            &nbsp;&nbsp;&nbsp;
+            <div class="fa fa-backward fa-sm" value="" id="BUTTON_BACK_<?php echo attr($zone); ?>" name="BUTTON_BACK_<?php echo attr($zone); ?>" title="Undo"></div>
+            &nbsp; &nbsp; &nbsp;
+            &nbsp;&nbsp;&nbsp;
+            -->
+
+            <a data-color="#00b6ff" href="#Sketch_<?php echo attr($zone); ?>" > 
+                <img id="sketch_tools_<?php echo attr($zone); ?>" src="../../forms/<?php echo $form_folder; ?>/images/pencil_blue.png" style="height:30px;width:15px;">
+            </a>
+            <a style="width: 20px; height:65px;" data-color="#ff0" href="#Sketch_<?php echo attr($zone); ?>">
+                <img id="sketch_tools_<?php echo attr($zone); ?>" src="../../forms/<?php echo $form_folder; ?>/images/pencil_yellow.png" style="height:30px;width:15px;">
+            </a>
+            <a style="width: 20px; height:65px;" data-color="#ffad00" href="#Sketch_<?php echo attr($zone); ?>">
+                <img id="sketch_tools_<?php echo attr($zone); ?>" src="../../forms/<?php echo $form_folder; ?>/images/pencil_orange.png" style="height:30px;width:15px;">
+            </a>
+            <a style="width: 20px; height:65px;" data-color="#AC8359" href="#Sketch_<?php echo attr($zone); ?>">
+                <img id="sketch_tools_<?php echo attr($zone); ?>" src="../../forms/<?php echo $form_folder; ?>/images/pencil_brown.png" style="height:30px;width:15px;">
+            </a>
+            <a style="width: 20px; height:65px;" data-color="red" href="#Sketch_<?php echo attr($zone); ?>">
+                <img id="sketch_tools_<?php echo attr($zone); ?>" src="../../forms/<?php echo $form_folder; ?>/images/pencil_red.png" style="height:30px;width:15px;">
+            </a>
+            <a style="width: 20px; height:65px;" data-color="black" data-color="#000" href="#Sketch_<?php echo attr($zone); ?>">
+                <img id="sketch_tools_<?php echo attr($zone); ?>" src="../../forms/<?php echo $form_folder; ?>/images/pencil_black.png" style="height:50px;width:15px;">
+            </a>
+            <a style="width: 20px; height:65px;" data-color="white" data-color="#fff" href="#Sketch_<?php echo attr($zone); ?>">
+                <img id="sketch_tools_<?php echo attr($zone); ?>" src="../../forms/<?php echo $form_folder; ?>/images/pencil_white.png" style="height:30px;width:15px;">
+            </a>
+            <span style="min-width:1in;">&nbsp;</span>
+            <!-- now to pencil size -->
+            <a id="sketch_sizes_<?php echo attr($zone); ?>" style="height:60px;width:60px;border-bottom:1pt solid black;" data-size="1" href="#Sketch_<?php echo attr($zone); ?>">
+                <img id="sketch_sizes_<?php echo attr($zone); ?>" src="../../forms/<?php echo $form_folder; ?>/images/brush_1.png" style="height:20px;width:20px;">
+            </a>
+            <a id="sketch_sizes_<?php echo attr($zone); ?>" style="height:60px;width:60px;" data-size="3" href="#Sketch_<?php echo attr($zone); ?>"> 
+                <img id="sketch_sizes_<?php echo attr($zone); ?>" src="../../forms/<?php echo $form_folder; ?>/images/brush_3.png" style="height:20px;width:20px;">
+            </a>
+            <a id="sketch_sizes_<?php echo attr($zone); ?>" style="height:60px;width:60px;" data-size="5" href="#Sketch_<?php echo attr($zone); ?>" >
+                <img id="sketch_sizes_<?php echo attr($zone); ?>" src="../../forms/<?php echo $form_folder; ?>/images/brush_5.png" style="height:20px;width:20px;">
+            </a>
+            <a id="sketch_sizes_<?php echo attr($zone); ?>" style="height:60px;width:60px;" data-size="10" href="#Sketch_<?php echo attr($zone); ?>">
+                     <img id="sketch_sizes_<?php echo attr($zone); ?>" src="../../forms/<?php echo $form_folder; ?>/images/brush_10.png" style="height:20px;width:20px;">
+            </a>
+            <a id="sketch_sizes_<?php echo attr($zone); ?>" style="height:60px;width:60px;" data-size="15" href="#Sketch_<?php echo attr($zone); ?>">
+                     <img id="sketch_sizes_<?php echo attr($zone); ?>" src="../../forms/<?php echo $form_folder; ?>/images/brush_15.png" style="height:20px;width:20px;">
+            </a>
+            <!--
+            &nbsp;&nbsp;&nbsp;
+            &nbsp;&nbsp;&nbsp;
+
+            <input type="button" name="Clear_<?php echo attr($zone); ?>" id="Clear_<?php echo attr($zone); ?>" style="width:40px;" value="Clear" />
+        -->
         </div>
         <?php 
         /** apache2 vhost config defaults to deny all access to documents directory directly.
           * Thus we need to move from this directory, elsewhere?
           * No, ext access to all is not hippa compliant.
           * We need a better way to serve the document.
-          * perhaps just like all the other documents from documents.php?
+          * perhaps just like all the other documents from documents.php? Yes.
           * Find the document_id by the filename...
           */
 
@@ -1689,18 +1749,19 @@ function display_draw_section ($zone,$encounter,$pid,$side ='OU') {
             $sql = "SELECT * from documents where url='file://".$file_location."'";
             $doc = sqlQuery($sql);
             if (file_exists($file_location) && ($doc['id'] > '0')) {
-
                 $filetoshow = $GLOBALS['web_root']."/controller.php?document&retrieve&patient_id=$pid&document_id=$doc[id]&as_file=false";
             } else {
-                $filetoshow = "../../forms/".$form_folder."/images/".$side."_".$zone."_BASE.png?".rand();
+                //base image.  ?random to not pull from cache.
+                $filetoshow = "../../forms/".$form_folder."/images/".$side."_".$zone."_BASE.png?".rand(); 
             }
         ?>
         <canvas id="Sketch_<?php echo attr($zone); ?>" class="borderShadow2" style="background: url(<?php echo attr($filetoshow); ?>)  no-repeat center center;background-size: 100% 100%;"></canvas>
         <script type="text/javascript">
             $(function() {
-                $('canvas').attr('height', '250px'); 
-                $('canvas').attr('width', '432px'); 
-                $('#Sketch_<?php echo attr($zone); ?>').sketch({defaultSize:"1"});
+                $('canvas').attr('height', '250px'); //these values are linked to the size of the background png, but not 1:1.
+                $('canvas').attr('width', '432px');  //changing sizes of canvas means playing with correct image size too.
+                $('#Sketch_<?php echo attr($zone); ?>').sketch({defaultSize:"1"});//frustrating nut to crack.
+                //need a better tool for this job.
             });
         </script>
         <br />
@@ -1727,342 +1788,338 @@ function copy_forward($zone,$copy_from,$copy_to,$pid) {
                 and form_eye_mag.id =? ";        
 
     $objQuery =sqlQuery($query,array($pid,$copy_from));
-    @extract($objQuery);
     if ($zone =="EXT") {
-        $result['RUL']="$RUL";
-        $result['LUL']="$LUL";
-        $result['RLL']="$RLL";
-        $result['LLL']="$LLL";
-        $result['RBROW']="$RBROW";
-        $result['LBROW']="$LBROW";
-        $result['RMCT']="$RMCT";
-        $result['LMCT']="$LMCT";
-        $result['RADNEXA']="$RADNEXA";
-        $result['LADNEXA']="$LADNEXA";
-        $result['RMRD']="$RMRD";
-        $result['LMRD']="$LMRD";
-        $result['RLF']="$RLF";
-        $result['LLF']="$LLF";
-        $result['RVFISSURE']="$RVFISSURE";
-        $result['LVFISSURE']="$LVFISSURE";
-        $result['ODHERTEL']="$ODHERTEL";
-        $result['OSHERTEL']="$OSHERTEL";
-        $result['HERTELBASE']="$HERTELBASE";
-        $result['ODPIC']="$ODPIC";
-        $result['OSPIC']="$OSPIC";
-        $result['EXT_COMMENTS']="$EXT_COMMENTS";
+        $result['RUL']=$objQuery['RUL'];
+        $result['LUL']=$objQuery['LUL'];
+        $result['RLL']=$objQuery['RLL'];
+        $result['LLL']=$objQuery['LLL'];
+        $result['RBROW']=$objQuery['RBROW'];
+        $result['LBROW']=$objQuery['LBROW'];
+        $result['RMCT']=$objQuery['RMCT'];
+        $result['LMCT']=$objQuery['LMCT'];
+        $result['RADNEXA']=$objQuery['RADNEXA'];
+        $result['LADNEXA']=$objQuery['LADNEXA'];
+        $result['RMRD']=$objQuery['RMRD'];
+        $result['LMRD']=$objQuery['LMRD'];
+        $result['RLF']=$objQuery['RLF'];
+        $result['LLF']=$objQuery['LLF'];
+        $result['RVFISSURE']=$objQuery['RVFISSURE'];
+        $result['LVFISSURE']=$objQuery['LVFISSURE'];
+        $result['ODHERTEL']=$objQuery['ODHERTEL'];
+        $result['OSHERTEL']=$objQuery['OSHERTEL'];
+        $result['HERTELBASE']=$objQuery['HERTELBASE'];
+        $result['ODPIC']=$objQuery['ODPIC'];
+        $result['OSPIC']=$objQuery['OSPIC'];
+        $result['EXT_COMMENTS']=$objQuery['EXT_COMMENTS'];
         $result["json"] = json_encode($result);
         echo json_encode($result); 
     } elseif ($zone =="ANTSEG") {
-        $result['OSCONJ']="$OSCONJ";
-        $result['ODCONJ']="$ODCONJ";
-        $result['ODCORNEA']="$ODCORNEA";
-        $result['OSCORNEA']="$OSCORNEA";
-        $result['ODAC']="$ODAC";
-        $result['OSAC']="$OSAC";
-        $result['ODLENS']="$ODLENS";
-        $result['OSLENS']="$OSLENS";
-        $result['ODIRIS']="$ODIRIS";
-        $result['OSIRIS']="$OSIRIS";
-        $result['ODKTHICKNESS']="$ODKTHICKNESS";
-        $result['OSKTHICKNESS']="$OSKTHICKNESS";
-        $result['ODGONIO']="$ODGONIO";
-        $result['OSGONIO']="$OSGONIO";
-        $result['ANTSEG_COMMENTS']="$ANTSEG_COMMENTS";
+        $result['OSCONJ']=$objQuery['OSCONJ'];
+        $result['ODCONJ']=$objQuery['ODCONJ'];
+        $result['ODCORNEA']=$objQuery['ODCORNEA'];
+        $result['OSCORNEA']=$objQuery['OSCORNEA'];
+        $result['ODAC']=$objQuery['ODAC'];
+        $result['OSAC']=$objQuery['OSAC'];
+        $result['ODLENS']=$objQuery['ODLENS'];
+        $result['OSLENS']=$objQuery['OSLENS'];
+        $result['ODIRIS']=$objQuery['ODIRIS'];
+        $result['OSIRIS']=$objQuery['OSIRIS'];
+        $result['ODKTHICKNESS']=$objQuery['ODKTHICKNESS'];
+        $result['OSKTHICKNESS']=$objQuery['OSKTHICKNESS'];
+        $result['ODGONIO']=$objQuery['ODGONIO'];
+        $result['OSGONIO']=$objQuery['OSGONIO'];
+        $result['ANTSEG_COMMENTS']=$objQuery['ANTSEG_COMMENTS'];
         $result["json"] = json_encode($result);
         echo json_encode($result); 
     } elseif ($zone =="RETINA") {
-        $result['ODDISC']="$ODDISC";
-        $result['OSDISC']="$OSDISC";
-        $result['ODCUP']="$ODCUP";
-        $result['OSCUP']="$OSCUP";
-        $result['ODMACULA']="$ODMACULA";
-        $result['OSMACULA']="$OSMACULA";
-        $result['ODVESSELS']="$ODVESSELS";
-        $result['OSVESSELS']="$OSVESSELS";
-        $result['ODPERIPH']="$ODPERIPH";
-        $result['OSPERIPH']="$OSPERIPH";
-        $result['ODDRAWING']="$ODDRAWING";
-        $result['OSDRAWING']="$OSDRAWING";
-        $result['ODCMT']="$ODCMT";
-        $result['OSCMT']="$OSCMT";
-        $result['RETINA_COMMENTS']="$RETINA_COMMENTS";
+        $result['ODDISC']=$objQuery['ODDISC'];
+        $result['OSDISC']=$objQuery['OSDISC'];
+        $result['ODCUP']=$objQuery['ODCUP'];
+        $result['OSCUP']=$objQuery['OSCUP'];
+        $result['ODMACULA']=$objQuery['ODMACULA'];
+        $result['OSMACULA']=$objQuery['OSMACULA'];
+        $result['ODVESSELS']=$objQuery['ODVESSELS'];
+        $result['OSVESSELS']=$objQuery['OSVESSELS'];
+        $result['ODPERIPH']=$objQuery['ODPERIPH'];
+        $result['OSPERIPH']=$objQuery['OSPERIPH'];
+        $result['ODDRAWING']=$objQuery['ODDRAWING'];
+        $result['OSDRAWING']=$objQuery['OSDRAWING'];
+        $result['ODCMT']=$objQuery['ODCMT'];
+        $result['OSCMT']=$objQuery['OSCMT'];
+        $result['RETINA_COMMENTS']=$objQuery['RETINA_COMMENTS'];
         $result["json"] = json_encode($result);
         echo json_encode($result); 
     } elseif ($zone =="NEURO") {
-        $result['ACT']="$ACT";
-        $result['ACTPRIMCCDIST']="$ACTPRIMCCDIST";
-        $result['ACT1CCDIST']="$ACT1CCDIST";
-        $result['ACT2CCDIST']="$ACT2CCDIST";
-        $result['ACT3CCDIST']="$ACT3CCDIST";
-        $result['ACT4CCDIST']="$ACT4CCDIST";
-        $result['ACT6CCDIST']="$ACT6CCDIST";
-        $result['ACT7CCDIST']="$ACT7CCDIST";
-        $result['ACT8CCDIST']="$ACT8CCDIST";
-        $result['ACT9CCDIST']="$ACT9CCDIST";
-        $result['ACTRTILTCCDIST']="$ACTRTILTCCDIST";
-        $result['ACTLTILTCCDIST']="$ACTLTILTCCDIST";
-        $result['ACT1SCDIST']="$ACT1SCDIST";
-        $result['ACT2SCDIST']="$ACT2SCDIST";
-        $result['ACT3SCDIST']="$ACT3SCDIST";
-        $result['ACT4SCDIST']="$ACT4SCDIST";
-        $result['ACTPRIMSCDIST']="$ACTPRIMSCDIST";
-        $result['ACT6SCDIST']="$ACT6SCDIST";
-        $result['ACT7SCDIST']="$ACT7SCDIST";
-        $result['ACT8SCDIST']="$ACT8SCDIST";
-        $result['ACT9SCDIST']="$ACT9SCDIST";
-        $result['ACTRTILTSCDIST']="$ACTRTILTSCDIST";
-        $result['ACTLTILTSCDIST']="$ACTLTILTSCDIST";
-        $result['ACT1SCNEAR']="$ACT1SCNEAR";
-        $result['ACT2SCNEAR']="$ACT2SCNEAR";
-        $result['ACT3SCNEAR']="$ACT3SCNEAR";
-        $result['ACT4SCNEAR']="$ACT4SCNEAR";
-        $result['ACTPRIMCCNEAR']="$ACTPRIMCCNEAR";
-        $result['ACT6CCNEAR']="$ACT6CCNEAR";
-        $result['ACT7CCNEAR']="$ACT7CCNEAR";
-        $result['ACT8CCNEAR']="$ACT8CCNEAR";
-        $result['ACT9CCNEAR']="$ACT9CCNEAR";
-        $result['ACTRTILTCCNEAR']="$ACTRTILTCCNEAR";
-        $result['ACTLTILTCCNEAR']="$ACTLTILTCCNEAR";
-        $result['ACTPRIMSCNEAR']="$ACTPRIMSCNEAR";
-        $result['ACT6SCNEAR']="$ACT6SCNEAR";
-        $result['ACT7SCNEAR']="$ACT7SCNEAR";
-        $result['ACT8SCNEAR']="$ACT8SCNEAR";
-        $result['ACT9SCNEAR']="$ACT9SCNEAR";
-        $result['ACTRTILTSCNEAR']="$ACTRTILTSCNEAR";
-        $result['ACTLTILTSCNEAR']="$ACTLTILTSCNEAR";
-        $result['ACT1CCNEAR']="$ACT1CCNEAR";
-        $result['ACT2CCNEAR']="$ACT2CCNEAR";
-        $result['ACT3CCNEAR']="$ACT3CCNEAR";
-        $result['ACT4CCNEAR']="$ACT4CCNEAR";
-        $result['ODVF1']="$ODVF1";
-        $result['ODVF2']="$ODVF2";
-        $result['ODVF3']="$ODVF3";
-        $result['ODVF4']="$ODVF4";
-        $result['OSVF1']="$OSVF1";
-        $result['OSVF2']="$OSVF2";
-        $result['OSVF3']="$OSVF3";
-        $result['OSVF4']="$OSVF4";
-        $result['MOTILITY_RS']="$MOTILITY_RS";
-        $result['MOTILITY_RI']="$MOTILITY_RI";
-        $result['MOTILITY_RR']="$MOTILITY_RR";
-        $result['MOTILITY_RL']="$MOTILITY_RL";
-        $result['MOTILITY_LS']="$MOTILITY_LS";
-        $result['MOTILITY_LI']="$MOTILITY_LI";
-        $result['MOTILITY_LR']="$MOTILITY_LR";
-        $result['MOTILITY_LL']="$MOTILITY_LL";
-        $result['NEURO_COMMENTS']="$NEURO_COMMENTS";
-        $result['STEREOPSIS']="$STEREOPSIS";
-        $result['ODNPA']="$ODNPA";
-        $result['OSNPA']="$OSNPA";
-        $result['VERTFUSAMPS']="$VERTFUSAMPS";
-        $result['DIVERGENCEAMPS']="$DIVERGENCEAMPS";
-        $result['NPC']="$NPC";
-        $result['CASCDIST']="$CASCDIST";
-        $result['CASCNEAR']="$CASCNEAR";
-        $result['CACCDIST']="$CACCDIST";
-        $result['CACCNEAR']="$CACCNEAR";
-        $result['ODCOLOR']="$ODCOLOR";
-        $result['OSCOLOR']="$OSCOLOR";
-        $result['ODCOINS']="$ODCOINS";
-        $result['OSCOINS']="$OSCOINS";
-        $result['ODREDDESAT']="$ODREDDESAT";
-        $result['OSREDDESAT']="$OSREDDESAT";
-
-
-        $result['ODPUPILSIZE1']="$ODPUPILSIZE1";
-        $result['ODPUPILSIZE2']="$ODPUPILSIZE2";
-        $result['ODPUPILREACTIVITY']="$ODPUPILREACTIVITY";
-        $result['ODAPD']="$ODAPD";
-        $result['OSPUPILSIZE1']="$OSPUPILSIZE1";
-        $result['OSPUPILSIZE2']="$OSPUPILSIZE2";
-        $result['OSPUPILREACTIVITY']="$OSPUPILREACTIVITY";
-        $result['OSAPD']="$OSAPD";
-        $result['DIMODPUPILSIZE1']="$DIMODPUPILSIZE1";
-        $result['DIMODPUPILSIZE2']="$DIMODPUPILSIZE2";
-        $result['DIMODPUPILREACTIVITY']="$DIMODPUPILREACTIVITY";
-        $result['DIMOSPUPILSIZE1']="$DIMOSPUPILSIZE1";
-        $result['DIMOSPUPILSIZE2']="$DIMOSPUPILSIZE2";
-        $result['DIMOSPUPILREACTIVITY']="$DIMOSPUPILREACTIVITY";
-        $result['PUPIL_COMMENTS']="$PUPIL_COMMENTS";
-        $result['ODVFCONFRONTATION1']="$ODVFCONFRONTATION1";
-        $result['ODVFCONFRONTATION2']="$ODVFCONFRONTATION2";
-        $result['ODVFCONFRONTATION3']="$ODVFCONFRONTATION3";
-        $result['ODVFCONFRONTATION4']="$ODVFCONFRONTATION4";
-        $result['ODVFCONFRONTATION5']="$ODVFCONFRONTATION5";
-        $result['OSVFCONFRONTATION1']="$OSVFCONFRONTATION1";
-        $result['OSVFCONFRONTATION2']="$OSVFCONFRONTATION2";
-        $result['OSVFCONFRONTATION3']="$OSVFCONFRONTATION3";
-        $result['OSVFCONFRONTATION4']="$OSVFCONFRONTATION4";
-        $result['OSVFCONFRONTATION5']="$OSVFCONFRONTATION5";
+        $result['ACT']=$objQuery['ACT'];
+        $result['ACTPRIMCCDIST']=$objQuery['ACTPRIMCCDIST'];
+        $result['ACT1CCDIST']=$objQuery['ACT1CCDIST'];
+        $result['ACT2CCDIST']=$objQuery['ACT2CCDIST'];
+        $result['ACT3CCDIST']=$objQuery['ACT3CCDIST'];
+        $result['ACT4CCDIST']=$objQuery['ACT4CCDIST'];
+        $result['ACT6CCDIST']=$objQuery['ACT6CCDIST'];
+        $result['ACT7CCDIST']=$objQuery['ACT7CCDIST'];
+        $result['ACT8CCDIST']=$objQuery['ACT8CCDIST'];
+        $result['ACT9CCDIST']=$objQuery['ACT9CCDIST'];
+        $result['ACTRTILTCCDIST']=$objQuery['ACTRTILTCCDIST'];
+        $result['ACTLTILTCCDIST']=$objQuery['ACTLTILTCCDIST'];
+        $result['ACT1SCDIST']=$objQuery['ACT1SCDIST'];
+        $result['ACT2SCDIST']=$objQuery['ACT2SCDIST'];
+        $result['ACT3SCDIST']=$objQuery['ACT3SCDIST'];
+        $result['ACT4SCDIST']=$objQuery['ACT4SCDIST'];
+        $result['ACTPRIMSCDIST']=$objQuery['ACTPRIMSCDIST'];
+        $result['ACT6SCDIST']=$objQuery['ACT6SCDIST'];
+        $result['ACT7SCDIST']=$objQuery['ACT7SCDIST'];
+        $result['ACT8SCDIST']=$objQuery['ACT8SCDIST'];
+        $result['ACT9SCDIST']=$objQuery['ACT9SCDIST'];
+        $result['ACTRTILTSCDIST']=$objQuery['ACTRTILTSCDIST'];
+        $result['ACTLTILTSCDIST']=$objQuery['ACTLTILTSCDIST'];
+        $result['ACT1SCNEAR']=$objQuery['ACT1SCNEAR'];
+        $result['ACT2SCNEAR']=$objQuery['ACT2SCNEAR'];
+        $result['ACT3SCNEAR']=$objQuery['ACT3SCNEAR'];
+        $result['ACT4SCNEAR']=$objQuery['ACT4SCNEAR'];
+        $result['ACTPRIMCCNEAR']=$objQuery['ACTPRIMCCNEAR'];
+        $result['ACT6CCNEAR']=$objQuery['ACT6CCNEAR'];
+        $result['ACT7CCNEAR']=$objQuery['ACT7CCNEAR'];
+        $result['ACT8CCNEAR']=$objQuery['ACT8CCNEAR'];
+        $result['ACT9CCNEAR']=$objQuery['ACT9CCNEAR'];
+        $result['ACTRTILTCCNEAR']=$objQuery['ACTRTILTCCNEAR'];
+        $result['ACTLTILTCCNEAR']=$objQuery['ACTLTILTCCNEAR'];
+        $result['ACTPRIMSCNEAR']=$objQuery['ACTPRIMSCNEAR'];
+        $result['ACT6SCNEAR']=$objQuery['ACT6SCNEAR'];
+        $result['ACT7SCNEAR']=$objQuery['ACT7SCNEAR'];
+        $result['ACT8SCNEAR']=$objQuery['ACT8SCNEAR'];
+        $result['ACT9SCNEAR']=$objQuery['ACT9SCNEAR'];
+        $result['ACTRTILTSCNEAR']=$objQuery['ACTRTILTSCNEAR'];
+        $result['ACTLTILTSCNEAR']=$objQuery['ACTLTILTSCNEAR'];
+        $result['ACT1CCNEAR']=$objQuery['ACT1CCNEAR'];
+        $result['ACT2CCNEAR']=$objQuery['ACT2CCNEAR'];
+        $result['ACT3CCNEAR']=$objQuery['ACT3CCNEAR'];
+        $result['ACT4CCNEAR']=$objQuery['ACT4CCNEAR'];
+        $result['ODVF1']=$objQuery['ODVF1'];
+        $result['ODVF2']=$objQuery['ODVF2'];
+        $result['ODVF3']=$objQuery['ODVF3'];
+        $result['ODVF4']=$objQuery['ODVF4'];
+        $result['OSVF1']=$objQuery['OSVF1'];
+        $result['OSVF2']=$objQuery['OSVF2'];
+        $result['OSVF3']=$objQuery['OSVF3'];
+        $result['OSVF4']=$objQuery['OSVF4'];
+        $result['MOTILITY_RS']=$objQuery['MOTILITY_RS'];
+        $result['MOTILITY_RI']=$objQuery['MOTILITY_RI'];
+        $result['MOTILITY_RR']=$objQuery['MOTILITY_RR'];
+        $result['MOTILITY_RL']=$objQuery['MOTILITY_RL'];
+        $result['MOTILITY_LS']=$objQuery['MOTILITY_LS'];
+        $result['MOTILITY_LI']=$objQuery['MOTILITY_LI'];
+        $result['MOTILITY_LR']=$objQuery['MOTILITY_LR'];
+        $result['MOTILITY_LL']=$objQuery['MOTILITY_LL'];
+        $result['NEURO_COMMENTS']=$objQuery['NEURO_COMMENTS'];
+        $result['STEREOPSIS']=$objQuery['STEREOPSIS'];
+        $result['ODNPA']=$objQuery['ODNPA'];
+        $result['OSNPA']=$objQuery['OSNPA'];
+        $result['VERTFUSAMPS']=$objQuery['VERTFUSAMPS'];
+        $result['DIVERGENCEAMPS']=$objQuery['DIVERGENCEAMPS'];
+        $result['NPC']=$objQuery['NPC'];
+        $result['CASCDIST']=$objQuery['CASCDIST'];
+        $result['CASCNEAR']=$objQuery['CASCNEAR'];
+        $result['CACCDIST']=$objQuery['CACCDIST'];
+        $result['CACCNEAR']=$objQuery['CACCNEAR'];
+        $result['ODCOLOR']=$objQuery['ODCOLOR'];
+        $result['OSCOLOR']=$objQuery['OSCOLOR'];
+        $result['ODCOINS']=$objQuery['ODCOINS'];
+        $result['OSCOINS']=$objQuery['OSCOINS'];
+        $result['ODREDDESAT']=$objQuery['ODREDDESAT'];
+        $result['OSREDDESAT']=$objQuery['OSREDDESAT'];
+        $result['ODPUPILSIZE1']=$objQuery['ODPUPILSIZE1'];
+        $result['ODPUPILSIZE2']=$objQuery['ODPUPILSIZE2'];
+        $result['ODPUPILREACTIVITY']=$objQuery['ODPUPILREACTIVITY'];
+        $result['ODAPD']=$objQuery['ODAPD'];
+        $result['OSPUPILSIZE1']=$objQuery['OSPUPILSIZE1'];
+        $result['OSPUPILSIZE2']=$objQuery['OSPUPILSIZE2'];
+        $result['OSPUPILREACTIVITY']=$objQuery['OSPUPILREACTIVITY'];
+        $result['OSAPD']=$objQuery['OSAPD'];
+        $result['DIMODPUPILSIZE1']=$objQuery['DIMODPUPILSIZE1'];
+        $result['DIMODPUPILSIZE2']=$objQuery['DIMODPUPILSIZE2'];
+        $result['DIMODPUPILREACTIVITY']=$objQuery['DIMODPUPILREACTIVITY'];
+        $result['DIMOSPUPILSIZE1']=$objQuery['DIMOSPUPILSIZE1'];
+        $result['DIMOSPUPILSIZE2']=$objQuery['DIMOSPUPILSIZE2'];
+        $result['DIMOSPUPILREACTIVITY']=$objQuery['DIMOSPUPILREACTIVITY'];
+        $result['PUPIL_COMMENTS']=$objQuery['PUPIL_COMMENTS'];
+        $result['ODVFCONFRONTATION1']=$objQuery['ODVFCONFRONTATION1'];
+        $result['ODVFCONFRONTATION2']=$objQuery['ODVFCONFRONTATION2'];
+        $result['ODVFCONFRONTATION3']=$objQuery['ODVFCONFRONTATION3'];
+        $result['ODVFCONFRONTATION4']=$objQuery['ODVFCONFRONTATION4'];
+        $result['ODVFCONFRONTATION5']=$objQuery['ODVFCONFRONTATION5'];
+        $result['OSVFCONFRONTATION1']=$objQuery['OSVFCONFRONTATION1'];
+        $result['OSVFCONFRONTATION2']=$objQuery['OSVFCONFRONTATION2'];
+        $result['OSVFCONFRONTATION3']=$objQuery['OSVFCONFRONTATION3'];
+        $result['OSVFCONFRONTATION4']=$objQuery['OSVFCONFRONTATION4'];
+        $result['OSVFCONFRONTATION5']=$objQuery['OSVFCONFRONTATION5'];
         $result["json"] = json_encode($result);
         echo json_encode($result); 
     } elseif ($zone =="ALL") {
-        $result['RUL']="$RUL";
-        $result['LUL']="$LUL";
-        $result['RLL']="$RLL";
-        $result['LLL']="$LLL";
-        $result['RBROW']="$RBROW";
-        $result['LBROW']="$LBROW";
-        $result['RMCT']="$RMCT";
-        $result['LMCT']="$LMCT";
-        $result['RADNEXA']="$RADNEXA";
-        $result['LADNEXA']="$LADNEXA";
-        $result['RMRD']="$RMRD";
-        $result['LMRD']="$LMRD";
-        $result['RLF']="$RLF";
-        $result['LLF']="$LLF";
-        $result['RVFISSURE']="$RVFISSURE";
-        $result['LVFISSURE']="$LVFISSURE";
-        $result['ODHERTEL']="$ODHERTEL";
-        $result['OSHERTEL']="$OSHERTEL";
-        $result['HERTELBASE']="$HERTELBASE";
-        $result['ODPIC']="$ODPIC";
-        $result['OSPIC']="$OSPIC";
-        $result['EXT_COMMENTS']="$EXT_COMMENTS";
+        $result['RUL']=$objQuery['RUL'];
+        $result['LUL']=$objQuery['LUL'];
+        $result['RLL']=$objQuery['RLL'];
+        $result['LLL']=$objQuery['LLL'];
+        $result['RBROW']=$objQuery['RBROW'];
+        $result['LBROW']=$objQuery['LBROW'];
+        $result['RMCT']=$objQuery['RMCT'];
+        $result['LMCT']=$objQuery['LMCT'];
+        $result['RADNEXA']=$objQuery['RADNEXA'];
+        $result['LADNEXA']=$objQuery['LADNEXA'];
+        $result['RMRD']=$objQuery['RMRD'];
+        $result['LMRD']=$objQuery['LMRD'];
+        $result['RLF']=$objQuery['RLF'];
+        $result['LLF']=$objQuery['LLF'];
+        $result['RVFISSURE']=$objQuery['RVFISSURE'];
+        $result['LVFISSURE']=$objQuery['LVFISSURE'];
+        $result['ODHERTEL']=$objQuery['ODHERTEL'];
+        $result['OSHERTEL']=$objQuery['OSHERTEL'];
+        $result['HERTELBASE']=$objQuery['HERTELBASE'];
+        $result['ODPIC']=$objQuery['ODPIC'];
+        $result['OSPIC']=$objQuery['OSPIC'];
+        $result['EXT_COMMENTS']=$objQuery['EXT_COMMENTS'];
         
-        $result['OSCONJ']="$OSCONJ";
-        $result['ODCONJ']="$ODCONJ";
-        $result['ODCORNEA']="$ODCORNEA";
-        $result['OSCORNEA']="$OSCORNEA";
-        $result['ODAC']="$ODAC";
-        $result['OSAC']="$OSAC";
-        $result['ODLENS']="$ODLENS";
-        $result['OSLENS']="$OSLENS";
-        $result['ODIRIS']="$ODIRIS";
-        $result['OSIRIS']="$OSIRIS";
-        $result['ODKTHICKNESS']="$ODKTHICKNESS";
-        $result['OSKTHICKNESS']="$OSKTHICKNESS";
-        $result['ODGONIO']="$ODGONIO";
-        $result['OSGONIO']="$OSGONIO";
-        $result['ANTSEG_COMMENTS']="$ANTSEG_COMMENTS";
+        $result['OSCONJ']=$objQuery['OSCONJ'];
+        $result['ODCONJ']=$objQuery['ODCONJ'];
+        $result['ODCORNEA']=$objQuery['ODCORNEA'];
+        $result['OSCORNEA']=$objQuery['OSCORNEA'];
+        $result['ODAC']=$objQuery['ODAC'];
+        $result['OSAC']=$objQuery['OSAC'];
+        $result['ODLENS']=$objQuery['ODLENS'];
+        $result['OSLENS']=$objQuery['OSLENS'];
+        $result['ODIRIS']=$objQuery['ODIRIS'];
+        $result['OSIRIS']=$objQuery['OSIRIS'];
+        $result['ODKTHICKNESS']=$objQuery['ODKTHICKNESS'];
+        $result['OSKTHICKNESS']=$objQuery['OSKTHICKNESS'];
+        $result['ODGONIO']=$objQuery['ODGONIO'];
+        $result['OSGONIO']=$objQuery['OSGONIO'];
+        $result['ANTSEG_COMMENTS']=$objQuery['ANTSEG_COMMENTS'];
         
-        $result['ODDISC']="$ODDISC";
-        $result['OSDISC']="$OSDISC";
-        $result['ODCUP']="$ODCUP";
-        $result['OSCUP']="$OSCUP";
-        $result['ODMACULA']="$ODMACULA";
-        $result['OSMACULA']="$OSMACULA";
-        $result['ODVESSELS']="$ODVESSELS";
-        $result['OSVESSELS']="$OSVESSELS";
-        $result['ODPERIPH']="$ODPERIPH";
-        $result['OSPERIPH']="$OSPERIPH";
-        $result['ODDRAWING']="$ODDRAWING";
-        $result['OSDRAWING']="$OSDRAWING";
-        $result['ODCMT']="$ODCMT";
-        $result['OSCMT']="$OSCMT";
-        $result['RETINA_COMMENTS']="$RETINA_COMMENTS";
+        $result['ODDISC']=$objQuery['ODDISC'];
+        $result['OSDISC']=$objQuery['OSDISC'];
+        $result['ODCUP']=$objQuery['ODCUP'];
+        $result['OSCUP']=$objQuery['OSCUP'];
+        $result['ODMACULA']=$objQuery['ODMACULA'];
+        $result['OSMACULA']=$objQuery['OSMACULA'];
+        $result['ODVESSELS']=$objQuery['ODVESSELS'];
+        $result['OSVESSELS']=$objQuery['OSVESSELS'];
+        $result['ODPERIPH']=$objQuery['ODPERIPH'];
+        $result['OSPERIPH']=$objQuery['OSPERIPH'];
+        $result['ODDRAWING']=$objQuery['ODDRAWING'];
+        $result['OSDRAWING']=$objQuery['OSDRAWING'];
+        $result['ODCMT']=$objQuery['ODCMT'];
+        $result['OSCMT']=$objQuery['OSCMT'];
+        $result['RETINA_COMMENTS']=$objQuery['RETINA_COMMENTS'];
 
-        $result['ACT']="$ACT";
-        $result['ACTPRIMCCDIST']="$ACTPRIMCCDIST";
-        $result['ACT1CCDIST']="$ACT1CCDIST";
-        $result['ACT2CCDIST']="$ACT2CCDIST";
-        $result['ACT3CCDIST']="$ACT3CCDIST";
-        $result['ACT4CCDIST']="$ACT4CCDIST";
-        $result['ACT6CCDIST']="$ACT6CCDIST";
-        $result['ACT7CCDIST']="$ACT7CCDIST";
-        $result['ACT8CCDIST']="$ACT8CCDIST";
-        $result['ACT9CCDIST']="$ACT9CCDIST";
-        $result['ACTRTILTCCDIST']="$ACTRTILTCCDIST";
-        $result['ACTLTILTCCDIST']="$ACTLTILTCCDIST";
-        $result['ACT1SCDIST']="$ACT1SCDIST";
-        $result['ACT2SCDIST']="$ACT2SCDIST";
-        $result['ACT3SCDIST']="$ACT3SCDIST";
-        $result['ACT4SCDIST']="$ACT4SCDIST";
-        $result['ACTPRIMSCDIST']="$ACTPRIMSCDIST";
-        $result['ACT6SCDIST']="$ACT6SCDIST";
-        $result['ACT7SCDIST']="$ACT7SCDIST";
-        $result['ACT8SCDIST']="$ACT8SCDIST";
-        $result['ACT9SCDIST']="$ACT9SCDIST";
-        $result['ACTRTILTSCDIST']="$ACTRTILTSCDIST";
-        $result['ACTLTILTSCDIST']="$ACTLTILTSCDIST";
-        $result['ACT1SCNEAR']="$ACT1SCNEAR";
-        $result['ACT2SCNEAR']="$ACT2SCNEAR";
-        $result['ACT3SCNEAR']="$ACT3SCNEAR";
-        $result['ACT4SCNEAR']="$ACT4SCNEAR";
-        $result['ACTPRIMCCNEAR']="$ACTPRIMCCNEAR";
-        $result['ACT6CCNEAR']="$ACT6CCNEAR";
-        $result['ACT7CCNEAR']="$ACT7CCNEAR";
-        $result['ACT8CCNEAR']="$ACT8CCNEAR";
-        $result['ACT9CCNEAR']="$ACT9CCNEAR";
-        $result['ACTRTILTCCNEAR']="$ACTRTILTCCNEAR";
-        $result['ACTLTILTCCNEAR']="$ACTLTILTCCNEAR";
-        $result['ACTPRIMSCNEAR']="$ACTPRIMSCNEAR";
-        $result['ACT6SCNEAR']="$ACT6SCNEAR";
-        $result['ACT7SCNEAR']="$ACT7SCNEAR";
-        $result['ACT8SCNEAR']="$ACT8SCNEAR";
-        $result['ACT9SCNEAR']="$ACT9SCNEAR";
-        $result['ACTRTILTSCNEAR']="$ACTRTILTSCNEAR";
-        $result['ACTLTILTSCNEAR']="$ACTLTILTSCNEAR";
-        $result['ACT1CCNEAR']="$ACT1CCNEAR";
-        $result['ACT2CCNEAR']="$ACT2CCNEAR";
-        $result['ACT3CCNEAR']="$ACT3CCNEAR";
-        $result['ACT4CCNEAR']="$ACT4CCNEAR";
-        $result['ODVF1']="$ODVF1";
-        $result['ODVF2']="$ODVF2";
-        $result['ODVF3']="$ODVF3";
-        $result['ODVF4']="$ODVF4";
-        $result['OSVF1']="$OSVF1";
-        $result['OSVF2']="$OSVF2";
-        $result['OSVF3']="$OSVF3";
-        $result['OSVF4']="$OSVF4";
-        $result['MOTILITY_RS']="$MOTILITY_RS";
-        $result['MOTILITY_RI']="$MOTILITY_RI";
-        $result['MOTILITY_RR']="$MOTILITY_RR";
-        $result['MOTILITY_RL']="$MOTILITY_RL";
-        $result['MOTILITY_LS']="$MOTILITY_LS";
-        $result['MOTILITY_LI']="$MOTILITY_LI";
-        $result['MOTILITY_LR']="$MOTILITY_LR";
-        $result['MOTILITY_LL']="$MOTILITY_LL";
-        $result['NEURO_COMMENTS']="$NEURO_COMMENTS";
-        $result['STEREOPSIS']="$STEREOPSIS";
-        $result['ODNPA']="$ODNPA";
-        $result['OSNPA']="$OSNPA";
-        $result['VERTFUSAMPS']="$VERTFUSAMPS";
-        $result['DIVERGENCEAMPS']="$DIVERGENCEAMPS";
-        $result['NPC']="$NPC";
-        $result['CASCDIST']="$CASCDIST";
-        $result['CASCNEAR']="$CASCNEAR";
-        $result['CACCDIST']="$CACCDIST";
-        $result['CACCNEAR']="$CACCNEAR";
-        $result['ODCOLOR']="$ODCOLOR";
-        $result['OSCOLOR']="$OSCOLOR";
-        $result['ODCOINS']="$ODCOINS";
-        $result['OSCOINS']="$OSCOINS";
-        $result['ODREDDESAT']="$ODREDDESAT";
-        $result['OSREDDESAT']="$OSREDDESAT";
+        $result['ACT']=$objQuery['ACT'];
+        $result['ACTPRIMCCDIST']=$objQuery['ACTPRIMCCDIST'];
+        $result['ACT1CCDIST']=$objQuery['ACT1CCDIST'];
+        $result['ACT2CCDIST']=$objQuery['ACT2CCDIST'];
+        $result['ACT3CCDIST']=$objQuery['ACT3CCDIST'];
+        $result['ACT4CCDIST']=$objQuery['ACT4CCDIST'];
+        $result['ACT6CCDIST']=$objQuery['ACT6CCDIST'];
+        $result['ACT7CCDIST']=$objQuery['ACT7CCDIST'];
+        $result['ACT8CCDIST']=$objQuery['ACT8CCDIST'];
+        $result['ACT9CCDIST']=$objQuery['ACT9CCDIST'];
+        $result['ACTRTILTCCDIST']=$objQuery['ACTRTILTCCDIST'];
+        $result['ACTLTILTCCDIST']=$objQuery['ACTLTILTCCDIST'];
+        $result['ACT1SCDIST']=$objQuery['ACT1SCDIST'];
+        $result['ACT2SCDIST']=$objQuery['ACT2SCDIST'];
+        $result['ACT3SCDIST']=$objQuery['ACT3SCDIST'];
+        $result['ACT4SCDIST']=$objQuery['ACT4SCDIST'];
+        $result['ACTPRIMSCDIST']=$objQuery['ACTPRIMSCDIST'];
+        $result['ACT6SCDIST']=$objQuery['ACT6SCDIST'];
+        $result['ACT7SCDIST']=$objQuery['ACT7SCDIST'];
+        $result['ACT8SCDIST']=$objQuery['ACT8SCDIST'];
+        $result['ACT9SCDIST']=$objQuery['ACT9SCDIST'];
+        $result['ACTRTILTSCDIST']=$objQuery['ACTRTILTSCDIST'];
+        $result['ACTLTILTSCDIST']=$objQuery['ACTLTILTSCDIST'];
+        $result['ACT1SCNEAR']=$objQuery['ACT1SCNEAR'];
+        $result['ACT2SCNEAR']=$objQuery['ACT2SCNEAR'];
+        $result['ACT3SCNEAR']=$objQuery['ACT3SCNEAR'];
+        $result['ACT4SCNEAR']=$objQuery['ACT4SCNEAR'];
+        $result['ACTPRIMCCNEAR']=$objQuery['ACTPRIMCCNEAR'];
+        $result['ACT6CCNEAR']=$objQuery['ACT6CCNEAR'];
+        $result['ACT7CCNEAR']=$objQuery['ACT7CCNEAR'];
+        $result['ACT8CCNEAR']=$objQuery['ACT8CCNEAR'];
+        $result['ACT9CCNEAR']=$objQuery['ACT9CCNEAR'];
+        $result['ACTRTILTCCNEAR']=$objQuery['ACTRTILTCCNEAR'];
+        $result['ACTLTILTCCNEAR']=$objQuery['ACTLTILTCCNEAR'];
+        $result['ACTPRIMSCNEAR']=$objQuery['ACTPRIMSCNEAR'];
+        $result['ACT6SCNEAR']=$objQuery['ACT6SCNEAR'];
+        $result['ACT7SCNEAR']=$objQuery['ACT7SCNEAR'];
+        $result['ACT8SCNEAR']=$objQuery['ACT8SCNEAR'];
+        $result['ACT9SCNEAR']=$objQuery['ACT9SCNEAR'];
+        $result['ACTRTILTSCNEAR']=$objQuery['ACTRTILTSCNEAR'];
+        $result['ACTLTILTSCNEAR']=$objQuery['ACTLTILTSCNEAR'];
+        $result['ACT1CCNEAR']=$objQuery['ACT1CCNEAR'];
+        $result['ACT2CCNEAR']=$objQuery['ACT2CCNEAR'];
+        $result['ACT3CCNEAR']=$objQuery['ACT3CCNEAR'];
+        $result['ACT4CCNEAR']=$objQuery['ACT4CCNEAR'];
+        $result['ODVF1']=$objQuery['ODVF1'];
+        $result['ODVF2']=$objQuery['ODVF2'];
+        $result['ODVF3']=$objQuery['ODVF3'];
+        $result['ODVF4']=$objQuery['ODVF4'];
+        $result['OSVF1']=$objQuery['OSVF1'];
+        $result['OSVF2']=$objQuery['OSVF2'];
+        $result['OSVF3']=$objQuery['OSVF3'];
+        $result['OSVF4']=$objQuery['OSVF4'];
+        $result['MOTILITY_RS']=$objQuery['MOTILITY_RS'];
+        $result['MOTILITY_RI']=$objQuery['MOTILITY_RI'];
+        $result['MOTILITY_RR']=$objQuery['MOTILITY_RR'];
+        $result['MOTILITY_RL']=$objQuery['MOTILITY_RL'];
+        $result['MOTILITY_LS']=$objQuery['MOTILITY_LS'];
+        $result['MOTILITY_LI']=$objQuery['MOTILITY_LI'];
+        $result['MOTILITY_LR']=$objQuery['MOTILITY_LR'];
+        $result['MOTILITY_LL']=$objQuery['MOTILITY_LL'];
+        $result['NEURO_COMMENTS']=$objQuery['NEURO_COMMENTS'];
+        $result['STEREOPSIS']=$objQuery['STEREOPSIS'];
+        $result['ODNPA']=$objQuery['ODNPA'];
+        $result['OSNPA']=$objQuery['OSNPA'];
+        $result['VERTFUSAMPS']=$objQuery['VERTFUSAMPS'];
+        $result['DIVERGENCEAMPS']=$objQuery['DIVERGENCEAMPS'];
+        $result['NPC']=$objQuery['NPC'];
+        $result['CASCDIST']=$objQuery['CASCDIST'];
+        $result['CASCNEAR']=$objQuery['CASCNEAR'];
+        $result['CACCDIST']=$objQuery['CACCDIST'];
+        $result['CACCNEAR']=$objQuery['CACCNEAR'];
+        $result['ODCOLOR']=$objQuery['ODCOLOR'];
+        $result['OSCOLOR']=$objQuery['OSCOLOR'];
+        $result['ODCOINS']=$objQuery['ODCOINS'];
+        $result['OSCOINS']=$objQuery['OSCOINS'];
+        $result['ODREDDESAT']=$objQuery['ODREDDESAT'];
+        $result['OSREDDESAT']=$objQuery['OSREDDESAT'];
 
 
-        $result['ODPUPILSIZE1']="$ODPUPILSIZE1";
-        $result['ODPUPILSIZE2']="$ODPUPILSIZE2";
-        $result['ODPUPILREACTIVITY']="$ODPUPILREACTIVITY";
-        $result['ODAPD']="$ODAPD";
-        $result['OSPUPILSIZE1']="$OSPUPILSIZE1";
-        $result['OSPUPILSIZE2']="$OSPUPILSIZE2";
-        $result['OSPUPILREACTIVITY']="$OSPUPILREACTIVITY";
-        $result['OSAPD']="$OSAPD";
-        $result['DIMODPUPILSIZE1']="$DIMODPUPILSIZE1";
-        $result['DIMODPUPILSIZE2']="$DIMODPUPILSIZE2";
-        $result['DIMODPUPILREACTIVITY']="$DIMODPUPILREACTIVITY";
-        $result['DIMOSPUPILSIZE1']="$DIMOSPUPILSIZE1";
-        $result['DIMOSPUPILSIZE2']="$DIMOSPUPILSIZE2";
-        $result['DIMOSPUPILREACTIVITY']="$DIMOSPUPILREACTIVITY";
-        $result['PUPIL_COMMENTS']="$PUPIL_COMMENTS";
-        $result['ODVFCONFRONTATION1']="$ODVFCONFRONTATION1";
-        $result['ODVFCONFRONTATION2']="$ODVFCONFRONTATION2";
-        $result['ODVFCONFRONTATION3']="$ODVFCONFRONTATION3";
-        $result['ODVFCONFRONTATION4']="$ODVFCONFRONTATION4";
-        $result['ODVFCONFRONTATION5']="$ODVFCONFRONTATION5";
-        $result['OSVFCONFRONTATION1']="$OSVFCONFRONTATION1";
-        $result['OSVFCONFRONTATION2']="$OSVFCONFRONTATION2";
-        $result['OSVFCONFRONTATION3']="$OSVFCONFRONTATION3";
-        $result['OSVFCONFRONTATION4']="$OSVFCONFRONTATION4";
-        $result['OSVFCONFRONTATION5']="$OSVFCONFRONTATION5";
+        $result['ODPUPILSIZE1']=$objQuery['ODPUPILSIZE1'];
+        $result['ODPUPILSIZE2']=$objQuery['ODPUPILSIZE2'];
+        $result['ODPUPILREACTIVITY']=$objQuery['ODPUPILREACTIVITY'];
+        $result['ODAPD']=$objQuery['ODAPD'];
+        $result['OSPUPILSIZE1']=$objQuery['OSPUPILSIZE1'];
+        $result['OSPUPILSIZE2']=$objQuery['OSPUPILSIZE2'];
+        $result['OSPUPILREACTIVITY']=$objQuery['OSPUPILREACTIVITY'];
+        $result['OSAPD']=$objQuery['OSAPD'];
+        $result['DIMODPUPILSIZE1']=$objQuery['DIMODPUPILSIZE1'];
+        $result['DIMODPUPILSIZE2']=$objQuery['DIMODPUPILSIZE2'];
+        $result['DIMODPUPILREACTIVITY']=$objQuery['DIMODPUPILREACTIVITY'];
+        $result['DIMOSPUPILSIZE1']=$objQuery['DIMOSPUPILSIZE1'];
+        $result['DIMOSPUPILSIZE2']=$objQuery['DIMOSPUPILSIZE2'];
+        $result['DIMOSPUPILREACTIVITY']=$objQuery['DIMOSPUPILREACTIVITY'];
+        $result['PUPIL_COMMENTS']=$objQuery['PUPIL_COMMENTS'];
+        $result['ODVFCONFRONTATION1']=$objQuery['ODVFCONFRONTATION1'];
+        $result['ODVFCONFRONTATION2']=$objQuery['ODVFCONFRONTATION2'];
+        $result['ODVFCONFRONTATION3']=$objQuery['ODVFCONFRONTATION3'];
+        $result['ODVFCONFRONTATION4']=$objQuery['ODVFCONFRONTATION4'];
+        $result['ODVFCONFRONTATION5']=$objQuery['ODVFCONFRONTATION5'];
+        $result['OSVFCONFRONTATION1']=$objQuery['OSVFCONFRONTATION1'];
+        $result['OSVFCONFRONTATION2']=$objQuery['OSVFCONFRONTATION2'];
+        $result['OSVFCONFRONTATION3']=$objQuery['OSVFCONFRONTATION3'];
+        $result['OSVFCONFRONTATION4']=$objQuery['OSVFCONFRONTATION4'];
+        $result['OSVFCONFRONTATION5']=$objQuery['OSVFCONFRONTATION5'];
         $result["json"] = json_encode($result);
         echo json_encode($result); 
 
-    }
-}
+    }}
 
 /**
 *  This function builds an array of documents for this patient ($pid).
@@ -2114,12 +2171,11 @@ function document_engine($pid) {
     $documents['docs_in_cat_id'] = $docs_in_cat_id;
     $documents['docs_in_name'] = $docs_in_name;
     
-    return array($documents);
-}
+    return array($documents);}
 
 /**
  *  This function returns hooks/links for the Document Library, 
- *      Reports (to do), upload(to do)and image DB(done)
+ *      Reports (to do), upload(done)and image DB(done)
  *      based on the category/zone
  *
  *  @param string $pid value = patient id
@@ -2184,19 +2240,24 @@ function display($pid,$encounter,$category_value) {
         <td>";
         // theorectically above leads to a document management engine.  Gotta build that...
         // we only need to know if there is one as this link will open the image management engine/display
-       if (count($documents['docs_in_cat_id'][$documents['zones'][$category_value][$j]['id']]) > '0') {
+        // use openEMR functionality of now...
+        /*  if (count($documents['docs_in_cat_id'][$documents['zones'][$category_value][$j]['id']]) > '0') {
             $episode .= '<a href="../../forms/'.$form_folder.'/css/AnythingSlider/simple.php?display=i&category_id='.$documents['zones'][$category_value][$j]['id'].'&encounter='.$encounter.'&category_name='.urlencode(xla($category_value)).'"
                     onclick="return dopopup(\'../../forms/'.$form_folder.'/css/AnythingSlider/simple.php?display=i&category_id='.$documents['zones'][$category_value][$j]['id'].'&encounter='.$encounter.'&category_name='.urlencode(xla($category_value)).'\')">
                     <img src="../../forms/'.$form_folder.'/images/jpg.png" class="little_image" /></a>';
+        
+        */
+        if (count($documents['docs_in_cat_id'][$documents['zones'][$category_value][$j]['id']]) > '0') {
+            $episode .= '<a href="../../../controller.php?document&view&patient_id='.$pid.'&parent_idX='.$documents['zones'][$category_value][$j]['id'].'&" 
+                    onclick="return dopopup(\'../../../controller.php?document&view&patient_id='.$pid.'&parent_idX='.$documents['zones'][$category_value][$j]['id'].'&document_id='.$doc[id].'&as_file=false\')">
+                    <img src="../../forms/'.$form_folder.'/images/jpg.png" class="little_image" /></a>';
         }
+//http://www.oculoplasticsllc.com/openemr/controller.php?document&view&patient_id=1&doc_id=411&
         $episode .= '</td></tr>';
         $i++;
     }
    
-    return array($documents,$episode);
-}
-
-
+    return array($documents,$episode);}
 
 /**
  *  
@@ -2205,14 +2266,14 @@ function redirector($url) {
     global $form_folder;
     
      ?>
-<html>
+    <html>
     <head>
     <?php html_header_show(); ?>
     <!-- jQuery library -->
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+    <script src="<?php echo $GLOBALS['webroot']; ?>/library/js/jquery.min.js"></script>
 
     <!-- Latest compiled JavaScript -->
-    <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>  
+    <script src="<?php echo $GLOBALS['webroot']; ?>/library/js/bootstrap.min.js"></script>  
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
         <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
         <!--[if lt IE 9]>
@@ -2232,7 +2293,7 @@ function redirector($url) {
     <link rel="stylesheet" href="<?php echo $GLOBALS['webroot']; ?>/library/css/font-awesome-4.2.0/css/font-awesome.min.css">
     <meta name="viewport" content="width=device-width, initial-scale=1">
   </head>
-<body>
+    <body>
     <?php
     $input_echo = menu_overhaul_top($pid,$encounter);
     //url
@@ -2243,8 +2304,7 @@ function redirector($url) {
     <?php 
     
     $output = menu_overhaul_bottom($pid,$encounter);
-exit(0);
-}
+    exit(0);}
 
 /**
  *  
@@ -2255,11 +2315,11 @@ function menu_overhaul_top($pid,$encounter,$title="Eye Exam") {
     $providerNAME = $prov_data['fname']." ".$prov_data['lname'];
     
     ?>
-    <div id="wrapper">
+    <div id="wrapper" style="font-size: 1.4em;">
         <!-- Navigation -->
                 <!-- Navigation -->
                 <br /><br />
-    <nav class="navbar-fixed-top navbar-custom navbar-bright navbar-fixed-top" role="Xbanner" role="navigation" style="margin-bottom: 0">
+    <nav class="navbar-fixed-top navbar-custom navbar-bright navbar-fixed-top" role="banner" role="navigation" style="margin-bottom: 0">
         <!-- Brand and toggle get grouped for better mobile display -->
         <div class="navbar-header">
             <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#oer-navbar-collapse-1">
@@ -2268,7 +2328,7 @@ function menu_overhaul_top($pid,$encounter,$title="Eye Exam") {
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </button>
-            <a class="navbar-brand right" href="/openemr" style="font-size:0.8em;font-weight:600;">OpenEMR <img src="/openemr/sites/default/images/login_logo.gif" class="little_image left"></a>
+            <a class="navbar-brand right" href="/openemr" onclick="window.close();" title="Close this window." style="font-size:0.8em;font-weight:600;">OpenEMR <img src="/openemr/sites/default/images/login_logo.gif" class="little_image left"></a>
         </div>
 
         <!-- Collect the nav links, forms, and other content for toggling -->
@@ -2277,11 +2337,18 @@ function menu_overhaul_top($pid,$encounter,$title="Eye Exam") {
                 <li class="dropdown">
                     <a class="dropdown-toggle" data-toggle="dropdown" id="menu_dropdown_file" role="button" aria-expanded="true">File </a>
                     <ul class="dropdown-menu" role="menu">
-                        <li id="menu_TEXT" name="menu_TEXT" class="active"> <a  id="BUTTON_TEXT_menu" href="#"> Save </a></li>
-                        <li id="menu_DRAW" name="menu_DRAW"> <a href="#" id="BUTTON_DRAW_menu">Print</a></li>
-                        <li id="menu_QP" name="menu_QP" ><a href="#"  onclick='show_QP();'> Close Window</a></li>
+                        <li id="menu_TEXT" name="menu_TEXT" class="active"> <a  id="BUTTON_SAVE_menu" href="#"> Save </a></li>
+                        <li id="menu_DRAW" name="menu_DRAW"> <a href="#" id="BUTTON_PRINT_menu" onclick="window.print();return false;">Print</a></li>
+                     <!--   <ul class="dropdown-menu" role="menu">
+                            <li id="menu_PRINT_screen" name="menu_PRINT_screen"> <a href="#" id="BUTTON_PRINT_screen" onclick="window.print();return false;">Print Screen</a></li>
+                            <li id="menu_PRINT_draw" name="menu_PRINT_draw"> <a href="#" id="BUTTON_PRINT_draw" onclick="window.print();return false;">Print Drawings</a></li>
+                            <li id="menu_PRINT_narrative" name="menu_PRINT_narrative"> <a href="#" id="BUTTON_PRINT_narrative" onclick="window.print();return false;">Print Narrative</a></li>
+                        
+                        </ul>
+                    -->
+                        <li id="menu_QP" name="menu_QP" ><a href="#"  onclick='window.close();'> Close Window</a></li>
                         <li class="divider"></li>
-                        <li id="menu_HPI" name="menu_HPI" ><a href="#" onclick='show_Section("HPI_1");' >Return to OpenEMR</a></li>
+                        <li id="menu_HPI" name="menu_HPI" ><a href="#" onclick='window.close();' >Return to OpenEMR</a></li>
                         <li id="menu_PMH" name="menu_PMH" ><a href="#PMH_1">Quit</a></li>
                     </ul>
                 </li>
@@ -2335,6 +2402,14 @@ function menu_overhaul_top($pid,$encounter,$title="Eye Exam") {
                 </li>
                 <li class="dropdown">
                     <a class="dropdown-toggle" role="button" id="menu_dropdown_clinical" data-toggle="dropdown">Clinical</a>
+                    <?php
+                    /*
+                     *  Here we need to incorporate the menu from openEMR too.  What Forms are active for this installation?
+                     *  openEMR uses Encounter Summary - Administrative - Clinical.  Think about the menu as a new entity with
+                     *  this + new functionaity.  It is OK to keep or consider changing any NAMES when creating the menu.  I assume
+                     *  a consensus will develop. 
+                    */
+                    ?>
                     <ul class="dropdown-menu" role="menu" aria-labelledby="menu1">
                         <li role="presentation" class="disabled"><a role="menuitem" tabindex="-1" href="#">Eye Exam</a></li>
                         <li role="presentation" class="disabled"><a role="menuitem" tabindex="-1" href="#">Documents</a></li>
@@ -2397,8 +2472,7 @@ function menu_overhaul_top($pid,$encounter,$title="Eye Exam") {
                 
     <?php 
 
-    return $input_echo;
-}
+    return $input_echo;}
 
 function menu_overhaul_left($pid,$encounter) {
    global $pat_data;
@@ -2409,7 +2483,7 @@ function menu_overhaul_left($pid,$encounter) {
                 <div class="borderShadow" style="width:280px;position:relative;text-align:center;padding:5px 0px 5px 5px;">
                     <a href="/openemr/controller.php?document&amp;retrieve&amp;patient_id=1&amp;document_id=80/tmp.bmp" 
                         onclick="top.restoreSession();" class="image_modal" style=""> 
-                        <img src="/openemr/controller.php?document&amp;retrieve&amp;patient_id=1&amp;document_id=80" alt="Patient Photograph:rgm.bmp" width="80">
+                        <img src="/openemr/controller.php?document&amp;retrieve&amp;patient_id=1&amp;document_id=80" alt="Patient Photograph" width="80">
                     </a>
                     <div style="position:relative;float:left;margin:auto 5px;width:140px;top:0px;right:0px;padding-bottom:20px;">
                         <table style="position:relative;float:left;margin:10px 5px;width:140px;top:0px;right:0px;font-size:12px;border-spacing: 5px;">
@@ -2491,8 +2565,8 @@ function undo() {
       *
       *  The same concept needs to be applied to the drawings.  If the user is drawing, there will be stored incremental images of each stroke,
       *  for each section/zone.  
-      */ 
-}
+      */ }
+
 function row_deleter($table, $where) {
   $tres = sqlStatement("SELECT * FROM $table WHERE $where");
   $count = 0;
@@ -2513,11 +2587,12 @@ function row_deleter($table, $where) {
    sqlStatement($query);
   }
  }
+
 function  finalize() {
     global $form_folder;
     global $pid;
     global $encounter;
-    echo $_REQUEST['action'] ." - ".$_REQUEST['final']."<br />";
+ //   echo $_REQUEST['action'] ." - ".$_REQUEST['final']."<br />";
     if (($_REQUEST['action'] =='finalize') or ($_REQUEST['final'] == '1')) {
         $storage = $GLOBALS['OE_SITES_BASE']."/".$_SESSION['site_id']."/documents/".$pid."/".$form_folder."/".$encounter;
         $zones = array("HPI","PMH","EXT","ANTSEG","RETINA","NEURO","VISION","IMPPLAN");
@@ -2532,7 +2607,7 @@ function  finalize() {
             while ($pics= sqlFetchArray($trow))   {   
                 $output1 = row_deleter("categories_to_documents", "document_id = '" . $pics['id'] . "'");
                 $output2 = row_deleter("documents", "id = '" . $pics['id'] . "'");
-                echo "<pre>".$output1."<br />2. ".$output2."<br /></pre>";
+          //      echo "<pre>".$output1."<br />2. ".$output2."<br /></pre>";
             }
         }
     }

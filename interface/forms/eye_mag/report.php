@@ -1,12 +1,4 @@
 <?php
-include_once("../../globals.php");
-include_once($GLOBALS["srcdir"]."/api.inc");
-
-
-if (!$_REQUEST['target']) {
-    //we are printing something.
-      $table_name = "form_eye_mag";
-/***************************************/
 
 /** 
  * forms/eye_mag/report.php 
@@ -62,10 +54,16 @@ $form_name = "eye_mag";
 $form_folder = "eye_mag";
 
 include_once("../../forms/".$form_folder."/php/".$form_folder."_functions.php");
+//@extract($_REQUEST); //working on removing
+//@extract($_SESSION); //working on removing
 
-@extract($_REQUEST); 
-@extract($_SESSION);
-
+$choice = $_REQUEST['choice'];
+//$encounter = $_REQUEST['encounter'];
+if ($_REQUEST['ptid']) $pid = $_REQUEST['ptid'];
+if ($_REQUEST['encid']) $encounter=$_REQUEST['encid'];
+$form_id = $_REQUEST['formid'];
+$form_name=$_REQUEST['formname'];
+$id=$form_id;
 // Get users preferences, for this user 
 // (and if not the default where a fresh install begins from, or someone else's) 
 $query  = "SELECT * FROM form_eye_mag_prefs where PEZONE='PREFS' AND id=? ORDER BY ZONE_ORDER,ordering";
@@ -87,7 +85,7 @@ $providerID = $prov_data['fname']." ".$prov_data['lname'];
 /** openEMR note:  eye_mag Index is id, 
   * linked to encounter in form_encounter 
   * whose encounter is linked to id in forms.
-  * Would VIEW be a better way to access this data?
+  * Would a DB VIEW be a better way to access this data?
   * If it matters we can create the VIEW right here in eye_mag
   */ 
 $query="select form_encounter.date as encounter_date,form_eye_mag.* 
@@ -98,7 +96,6 @@ $query="select form_encounter.date as encounter_date,form_eye_mag.*
                     form_eye_mag.id=forms.form_id and
                     forms.pid =form_eye_mag.pid and 
                     form_eye_mag.pid=? ";        
-                   
 $objQuery =sqlQuery($query,array($encounter,$pid));
 @extract($objQuery);
 
@@ -117,7 +114,7 @@ formHeader("Chart: ".$pat_data['fname']." ".$pat_data['lname']." ".$visit_date);
 
 <!-- Add Font stuff for the look and feel.  -->
 <link rel="stylesheet" href="<?php echo $css_header;?>" type="text/css">
-<link rel="stylesheet" href="http://yui.yahooapis.com/pure/0.5.0/pure-min.css">
+<link rel="stylesheet" href="<?php echo $GLOBALS['webroot'] ?>/library/css/pure-min.css">
 <link rel="stylesheet" href="<?php echo $GLOBALS['webroot'] ?>/library/css/font-awesome-4.2.0/css/font-awesome.min.css">
 <link rel="stylesheet" href="../../forms/<?php echo $form_folder; ?>/style.css" type="text/css">    
 
@@ -135,76 +132,79 @@ formHeader("Chart: ".$pat_data['fname']." ".$pat_data['lname']." ".$visit_date);
           *  5. Create a new, additional report.
           */
         //  see save.php
-        $side="OU";
-        $zone = array("HPI","PMH","VISION","NEURO","EXT","ANTSEG","RETINA","IMPPLAN");
-        //  for ($i = 0; $i < count($zone); ++$i) {
-        //  show only 2 for now
-        for ($i = 0; $i < '2'; ++$i) {
-            $file_location = $GLOBALS["OE_SITES_BASE"]."/".$_SESSION['site_id']."/documents/".$pid."/".$form_folder."/".$encounter."/".$side."_".$zone[$i]."_VIEW.png";
-            $sql = "SELECT * from documents where url='file://".$file_location."'";
-            $doc = sqlQuery($sql);
-            if (file_exists($file_location) && ($doc['id'] > '0')) {
-                $filetoshow = $GLOBALS['web_root']."/controller.php?document&retrieve&patient_id=$pid&document_id=$doc[id]&as_file=false";
-            } else {
-                $filetoshow = "../../forms/".$form_folder."/images/".$side."_".$zone[$i]."_BASE.png?".rand();
-            }
-            
-            /*$file_location = $GLOBALS["OE_SITES_BASE"]."/".$_SESSION['site_id']."/".$form_folder."/".$pid."/".$encounter."/".$side."_".$zone[$i]."_VIEW.png";
-            if (file_exists($file_location)) {
-                $filetoshow = $GLOBALS['web_root']."/sites/".$_SESSION['site_id']."/".$form_folder."/".$pid."/".$encounter."/".$side."_".$zone[$i]."_VIEW.png?".rand();
-            } else {
-                $filetoshow = "../../forms/".$form_folder."/images/".$side."_".$zone[$i]."_BASE.png?".rand();
-            }*/
-            ?>
-            <div class='bordershadow' style='position:relative;float:left;width:310px;height:205px;'>
-                <img src='<?php echo $filetoshow; ?>' width=300 heght=200>
-                
-            </div>
 
-            <?php
+        /*
+        This displays the first two drawings in the encounter page, which calls report.php in main openEMR
+        If you want to display something else in this pop-up area, alter this.
+        The variable $choice will tell us what to display.
+        * @param string $choice options NULL,TEXT,DRAW,NARRATIVE
+        * @param string $encounter  encounter number
+        * @param string $pid value = patient id
+        * @return string returns the HTML old record selector widget for the desired zone 
+        */    
+        $choice = 'drawing';    
+        if (!$choice or $choice == 'drawing') {
+            $side="OU";
+            $zone = array("HPI","PMH","VISION","NEURO","EXT","ANTSEG","RETINA","IMPPLAN");
+            //  for ($i = 0; $i < count($zone); ++$i) {
+            //  show only 2 for now in the encounter page
+            ($choice =='drawing') ? ($count = count($zone)) : ($count ='2');
+            for ($i = 0; $i < $count; ++$i) {
+                $file_location = $GLOBALS["OE_SITES_BASE"]."/".$_SESSION['site_id']."/documents/".$pid."/".$form_folder."/".$encounter."/".$side."_".$zone[$i]."_VIEW.png";
+                $sql = "SELECT * from documents where url='file://".$file_location."'";
+                $doc = sqlQuery($sql);
+                if (file_exists($file_location) && ($doc['id'] > '0')) {
+                    $filetoshow = $GLOBALS['web_root']."/controller.php?document&retrieve&patient_id=$pid&document_id=$doc[id]&as_file=false";
+                } else {
+                    $filetoshow = "../../forms/".$form_folder."/images/".$side."_".$zone[$i]."_BASE.png?".rand();
+                } 
+                ?>
+                <div class='bordershadow' style='position:relative;float:left;width:310px;height:205px;'>
+                    <img src='<?php echo $filetoshow; ?>' width=300 heght=200>
+                </div>
+                <?php
+            }
+        } else if ($choice =="drawing") {
+            ?>
+            <Xdiv class="XXXXXXborderShadow">
+                <?php display_draw_section ("VISION",$encounter,$pid); ?>
+            </Xdiv>
+            <Xdiv class="XXXborderShadow">
+                <br />
+                <?php display_draw_section ("NEURO",$encounter,$pid); ?>
+            </Xdiv>
+            <Xdiv class="XXXborderShadow">
+                <br />
+                <?php display_draw_section ("EXT",$encounter,$pid); ?>
+            </Xdiv>
+            <Xdiv class="XXXborderShadow">
+                <br />
+                <?php display_draw_section ("ANTSEG",$encounter,$pid); ?>
+            </Xdiv>
+            <Xdiv class="XXXborderShadow">
+                <br />
+                <?php display_draw_section ("RETINA",$encounter,$pid); ?>
+            </Xdiv>
+            <Xdiv class="XXXborderShadow">
+                <br />
+                <?php display_draw_section ("IMPPLAN",$encounter,$pid); ?>
+            </Xdiv>
+            <? 
+        } else if ($choice =="narrative") {
+            narrative($pid, $encounter, $cols, $form_id);
         }
-        exit;
-    ?>
-        <div class="bordershadow">
-            <?php display_draw_section ("VISION",$encounter,$pid); ?>
-        </div>
-        <div class="bordershadow">
-            <br />
-            <?php display_draw_section ("NEURO",$encounter,$pid); ?>
-        </div>
-        <div class="bordershadow">
-            <br />
-            <?php display_draw_section ("EXT",$encounter,$pid); ?>
-        </div>
-        <div class="bordershadow">
-            <br />
-            <?php display_draw_section ("ANTSEG",$encounter,$pid); ?>
-        </div>
-        <div class="bordershadow">
-            <br />
-            <?php display_draw_section ("RETINA",$encounter,$pid); ?>
-        </div>
-        <div class="bordershadow">
-            <br />
-            <?php display_draw_section ("IMPPLAN",$encounter,$pid); ?>
-        </div>
-        
+        ?>
 </body>
 </html>
 
 <?
 
 exit;
-
-
-
-
 /***************************************/
     $count = 0;
     $data = formFetch($table_name, $id);
    
     if ($data) {
- 
         foreach($data as $key => $value) {
             $$key=$value;
         }
@@ -212,8 +212,8 @@ exit;
     if ($target =="W") {
         //we are printing the current RX
        
-?>
- <table id="SpectacleRx">
+        ?>
+         <table id="SpectacleRx">
                                                 <th colspan="9"><?=$fname?><?=$lname?></th>
                                                 <tr style="font-style:bold;">
                                                     <td></td>
@@ -282,14 +282,10 @@ exit;
                                                     </td>
                                                 </tr>
                                             </table>
+            <?
+    }
 
-
-<?
-        }
-}
-/** CHANGE THIS, the name of the function is significant and  **
- **              must be changed to match the folder name     **/
-function eye_mag_report( $pid, $encounter, $cols, $id) {
+function full_report( $pid, $encounter, $cols='2', $id) {
     
     /** CHANGE THIS - name of the database table associated with this form **/
     $table_name = "form_eye_mag";
