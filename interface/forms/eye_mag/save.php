@@ -284,6 +284,7 @@ if ($_REQUEST['canvas']) {
    * Documents directory and subdirs are NOT publicly accessible directly (w/o acl checking)
    */
   //sites/default/documents
+  debug($_REQUEST);
   $side = "OU";
   $storage = $GLOBALS["OE_SITES_BASE"]."/".$_SESSION['site_id']."/documents/".$pid."/".$form_folder."/".$encounter;
   
@@ -294,8 +295,8 @@ if ($_REQUEST['canvas']) {
     $query = "select id from documents where url like '$PRIOR_url'";
     $prior_doc = sqlQuery($query);
     //var_dump($prior_doc);
-    //echo $prior_doc['id'];
-   // echo $query;
+    echo $prior_doc['id'];
+   echo $query;
     echo $GLOBALS['web_root']."/controller.php?document&retrieve&patient_id=".$pid."&document_id=".$prior_doc['id']."&as_file=false";
   //echo $prior_doc['id'];
 

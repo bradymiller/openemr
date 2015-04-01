@@ -1590,28 +1590,31 @@ $(document).ready(function() {
                                              submit_form("eye_mag");
                                              });
                   $("[id^='Sketch_']").mouseout(function() {
+                                                // OK here we are storing a sketch image.  The server will merge it with the base which is _DRAW_$("#"+zone+"_counter").val().
+                                                // say we are on _DRAW_100 and we go back to _DRAW_95.  $("#"+zone+"_counter").val() = 95 now, per this function.
+                                                // When this function is run, it tells the server $("#"+zone+"_counter").val() is the base and new changes get merged with this
+                                                // _DRAW_$("#"+zone+"_counter").val().  So we get a new file _DRAW_$("#"+zone+"_counter").val() +1 and a new _VIEW file for this zone.
+                                                // Anthing greater than _DRAW_$("#"+zone+"_counter").val() + 1 is deleted.
+                                                // BACK_BUTTON will display _DRAW_[$("#"+zone+"_counter").val() - 1]
                                                 var zone = this.id.match(/Sketch_(.*)/)[1];
                                                 var dataURL = this.toDataURL();
-                                             
+                                                var zone_start = $("#"+zone+"_counter").val();
                                                 $.ajax({
                                                        type: "POST",
                                                        url: "../../forms/eye_mag/save.php?canvas="+zone+"&id="+$("#form_id").val(),
                                                        data: {
-                                                       imgBase64     : dataURL,
+                                                       imgBase64     : dataURL,  //this contains the new strokes, the sketch.js foreground
                                                        'zone'        : zone,
                                                        'visit_date'  : $("#visit_date").val(),
                                                        'encounter'   : $("#encounter").val(),
-                                                       'zone_counter': $("#"+zone+"_counter").val()
+                                                       'zone_counter': $("#"+zone+"_counter").val(),
+                                                       'pid'         : $("#pid").val()
                                                        },
                                                        success      : function(result) {
-                                                       // var prior = new String(result.match(/document_id=(.*)\&as_file/)[1]);
-                                                       // prior2 = prior - 1;
-                                                       //var regexp = new RegExp("DRAW_"+prior, 'g');
-                                                       //var count = result.replace(regexp,"DRAW_"+prior2);
-                                                       //change value for back button
-                                                       $("#"+zone+"_counter").val(result);
-                                                       // $("#BUTTON_BACK_"+zone).val('test');
-                                                       $("#tellme").html(result);
+                                                       // alert('hello'+zone_start+' - '+result);
+                                                                            $("#BUTTON_BACK_"+zone).val(zone_start);
+                                                                            $("#"+zone+"_counter").val(result);
+                                                                            $("#tellme").html(result);
                                                        }
                                                        }).done(function(o) {
                                                                //          console.log(result);
@@ -1703,13 +1706,13 @@ $(document).ready(function() {
                                       });
                 
                   var $body   = $(document.body);
-                  var navHeight = $('.navbar').outerHeight(true) + 10;
+                  var navHeight = $('.navbar').outerHeight(true) + 100;
                   
-                  /*$body.scrollspy({
+                  $body.scrollspy({
                                   target: '#leftCol',
                                   offset: navHeight
                                   });
-                  */
+                  
                   });
 
 

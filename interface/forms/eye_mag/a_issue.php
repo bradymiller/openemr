@@ -248,10 +248,10 @@ if (!empty($irow['type'])) {
 <link rel="stylesheet" href='<?php echo $css_header ?>' type='text/css'>
 <link rel="stylesheet" href="<?php echo $GLOBALS['webroot']; ?>/interface/forms/<?php echo $form_folder; ?>/style.css" type="text/css"> 
 <!-- jQuery library -->
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+<script src="<?php echo $GLOBALS['webroot'] ?>/library/js/jquery.min.js"></script>
 
 <!-- Latest compiled JavaScript -->
-<script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>  <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+<script src="<?php echo $GLOBALS['webroot'] ?>/library/js/bootstrap.min.js"></script>  <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
     <!--[if lt IE 9]>
         <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>

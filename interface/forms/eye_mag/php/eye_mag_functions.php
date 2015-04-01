@@ -1665,22 +1665,22 @@ function display_draw_section ($zone,$encounter,$pid,$side ='OU',$counter='') {
     ?>
     <div id="Draw_<?php echo attr($zone); ?>" name="Draw_<?php echo attr($zone); ?>" style="text-align:center;height: 2.5in;" class="Draw_class canvas">
         <span class="closeButton fa fa-file-text-o" id="BUTTON_TEXT_<?php echo attr($zone); ?>" name="BUTTON_TEXT_<?php echo attr($zone); ?>"></span>
-        <!--
         
         <?php  
-            /* This will provide a way to scroll back through prior visit images. 
-             * Will need to do a lot of coding to create this.  Jist is alax call to server for image retrieval.
+            /* This will provide a way to scroll back through prior VISIT images, to copy forward to today's visit.
+             * Will need to do a lot of coding to create this.  Jist is ajax call to server for image retrieval.
              * To get this to work we need a way to select an old image to work from, use current or return to baseline.
              * This will require a global BACK button like above (BUTTON_BACK_<?php echo attr($zone); ?>). 
              * The button above scrolls through current encounter zone images as they are incrementally added, to "Undo" a mishap.  
-             * If we look back at a prior encounter's saved final image, 
-             * we should store a copy of this image in today's directory and give it a new number, 
+             * If we look back at a prior VISIT's saved final image, 
+             * we should store a copy of this image in today's directory and give it a new number, one greater than the current,
              * just like we had drawn new stuff and stored the changes. 
              * Thus the Undo feature will only retrieve images from today's encounter directory
-             * Need to think about how to display this visually so it's intuitive to all, without cluttering the page...
+             * Need to think about how to display this visually so it's intuitive, without cluttering the page...
              */
-        $output = priors_select($zone,$orig_id,$id_to_show,$pid); echo $output; ?>
-        -->
+        //$output = priors_select($zone,$orig_id,$id_to_show,$pid); echo $output; 
+        ?>
+        
         <input type="hidden" id="<?php echo attr($zone); ?>_counter" name="<?php echo attr($zone); ?>_counter"  value="<?php echo attr($additional); ?>">
         <div class="tools" style="text-align:center;width:100%;">
             <!--
@@ -1689,6 +1689,7 @@ function display_draw_section ($zone,$encounter,$pid,$side ='OU',$counter='') {
             <div class="fa fa-backward fa-sm" value="" id="BUTTON_BACK_<?php echo attr($zone); ?>" name="BUTTON_BACK_<?php echo attr($zone); ?>" title="Undo"></div>
             &nbsp; &nbsp; &nbsp;
             &nbsp;&nbsp;&nbsp;
+            This would be a good time to get a real developer to incorporate something like http://fabricjs.com
             -->
 
             <a data-color="#00b6ff" href="#Sketch_<?php echo attr($zone); ?>" > 
@@ -1737,9 +1738,10 @@ function display_draw_section ($zone,$encounter,$pid,$side ='OU',$counter='') {
         -->
         </div>
         <?php 
+
         /** apache2 vhost config defaults to deny all access to documents directory directly.
           * Thus we need to move from this directory, elsewhere?
-          * No, ext access to all is not hippa compliant.
+          * No! External access to data without authentication is not hippa compliant.
           * We need a better way to serve the document.
           * perhaps just like all the other documents from documents.php? Yes.
           * Find the document_id by the filename...
@@ -1748,10 +1750,11 @@ function display_draw_section ($zone,$encounter,$pid,$side ='OU',$counter='') {
             $file_location = $GLOBALS["OE_SITES_BASE"]."/".$_SESSION['site_id']."/documents/".$pid."/".$form_folder."/".$encounter."/".$side."_".$zone."_VIEW.png";
             $sql = "SELECT * from documents where url='file://".$file_location."'";
             $doc = sqlQuery($sql);
+            // random to not pull from cache.
             if (file_exists($file_location) && ($doc['id'] > '0')) {
-                $filetoshow = $GLOBALS['web_root']."/controller.php?document&retrieve&patient_id=$pid&document_id=$doc[id]&as_file=false";
+                $filetoshow = $GLOBALS['web_root']."/controller.php?document&retrieve&patient_id=$pid&document_id=".$doc['id']."&as_file=false&blahblah=".rand();
             } else {
-                //base image.  ?random to not pull from cache.
+                //base image. 
                 $filetoshow = "../../forms/".$form_folder."/images/".$side."_".$zone."_BASE.png?".rand(); 
             }
         ?>
@@ -2345,7 +2348,7 @@ function menu_overhaul_top($pid,$encounter,$title="Eye Exam") {
                             <li id="menu_PRINT_narrative" name="menu_PRINT_narrative"> <a href="#" id="BUTTON_PRINT_narrative" onclick="window.print();return false;">Print Narrative</a></li>
                         
                         </ul>
-                    -->
+                            -->
                         <li id="menu_QP" name="menu_QP" ><a href="#"  onclick='window.close();'> Close Window</a></li>
                         <li class="divider"></li>
                         <li id="menu_HPI" name="menu_HPI" ><a href="#" onclick='window.close();' >Return to OpenEMR</a></li>
@@ -2368,7 +2371,7 @@ function menu_overhaul_top($pid,$encounter,$title="Eye Exam") {
                 </li>
                 <li class="dropdown">
                     <a class="dropdown-toggle" data-toggle="dropdown" id="menu_dropdown_view" role="button" aria-expanded="true">View </a>
-                    <ul class="dropdown-menu" Xrole="menu">
+                    <ul class="dropdown-menu" role="menu">
                         <li id="menu_TEXT" name="menu_TEXT" class="active"> <a  id="BUTTON_TEXT_menu" href="#" onclick="show_TEXT();">Text <i class="right fa fa-text"></i></a></li>
                         <li id="menu_DRAW" name="menu_DRAW"> <a href="#mid_menu" id="BUTTON_DRAW_menu" nam="BUTTON_DRAW_menu">Draw</a></li>
                         <li id="menu_QP" name="menu_QP" ><a href="#mid_menu"  onclick='show_QP();'> Quick Picks</a></li>
@@ -2432,9 +2435,11 @@ function menu_overhaul_top($pid,$encounter,$title="Eye Exam") {
                     </ul>
                 </li>
                 <li class="dropdown">
-                    <a class="dropdown-toggle" data-toggle="dropdown" id="menu_dropdown_library" role="button" aria-expanded="false">Library</a>
+                    <a class="dropdown-toggle" data-toggle="dropdown" 
+                       id="menu_dropdown_library" role="button" 
+                       aria-expanded="false">Library</a>
                     <ul class="dropdown-menu" role="menu">
-                        <li  class="disabled"><a href="#" >Upload</a></li>
+                        <li class="disabled"><a href="#" >Upload</a></li>
                         <li class="disabled"><a href="../../forms/eye_mag/css/AnythingSlider/simple.php?display=fullscreen&encounter=<?php echo xla($encounter); ?>">Documents</a></li>
                         <li class="disabled"><a href="#">Images</a></li>
                         <li class="divider"></li>
@@ -2443,8 +2448,50 @@ function menu_overhaul_top($pid,$encounter,$title="Eye Exam") {
                         <li class="disabled"><a href="#">One more separated link</a></li>
                     </ul>
                 </li>
+                <!-- let's import the openEMR menu here.  -->
+                <?php
+                    $reg = Menu_myGetRegistered();
+                    if (!empty($reg)) {
+                        $StringEcho= '<li class="dropdown">';
+                        if ( $encounterLocked === false || !(isset($encounterLocked))) {
+                            foreach ($reg as $entry) {
+                                $new_category = trim($entry['category']);
+                                $new_nickname = trim($entry['nickname']);
+                                if ($new_category == '') {$new_category = htmlspecialchars(xl('Miscellaneous'),ENT_QUOTES);}
+                                if ($new_nickname != '') {$nickname = $new_nickname;}
+                                else {$nickname = $entry['name'];}
+                                if ($old_category != $new_category) { //new category, new menu section
+                                    $new_category_ = $new_category;
+                                    $new_category_ = str_replace(' ','_',$new_category_);
+                                    if ($old_category != '') {
+                                        $StringEcho.= "
+                                            </ul>
+                                        </li>
+                                        <li class='dropdown'>
+                                        ";
+                                    }
+                                  $StringEcho.= '
+                                  <a class="dropdown-toggle" data-toggle="dropdown" 
+                                    id="menu_dropdown_'.$new_category_.'" role="button" 
+                                    aria-expanded="false">'.$new_category.'</a>
+                                    <ul class="dropdown-menu" role="menu">
+                                    ';
+                                  $old_category = $new_category;
+                                } //target this link back into the correct frame.  Mais porquois?
+                                $StringEcho.= "<li><a href='".$GLOBALS['webroot']."/interface/patient_file/encounter/load_form.php?formname=" .urlencode($entry['directory'])."'>" . xl_form_title($nickname) . "</a></li>";
+                          }
+                      }
+                      $StringEcho.= '
+                        </ul>
+                      </li>
+                      ';
+                    } else { $StringEcho .= "nada here que pasa?"; }
+                    echo $StringEcho;
+                ?>
             </ul>
-        
+         
+             
+
              <ul class="navbar-right navbar-nav">
                 <li><a href="#"><?php echo $providerNAME; ?></a></li>
                 
@@ -2475,16 +2522,34 @@ function menu_overhaul_top($pid,$encounter,$title="Eye Exam") {
     return $input_echo;}
 
 function menu_overhaul_left($pid,$encounter) {
-   global $pat_data;
-   @extract($pat_data);
+    global $form_folder;
+    global $pat_data;
+    @extract($pat_data);
+    /*
+     * I don't understand the controller.php thing/Smarty.  We need to find out if the patient has a photo right? 
+     */
+    //  echo "time now = ". date('g:i:s:u a'); 
+    list($documents) = document_engine($pid);
+  //  echo "<pre><br /><div style='text-align:left'>time now = ". date('g:i:s:u a'); 
+    //print_r($documents);
    
+        ?>   </div>   <div class="borderShadow" style="width:280px;position:relative;text-align:center;padding:5px 0px 5px 5px;">
+        <?
+        //if the patient has a photograph, use it else use generic avitar thing.
+        if ($documents['docs_in_name']['Patient Photograph'][0]['id']) {
+            ?>
+            <object><embed src="/openemr/controller.php?document&amp;retrieve&amp;patient_id=<?php echo $pid; ?>&amp;document_id=<?php echo $documents['docs_in_name']['Patient Photograph'][0]['id']; ?>&amp;as_file=false" frameborder="0"
+                 type="<?php echo $documents['docs_in_name']['Patient Photograph'][0]['mimetype']; ?>" allowscriptaccess="always" allowfullscreen="false" width="60"></embed></object>
+        <?php 
+        } else {
         ?>
-                
-                <div class="borderShadow" style="width:280px;position:relative;text-align:center;padding:5px 0px 5px 5px;">
-                    <a href="/openemr/controller.php?document&amp;retrieve&amp;patient_id=1&amp;document_id=80/tmp.bmp" 
-                        onclick="top.restoreSession();" class="image_modal" style=""> 
-                        <img src="/openemr/controller.php?document&amp;retrieve&amp;patient_id=1&amp;document_id=80" alt="Patient Photograph" width="80">
-                    </a>
+                <object><embed src="<?php echo $GLOBALS['web_root']; ?>/interface/forms/<?php echo $form_folder; ?>/images/anon.gif" frameborder="0"
+                 type="image/gif" width="60"></embed></object>
+                <?php
+        }
+        ?>
+
+                    
                     <div style="position:relative;float:left;margin:auto 5px;width:140px;top:0px;right:0px;padding-bottom:20px;">
                         <table style="position:relative;float:left;margin:10px 5px;width:140px;top:0px;right:0px;font-size:12px;border-spacing: 5px;">
                         
@@ -2502,7 +2567,7 @@ function menu_overhaul_left($pid,$encounter) {
                                             <?php 
                                                 /**
                                                   * List out the prior eye_mag encounters as options.  
-                                                  * The one above is belongs to today.  
+                                                  * The one above is today.  
                                                   * This will run a function to go back a day, changing all the form's values to that day, 
                                                   * and if e-signed and locked, changes are disabled.  Perhaps if locked what is shown is the PDF of this?
                                                   * Too slow?  Loss of javascript control of presentation.  Unable to widen or narrow or flip to the drawings,
@@ -2620,7 +2685,23 @@ function  finalize() {
     */
     return;
 }
-
-
+/*
+ * This was taken from new_form.php
+ */
+function Menu_myGetRegistered($state="1", $limit="unlimited", $offset="0") {
+    $sql = "SELECT category, nickname, name, state, directory, id, sql_run, " .
+      "unpackaged, date FROM registry WHERE " .
+      "state LIKE \"$state\" ORDER BY category, priority, name";
+    if ($limit != "unlimited") $sql .= " limit $limit, $offset";
+    $res = sqlStatement($sql);
+    if ($res) {
+        for($iter=0; $row=sqlFetchArray($res); $iter++) {
+            $all[$iter] = $row;
+        }
+    } else {
+        return false;
+    }
+    return $all;
+}
 return ;
 ?>

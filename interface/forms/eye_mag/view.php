@@ -678,14 +678,14 @@ if ($refresh and $refresh != 'fullscreen') {
                       </div>
                       <div id="Visions_A" name="Visions_A" class="" style="position: absolute; top: 0.35in; text-align:right;right:0.1in; height: 0.72in;  padding: 0in;" >
                           <b>OD </b>
-                          <input type="TEXT" style="left: 0.5in; width: 0.35in; height: 0.19in; font-family: 'Times New Roman';" tabindex="40" Xsize="6" id="SCODVA" name="SCODVA" value="<?php echo attr($SCODVA); ?>">
-                          <input type="TEXT" style="left: 0.5in; width: 0.35in; height: 0.19in; font-family: 'Times New Roman';" tabindex="42" Xsize="6"  id="WODVA_copy" name="WODVA_copy" value="<?php echo attr($WODVA); ?>">
-                          <input type="TEXT" style="left: 0.5in; width: 0.35in; height: 0.19in; font-family: 'Times New Roman';" tabindex="44" Xsize="6"  id="PHODVA_copy" name="PHODVA_copy" value="<?php echo attr($PHODVA); ?>">
+                          <input type="TEXT" style="left: 0.5in; width: 0.35in; height: 0.19in; " tabindex="40" Xsize="6" id="SCODVA" name="SCODVA" value="<?php echo attr($SCODVA); ?>">
+                          <input type="TEXT" style="left: 0.5in; width: 0.35in; height: 0.19in; " tabindex="42" Xsize="6"  id="WODVA_copy" name="WODVA_copy" value="<?php echo attr($WODVA); ?>">
+                          <input type="TEXT" style="left: 0.5in; width: 0.35in; height: 0.19in; " tabindex="44" Xsize="6"  id="PHODVA_copy" name="PHODVA_copy" value="<?php echo attr($PHODVA); ?>">
                           <br />                            
                           <b>OS </b>
-                          <input type="TEXT" style="left: 0.5in; width: 0.35in; height: 0.19in; font-family: 'Times New Roman'" tabindex="41" size="8"  id="SCOSVA" name="SCOSVA" value="<?php echo attr($SCOSVA); ?>">
-                          <input type="TEXT" style="left: 0.5in; width: 0.35in; height: 0.19in; font-family: 'Times New Roman'" tabindex="43" size="8" id="WOSVA_copy" name="WOSVA_copy" value="<?php echo attr($WOSVA); ?>">
-                          <input type="TEXT" style="left: 0.5in; width: 0.35in; height: 0.19in; font-family: 'Times New Roman'" tabindex="45" size="8" id="PHOSVA_copy" name="PHOSVA_copy" value="<?php echo attr($PHOSVA); ?>">
+                          <input type="TEXT" style="left: 0.5in; width: 0.35in; height: 0.19in; " tabindex="41" size="8"  id="SCOSVA" name="SCOSVA" value="<?php echo attr($SCOSVA); ?>">
+                          <input type="TEXT" style="left: 0.5in; width: 0.35in; height: 0.19in; " tabindex="43" size="8" id="WOSVA_copy" name="WOSVA_copy" value="<?php echo attr($WOSVA); ?>">
+                          <input type="TEXT" style="left: 0.5in; width: 0.35in; height: 0.19in; " tabindex="45" size="8" id="PHOSVA_copy" name="PHOSVA_copy" value="<?php echo attr($PHOSVA); ?>">
                           <br />
                           <span id="more_visions_1" name="more_visions_1" style="position: absolute;top:0.44in;left:-0.37in;font-size: 0.9em;padding-right:4px;"><b><?php echo xlt('Acuity'); ?></b> </span>
                           <span style="position: absolute;top:0.41in;left:0.33in;font-size: 0.8em;"><b><?php echo xlt('SC'); ?></b></span>
@@ -694,14 +694,14 @@ if ($refresh and $refresh != 'fullscreen') {
                       </div>
                       <div id="Visions_B" name="Visions_B" class="nodisplay" style="position: absolute; top: 0.35in; text-align:right;right:0.1in; height: 0.72in;  padding: 0in;" >
                           <b><?php echo xlt('OD'); ?> </b>
-                          <input type="TEXT" style="left: 0.5in; width: 0.35in; height: 0.19in; font-family: 'Times New Roman';" tabindex="46" Xsize="6" id="ARODVA_copy" name="ARODVA_copy" value="<?php echo attr($ARODVA); ?>">
-                          <input type="TEXT" style="left: 0.5in; width: 0.35in; height: 0.19in; font-family: 'Times New Roman';" tabindex="48" Xsize="6" id="MRODVA_copy" name="MRODVA_copy" value="<?php echo attr($MRODVA); ?>">
-                          <input type="TEXT" style="left: 0.5in; width: 0.35in; height: 0.19in; font-family: 'Times New Roman';" tabindex="50" Xsize="6" id="CRODVA_copy" name="CRODVA_copy" value="<?php echo attr($CRODVA); ?>">
+                          <input type="TEXT" style="left: 0.5in; width: 0.35in; height: 0.19in; " tabindex="46" Xsize="6" id="ARODVA_copy" name="ARODVA_copy" value="<?php echo attr($ARODVA); ?>">
+                          <input type="TEXT" style="left: 0.5in; width: 0.35in; height: 0.19in; " tabindex="48" Xsize="6" id="MRODVA_copy" name="MRODVA_copy" value="<?php echo attr($MRODVA); ?>">
+                          <input type="TEXT" style="left: 0.5in; width: 0.35in; height: 0.19in; " tabindex="50" Xsize="6" id="CRODVA_copy" name="CRODVA_copy" value="<?php echo attr($CRODVA); ?>">
                           <br />                            
                           <b><?php echo xlt('OS'); ?> </b>
-                          <input type="TEXT" style="left: 0.5in; width: 0.35in; height: 0.19in; font-family: 'Times New Roman'" tabindex="47" Xsize="6" id="AROSVA_copy" name="AROSVA_copy" value="<?php echo attr($AROSVA); ?>">
-                          <input type="TEXT" style="left: 0.5in; width: 0.35in; height: 0.19in; font-family: 'Times New Roman'" tabindex="49" Xsize="6" id="MROSVA_copy" name="MROSVA_copy" value="<?php echo attr($MROSVA); ?>">
-                          <input type="TEXT" style="left: 0.5in; width: 0.35in; height: 0.19in; font-family: 'Times New Roman'" tabindex="51" Xsize="6" id="CROSVA_copy" name="CROSVA_copy" value="<?php echo attr($CROSVA); ?>">
+                          <input type="TEXT" style="left: 0.5in; width: 0.35in; height: 0.19in; " tabindex="47" Xsize="6" id="AROSVA_copy" name="AROSVA_copy" value="<?php echo attr($AROSVA); ?>">
+                          <input type="TEXT" style="left: 0.5in; width: 0.35in; height: 0.19in; " tabindex="49" Xsize="6" id="MROSVA_copy" name="MROSVA_copy" value="<?php echo attr($MROSVA); ?>">
+                          <input type="TEXT" style="left: 0.5in; width: 0.35in; height: 0.19in; " tabindex="51" Xsize="6" id="CROSVA_copy" name="CROSVA_copy" value="<?php echo attr($CROSVA); ?>">
                           <br />
                           <span id="more_visions_2" name="more_visions_2" style="position: absolute;top:0.44in;left:-0.37in;font-size: 0.9em;padding-right:4px;"><b><?php echo xlt('Acuity'); ?></b> </span>
                           <span style="position: absolute;top:0.41in;left:0.33in;font-size: 0.8em;"><b><?php echo xlt('AR'); ?></b></span>
@@ -736,14 +736,14 @@ if ($refresh and $refresh != 'fullscreen') {
                       </div>
                       <div id="Lyr4.2" style="position: absolute; top: 0.35in; text-align:right;right:0.1in; height: 0.72in;  padding: 0in; border: 1pt black;">
                           <b><?php echo xlt('OD'); ?></b>
-                          <input type="text" style="left: 0.5in; width: 0.23in; height: 0.18in; font-family: 'Times New Roman';" tabindex="52" Xsize="6" name="ODIOPAP" value="<?php echo attr($ODIOPAP); ?>">
-                          <input type="text" style="left: 0.5in; width: 0.23in; height: 0.18in; font-family: 'Times New Roman';" tabindex="54" Xsize="6" name="ODIOPTPN" value="<?php echo attr($ODIOPTPN); ?>">
-                          <input type="text" style="left: 0.5in; width: 0.23in; height: 0.18in; font-family: 'Times New Roman';" tabindex="56" Xsize="6" name="ODIOPFTN" value="<?php echo attr($ODIOPTPN); ?>">
+                          <input type="text" style="left: 0.5in; width: 0.23in; height: 0.18in; " tabindex="52" Xsize="6" name="ODIOPAP" value="<?php echo attr($ODIOPAP); ?>">
+                          <input type="text" style="left: 0.5in; width: 0.23in; height: 0.18in; " tabindex="54" Xsize="6" name="ODIOPTPN" value="<?php echo attr($ODIOPTPN); ?>">
+                          <input type="text" style="left: 0.5in; width: 0.23in; height: 0.18in; " tabindex="56" Xsize="6" name="ODIOPFTN" value="<?php echo attr($ODIOPTPN); ?>">
                           <br />
                           <b><?php echo xlt('OS'); ?> </b>
-                          <input type="text" style="left: 0.5in; width: 0.23in; height: 0.18in; font-family: 'Times New Roman';" tabindex="53" Xsize="6" name="OSIOPAP" value="<?php echo attr($OSIOPAP); ?>">
-                          <input type="text" style="left: 0.5in; width: 0.23in; height: 0.18in; font-family: 'Times New Roman';" tabindex="55" Xsize="6" name="OSIOPTPN" value="<?php echo attr($OSIOPTPN); ?>">
-                          <input type="text" style="left: 0.5in; width: 0.23in; height: 0.18in; font-family: 'Times New Roman';" tabindex="57" Xsize="6" name="OSIOPFTN" value="<?php echo attr($OSIOPFTN); ?>">
+                          <input type="text" style="left: 0.5in; width: 0.23in; height: 0.18in; " tabindex="53" Xsize="6" name="OSIOPAP" value="<?php echo attr($OSIOPAP); ?>">
+                          <input type="text" style="left: 0.5in; width: 0.23in; height: 0.18in; " tabindex="55" Xsize="6" name="OSIOPTPN" value="<?php echo attr($OSIOPTPN); ?>">
+                          <input type="text" style="left: 0.5in; width: 0.23in; height: 0.18in; " tabindex="57" Xsize="6" name="OSIOPFTN" value="<?php echo attr($OSIOPFTN); ?>">
                           <br /><br />
                           <span style="position: absolute;top:0.44in;left:0.22in;font-size: 0.8em;"><b><?php echo xlt('AP'); ?></b></span>
                           <span style="position: absolute;top:0.44in;left:0.47in;font-size: 0.8em;"><b><?php echo xlt('TP'); ?></b></span>
@@ -1488,7 +1488,7 @@ if ($refresh and $refresh != 'fullscreen') {
             <!-- end of the refraction box -->
 
             <!-- my reporting div for development only remove the "X" to see output from save.php-->
-          <div id="tellmeX" name="tellmeX"></div>
+          <div id="tellme" name="tellme"></div>
             <!-- end reporting div -->
 
           <!-- Start of the exam selection/middle menu row -->

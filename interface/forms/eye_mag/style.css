@@ -1294,13 +1294,18 @@ filter: progid:DXImageTransform.Microsoft.BasicImage(rotation=3);
     top:-0.0in;
 }
   
-.navbar-custom ,.navbar-nav > li > a {
+.navbar-custom {
     color:black; /* just changes the base font color */
-    padding:5 10;
+    padding:2 10 1;
     margin:0;
 }
-     
-.navbar-nav > li > a:hover, .nav > li > a:focus {
+.navbar-nav > li > a {
+    color:black; /* just changes the base font color */
+    padding:6 10 4;
+    margin:0;
+}
+
+.nav > li > a:focus, .nav > li:focus {
     text-decoration: none;
     background-color: #1C5ECF; /* this is the "hover" blue */
     color:#fff;
