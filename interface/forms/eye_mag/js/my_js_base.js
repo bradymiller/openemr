@@ -244,7 +244,7 @@ function show_TEXT() {
     hide_right(); //this hides the right half
     $("#PMH_1").show();
     $("#NEURO_1").show();
-    $("#NIMPPLAN_1").show();
+    $("#IMPPLAN_1").show();
     $(".TEXT_class").show();
 }
 function show_PRIORS() {
@@ -318,9 +318,7 @@ function show_QP_section(zone) {
 }
 
 function menu_select(zone,che) {
-        //$("[name^='menu_']").removeClass('active');
     $("#menu_"+zone).addClass('active');
-        //$("#menu_"+zone+"_"+checked).addClass('');
 }
 function hide_DRAW() {
     $(".Draw_class").hide();
@@ -347,7 +345,6 @@ function hide_PRIORS() {
     $(".PRIORS_class").hide();
     $(".PRIORS_class").css("display","none");
     $("#EXT_right").removeClass("PRIORS_color");
-    
     $("#PRIORS_EXT_left_text").hide();
     $("#PRIORS_ANTSEG_left_text").hide();
     $("#PRIORS_RETINA_left_text").hide();
@@ -490,21 +487,28 @@ function show_CC(CC_X) {
     $("#CC_"+CC_X).removeClass('nodisplay');
     $("#CC_"+CC_X).index;
 }
+
+
+
 $(document).ready(function() {
                   $("[id^='sketch_tools_']").click(function() {
                                                    var zone = this.id.match(/sketch_tools_(.*)/)[1];
                                                    $("[id^='sketch_tools_"+zone+"']").css("height","30px");
                                                    $(this).css("height","50px");
+                                                   
+                                                   // $("#selColor_"+zone).value = $(this).val();
                                                    });
                   $("[id^='sketch_sizes_']").click(function() {
                                                    var zone = this.id.match(/sketch_sizes_(.*)/)[1];
                                                    $("[id^='sketch_sizes_"+zone+"']").css("background","").css("border-bottom","");
                                                    // $(this).css("background-color","white");
                                                    $(this).css("border-bottom","2pt solid black");
+                                                   //$("#selWidth_"+zone).value = $(this).val();
+
                                                    });
                   
                   //$("#tabs li").removeClass('active');
-                  //$("#tab1_CC").trigger("click");
+                  $("#tab1_CC1").trigger("click");
                   alter_issue('',''); // on ready displays the PMH engine.
                     $("#tabs li").click(function() {
                             //  First remove class "active" from currently active tab
@@ -1589,16 +1593,11 @@ $(document).ready(function() {
                                              $("#OSREDDESAT").val("100");
                                              submit_form("eye_mag");
                                              });
-                  $("[id^='Sketch_']").mouseout(function() {
-                                                // OK here we are storing a sketch image.  The server will merge it with the base which is _DRAW_$("#"+zone+"_counter").val().
-                                                // say we are on _DRAW_100 and we go back to _DRAW_95.  $("#"+zone+"_counter").val() = 95 now, per this function.
-                                                // When this function is run, it tells the server $("#"+zone+"_counter").val() is the base and new changes get merged with this
-                                                // _DRAW_$("#"+zone+"_counter").val().  So we get a new file _DRAW_$("#"+zone+"_counter").val() +1 and a new _VIEW file for this zone.
-                                                // Anthing greater than _DRAW_$("#"+zone+"_counter").val() + 1 is deleted.
-                                                // BACK_BUTTON will display _DRAW_[$("#"+zone+"_counter").val() - 1]
-                                                var zone = this.id.match(/Sketch_(.*)/)[1];
+                  
+                  $("[id^='myCanvas_'],[name^='canvas_button']").mouseout(function() {
+                                                // OK here we are storing a canvas image.
+                                                var zone = this.id.match(/myCanvas_(.*)/)[1];
                                                 var dataURL = this.toDataURL();
-                                                var zone_start = $("#"+zone+"_counter").val();
                                                 $.ajax({
                                                        type: "POST",
                                                        url: "../../forms/eye_mag/save.php?canvas="+zone+"&id="+$("#form_id").val(),
@@ -1607,13 +1606,12 @@ $(document).ready(function() {
                                                        'zone'        : zone,
                                                        'visit_date'  : $("#visit_date").val(),
                                                        'encounter'   : $("#encounter").val(),
-                                                       'zone_counter': $("#"+zone+"_counter").val(),
                                                        'pid'         : $("#pid").val()
                                                        },
                                                        success      : function(result) {
                                                        // alert('hello'+zone_start+' - '+result);
-                                                                            $("#BUTTON_BACK_"+zone).val(zone_start);
-                                                                            $("#"+zone+"_counter").val(result);
+                                                       //           $("#BUTTON_BACK_"+zone).val(zone_start);
+                                                       //                   $("#"+zone+"_counter").val(result);
                                                                             $("#tellme").html(result);
                                                        }
                                                        }).done(function(o) {
@@ -1699,7 +1697,8 @@ $(document).ready(function() {
                                           });
                   $("[name$='_loading']").hide();
                   $("[name$='_sections']").show();
-                 $('#sidebar').affix({
+                  
+                                   /* $('#sidebar').affix({
                                       offset: {
                                       top: 245
                                       }
@@ -1707,11 +1706,12 @@ $(document).ready(function() {
                 
                   var $body   = $(document.body);
                   var navHeight = $('.navbar').outerHeight(true) + 100;
-                  
-                  $body.scrollspy({
+                  */
+                  /*  $body.scrollspy({
                                   target: '#leftCol',
                                   offset: navHeight
-                                  });
+                                });
+                   */
                   
                   });
 

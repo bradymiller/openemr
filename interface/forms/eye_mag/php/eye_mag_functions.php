@@ -170,7 +170,7 @@ function priors_select($zone,$orig_id,$id_to_show,$pid,$type='text') {
  * @return true : when called directly outputs the ZONE specific HTML for a prior record + widget for the desired zone 
  */ 
 
-function display_section ($zone,$orig_id,$id_to_show,$pid,$report = '0') {
+function display_PRIOR_section ($zone,$orig_id,$id_to_show,$pid,$report = '0') {
     global $form_folder;
     global $id;
     global $ISSUE_TYPES;
@@ -347,7 +347,7 @@ function display_section ($zone,$orig_id,$id_to_show,$pid,$report = '0') {
                 </tr>
             </table>
         </div>
-        <?php ($ANTSEG_VIEW !='1') ? ($display_ANTSEG_view = "wide_textarea") : ($display_ANTSEG_view= "narrow_textarea");?>
+        <?php ($ANTSEG_VIEW =='1') ? ($display_ANTSEG_view = "wide_textarea") : ($display_ANTSEG_view= "narrow_textarea");?>
         <?php ($display_ANTSEG_view == "wide_textarea") ? ($marker ="fa-minus-square-o") : ($marker ="fa-plus-square-o");?>
         <div id="PRIOR_ANTSEG_text_list"  name="PRIOR_ANTSEG_text_list" class="borderShadow PRIORS <?php echo attr($display_ANTSEG_view); ?>" >
                 <span class="top_right fa <?php echo attr($marker); ?>" name="PRIOR_ANTSEG_text_view" id="PRIOR_ANTSEG_text_view"></span>
@@ -1681,72 +1681,26 @@ function display_draw_section ($zone,$encounter,$pid,$side ='OU',$counter='') {
         //$output = priors_select($zone,$orig_id,$id_to_show,$pid); echo $output; 
         ?>
         
-        <input type="hidden" id="<?php echo attr($zone); ?>_counter" name="<?php echo attr($zone); ?>_counter"  value="<?php echo attr($additional); ?>">
         <div class="tools" style="text-align:center;width:100%;">
-            <!--
-            <div class="fa fa-fast-backward fa-sm" value="" id="BUTTON_BACK_<?php echo attr($zone); ?>" name="BUTTON_BACK_<?php echo attr($zone); ?>" title="Prior Visits"></div>
-            &nbsp;&nbsp;&nbsp;
-            <div class="fa fa-backward fa-sm" value="" id="BUTTON_BACK_<?php echo attr($zone); ?>" name="BUTTON_BACK_<?php echo attr($zone); ?>" title="Undo"></div>
-            &nbsp; &nbsp; &nbsp;
-            &nbsp;&nbsp;&nbsp;
-            This would be a good time to get a real developer to incorporate something like http://fabricjs.com
-            -->
-
-            <a data-color="#00b6ff" href="#Sketch_<?php echo attr($zone); ?>" > 
-                <img id="sketch_tools_<?php echo attr($zone); ?>" src="../../forms/<?php echo $form_folder; ?>/images/pencil_blue.png" style="height:30px;width:15px;">
-            </a>
-            <a style="width: 20px; height:65px;" data-color="#ff0" href="#Sketch_<?php echo attr($zone); ?>">
-                <img id="sketch_tools_<?php echo attr($zone); ?>" src="../../forms/<?php echo $form_folder; ?>/images/pencil_yellow.png" style="height:30px;width:15px;">
-            </a>
-            <a style="width: 20px; height:65px;" data-color="#ffad00" href="#Sketch_<?php echo attr($zone); ?>">
-                <img id="sketch_tools_<?php echo attr($zone); ?>" src="../../forms/<?php echo $form_folder; ?>/images/pencil_orange.png" style="height:30px;width:15px;">
-            </a>
-            <a style="width: 20px; height:65px;" data-color="#AC8359" href="#Sketch_<?php echo attr($zone); ?>">
-                <img id="sketch_tools_<?php echo attr($zone); ?>" src="../../forms/<?php echo $form_folder; ?>/images/pencil_brown.png" style="height:30px;width:15px;">
-            </a>
-            <a style="width: 20px; height:65px;" data-color="red" href="#Sketch_<?php echo attr($zone); ?>">
-                <img id="sketch_tools_<?php echo attr($zone); ?>" src="../../forms/<?php echo $form_folder; ?>/images/pencil_red.png" style="height:30px;width:15px;">
-            </a>
-            <a style="width: 20px; height:65px;" data-color="black" data-color="#000" href="#Sketch_<?php echo attr($zone); ?>">
-                <img id="sketch_tools_<?php echo attr($zone); ?>" src="../../forms/<?php echo $form_folder; ?>/images/pencil_black.png" style="height:50px;width:15px;">
-            </a>
-            <a style="width: 20px; height:65px;" data-color="white" data-color="#fff" href="#Sketch_<?php echo attr($zone); ?>">
-                <img id="sketch_tools_<?php echo attr($zone); ?>" src="../../forms/<?php echo $form_folder; ?>/images/pencil_white.png" style="height:30px;width:15px;">
-            </a>
+           
+            <img  id="sketch_tools_<?php echo attr($zone); ?>" onclick='$("#selColor_<?php echo $zone; ?>").val("blue");' src="../../forms/<?php echo $form_folder; ?>/images/pencil_blue.png" style="height:30px;width:15px;">
+            <img id="sketch_tools_<?php echo attr($zone); ?>" onclick='$("#selColor_<?php echo $zone; ?>").val("#ff0");'  src="../../forms/<?php echo $form_folder; ?>/images/pencil_yellow.png" style="height:30px;width:15px;">
+            <img id="sketch_tools_<?php echo attr($zone); ?>" onclick='$("#selColor_<?php echo $zone; ?>").val("#ffad00");' src="../../forms/<?php echo $form_folder; ?>/images/pencil_orange.png" style="height:30px;width:15px;">
+            <img id="sketch_tools_<?php echo attr($zone); ?>" onclick='$("#selColor_<?php echo $zone; ?>").val("#AC8359");' src="../../forms/<?php echo $form_folder; ?>/images/pencil_brown.png" style="height:30px;width:15px;">
+            <img id="sketch_tools_<?php echo attr($zone); ?>" onclick='$("#selColor_<?php echo $zone; ?>").val("red");' src="../../forms/<?php echo $form_folder; ?>/images/pencil_red.png" style="height:30px;width:15px;">
+            <img id="sketch_tools_<?php echo attr($zone); ?>" onclick='$("#selColor_<?php echo $zone; ?>").val("#000");' src="../../forms/<?php echo $form_folder; ?>/images/pencil_black.png" style="height:50px;width:15px;">
+            <img id="sketch_tools_<?php echo attr($zone); ?>" onclick='$("#selColor_<?php echo $zone; ?>").val("#fff");' src="../../forms/<?php echo $form_folder; ?>/images/pencil_white.png" style="height:30px;width:15px;">
+             
             <span style="min-width:1in;">&nbsp;</span>
             <!-- now to pencil size -->
-            <a id="sketch_sizes_<?php echo attr($zone); ?>" style="height:60px;width:60px;border-bottom:1pt solid black;" data-size="1" href="#Sketch_<?php echo attr($zone); ?>">
-                <img id="sketch_sizes_<?php echo attr($zone); ?>" src="../../forms/<?php echo $form_folder; ?>/images/brush_1.png" style="height:20px;width:20px;">
-            </a>
-            <a id="sketch_sizes_<?php echo attr($zone); ?>" style="height:60px;width:60px;" data-size="3" href="#Sketch_<?php echo attr($zone); ?>"> 
-                <img id="sketch_sizes_<?php echo attr($zone); ?>" src="../../forms/<?php echo $form_folder; ?>/images/brush_3.png" style="height:20px;width:20px;">
-            </a>
-            <a id="sketch_sizes_<?php echo attr($zone); ?>" style="height:60px;width:60px;" data-size="5" href="#Sketch_<?php echo attr($zone); ?>" >
-                <img id="sketch_sizes_<?php echo attr($zone); ?>" src="../../forms/<?php echo $form_folder; ?>/images/brush_5.png" style="height:20px;width:20px;">
-            </a>
-            <a id="sketch_sizes_<?php echo attr($zone); ?>" style="height:60px;width:60px;" data-size="10" href="#Sketch_<?php echo attr($zone); ?>">
-                     <img id="sketch_sizes_<?php echo attr($zone); ?>" src="../../forms/<?php echo $form_folder; ?>/images/brush_10.png" style="height:20px;width:20px;">
-            </a>
-            <a id="sketch_sizes_<?php echo attr($zone); ?>" style="height:60px;width:60px;" data-size="15" href="#Sketch_<?php echo attr($zone); ?>">
-                     <img id="sketch_sizes_<?php echo attr($zone); ?>" src="../../forms/<?php echo $form_folder; ?>/images/brush_15.png" style="height:20px;width:20px;">
-            </a>
-            <!--
-            &nbsp;&nbsp;&nbsp;
-            &nbsp;&nbsp;&nbsp;
-
-            <input type="button" name="Clear_<?php echo attr($zone); ?>" id="Clear_<?php echo attr($zone); ?>" style="width:40px;" value="Clear" />
-        -->
+            <img id="sketch_sizes_<?php echo attr($zone); ?>" onclick='$("#selWidth_<?php echo $zone; ?>").val("1");' src="../../forms/<?php echo $form_folder; ?>/images/brush_1.png" style="height:20px;width:20px;">
+            <img id="sketch_sizes_<?php echo attr($zone); ?>" onclick='$("#selWidth_<?php echo $zone; ?>").val("3");' src="../../forms/<?php echo $form_folder; ?>/images/brush_3.png" style="height:20px;width:20px;">
+            <img id="sketch_sizes_<?php echo attr($zone); ?>" onclick='$("#selWidth_<?php echo $zone; ?>").val("5");' src="../../forms/<?php echo $form_folder; ?>/images/brush_5.png" style="height:20px;width:20px;">
+            <img id="sketch_sizes_<?php echo attr($zone); ?>" onclick='$("#selWidth_<?php echo $zone; ?>").val("10");' src="../../forms/<?php echo $form_folder; ?>/images/brush_10.png" style="height:20px;width:20px;">
+            <img id="sketch_sizes_<?php echo attr($zone); ?>" onclick='$("#selWidth_<?php echo $zone; ?>").val("15");' src="../../forms/<?php echo $form_folder; ?>/images/brush_15.png" style="height:20px;width:20px;">
         </div>
+        
         <?php 
-
-        /** apache2 vhost config defaults to deny all access to documents directory directly.
-          * Thus we need to move from this directory, elsewhere?
-          * No! External access to data without authentication is not hippa compliant.
-          * We need a better way to serve the document.
-          * perhaps just like all the other documents from documents.php? Yes.
-          * Find the document_id by the filename...
-          */
-
             $file_location = $GLOBALS["OE_SITES_BASE"]."/".$_SESSION['site_id']."/documents/".$pid."/".$form_folder."/".$encounter."/".$side."_".$zone."_VIEW.png";
             $sql = "SELECT * from documents where url='file://".$file_location."'";
             $doc = sqlQuery($sql);
@@ -1755,18 +1709,21 @@ function display_draw_section ($zone,$encounter,$pid,$side ='OU',$counter='') {
                 $filetoshow = $GLOBALS['web_root']."/controller.php?document&retrieve&patient_id=$pid&document_id=".$doc['id']."&as_file=false&blahblah=".rand();
             } else {
                 //base image. 
-                $filetoshow = "../../forms/".$form_folder."/images/".$side."_".$zone."_BASE.png?".rand(); 
+                $filetoshow = "../../forms/".$form_folder."/images/".$side."_".$zone."_BASE.png"; 
             }
         ?>
-        <canvas id="Sketch_<?php echo attr($zone); ?>" class="borderShadow2" style="background: url(<?php echo attr($filetoshow); ?>)  no-repeat center center;background-size: 100% 100%;"></canvas>
-        <script type="text/javascript">
-            $(function() {
-                $('canvas').attr('height', '250px'); //these values are linked to the size of the background png, but not 1:1.
-                $('canvas').attr('width', '432px');  //changing sizes of canvas means playing with correct image size too.
-                $('#Sketch_<?php echo attr($zone); ?>').sketch({defaultSize:"1"});//frustrating nut to crack.
-                //need a better tool for this job.
-            });
-        </script>
+        <input type="hidden" id="url_<?php echo attr($zone); ?>" name="url_<?php echo attr($zone); ?>" value="<?php echo $filetoshow; ?>">
+       
+        <div align="center" class="borderShadow">
+            <canvas id="myCanvas_<?php echo $zone; ?>" name="myCanvas_<?php echo $zone; ?>" width="400" height="225"></canvas>
+        </div>
+        <input type="hidden" id="selWidth_<?php echo $zone; ?>" value="1">
+        <input type="hidden" id="selColor_<?php echo $zone; ?>" value="#000">
+        <div style="margin-top: 7px;">
+            <button onclick="javascript:cUndo('<?php echo $zone; ?>');return false;" name="canvas_button">Undo</button>
+            <button onclick="javascript:cRedo('<?php echo $zone; ?>');return false;" name="canvas_button">Redo</button>
+            <button onclick="javascript:drawImage('<?php echo $zone; ?>');return false;" name="canvas_button">Clear</button>
+        </div>
         <br />
     </div>
     <?php
@@ -2174,7 +2131,8 @@ function document_engine($pid) {
     $documents['docs_in_cat_id'] = $docs_in_cat_id;
     $documents['docs_in_name'] = $docs_in_name;
     
-    return array($documents);}
+    return array($documents);
+}
 
 /**
  *  This function returns hooks/links for the Document Library, 
@@ -2255,12 +2213,13 @@ function display($pid,$encounter,$category_value) {
                     onclick="return dopopup(\'../../../controller.php?document&view&patient_id='.$pid.'&parent_idX='.$documents['zones'][$category_value][$j]['id'].'&document_id='.$doc[id].'&as_file=false\')">
                     <img src="../../forms/'.$form_folder.'/images/jpg.png" class="little_image" /></a>';
         }
-//http://www.oculoplasticsllc.com/openemr/controller.php?document&view&patient_id=1&doc_id=411&
+    //http://www.oculoplasticsllc.com/openemr/controller.php?document&view&patient_id=1&doc_id=411&
         $episode .= '</td></tr>';
         $i++;
     }
    
-    return array($documents,$episode);}
+    return array($documents,$episode);
+}
 
 /**
  *  
@@ -2630,7 +2589,8 @@ function undo() {
       *
       *  The same concept needs to be applied to the drawings.  If the user is drawing, there will be stored incremental images of each stroke,
       *  for each section/zone.  
-      */ }
+      */ 
+}
 
 function row_deleter($table, $where) {
   $tres = sqlStatement("SELECT * FROM $table WHERE $where");

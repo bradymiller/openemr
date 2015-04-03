@@ -65,7 +65,6 @@ if ($_REQUEST['url']) {
   redirector($_REQUEST['url']);
   exit;
 }
-
 // Get user preferences, for this user
 $query  = "SELECT * FROM form_eye_mag_prefs where PEZONE='PREFS' AND (id=?) ORDER BY id,ZONE_ORDER,ordering";
 $result = sqlStatement($query,array($_SESSION['userauthorized']));
@@ -112,7 +111,7 @@ if (!$form_id or !$encounter) { echo $encounter."-".$form_id." No encounter...";
 //ideally this would point to an error databased by problem #, cause it'd be a problem.
 
 if ($refresh and $refresh != 'fullscreen') {
-  display_section($refresh,$id,$id,$pid);
+  display_PRIOR_section($refresh,$id,$id,$pid);
   exit;
 }
 
@@ -147,7 +146,6 @@ if ($refresh and $refresh != 'fullscreen') {
 
   </script>
 <!-- Add HTML5 Draw program library -->
-    <script type="text/javascript" src="<?php echo $GLOBALS['webroot'] ?>/library/js/sketch.js"></script>
     
     <!-- Add Font stuff for the look and feel.  -->
     <link rel="stylesheet" href="<?php echo $css_header;?>" type="text/css">
@@ -590,7 +588,7 @@ if ($refresh and $refresh != 'fullscreen') {
                   <?php ($PMH_VIEW !=2) ? ($display_PMH_view = "wide_textarea") : ($display_PMH_view= "narrow_textarea");?>                                 
                   <?php ($display_PMH_view == "wide_textarea") ? ($marker ="fa-minus-square-o") : ($marker ="fa-plus-square-o");?>
                   <div id="PMSFH_sections" name="PMSFH_sections">
-                    <?php display_section("PMSFH",$id,$id,$pid); ?>
+                    <?php display_PRIOR_section("PMSFH",$id,$id,$pid); ?>
                  </div>
                 </div>
               </div>
@@ -1169,7 +1167,7 @@ if ($refresh and $refresh != 'fullscreen') {
                             <?php ($CR==1)  ? ($display_Cyclo = "display") : ($display_Cyclo = "nodisplay"); ?>
                             <div id="LayerVision_CR" class="refraction borderShadow <?php echo $display_Cyclo; ?>">
                                 <span class="closeButton fa  fa-close" id="Close_CR" name="Close_CR"></span>
-                                <a class="closeButton2 fa fa-print" Xonclick="top.restoreSession();  return false;" href="../../forms/<?php echo $form_folder; ?>/SpectacleRx.php?target=CR&id=<?php echo attr($pid); ?>"></a>
+                                <a class="closeButton2 fa fa-print" onclick="top.restoreSession();  return false;" href="../../forms/<?php echo $form_folder; ?>/SpectacleRx.php?target=CR&id=<?php echo attr($pid); ?>"></a>
                                 <table id="cycloplegia">
                                     <th colspan=9><?php echo xlt('Cycloplegic (Wet) Refraction'); ?></th>
                                     <tr>
@@ -1178,7 +1176,6 @@ if ($refresh and $refresh != 'fullscreen') {
                                         <td><?php echo xlt('Cyl'); ?></td>
                                         <td><?php echo xlt('Axis'); ?></td>
                                         <td><?php echo xlt('Acuity'); ?></td>
-
                                         <td colspan="1" style="text-align:left;width:60px;">
                                             <input type="radio" name="WETTYPE" id="Flash" value="Flash" <?php if ($WETTYPE == "Flash") echo "checked='checked'"; ?>/>
                                             <label for="Flash" class="input-helper input-helper--checkbox"><?php echo xlt('Flash'); ?></label>
@@ -1488,7 +1485,7 @@ if ($refresh and $refresh != 'fullscreen') {
             <!-- end of the refraction box -->
 
             <!-- my reporting div for development only remove the "X" to see output from save.php-->
-          <div id="tellme" name="tellme"></div>
+          <div id="tellmeX" name="tellmeX"></div>
             <!-- end reporting div -->
 
           <!-- Start of the exam selection/middle menu row -->
@@ -2809,8 +2806,8 @@ if ($refresh and $refresh != 'fullscreen') {
               </div>
               
                         <br />  
-              <span class="Button" action="finalize" id="action" name="action" value="finalize" onclick="finalize();">FINALIZE</span>  
-              <BR /><BR />
+            <!--  <span class="Button" action="finalize" id="action" name="action" value="finalize" onclick="finalize();">FINALIZE</span>  
+             --> <BR /><BR />
             <!-- END IMP/PLAN -->  
           </div>
           <!-- end of the exam section -->
@@ -2837,17 +2834,15 @@ if ($refresh and $refresh != 'fullscreen') {
             <input type="button" value="Print" id="PrintButton" />
     -->
 
-    <canvas id="simple_sketch" width="1200" height="600" class="nodisplay"></canvas>
-    <script type="text/javascript">
-            $(function() {
-            $('#simple_sketch').sketch({defaultSize:"1"});
-        });
-    </script>
+   
         <!-- Add eye_mag js library -->
     <script type="text/javascript" src="../../forms/<?php echo $form_folder; ?>/js/shortcut.js"></script>
     <script type="text/javascript" src="../../forms/<?php echo $form_folder; ?>/js/my_js_base.js"></script>
+    <script type="text/javascript" src="../../forms/<?php echo $form_folder; ?>/js/canvasdraw.js"></script>
+
     <script type="text/javascript" src="<?php echo $GLOBALS['webroot']; ?>/library/restoreSession.php"></script>
     <script type="text/javascript" src="<?php echo $GLOBALS['webroot']; ?>/library/dialog.js"></script>
+   
 
   </body>   
 </html>

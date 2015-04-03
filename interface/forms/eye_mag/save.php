@@ -65,9 +65,6 @@ if ($encounter == "" && !$id) {
 
 /**  
  * Save/update the preferences  
- * could probably make these values into an array and loop through it to look prettier but this works...
- * and maybe it helps people understand what and why we are doing what we are doing?
- * Leave it to the professionals...
  */
 if ($_REQUEST['AJAX_PREFS']) { 
     $query = "REPLACE INTO form_eye_mag_prefs (PEZONE,LOCATION,LOCATION_text,id,selection,ZONE_ORDER,VALUE,ordering) 
@@ -156,9 +153,8 @@ if ($_REQUEST['AJAX_PREFS']) {
               ";
     sqlQuery($query,array($_SESSION['authId'],$_REQUEST['PREFS_ACT_SHOW'],$_REQUEST['PREFS_ACT_SHOW)'])); 
 }
-
 /**
-  * ADD ANY NEW PREFERENCES HERE, and as a hidden field in the body.  I prefer this vs Session items but that would
+  * ADD ANY NEW PREFERENCES above, and as a hidden field in the body.  I prefer this vs Session items but that would
   * also work here.  No good reason.
   */
 
@@ -181,38 +177,39 @@ if ($_GET["mode"] == "new")             {
   // Submission are ongoing and then the final unload of page changes the 
   // DOM variable $("#final") to == 1.  As one draws on the HTML5 canvas, each step is saved incrementally allowing
   // the user to go back through their history should they make a drawing error or simply want to reverse a
-  // step.  On finalization, we need to cleanup the drawing history images and leave just the final one.
-  // For example, OU_EXTERNAL_DRAW_0.png through OU_EXTERNAL_DRAW_100.png exist since the user did 101 drawing
-  // events in the EXTernal zone!  Now we only want OU_".$zone."_DRAW.png".  Clean up the directories and remove the 
-  //  document from the DB.
+  // step.  They are saved client side now.  On finalization, we need to update the _VIEW.png file with the current
+  // canvases.  
 
-  finalize($pid,$encounter);  //does nothing if final !=1
-    //need to update the eye_mag form in DB to LOCKED, when and by whom, and esign it according to openEMR specs...
-    //need help here.
+  // Is the form LOCKED? when and by whom, and esign it according to openEMR specs...
+  // Need help here.
+  // If this is LOCKED by esigning,tell user to move along, nothing to see here...
+  // if this form/encounter? is esigned and locked, then return without touching data.
   
-  // Any field that exists in the database can be updated
+  // Any field that exists in the database could be updated
   // so we need to exclude the important ones...
   // id  date  pid   user  groupname   authorized  activity  .  Any other just add them below.
-  // Doing it this way means you can add new fields and the update feature still works.    
+  // Doing it this way means you can add new fields on a web page and in the DB without touching this function.
+  // The update feature still works because it only updates columns that are in the table you are wrking on.    
   $query = "SHOW COLUMNS from form_eye_mag";
   $result = sqlStatement($query);
 
   if (!$result) {
-    return 'Could not run query: ' . mysql_error();
+    return 'Could not run query: No columns found in your table!  ' . mysql_error();
     exit;
   }
   $fields = array();
   
   if (sqlNumRows($result) > 0) {
     while ($row = sqlFetchArray($result)) {
-      //exclude critical fields from update
+      //exclude critical columns/fields from update
       if ($row['Field'] == 'id' or 
          $row['Field'] == 'date' or 
          $row['Field'] == 'pid' or 
          $row['Field'] == 'user' or 
          $row['Field'] == 'groupname' or 
          $row['Field'] == 'authorized' or 
-         $row['Field'] == 'activity') continue;
+         $row['Field'] == 'activity') 
+        continue;
       if (isset($_POST[$row['Field']])) $fields[$row['Field']] = $_POST[$row['Field']];
     }
     /** checkboxes need to be entered manually as they are only submitted when they are checked
@@ -233,8 +230,6 @@ if ($_GET["mode"] == "new")             {
     $success = formUpdate($table_name, $fields, $form_id, $_SESSION['userauthorized']);
     return $success;
   }
-  
-
 } elseif ($_GET["mode"] == "retrieve")  { 
     $query = "SELECT * FROM patient_data where pid=?";
     $pat_data =  sqlQuery($query,array($pid));
@@ -252,22 +247,20 @@ if ($_GET["mode"] == "new")             {
               forms.id = ? and 
               forms.deleted !='1'  
               ORDER BY forms.date DESC";
-  //    echo $query;
     $visit_data =  sqlQuery($query,array($form_folder,$id_to_show));
     $query = "select form_eye_mag.id as id_to_show from form_eye_mag where id=?";
     $visit_data =  sqlQuery($query,array($id_to_show));
     @extract($visit_data);
-      //HERE WE DECIDE WHAT WE WANT TO SHOW = A SEGMENT, A ZONE OR EVEN A VALUE...  
       //ALL VARIABLES GET EXTRACTED AND ARE READY FOR USE.
-    
+      //HERE WE DECIDE WHAT WE WANT TO SHOW = A SEGMENT, A ZONE OR EVEN A VALUE...  
+      
     if ($_REQUEST['PRIORS_query']) {
       //$id_to_show = $id;
       include_once("../../forms/".$form_folder."/php/".$form_folder."_functions.php");
-      display_section($_REQUEST['zone'],$_REQUEST['orig_id'],$visit_data['id_to_show'],$pid);
+      display_PRIOR_section($_REQUEST['zone'],$_REQUEST['orig_id'],$visit_data['id_to_show'],$pid);
       return; 
     }
 } 
-
 
 /**  
  * Save the canvas drawings  
@@ -283,27 +276,7 @@ if ($_REQUEST['canvas']) {
    * Each file also needs to be filed as a Document to retrieve through controller to keep HIPAA happy
    * Documents directory and subdirs are NOT publicly accessible directly (w/o acl checking)
    */
-  //sites/default/documents
-  debug($_REQUEST);
-  $side = "OU";
-  $storage = $GLOBALS["OE_SITES_BASE"]."/".$_SESSION['site_id']."/documents/".$pid."/".$form_folder."/".$encounter;
   
-  if ($_POST['prior']) {
-    //we are using the back button
-    // return the PRIOR image document for this zone
-    $PRIOR_url = "file://".$storage."/OU_".$_POST['zone']."_DRAW_". $_POST['prior'].".png";
-    $query = "select id from documents where url like '$PRIOR_url'";
-    $prior_doc = sqlQuery($query);
-    //var_dump($prior_doc);
-    echo $prior_doc['id'];
-   echo $query;
-    echo $GLOBALS['web_root']."/controller.php?document&retrieve&patient_id=".$pid."&document_id=".$prior_doc['id']."&as_file=false";
-  //echo $prior_doc['id'];
-
-    //echo "hello".$css;
-    exit;
-
-  }
   $location = $GLOBALS["OE_SITES_BASE"]."/".$_SESSION['site_id']."/documents/".$pid;
  
   if (!is_dir($location."/".$form_folder."/".$encounter)) {
@@ -321,61 +294,32 @@ if ($_REQUEST['canvas']) {
 
   /** 
    *    BASE, found in forms/$form_folder/images eg. OU_EXT_BASE.png
-   *          BASE is the blank image to start from and can be customized. Currently 432x150px
+   *          BASE is the blank image to start from and can be customized. 
    *    VIEW, found in /sites/$_SESSION['site_id']."/documents/".$pid."/".$form_folder."/".$encounter
    *    TEMP, intermediate png merge file of new drawings with BASE or previous VIEW
-   *    side, (potential variable $side)  To add OD and OS with pre-existing OU.  Will next increase 
-   *          to three png files (OU,OD,OS) per LOCATION (EXT,ANTSEG,RETINA,NEURO) 
-   *          Since we only have one drawing so far.  Can extend this to a 3D interpretation when 
-   *          integrating radiology or OCT or 3D Ultrasound
+   *          Currently not implementd/used since we merge them client side, but may be later for layers?
+   *    side, optional.  To add OD and OS with pre-existing OU.  Will next increase 
+   *          to three png files (OU,OD,OS) per LOCATION (HPI,PMH,EXT,ANTSEG,RETINA,NEURO,IMPPLAN) 
+   *          Since we only have one drawing so far.  Can extend this to a 3D plot/interpretation (X100Y46Z359) when 
+   *          integrating layers with objects, perhaps radiology, OCT or 3D Ultrasound
    *          to pick out images at a specific angle/slice.  For now just use OU.
    */
-  $counting = $zone."_counter";
- //   echo "<pre>zone-counter: ".$zone."_counter".$counting;
-  //  var_dump($_REQUEST);
-  //  exit;
-  //on occasion the image goes all black.  Not sure why.
-  // Is there a way to detect that and if so use the base image until this bug is found?
-  // Just scroll back.
-  if (file_exists($storage."/OU_".$zone."_VIEW.png")) {   //  add new drawings to previous for this encounter
-    $file_base = $storage."/OU_".$zone."_VIEW.png";   //
-  } else  {                                           // start from the base image found in $form_folder eye_mag directory/images
-    $file_base = $GLOBALS['webserver_root']."/interface/forms/".$form_folder."/images/OU_".$zone."_BASE.png";
-  }
+  $side = "OU";
+  $storage = $GLOBALS["OE_SITES_BASE"]."/".$_SESSION['site_id']."/documents/".$pid."/".$form_folder."/".$encounter;  
   $data =$_POST["imgBase64"];
   $data=substr($data, strpos($data, ",")+1);
   $data=base64_decode($data);
-  $file_draw = $storage."/OU_".$zone."_DRAW.png";
+  $file_draw = $storage."/OU_".$zone."_VIEW.png";
   file_put_contents($file_draw, $data);
 
-  /**
-   *    Three png files (OU,OD,OS) per LOCATION (EXT,ANTSEG,RETINA,NEURO) 
-   *    BASE, found in forms/$form_folder/images eg. OU_EXT_BASE.png
-   *          BASE is the blank image to start from and can be customized. Currently 432x150px
-   *    VIEW, found in /sites/$_SESSION['site_id']."/".$form_folder."/".$pid."/".$encounter
-   *    TEMP, intermediate png merge file of new drawings with BASE or previous VIEW
-   *          These are saved to be used in an undo feature...
-   */
-  if (file_exists($storage."/OU_".$zone."_VIEW.png")) { //add new drawings to previous for this encounter
-    $file_base = $storage."/OU_".$zone."_VIEW.png";
-  } else  { //start from the base image
-    $file_base = $GLOBALS['webserver_root']."/interface/forms/".$form_folder."/images/OU_".$zone."_BASE.png";
-  }
-  //merge needs to store to a separate file first, then rename to new VIEW
-  $file_temp = $storage."/OU_".$zone."_TEMP.png"; 
-  $file_here = $storage."/OU_".$zone."_VIEW.png";
-  merge( $file_draw, $file_base, $file_temp);
-  rename( $file_temp , $file_here );
- 
-  // Store pointer to this in DB table documents
-  /** To be done now.
+
+   /** 
     *  We have a file in the right place
     *  We need to tell the documents engine about this file, add it to the documents and doc_to_cat tables.
-    *  
+    *  So we can pullit up later for display.  It is part of the official record.
     */
-
-  
-  $doc = sqlQuery("Select * from documents where url='file://".$storage."/OU_".$zone."_VIEW.png'");
+   $file_here ="file://".$storage."/".$side."_".$zone."_VIEW.png";
+  $doc = sqlQuery("Select * from documents where url='".$file_here."'");
   if ($doc['id'] < '1') {
     $doc = sqlQuery("select MAX(id)+1 as id from documents");
     $sql = "REPLACE INTO documents set 
@@ -389,73 +333,18 @@ if ($_REQUEST['canvas']) {
               docdate=NOW(),
               path_depth='3',
               url=?";
-    $doc_id = sqlQuery($sql,array($doc['id'],$encounter,filesize($file_here),$_SESSION['authUserID'],$pid,'file://'.$file_here));  
+    $doc_id = sqlQuery($sql,array($doc['id'],$encounter,filesize($file_here),$_SESSION['authUserID'],$pid,$file_here));  
 
     $category = sqlQuery("select id from categories where name='Drawings'");       
     $sql = "REPLACE INTO categories_to_documents set category_id = ?, document_id = ?";
     sqlQuery($sql,array($category['id'],$doc['id']));  
   }
-   /** HISTORY FEATURE: Images.  
-    * Store this latest drawing separately, incrementally, in the directory so user can go backwards - 
-    * canvas stores everything in real time! We need to be able to correct a slip-up by reversing through
-    * old images just like the PRIORS feature for the text fields but using today's most recent drawings...
-    * This may have to be done client side due to network lag issues
-    */
-  finalize($pid,$encounter);
-   
-  $PRIOR_url = "in progress";
-  $file_history = $storage."/OU_".$zone."_DRAW_1";
-  $file_store= $file_history.".png";
-  $additional = '1';
-  //limit it to 10 for now...
-
-  while (file_exists($file_history.".png")) {
-    //echo $file_history;
-        $file_history = $storage."/OU_".$zone."_DRAW_". $additional++;
-        $file_store= $file_history.".png";
-  }
-  copy($storage."/OU_".$zone."_VIEW.png",$file_store);
-  // We DO need to store these images in the Documents DB
-  // These are temporary files, to be deleted on finalization/esigning.  Still need to integrate esigning with openemr.
-  // We do not need these to show up in the document list or under Drawings category, ever so stop it...
-  // Is that sensitivity???  Not sure without altering the main openemr code...
-  // Why give the temporary document a category?  If we don't, it won't show up on the documents list, or will it?
-  
-  $PRIOR_url = "file://".$storage."/OU_".$zone."_DRAW_". $additional--.".png";
-
-  $doc = sqlQuery("select MAX(id)+1 as id from documents");
-  $sql = "REPLACE INTO documents set 
-              id='".$doc['id']."',
-              type='file_url',size='".filesize($file_store)."',
-              date=NOW(),
-              mimetype='image/png',
-              owner='".$_SESSION['authUserID']."',
-              foreign_id='".$pid."',
-              docdate=NOW(),
-              path_depth='3',
-              url='file://".$file_store."'";
-  $doc_id = sqlQuery($sql);  
-
- // $category = sqlQuery("select id from categories where name='Drawings'");       
- // $sql = "REPLACE INTO categories_to_documents set category_id = '" . $category['id'] . "', document_id = '" . $doc['id'] . "'";
- // sqlQuery($sql);  
-    
-  //echo "<BR />".$PRIOR_url." now<br />";
-  $prior_doc = sqlQuery("select id from documents where url =?",array($PRIOR_url));
-  //echo $GLOBALS['web_root']."/controller.php?document&retrieve&patient_id=".$pid."&document_id=".$prior_doc['id']."&as_file=false";
-echo $prior_doc['id'];
-   // Why give the temporary document a category?  If we don't, it won't show up on the documents list, or will it?
-  //  $last_id = "/openemr/".$_SESSION['site_id']."/documents/".$pid."/".$form_folder."/".$encounter."/OU_".$zone."_DRAW_". $additional-- .".png";
-  // what we echo here should be the link to the previous Drawing, which the UNDO features will utilize
-//  echo $prior_doc['id'];
-
 }
 
 if ($copy) {
-//  echo $zone,$id,$form_id,$pid;
-//  exit;
   copy_forward($zone,$copy_from,$copy_to,$pid);
 }
+
 function debug($local_var) {
     echo "<pre><BR>We are in the debug function.<BR>";
     echo "Passed variable = ". $local_var . " <BR>";
@@ -464,7 +353,27 @@ function debug($local_var) {
 }
 
 function merge($filename_x, $filename_y, $filename_result) {
-
+  /**
+   *    Three png files (OU,OD,OS) per LOCATION (EXT,ANTSEG,RETINA,NEURO) 
+   *    BASE, found in forms/$form_folder/images eg. OU_EXT_BASE.png
+   *          BASE is the blank image to start from and can be customized. Currently 432x150px
+   *    VIEW, found in /sites/$_SESSION['site_id']."/".$form_folder."/".$pid."/".$encounter
+   *    TEMP, intermediate png merge file of new drawings with BASE or previous VIEW
+   *          These are saved to be used in an undo feature...
+   */
+/*  
+This section
+if (file_exists($storage."/OU_".$zone."_VIEW.png")) { //add new drawings to previous for this encounter
+    $file_base = $storage."/OU_".$zone."_VIEW.png";
+  } else  { //start from the base image
+    $file_base = $GLOBALS['webserver_root']."/interface/forms/".$form_folder."/images/OU_".$zone."_BASE.png";
+  }
+  //merge needs to store to a separate file first, then rename to new VIEW
+  $file_temp = $storage."/OU_".$zone."_TEMP.png"; 
+  $file_here = $storage."/OU_".$zone."_VIEW.png";
+  merge( $file_draw, $file_base, $file_temp);
+  rename( $file_temp , $file_here );
+ */
   // Get dimensions for specified images
   list($width_x, $height_x) = getimagesize($filename_x);
   list($width_y, $height_y) = getimagesize($filename_y);
@@ -487,9 +396,6 @@ function merge($filename_x, $filename_y, $filename_result) {
   imagedestroy($image_x);
   imagedestroy($image_y);
 }
+finalize($pid,$encounter);
 exit;
-$_SESSION["encounter"] = $encounter;
-formHeader("Redirecting....");
-formJump();
-formFooter();
 ?>

@@ -671,8 +671,9 @@ text-align: center;
 text-decoration: none;
 color: black;
 font-weight: bold;
-margin-bottom: auto;
+margin-bottom: -3px;
 }
+
 .transparent {
   z-index: 10;
 }
