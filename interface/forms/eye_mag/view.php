@@ -151,9 +151,9 @@ if ($refresh and $refresh != 'fullscreen') {
     <link rel="stylesheet" href="<?php echo $css_header;?>" type="text/css">
     <link rel="stylesheet" href="<?php echo $GLOBALS['webroot'] ?>/library/css/pure-min.css">
     <link rel="stylesheet" href="<?php echo $GLOBALS['webroot'] ?>/library/css/bootstrap-3-2-0.min.css">
-    <link rel=stylesheet href="<?php echo $GLOBALS['css_header']; ?>" type="text/css">
     
     <link rel="stylesheet" href="../../forms/<?php echo $form_folder; ?>/style.css" type="text/css">    
+    <link rel=stylesheet href="<?php echo $GLOBALS['css_header']; ?>" type="text/css">
     <link rel="stylesheet" href="<?php echo $GLOBALS['webroot'] ?>/library/css/font-awesome-4.2.0/css/font-awesome.min.css">
     
     <meta charset="utf-8">
@@ -398,8 +398,7 @@ if ($refresh and $refresh != 'fullscreen') {
                             </tr> 
                             <tr>
                               <td class="right"><b><?php echo xlt('Duration'); ?>:</b></td>
-                              <td><textarea name="DURATION1" id="DURATION1" tabindex="37" style="width:250px;">
-                                <?php echo text($DURATION1); ?></textarea>
+                              <td><textarea name="DURATION1" id="DURATION1" tabindex="37" style="width:250px;"><?php echo text($DURATION1); ?></textarea>
                               </td>
                               <td>
                                 <i><?php echo xlt('How long does it last?'); ?></i>
@@ -473,8 +472,7 @@ if ($refresh and $refresh != 'fullscreen') {
                             </tr> 
                             <tr>
                               <td class="right"><b><?php echo xlt('Duration'); ?>:</b></td>
-                              <td><textarea name="DURATION2" id="DURATION2" tabindex="37" style="width:250px;">
-                                <?php echo text($DURATION2); ?></textarea>
+                              <td><textarea name="DURATION2" id="DURATION2" tabindex="37" style="width:250px;"><?php echo text($DURATION2); ?></textarea>
                               </td>
                               <td>
                                 <i><?php echo xlt('How long does it last?'); ?></i>
@@ -548,8 +546,7 @@ if ($refresh and $refresh != 'fullscreen') {
                             </tr> 
                             <tr>
                               <td class="right"><b><?php echo xlt('Duration'); ?>:</b></td>
-                              <td><textarea name="DURATION3" id="DURATION3" tabindex="37" style="width:250px;">
-                                <?php echo text($DURATION3); ?></textarea>
+                              <td><textarea name="DURATION3" id="DURATION3" tabindex="37" style="width:250px;"><?php echo text($DURATION3); ?></textarea>
                               </td>
                               <td>
                                 <i><?php echo xlt('How long does it last?'); ?></i>

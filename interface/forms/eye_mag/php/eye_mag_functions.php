@@ -1720,9 +1720,9 @@ function display_draw_section ($zone,$encounter,$pid,$side ='OU',$counter='') {
         <input type="hidden" id="selWidth_<?php echo $zone; ?>" value="1">
         <input type="hidden" id="selColor_<?php echo $zone; ?>" value="#000">
         <div style="margin-top: 7px;">
-            <button onclick="javascript:cUndo('<?php echo $zone; ?>');return false;" name="canvas_button">Undo</button>
-            <button onclick="javascript:cRedo('<?php echo $zone; ?>');return false;" name="canvas_button">Redo</button>
-            <button onclick="javascript:drawImage('<?php echo $zone; ?>');return false;" name="canvas_button">Clear</button>
+            <button onclick="javascript:cUndo('<?php echo $zone; ?>');return false;" id="Undo_Canvas_<?php echo $zone; ?>">Undo</button>
+            <button onclick="javascript:cRedo('<?php echo $zone; ?>');return false;" id="Redo_Canvas_<?php echo $zone; ?>">Redo</button>
+            <button onclick="javascript:drawImage('<?php echo $zone; ?>');return false;" id="Clear_Canvas_<?php echo $zone; ?>">Clear</button>
         </div>
         <br />
     </div>
@@ -2230,7 +2230,6 @@ function redirector($url) {
      ?>
     <html>
     <head>
-    <?php html_header_show(); ?>
     <!-- jQuery library -->
     <script src="<?php echo $GLOBALS['webroot']; ?>/library/js/jquery.min.js"></script>
 
@@ -2244,13 +2243,12 @@ function redirector($url) {
         <![endif]-->
         <!-- Add Font stuff for the look and feel.  -->
     <link rel="stylesheet" href="<?php echo $css_header;?>" type="text/css">
-    <link rel="stylesheet" href="http://yui.yahooapis.com/pure/0.5.0/pure-min.css">
+    <link rel="stylesheet" href="<?php echo $GLOBALS['webroot']; ?>/library/css/pure-min.css">
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="description" content="">
     <meta name="author" content="">
-    <!-- link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css" -->
     <link rel="stylesheet" href="<?php echo $GLOBALS['webroot']; ?>/interface/forms/<?php echo $form_folder; ?>/style.css" type="text/css">    
     <link rel="stylesheet" href="<?php echo $GLOBALS['webroot']; ?>/library/css/font-awesome-4.2.0/css/font-awesome.min.css">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -2479,19 +2477,19 @@ function menu_overhaul_top($pid,$encounter,$title="Eye Exam") {
     <?php 
 
     return $input_echo;}
-
+/**
+ *  This is currently a floating div top and near the left with patient demographics and such.
+ *  It can also be modified to create a left had column full of the PMH/MEDS/POH/ALL/etc that either
+ *  moves with the page or remains static.  If so, changes to the PMH data will need to show up here too...
+ */
 function menu_overhaul_left($pid,$encounter) {
     global $form_folder;
     global $pat_data;
     @extract($pat_data);
     /*
-     * I don't understand the controller.php thing/Smarty.  We need to find out if the patient has a photo right? 
+     * We need to find out if the patient has a photo right? 
      */
-    //  echo "time now = ". date('g:i:s:u a'); 
     list($documents) = document_engine($pid);
-  //  echo "<pre><br /><div style='text-align:left'>time now = ". date('g:i:s:u a'); 
-    //print_r($documents);
-   
         ?>   </div>   <div class="borderShadow" style="width:280px;position:relative;text-align:center;padding:5px 0px 5px 5px;">
         <?
         //if the patient has a photograph, use it else use generic avitar thing.
@@ -2549,6 +2547,15 @@ function menu_overhaul_left($pid,$encounter) {
     <?php
 }
 
+/**
+ *  This is currently just closing up the divs.  It can easily be a footer with the practice info
+ *  or whatever you like.  Maybe a placeholder for user groups or link outs to data repositories 
+ *  such as Medftech.com/PubMed/UpToDate/DynaMed????
+ *  It could provide information as to available data imports from connected machines - yes we have 
+ *  data from an autorefractor needed to be imported.  The footer can be fixed or floating.
+ *  It could have balance info, notes, or an upside down menu mirroring the header menu, maybe allowing
+ *  the user to decide which is fixed and which is not?  Oh the possibilities.
+ */
 function menu_overhaul_bottom($pid,$encounter) {
  ?>
                 </div>
@@ -2566,29 +2573,27 @@ function menu_overhaul_bottom($pid,$encounter) {
 function undo() {
     /**  In order to have an undo feature, we need to keep copies of the old records - not last visit but last save.
       *  And how should we do that?  The form_eye_mag is the official current record.
-      *  Create another table form_eye_mag_undo.  Each save to form_eye_mag is also saved to this table, incrementally.
-      *  To undo simply change all the values on the form back to the prior values.  Just like with PRIORS but all of them.
+      *  SERVER SIDE: Create another table form_eye_mag_undo.  Each save to form_eye_mag is also saved to this table, incrementally.
+      *  CLIENT SIDE: Each snapshot of text values sent to the server during a save are stored in an inmemory array.
+      *  To undo simply change all the values on the form back to the prior values, either from the server or client storage area.
+      *  Just like with PRIORS (server side) but all of them on the form.  Doing this client side makes the most sense.
+      *  Using similar logic as is now done for the canvases in canvasdraw.js, we should be able to do this...
       *  The end user will have an unlimited number of "undos" available - well they will be able to go back to the record's
       *  original blank state, in order, how ever many that is.  When undone is run, or selected from the menu, 
-      *  the values returned replace the current on screen values but a call to "save.php" has not gone out.
+      *  the values returned replace the current on screen values for display only -- a call to "save.php" has not gone out, yet.
       *  The user can scroll foward and back (Redo and Undo).  Redo is disabled if this is the latest.  Undo > once
-      *  and it is not disabled.  
-      *  Leave the page, touch any field on the page and you will most likely not be able to go forward.
+      *  and it is enabled.  
+      *  Leave the page, touch any field on the page and you will trigger a "save.php" and now you are at the tip
+      *  of the sanpshots, and you will not be able to go forward.
       *  If you are happy with the change the undo provided, proceed with another entry or leave the page and save.php will store it. 
       *  We need a way to reset the undo table to this number.  It will have to be a session key or a hard coded hidden html input field.
-      *  That works.
+      *  That works if we use a server side storage methid.
       *  Another way to do this is all with javascript.  We can create another monster array clientside, containing (sequential) all variable values
       *  that just drop in without involving ajax and server calls.  Seems this should be faster too, since locally performed?
-      *  To make this all work, we need to delete every record for this form and encounter in the undo folder.
-      *  The act of finalizing and "esigning" a document to me means the document is locked.  There should be some sort of
-      *  encryption key here with a checksum and/or digital time mark to say this is locked and if the key fails, the values do
-      *  NOT natch the esigned document.  Indeed all knock-on changes should be added as addeneums or notes or whatever exists in the main
-      *  openEMR.  The file needs to be locked and unless someone goes into the DB to change a field's value, the program should not allow
-      *  any update.  If they do that, the keys will not match.  An immediate chart integreity issue is raised.  I don't know how to do this
-      *  but someone does...  Can a DB field be made permanent?  Can a DB field have an encryption protocol attached to it to do this?
       *
-      *  The same concept needs to be applied to the drawings.  If the user is drawing, there will be stored incremental images of each stroke,
-      *  for each section/zone.  
+      *  The same server side concept has been applied to the drawings already.  If the user is drawing, there will be stored incremental images of each stroke,
+      *  for each section/zone, on the client side, with only the latest changes sent to server.  Scrolling back and forth pulls from the browser cache, not server.
+      *
       */ 
 }
 
@@ -2613,40 +2618,30 @@ function row_deleter($table, $where) {
   }
  }
 
+
+/*
+*  To make this all work, we need to delete every record for this form and encounter in the undo folder.
+*  The act of finalizing and "esigning" a document to me means the document is locked.  There should be some sort of
+*  encryption key here with a checksum and/or digital time mark to say this is locked and if the key fails, the values do
+*  NOT natch the esigned document.  Indeed all knock-on changes should be added as addeneums or notes or whatever exists in the main
+*  openEMR.  The file needs to be locked and unless someone goes into the DB to change a field's value, the program should not allow
+*  any update.  If they do that, the keys will not match.  An immediate chart integreity issue is raised.  I don't know how to do this
+*  but someone does...  Can a DB field be made permanent?  Can a DB record of all fields have an encryption protocol attached to it 
+*  so if it is changed, the stored key no longer matches and the record is forever tainted? We should make openEMR records
+*  untaintable, if that is a word.
+*/
 function  finalize() {
     global $form_folder;
     global $pid;
     global $encounter;
- //   echo $_REQUEST['action'] ." - ".$_REQUEST['final']."<br />";
     if (($_REQUEST['action'] =='finalize') or ($_REQUEST['final'] == '1')) {
-        $storage = $GLOBALS['OE_SITES_BASE']."/".$_SESSION['site_id']."/documents/".$pid."/".$form_folder."/".$encounter;
-        $zones = array("HPI","PMH","EXT","ANTSEG","RETINA","NEURO","VISION","IMPPLAN");
-        foreach ($zones as &$zone) {
-            //delete all the prior drawings for this encounter leaving the final one.
-            $file_delete = $GLOBALS['OE_SITES_BASE']."/".$_SESSION['site_id']."/documents/".$pid."/".$form_folder."/".$encounter."/OU_".$zone."_DRAW";
-            array_map('unlink', glob($file_delete."*")); 
-
-            $query = "SELECT * FROM documents WHERE url like 'file://".$file_delete."%'";
-            $item = "'file://".$file_delete."%'";
-            $trow = sqlStatement($query);
-            while ($pics= sqlFetchArray($trow))   {   
-                $output1 = row_deleter("categories_to_documents", "document_id = '" . $pics['id'] . "'");
-                $output2 = row_deleter("documents", "id = '" . $pics['id'] . "'");
-          //      echo "<pre>".$output1."<br />2. ".$output2."<br /></pre>";
-            }
-        }
+        //logic to finalize according to openEMR protocol
     }
-   /* formHeader("Redirecting....");
-    //formJump('/');
-    
-    formJump('./view_form.php?formname='.$form_name.'&id='.$encounter.'&pid='.$pid);
-    formFooter();
-    exit;
-    */
     return;
 }
 /*
- * This was taken from new_form.php
+ * This was taken from new_form.php and is helping to integrate new menu with openEMR
+ * menu seen on encounter page.
  */
 function Menu_myGetRegistered($state="1", $limit="unlimited", $offset="0") {
     $sql = "SELECT category, nickname, name, state, directory, id, sql_run, " .

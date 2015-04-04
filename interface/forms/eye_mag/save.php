@@ -54,7 +54,7 @@ $form_name    = "eye_mag";
 $form_folder  = "eye_mag";
 $returnurl    = $GLOBALS['concurrent_layout'] ? 'encounter_top.php' : 'patient_encounter.php';
 //@extract($_SESSION); //working to remomve
-@extract($_REQUEST); //working to remove
+//@extract($_REQUEST); //working to remove
 
 $id = $_REQUEST['id'];
 $AJAX_PREFS = $_REQUEST['AJAX_PREFS'];
@@ -167,7 +167,8 @@ $pid            = $_SESSION['pid'];
 $userauthorized = $_SESSION['userauthorized'];
 $encounter      = $_REQUEST['encounter'];
 if ($encounter == "") $encounter = date("Ymd");
-$zone = $_REQUEST['zone'];
+$form_id        = $_REQUEST['form_id'];
+$zone           = $_REQUEST['zone'];
 
 if ($_GET["mode"] == "new")             { 
   $newid = formSubmit($table_name, $_POST, $id, $userauthorized);
@@ -226,7 +227,6 @@ if ($_GET["mode"] == "new")             {
     if (!$_POST['TROPICAMIDE']) $fields['TROPICAMIDE'] = '0';
     if (!$_POST['BALANCED']) $fields['BALANCED'] = '0';
     if (!$_POST['RX1']) $fields['RX1'] = '0';
- 
     $success = formUpdate($table_name, $fields, $form_id, $_SESSION['userauthorized']);
     return $success;
   }
@@ -318,7 +318,7 @@ if ($_REQUEST['canvas']) {
     *  We need to tell the documents engine about this file, add it to the documents and doc_to_cat tables.
     *  So we can pullit up later for display.  It is part of the official record.
     */
-   $file_here ="file://".$storage."/".$side."_".$zone."_VIEW.png";
+  $file_here ="file://".$storage."/".$side."_".$zone."_VIEW.png";
   $doc = sqlQuery("Select * from documents where url='".$file_here."'");
   if ($doc['id'] < '1') {
     $doc = sqlQuery("select MAX(id)+1 as id from documents");
@@ -396,6 +396,6 @@ if (file_exists($storage."/OU_".$zone."_VIEW.png")) { //add new drawings to prev
   imagedestroy($image_x);
   imagedestroy($image_y);
 }
-finalize($pid,$encounter);
+finalize($pid,$encounter); //since we are storing images client side, we may not need this...
 exit;
 ?>
