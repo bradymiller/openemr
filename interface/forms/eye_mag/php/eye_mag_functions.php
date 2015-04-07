@@ -134,7 +134,7 @@ function priors_select($zone,$orig_id,$id_to_show,$pid,$type='text') {
         </span>&nbsp;&nbsp;
         <select name="PRIOR_'.attr($zone).'" 
                 id="PRIOR_'.attr($zone).'" 
-                style="padding:0 5;font-size:1.1em;" 
+                style="padding:0 0;font-size:1.1em;" 
                 class="PRIORS">
                 '.$output.'
         </select>
@@ -151,7 +151,6 @@ function priors_select($zone,$orig_id,$id_to_show,$pid,$type='text') {
                 class="fa  fa-fast-forward PRIORS"
                 title="'.attr($zone).': '.attr($priors[0]['encounter_date']).'"> &nbsp;
         </span>
-        
     </span>';
                  
      return $output_return;   
@@ -184,7 +183,7 @@ function display_PRIOR_section ($zone,$orig_id,$id_to_show,$pid,$report = '0') {
     $result = sqlStatement($query,array($_SESSION['authUserID']));
     while ($prefs= sqlFetchArray($result))   {   
         @extract($prefs);    
-        $$LOCATION = $VALUE; 
+        $$LOCATION = $VALUE; //same as concept ${$prefs['LOCATION']} = $prefs['VALUE'];
     }
     $query = "SELECT * FROM form_".$form_folder." where pid =? and id = ?";
     $result = sqlQuery($query, array($pid,$id_to_show));
@@ -1317,34 +1316,13 @@ function display_PRIOR_section ($zone,$orig_id,$id_to_show,$pid,$report = '0') {
         }
          // Collect parameter(s)
         $category = empty($_REQUEST['category']) ? '' : $_REQUEST['category'];
-   
-        //we want to display PMSFH in this little box...
-        //let's start to see what it will look like.
-        //let's try a 2 column approach 1st
-        //why not use the Quick Picks 2 column approach?
-        
-        //ok
-        /*
-        <div id="stats_div" name="stats_div">
-            tesy
-        </div>
-        */
         ?>
         <div id="PMFSH_block_1" name="PMFSH_block_1" class="QP_block borderShadow text_clinical" style="height:2.9in;overflow:auto;">
             <?php
             $encount = 0;
             $lasttype = "";
             $first = 1; // flag for first section
-            /*
-            <script type="text/javascript" language="JavaScript">
-            $("#stats_div").load("../../../interface/patient_file/summary/stats.php");
-    
-            </script>
-                </div>
-            */
-            ?><script type="text/javascript" src="<?php echo $GLOBALS['webroot']; ?>/library/dialog.js"></script>
-            <?php
-                    $counter="0";
+            $counter="0";
             foreach ($ISSUE_TYPES as $focustype => $focustitles) {
                 
                 if ($category) {
@@ -1671,9 +1649,9 @@ function display_draw_section ($zone,$encounter,$pid,$side ='OU',$counter='') {
              * Will need to do a lot of coding to create this.  Jist is ajax call to server for image retrieval.
              * To get this to work we need a way to select an old image to work from, use current or return to baseline.
              * This will require a global BACK button like above (BUTTON_BACK_<?php echo attr($zone); ?>). 
-             * The button above scrolls through current encounter zone images as they are incrementally added, to "Undo" a mishap.  
+             * The Undo Redo buttons scroll through current encounter zone images as they are incrementally added, to "Undo" a mishap.  
              * If we look back at a prior VISIT's saved final image, 
-             * we should store a copy of this image in today's directory and give it a new number, one greater than the current,
+             * we should store a copy of this image client side also in order.
              * just like we had drawn new stuff and stored the changes. 
              * Thus the Undo feature will only retrieve images from today's encounter directory
              * Need to think about how to display this visually so it's intuitive, without cluttering the page...
@@ -2104,13 +2082,11 @@ function document_engine($pid) {
             }
         }
     }
-
     $query = "Select *
                 from 
                 categories, documents,categories_to_documents
                 where documents.foreign_id=? and documents.id=categories_to_documents.document_id and
                 categories_to_documents.category_id=categories.id ORDER BY categories.name";
-         //       echo $query;
     $sql2 =  sqlStatement($query,array($pid));
     while ($row2 = sqlFetchArray($sql2)) {
         $documents[]= $row2;
@@ -2150,29 +2126,7 @@ function display($pid,$encounter,$category_value) {
     global $form_folder;
     global $id;
     global $documents;
-        /**
-        *  I wish to open a popup here perhaps fancy-box to upload a file here
-        *  We will need to know what the id of the section is in the categories table
-        *  Until written, the will lead to the PAGE to do this action.  The pop-up will be much 
-        *  preferred.  Perhaps a "show the other type" button will store a preference?
-        *  Maybe this is something for the yet-to-be used Settings button?  Maybe a small div appears
-        *  below this with the Seclect File and Upload buttons?  Nothing needs to pop up.
-        *  Simply replace buttons w/ ajax swirl until the completed response is displayed.
-        *  The second button is to view the files held within.  How they are displayed gets 
-        *  us into the DICOM image viewer features, some of which have been developed elsewhere
-        *  on sourceforge I believe.  For now it is not unreasonable to be able to flip through
-        *  all the images in this subtype like the treemenu or Apple does.  Use Anything Slider.
-        */
-
-        /*
-        * 1. get the id for the categories under imaging:
-        *  We created them on form installation but they can easily be altered by the ned user
-        *  so they will be site specific - any previous categories added affects the id, 
-        *  and they can name them soemthing else in the DB, so we can't use name
-        *  what if they created a sub category for imaging and put images there?
-        *  This will not get those yet?  Do we need them? Not now, just get this working.
-        */
-        /**
+       /**
         *   Each section will need a designator as to the section it belongs in.
         *   The categories table does not have that but it has an unused value field.
         *   This is where we link it to the image database.  We add this link value  
@@ -2183,10 +2137,9 @@ function display($pid,$encounter,$category_value) {
         *   Thus we need to build out the Documents section by adding another layer "zones"
         *   to the treemenu backbone.  
         */
-        if (!$documents) {
-            list($documents) = document_engine($pid);
-        }
-       
+    if (!$documents) {
+        list($documents) = document_engine($pid);
+    }
     for ($j=0; $j < count($documents['zones'][$category_value]); $j++) {
         $episode .= "<tr>
         <td class='right'><b>".$documents['zones'][$category_value][$j]['name']."</b>:&nbsp;</td>
@@ -2297,6 +2250,7 @@ function menu_overhaul_top($pid,$encounter,$title="Eye Exam") {
                 <li class="dropdown">
                     <a class="dropdown-toggle" data-toggle="dropdown" id="menu_dropdown_file" role="button" aria-expanded="true">File </a>
                     <ul class="dropdown-menu" role="menu">
+                       <li id="menu_PREFERENCES" name="menu_PREFERENCES"> <a  id="BUTTON_PREFERENCES_menu" href="#">Preferences</a></li>
                         <li id="menu_TEXT" name="menu_TEXT" class="active"> <a  id="BUTTON_SAVE_menu" href="#"> Save </a></li>
                         <li id="menu_DRAW" name="menu_DRAW"> <a href="#" id="BUTTON_PRINT_menu" onclick="window.print();return false;">Print</a></li>
                      <!--   <ul class="dropdown-menu" role="menu">
@@ -2361,7 +2315,7 @@ function menu_overhaul_top($pid,$encounter,$title="Eye Exam") {
                     </ul>
                 </li>
                 <li class="dropdown">
-                    <a class="dropdown-toggle" role="button" id="menu_dropdown_clinical" data-toggle="dropdown">Clinical</a>
+                    <a class="dropdown-toggle" role="button" id="menu_dropdown_clinical" data-toggle="dropdown">Encounter</a>
                     <?php
                     /*
                      *  Here we need to incorporate the menu from openEMR too.  What Forms are active for this installation?
@@ -2381,7 +2335,7 @@ function menu_overhaul_top($pid,$encounter,$title="Eye Exam") {
                 <li class="dropdown">
                     <a class="dropdown-toggle" role="button" id="menu_dropdown_window" data-toggle="dropdown">Window</a>
                     <ul class="dropdown-menu" role="menu" aria-labelledby="menu1">
-                      <li role="presentation" class="disabled"><a role="menuitem" tabindex="-1" href="#"><i class="fa fa-calendar text-error"> </i>  Calendar</a></li>
+                      <li role="presentation" class=""><a role="menuitem" tabindex="-1" onclick="restoreSession();" href="http://www.oculoplasticsllc.com/openemr/interface/main/calendar/index.php?module=PostCalendar&viewtype=day&func=view&framewidth=1020"><i class="fa fa-calendar text-error"> </i>  Calendar</a></li>
                       <li role="presentation" class="disabled"><a role="menuitem" tabindex="-1" href="#">Messages</a></li>
                       <li role="presentation" class="dropdown-header">Patient/client</li>
                       <li role="presentation" class="disabled"><a role="menuitem" tabindex="-1" href="#">Patients</a></li>
@@ -2446,37 +2400,16 @@ function menu_overhaul_top($pid,$encounter,$title="Eye Exam") {
                     echo $StringEcho;
                 ?>
             </ul>
-         
-             
-
-             <ul class="navbar-right navbar-nav">
+             <ul class="navbar-right navbar-nav dropdown">
                 <li><a href="#"><?php echo $providerNAME; ?></a></li>
-                
             </ul> 
-
         </div><!-- /.navbar-collapse -->
     </nav>
 
-    <div id="page-wrapper" style="margin: 30px 0px 0px 0px;">
-
-    <!--
-            <div class="alert alert-warning">
-                <button type="button" class="close" data-dismiss="alert">&times;</button>
-                <strong>Warning!</strong> Best check yo self, you're not looking too good.
-            </div>
-        -->
-    
-        
-        <div class="container" style="text-align:center;">
-            <!-- Page Heading -->
-            
-    <?php menu_overhaul_left($pid,$encounter); ?>
-           
-                
-                
     <?php 
 
-    return $input_echo;}
+        return $input_echo;
+}
 /**
  *  This is currently a floating div top and near the left with patient demographics and such.
  *  It can also be modified to create a left had column full of the PMH/MEDS/POH/ALL/etc that either
@@ -2490,9 +2423,10 @@ function menu_overhaul_left($pid,$encounter) {
      * We need to find out if the patient has a photo right? 
      */
     list($documents) = document_engine($pid);
-        ?>   </div>   <div class="borderShadow" style="width:280px;position:relative;text-align:center;padding:5px 0px 5px 5px;">
-        <?
-        //if the patient has a photograph, use it else use generic avitar thing.
+        ?>    
+    <div id="left_menu" name="left_menu" class="borderShadow" style="width:280px;position:relative;text-align:center;padding:5px 0px 5px 5px;">
+            <?
+            //if the patient has a photograph, use it else use generic avitar thing.
         if ($documents['docs_in_name']['Patient Photograph'][0]['id']) {
             ?>
             <object><embed src="/openemr/controller.php?document&amp;retrieve&amp;patient_id=<?php echo $pid; ?>&amp;document_id=<?php echo $documents['docs_in_name']['Patient Photograph'][0]['id']; ?>&amp;as_file=false" frameborder="0"
@@ -2500,49 +2434,44 @@ function menu_overhaul_left($pid,$encounter) {
         <?php 
         } else {
         ?>
-                <object><embed src="<?php echo $GLOBALS['web_root']; ?>/interface/forms/<?php echo $form_folder; ?>/images/anon.gif" frameborder="0"
+            <object><embed src="<?php echo $GLOBALS['web_root']; ?>/interface/forms/<?php echo $form_folder; ?>/images/anon.gif" frameborder="0"
                  type="image/gif" width="60"></embed></object>
                 <?php
         }
         ?>
-
-                    
-                    <div style="position:relative;float:left;margin:auto 5px;width:140px;top:0px;right:0px;padding-bottom:20px;">
-                        <table style="position:relative;float:left;margin:10px 5px;width:140px;top:0px;right:0px;font-size:12px;border-spacing: 5px;">
-                        
-                            <tr>
-                                <td class="right" >
+        <div style="position:relative;float:left;margin:auto 5px;width:140px;top:0px;right:0px;padding-bottom:20px;">
+                <table style="position:relative;float:left;margin:10px 5px;width:140px;top:0px;right:0px;font-size:12px;border-spacing: 5px;">
+                
+                    <tr>
+                        <td class="right" >
+                            <?php 
+                            $age = getPatientAgeDisplay($DOB, $encounter_date);
+                            echo "<b>".xlt('Name').":</b> </td><td>".$fname."  ".$lname."</td></tr>
+                                    <tr><td class='right'><b>".xlt('DOB').":</b></td><td> ".$DOB. "(".$age.")</td></tr>
+                                    <tr><td class='right'>"; 
+                            ?>
+                            <form><b><?php echo xlt('Visit'); ?>:</b>  </td><td>
+                                <select>
+                                <option><?php global $visit_date; echo $visit_date; ?> (<?php echo $encounter; ?>)</option>
                                     <?php 
-                                    $age = getPatientAgeDisplay($DOB, $encounter_date);
-                                    echo "<b>".xlt('Name').":</b> </td><td>".$fname."  ".$lname."</td></tr>
-                                            <tr><td class='right'><b>".xlt('DOB').":</b></td><td> ".$DOB. "(".$age.")</td></tr>
-                                            <tr><td class='right'>"; 
+                                        /**
+                                          * List out the prior eye_mag encounters as options.  
+                                          * The one above is today.  
+                                          * This will run a function to go back a day, changing all the form's values to that day, 
+                                          * and if e-signed and locked, changes are disabled.  Perhaps if locked what is shown is the PDF of this?
+                                          * Too slow?  Loss of javascript control of presentation.  Unable to widen or narrow or flip to the drawings,
+                                          * which must also be brought into the DOM from the records area, or just be another page in the PDF.  Not so much fun.
+                                          * So, same form, all fields disabled, but display JS actions active, and no saving allowed.
+                                          */
                                     ?>
-                                    <form><b><?php echo xlt('Visit'); ?>:</b>  </td><td>
-                                        <select>
-                                        <option><?php global $visit_date; echo $visit_date; ?> (<?php echo $encounter; ?>)</option>
-                                            <?php 
-                                                /**
-                                                  * List out the prior eye_mag encounters as options.  
-                                                  * The one above is today.  
-                                                  * This will run a function to go back a day, changing all the form's values to that day, 
-                                                  * and if e-signed and locked, changes are disabled.  Perhaps if locked what is shown is the PDF of this?
-                                                  * Too slow?  Loss of javascript control of presentation.  Unable to widen or narrow or flip to the drawings,
-                                                  * which must also be brought into the DOM from the records area, or just be another page in the PDF.  Not so much fun.
-                                                  * So, same form, all fields disabled, but display JS actions active, and no saving allowed.
-                                                  */
-                                            ?>
-                                        </select>
-                                    </form>
-                                </td>
-                            </tr>
-                        </table>
-                    </div>
-                </div>
-            
-            <br />
-          
-            <div class="col-sm-12">
+                                </select>
+                            </form>
+                        </td>
+                    </tr>
+                </table>
+        </div>
+    </div>  
+        <br />
 
     <?php
 }

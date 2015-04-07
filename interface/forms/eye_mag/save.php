@@ -255,9 +255,8 @@ if ($_GET["mode"] == "new")             {
       //HERE WE DECIDE WHAT WE WANT TO SHOW = A SEGMENT, A ZONE OR EVEN A VALUE...  
       
     if ($_REQUEST['PRIORS_query']) {
-      //$id_to_show = $id;
       include_once("../../forms/".$form_folder."/php/".$form_folder."_functions.php");
-      display_PRIOR_section($_REQUEST['zone'],$_REQUEST['orig_id'],$visit_data['id_to_show'],$pid);
+      display_PRIOR_section($_REQUEST['zone'],$_REQUEST['orig_id'],$_REQUEST['id_to_show'],$pid);
       return; 
     }
 } 
@@ -315,7 +314,7 @@ if ($_REQUEST['canvas']) {
 
    /** 
     *  We have a file in the right place
-    *  We need to tell the documents engine about this file, add it to the documents and doc_to_cat tables.
+    *  We need to tell the documents engine about this file, add it to the documents BUT NOT doc_to_cat tables.
     *  So we can pullit up later for display.  It is part of the official record.
     */
   $file_here ="file://".$storage."/".$side."_".$zone."_VIEW.png";
@@ -334,11 +333,13 @@ if ($_REQUEST['canvas']) {
               path_depth='3',
               url=?";
     $doc_id = sqlQuery($sql,array($doc['id'],$encounter,filesize($file_here),$_SESSION['authUserID'],$pid,$file_here));  
-
+/*
     $category = sqlQuery("select id from categories where name='Drawings'");       
     $sql = "REPLACE INTO categories_to_documents set category_id = ?, document_id = ?";
     sqlQuery($sql,array($category['id'],$doc['id']));  
+*/
   }
+  exit;
 }
 
 if ($copy) {

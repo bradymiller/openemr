@@ -72,14 +72,37 @@ function submit_form() {
     $.ajax({
            type 	: 'POST',   // define the type of HTTP verb we want to use (POST for our form)
            url 		: url,      // the url where we want to POST
-           data 	: formData, // our data object
-           success  : function(result)  {
-           $("#tellme").html(result);
-           }
-           });
-}
+           data 	: formData // our data object
+           }).done(function(o) {
+                  console.log(o);
+                  $("#tellme").html(o);
+                  })
+};
 
-/**
+           
+/*
+ * Function to save a canvas by zone
+ */
+function submit_canvas(zone) {
+    var id_here = document.getElementById('myCanvas_'+zone);
+    var dataURL = id_here.toDataURL();
+    $.ajax({
+           type: "POST",
+           url: "../../forms/eye_mag/save.php?canvas="+zone+"&id="+$("#form_id").val(),
+           data: {
+           imgBase64     : dataURL,  //this contains the new strokes, the sketch.js foreground
+           'zone'        : zone,
+           'visit_date'  : $("#visit_date").val(),
+           'encounter'   : $("#encounter").val(),
+           'pid'         : $("#pid").val()
+           }
+           
+           }).done(function(o) {
+                             console.log(o);
+                   $("#tellme").html(o);
+                   });
+}
+/*
  *  Function to update the user's preferences
  */
 function update_PREFS() {
@@ -106,11 +129,11 @@ function update_PREFS() {
     $.ajax({
            type 		: 'POST',
            url          : url,
-           data 		: formData,
-           success      : function(result) {
-           $("#tellme").html(result);
-           }
-           });
+           data 		: formData
+           }).done(function(o) {
+                   console.log(o);
+                   $("#tellme").html(o);
+                   });
 }
 
 /**
@@ -128,11 +151,10 @@ function finalize() {
     $.ajax({
            type 		: 'POST',
            url          : url,
-           data 		: formData,
-           success      : function(result) {
-           $("#tellme").html(result);
-           }
-           });
+           data 		: formData }).done(function(o) {
+                                           console.log(o);
+                                           $("#tellme").html(o);
+                                           });
 }
 function alter_issue(issue_number,issue_type) {
     result = '<center><iframe src="/openemr/interface/forms/eye_mag/a_issue.php?issue=' + issue_number + '&thistype=' + issue_type +  '" title="MyForm" width="435" height="320" scrolling = "yes" frameBorder = "0" ></iframe></center>';
@@ -159,13 +181,13 @@ function refreshIssues() {
     $.ajax({
            type 		: 'GET',
            url          : url,
-           data 		: formData,
-           success      : function(result) {
-           $("#PMSFH_sections").html(result);
-           }
-           });
-    
+           data 		: formData
+           }).done(function(o) {
+                   $("#PMSFH_sections").html(result);
+                   });
 }
+
+
 function show_right() {
     $("#HPI_1").removeClass("size50").addClass("size100");
     $("#PMH_1").removeClass("size50").addClass("size100");
@@ -319,6 +341,29 @@ function show_QP_section(zone) {
 
 function menu_select(zone,che) {
     $("#menu_"+zone).addClass('active');
+    if (zone =='PREFERENCES') {
+        var url = "/openemr/interface/super/edit_globals.php";
+        var formData = {
+            'id'               : $('#id').val(),
+            'encounter'        : $('#encounter').val(),
+            'pid'              : $('#pid').val(),
+        };
+        $.ajax({
+               type 		: 'GET',
+               url          : url,
+               data 		: formData,
+               success      : function(result) {
+               // alert(result);
+               $("#Layer1").addClass('nodisplay');
+               $("#Layer3").addClass('nodisplay');
+               $("#left_menu").addClass('nodisplay');
+               $("#Layer2").removeClass('nodisplay');
+               $("#Layer2").html(result);//.replace("../..","../../..");
+               }
+               });
+        
+
+    }
 }
 function hide_DRAW() {
     $(".Draw_class").hide();
@@ -534,7 +579,7 @@ $(document).ready(function() {
                             return false;
                             });
                   $("[id^='CONSTRUCTION_']").addClass('nodisplay');
-                  $("input,select,textarea,text").css("background-color","#FFF8DC");
+                  $("input,textarea,text").css("background-color","#FFF8DC");
                   $("#IOPTIME").css("background-color","#FFFFFF");
                   $("#refraction_width").css("width","8.5in");
                   $(".Draw_class").hide();
@@ -651,7 +696,7 @@ $(document).ready(function() {
                                                submit_form();
                                                });
                   
-                  $("[name$='AXIS']").blur(function() {
+                  $("input[name$='AXIS']").blur(function() {
                                            //hmmn.  Make this a 3 digit leading zeros number.
                                            // we are not translating text to numbers, just numbers to
                                            // a 3 digit format with leading zeroes as needed.
@@ -682,13 +727,14 @@ $(document).ready(function() {
                                            });
                   
                   
-                  $("[name$='CYL']").blur(function() {
-                                          var mid = $(this).val();
-                                          if (!mid.match(/\./)) {
-                                          var front = mid.match(/([\+\-]?\d{0,2})(\d{2})/)[1];
-                                          var back  = mid.match(/(\d{0,2})(\d{2})/)[2];
-                                          mid = front + "." + back;
-                                          }
+                  $("input[name$='CYL']").blur(function() {
+                                               var mid = $(this).val();
+                                               if (!mid.match(/\./)) {
+                                               var front = mid.match(/([\+\-]?\d{0,2})(\d{2})/)[1];
+                                               var back  = mid.match(/(\d{0,2})(\d{2})/)[2];
+                                               mid = front + "." + back;
+                                               }
+
                                           //if mid is -2.5 make it -2.50
                                           if (mid.match(/\.\d$/)) {
                                           mid = mid + '0';
@@ -696,28 +742,25 @@ $(document).ready(function() {
                                           }
                                           $(this).val(mid);
                                           if (!$('#PREFS_CYL').val()) {
-                                          $('#PREFS_CYL').val('+');
-                                          update_PREFS();
+                                               $('#PREFS_CYL').val('+');
+                                               update_PREFS();
                                           }
                                           
                                           if (!mid.match(/^(\+|\-){1}/)) {
-                                          //no +/- sign in the field
-                                          //ok so there is a preference set
-                                          //if it doesn't start with + or - then give it the preference value
-                                          var plusminus = $('#PREFS_CYL').val() + mid;
-                                          $(this).val(plusminus);  //set this cyl value to plusminus
+                                              //no +/- sign at the start of the field.
+                                              //ok so there is a preference set
+                                              //Since it doesn't start with + or - then give it the preference value
+                                              var plusminus = $('#PREFS_CYL').val() + mid;
+                                              $(this).val(plusminus);  //set this cyl value to plus or minus
                                           } else if (mid.match(/^(\+|\-){1}/)) {
-                                          midmatch = mid.match(/^(\+|\-){1}/)[0];
-                                          $(this).val(mid);
-                                          $('#PREFS_CYL').val(midmatch);
-                                          update_PREFS();
-                                          //so they used a value + or - in the field.
-                                          //The only reason to work on this is to change to cylinder preference
-                                          if ($('#PREFS_CYL').val() != mid.match(/^(\+|\-){1}/)[0]){
-                                          //and that is what they are doing here
-                                          pref = mid.match(/^(\+|\-){1}/)[0];
-                                          $('#PREFS_CYL').val(pref);
-                                          }
+                                               pref = mid.match(/^(\+|\-){1}/)[0];
+                                               //so they used a value + or - at the start of the field.
+                                               //The only reason to work on this is to change to cylinder preference
+                                               if ($('#PREFS_CYL').val() != pref){
+                                                //and that is what they are doing here
+                                                $('#PREFS_CYL').val(pref);
+                                                update_PREFS();
+                                               }
                                           }
                                           submit_form($(this));
                                           });
@@ -857,8 +900,6 @@ $(document).ready(function() {
                                }
                                
                                function getSection(section) {
-                               //  $("#PRIORS_"+ section +"_left_text").removeClass('nodisplay');
-                               //    $("#" + section + "_right").addClass('nodisplay');
                                var formData = {
                                'PRIORS_query'          : "1",
                                'zone'                  : section,
@@ -1190,10 +1231,10 @@ $(document).ready(function() {
                   // These defaults can also be set server side and retrieved via an ajax call allowing customization at the DB server level via openEMR,
                   // rather than here.  Here however the end user would need to manually edit this file.  Perhaps shifting defaults into the DB makes sense.
                   // FEATURE REQUEST.
-                  // Perfect.  This will go under the framework of starting and modifying the record according to ICD-10 codes, rather than or in addition to
-                  // the other way around.
-                  // Enter the correct ICD-10 code, fill in/addend the field
-                  // Lots of work in getting the last 10 words to work...
+                  // Perfect.  This will go under the framework of starting and modifying the record according to ICD-10 codes,
+                  // rather than or in addition to the other way around.
+                  // Enter the correct ICD-10 code, fill in/addend the field, add Dx code in impression area.
+                  // Lots of work in getting the last sentence to work...
                   $("#EXT_defaults").click(function() {
                                            $('#RUL').val('normal lids and lashes').css("background-color","beige");
                                            $('#LUL').val('normal lids and lashes').css("background-color","beige");
@@ -1385,15 +1426,12 @@ $(document).ready(function() {
                                               }
                                               });
                   
-                  $("#MOTILITYORMAL").click(function() {
-                                            //reset all motility measurements to zero if checked
-                                            //if not, then leave alone...
-                                            });
+                  
                   $("#EXAM_DRAW, #BUTTON_DRAW_menu").click(function() {
                                                            if ($("#PREFS_CLINICAL").value !='0') {
-                                                           show_right();
-                                                           $("#PREFS_CLINICAL").val('0');
-                                                           update_PREFS();
+                                                            show_right();
+                                                            $("#PREFS_CLINICAL").val('0');
+                                                            update_PREFS();
                                                            }
                                                            if ($("#PREFS_EXAM").value != 'DRAW') {
                                                             $("#PREFS_EXAM").val('DRAW');
@@ -1407,15 +1445,15 @@ $(document).ready(function() {
                                                            });
                   $("#EXAM_QP").click(function() {
                                       if ($("#PREFS_CLINICAL").value !='0') {
-                                      $("#PREFS_CLINICAL").val('0');
-                                      update_PREFS();
+                                        $("#PREFS_CLINICAL").val('0');
+                                        update_PREFS();
                                       }
                                       if ($("#PREFS_EXAM").value != 'QP') {
-                                      $("#PREFS_EXAM").val('QP');
-                                      $("#EXAM_QP").addClass('button_selected');
-                                      $("#EXAM_DRAW").removeClass('button_selected');
-                                      $("#EXAM_TEXT").removeClass('button_selected');
-                                      update_PREFS();
+                                        $("#PREFS_EXAM").val('QP');
+                                        $("#EXAM_QP").addClass('button_selected');
+                                        $("#EXAM_DRAW").removeClass('button_selected');
+                                        $("#EXAM_TEXT").removeClass('button_selected');
+                                        update_PREFS();
                                       }
                                       show_QP();
                                       $(document).scrollTop( $("#clinical_anchor").offset().top );
@@ -1430,7 +1468,7 @@ $(document).ready(function() {
                                             hide_DRAW();
                                             hide_QP();
                                             hide_PRIORS();
-                                        hide_right();
+                                            hide_right();
                                             show_TEXT();
                                             update_PREFS();
                                         }
@@ -1455,57 +1493,7 @@ $(document).ready(function() {
                                                   $("#"+zone+"_right").css("display","none");
                                                   }
                                                   });
-                  // In this function, we are scrolling back through the prior exam IMAGES
-                  // Images cannot be viewed directly on the web, but need to be processed by the
-                  // controller.php file.
-                  // eg. /openemr/default/documents/3/eye_mag/102/OU_HPI_DRAW_12.png
-                  // Each image thus has an ID.  We need to find the ID for the previous image
-                  // for this section's DRAWings.
-                  $("[id^='BUTTON_BACK_']").click(function() {
-                                                  var zone = this.id.match(/BUTTON_BACK_(.*)/)[1];
-                                                  if (zone != "menu") {
-                                                  var css = $("#"+zone+"_counter").val();
-                                                  var prior = css-1;
-                                                  
-                                                  // now change the value to the next prior image/drawing...
-                                                  //have to clear the last sketch
-                                                  //replace this with prior image
-                                                  //var counter =$("#"+zone+"_counter").val();
-                                                  // what is the previous image?
-                                                  // ask the server
-                                                  
-                                                  $.ajax({
-                                                         type           : 'POST',
-                                                         url            : "../../forms/eye_mag/save.php?canvas="+zone+"&id="+$("#form_id").val(),
-                                                         data           :  {
-                                                         'css'          : css,
-                                                         'prior'        : prior,
-                                                         'encounter'    : $("#encounter").val(),
-                                                         'zone'         : zone,
-                                                         'zone_counter' : $("#"+zone+"_counter").val()
-                                                         },
-                                                         success   : function(result) {
-                                                            $("#Sketch_"+zone).css("background","url('"+result+"')");
-                                                            $("#"+zone+"_counter").val(prior);
-                                                            $("#tellme").html(result);
-                                                         }
-                                                         });
-
-                                                  // need to do an ajax call to find out what is the next prior and later draws...
-                                                  //$("#"+zone+"_counter").val(counter);
-                                                  //change the image shown in the back ground?
-                                                  //Sketch_<?php echo attr($zone); ?> style background
-                                                  //replace background: url(<?php echo attr($filetoshow); ?>)
-                                                  //with OU_zone_counter.jpg
-                                                  //in order to retrieve this through the controller
-                                                  // it must be a registered document...
-                                                  // which means when finalized, these references must be deleted also.
-                                                  //or just hide the arrows
-                                                  
-                                                  //$("#Sketch_"+zone).css("background",")
-                                                  //$("#"+zone+"_right").hide();
-                                                  }
-                                                  });
+                  
                   $("#EXAM_TEXT").addClass('button_selected');
                   if ($("#PREFS_CLINICAL").val() !='1') {
                     var actionQ = "#EXAM_"+$("#PREFS_EXAM").val();
@@ -1594,30 +1582,22 @@ $(document).ready(function() {
                                              submit_form("eye_mag");
                                              });
                   
-                  $("[id^='myCanvas_'],[name^='canvas_button']").mouseout(function() {
-                                                // OK here we are storing a canvas image.
-                                                var zone = this.id.match(/myCanvas_(.*)/)[1];
-                                                var dataURL = this.toDataURL();
-                                                $.ajax({
-                                                       type: "POST",
-                                                       url: "../../forms/eye_mag/save.php?canvas="+zone+"&id="+$("#form_id").val(),
-                                                       data: {
-                                                       imgBase64     : dataURL,  //this contains the new strokes, the sketch.js foreground
-                                                       'zone'        : zone,
-                                                       'visit_date'  : $("#visit_date").val(),
-                                                       'encounter'   : $("#encounter").val(),
-                                                       'pid'         : $("#pid").val()
-                                                       },
-                                                       success      : function(result) {
-                                                       // alert('hello'+zone_start+' - '+result);
-                                                       //           $("#BUTTON_BACK_"+zone).val(zone_start);
-                                                       //                   $("#"+zone+"_counter").val(result);
-                                                                            $("#tellme").html(result);
-                                                       }
-                                                       }).done(function(o) {
-                                                               //          console.log(result);
-                                                               });
-                                                });
+                  $("[id^='myCanvas_']").mouseout(function() {
+                                                  var zone = this.id.match(/myCanvas_(.*)/)[1];
+                                                  submit_canvas(zone);
+                                                  });
+                  $("[id^='Undo_']").click(function() {
+                                                  var zone = this.id.match(/Undo_Canvas_(.*)/)[1];
+                                                  submit_canvas(zone);
+                                                  });
+                  $("[id^='Redo_']").click(function() {
+                                                  var zone = this.id.match(/Redo_Canvas_(.*)/)[1];
+                                                  submit_canvas(zone);
+                                                  });
+                  $("[id^='Clear_']").click(function() {
+                                                  var zone = this.id.match(/Clear_Canvas_(.*)/)[1];
+                                                  submit_canvas(zone);
+                                                  });
                   
                   
                   

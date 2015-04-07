@@ -145,7 +145,7 @@ if ($refresh and $refresh != 'fullscreen') {
   }
 
   </script>
-<!-- Add HTML5 Draw program library -->
+  <!-- Add HTML5 Draw program library -->
     
     <!-- Add Font stuff for the look and feel.  -->
     <link rel="stylesheet" href="<?php echo $css_header;?>" type="text/css">
@@ -173,14 +173,30 @@ if ($refresh and $refresh != 'fullscreen') {
       echo "";
   
       $input_echo = menu_overhaul_top($pid,$encounter);
+      echo $input_echo;
+      ?>
+      <div id="page-wrapper" style="margin: 30px 0px 0px 0px;">
+        <!--
+            <div class="alert alert-warning">
+                <button type="button" class="close" data-dismiss="alert">&times;</button>
+                <strong>Warning!</strong> Best check yo self, you're not looking too good.
+            </div>
+        -->
+        <div id="Layer2" name="Layer2" class="nodisplay">
+        </div>
+ 
+        <div id="Layer3" name="Layer3" class="container" style="text-align:center;">
+            <!-- Page Heading -->
+            <?php menu_overhaul_left($pid,$encounter);   
+             echo    '<div class="col-sm-12"></div>';
     } else {
       //now include openEMR encounter menu
       $hide=1;
       require_once("$incdir/patient_file/encounter/new_form.php");
     }
     ?>
-  </div>
-
+        </div>
+   <div id="Layer1" name="Layer1" class="display">
     <form method="post" action="<?php echo $rootdir;?>/forms/<?php echo $form_folder; ?>/save.php?mode=update" id="eye_mag" class="eye_magX pure-formX" name="eye_mag">
       <!-- start container for the main body of the form -->
       <div class="body_top text-center" id="form_container" name="form_container">
@@ -326,7 +342,7 @@ if ($refresh and $refresh != 'fullscreen') {
                   <!-- start    QP_HPI_Build -->
                 <div id="QP_HPI" name="QP_HPI" class="QP_class" style="text-align:left;overflow:auto;">
                   <div id="HPI_text_list" name="HPI_text_list" class="">
-                    <b>HPI Detail:</b><br /><br />
+                    <b>HPI Detail:</b><p>
                     <div id="tabs_wrapper">
                       <div id="tabs_container" style="">
                         <ul id="tabs">
@@ -596,19 +612,15 @@ if ($refresh and $refresh != 'fullscreen') {
                 <div id="QP_PMH" name="QP_PMH" class="QP_class" style="text-align:left;vertical align:middle; max-height: 4.5in;overflow:auto;font-size:0.7em;">
                   <div id="PMH_text_list" name="PMH_text_list" class="borderShadow  <?php echo attr($display_PMH_view); ?> ">
                     <h1></h1> &nbsp;<br />
-                    <span style="font-size:1.1em;text-align:left;"><ul>Deliverables:
-                      <li>Add, delete or alter an issue </li>
-                      <li>Inserting the popu-ups via ajax</li>
-                      <li>Incorporating the OpenEMR functionality to add QP Problems and issues</li>
-                      <li>Complete ROS section. </li>
-                    </ul>
-                    
-                    
+                    <span style="font-size:1.1em;text-align:left;">
+                      <ul>Deliverables:
+                        <li>Add, delete or alter an issue </li>
+                        <li>Inserting the popu-ups via ajax</li>
+                        <li>Incorporating the OpenEMR functionality to add QP Problems and issues</li>
+                        <li>Complete ROS section. </li>
+                      </ul>
                     </span>
                     <br />&nbsp;
-                    <h1></h1> &nbsp;<br />
-                    <a href="javascript:;" class="css_button_small" onclick="dopclick(0,<?php echo xla($dispzone); ?>)"><span>Add</span></a>
-                    
                   </div>
                 </div>  
                 
@@ -1006,7 +1018,7 @@ if ($refresh and $refresh != 'fullscreen') {
                             <?php ($W ==1) ? ($display_W = "display") : ($display_W = "nodisplay"); ?>
                             <div id="LayerVision_W" class="refraction borderShadow <?php echo $display_W; ?>">
                               <span class="closeButton fa fa-close" id="Close_W" name="Close_W"></span>
-                              <a class="closeButton2 fa fa-print" Xonclick="top.restoreSession();  return false;" href="../../forms/<?php echo $form_folder; ?>/SpectacleRx.php?target=W&id=<?php echo attr($pid); ?>" target="_blank"></a>
+                              <a class="closeButton2 fa fa-print" onclick="top.restoreSession();  return false;" href="../../forms/<?php echo $form_folder; ?>/SpectacleRx.php?target=W&id=<?php echo attr($pid); ?>" target="_blank"></a>
                             
                                 <table id="wearing" >
                                     <tr>
@@ -1489,7 +1501,6 @@ if ($refresh and $refresh != 'fullscreen') {
           <div class="section" style="text-align:center;vertical-align:top;width:100%;margin:10;" name="mid_menu" id="mid_menu">
             <span class="anchor" id="SELECTION_ROW_anchor"></span>
 
-              
             <!--  <span id="EXAM_settings" name="EXAM_settings" class="bordershadow" href="#"><i class="fa fa-cog"></i>&nbsp;<?php echo xlt('Settings'); ?></span> -->
             <span id="EXAM_defaults" name="EXAM_defaults" value="Defaults" class="bordershadow"><i class="fa fa-newspaper-o"></i>&nbsp;<?php echo xlt('Defaults'); ?></span> 
             <span id="EXAM_TEXT" name="EXAM_TEXT" value="TEXT" class="bordershadow"><i class="fa fa-hospital-o"></i>&nbsp;<?php echo xlt('Text'); ?></span>
@@ -1499,7 +1510,7 @@ if ($refresh and $refresh != 'fullscreen') {
               <i class="fa fa-database fa-sm"> </i>&nbsp;<?php echo xlt('DB Picks'); ?>
             </span>
             <span id="PRIORS_ALL_left_text" name="PRIORS_ALL_left_text" 
-                  class="borderShadow" sdtyle="padding-right:10px;">
+                  class="borderShadow" style="padding-right:5px;">
                 <?php $output = priors_select("ALL",$id,$id,$pid);
                 if ($output !='') {  echo $output; } else { echo "First visit: No Old Records"; }
                 ?>
@@ -1528,7 +1539,7 @@ if ($refresh and $refresh != 'fullscreen') {
                           <div style="position:relative;float:right;top:0.2in;">
                             <table style="text-align:center;font-weight:600;font-size:0.8em;">
                                <?php 
-                                  list($imaging,$episode) = display($pid,$encounter, "EXT"); 
+                                  list($documents,$episode) = display($pid,$encounter, "EXT"); 
                                   echo $episode;
                                 ?>
                             </table>
@@ -2817,6 +2828,8 @@ if ($refresh and $refresh != 'fullscreen') {
       </div>
       <!-- end container for the main body of the form -->
     </form>
+  </div>
+  
 <?php
     if ($display=="fullscreen") { 
       // trial fullscreen will lead to tablet versions and bootstrap menu overhaul

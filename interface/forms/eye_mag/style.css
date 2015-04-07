@@ -1319,6 +1319,9 @@ filter: progid:DXImageTransform.Microsoft.BasicImage(rotation=3);
     color: white;
     background-color:#C9DBF2; /* Mac Menu title bar background color */
 }
+.dropdown {
+list-style:none;
+}
 .dropdown-menu {
     background-color:#dee9f7; /* Mac Menu dropdown bar background color */
 }
