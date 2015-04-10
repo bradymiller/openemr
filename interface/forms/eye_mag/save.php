@@ -55,8 +55,8 @@ $form_folder  = "eye_mag";
 $returnurl    = $GLOBALS['concurrent_layout'] ? 'encounter_top.php' : 'patient_encounter.php';
 //@extract($_SESSION); //working to remomve
 //@extract($_REQUEST); //working to remove
-
 $id = $_REQUEST['id'];
+
 $AJAX_PREFS = $_REQUEST['AJAX_PREFS'];
 if ($encounter == "" && !$id) {
     return "Sorry Charlie..."; //should lead to a database of errors for explanation.
@@ -303,7 +303,6 @@ if ($_GET["mode"] == "new")             {
 /**  
  * Save the canvas drawings  
  */
-
 if ($_REQUEST['canvas']) {
   /**
    * Make the directory for this encounter to store the images
@@ -372,17 +371,17 @@ if ($_REQUEST['canvas']) {
               path_depth='3',
               url=?";
     $doc_id = sqlQuery($sql,array($doc['id'],$encounter,filesize($file_here),$_SESSION['authUserID'],$pid,$file_here));  
-/*
+  /*
     $category = sqlQuery("select id from categories where name='Drawings'");       
     $sql = "REPLACE INTO categories_to_documents set category_id = ?, document_id = ?";
     sqlQuery($sql,array($category['id'],$doc['id']));  
-*/
+  */
   }
   exit;
 }
 
-if ($copy) {
-  copy_forward($zone,$copy_from,$copy_to,$pid);
+if ($_REQUEST['copy']) {
+  copy_forward($_REQUEST['zone'],$_REQUEST['copy_from'],$_SESSION['ID'],$pid);
 }
 
 function debug($local_var) {

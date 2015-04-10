@@ -183,7 +183,7 @@ if ($refresh and $refresh != 'fullscreen') {
     ?>
         </div>
    <div id="Layer1" name="Layer1" class="display">
-    <form method="post" action="<?php echo $rootdir;?>/forms/<?php echo $form_folder; ?>/save.php?mode=update" id="eye_mag" class="eye_magX pure-formX" name="eye_mag">
+    <form method="post" action="<?php echo $rootdir;?>/forms/<?php echo $form_folder; ?>/save.php?mode=update" id="eye_mag" class="eye_mag pure-form" name="eye_mag">
       <!-- start container for the main body of the form -->
       <div class="body_top text-center" id="form_container" name="form_container">
         <input type="hidden" name="menustate" id="menustate" value="start">
