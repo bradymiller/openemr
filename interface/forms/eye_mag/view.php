@@ -1490,7 +1490,7 @@ if ($refresh and $refresh != 'fullscreen') {
             <!-- end of the refraction box -->
 
             <!-- my reporting div for development only remove the "X" to see output from save.php-->
-          <div id="tellme" name="tellme"></div>
+          <div id="tellmeX" name="tellmeX"></div>
             <!-- end reporting div -->
 
           <!-- Start of the exam selection/middle menu row -->
