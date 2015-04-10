@@ -74,7 +74,7 @@ function submit_form() {
            url 		: url,      // the url where we want to POST
            data 	: formData // our data object
            }).done(function(o) {
-                  console.log(o);
+                   //  console.log(o);
                   $("#tellme").html(o);
                   })
 };
@@ -98,7 +98,7 @@ function submit_canvas(zone) {
            }
            
            }).done(function(o) {
-                             console.log(o);
+                   //            console.log(o);
                    $("#tellme").html(o);
                    });
 }
@@ -124,14 +124,22 @@ function update_PREFS() {
         'PREFS_RETINA_VIEW'     : $('#PREFS_RETINA_VIEW').val(),
         'PREFS_NEURO_VIEW'      : $('#PREFS_NEURO_VIEW').val(),
         'PREFS_ACT_VIEW'        : $('#PREFS_ACT_VIEW').val(),
-        'PREFS_ACT_SHOW'        : $('#PREFS_ACT_SHOW').val()
+        'PREFS_ACT_SHOW'        : $('#PREFS_ACT_SHOW').val(),
+        'PREFS_HPI_RIGHT'        : $('#PREFS_HPI_RIGHT').val(),
+        'PREFS_PMH_RIGHT'        : $('#PREFS_PMH_RIGHT').val(),
+        'PREFS_EXT_RIGHT'        : $('#PREFS_EXT_RIGHT').val(),
+        'PREFS_ANTSEG_RIGHT'     : $('#PREFS_ANTSEG_RIGHT').val(),
+        'PREFS_RETINA_RIGHT'     : $('#PREFS_RETINA_RIGHT').val(),
+        'PREFS_NEURO_RIGHT'      : $('#PREFS_NEURO_RIGHT').val(),
+        'PREFS_IMPPLAN_RIGHT'    : $('#PREFS_IMPPLAN_DRAW').val()
+    
     };
     $.ajax({
            type 		: 'POST',
            url          : url,
            data 		: formData
            }).done(function(o) {
-                   console.log(o);
+                   //  console.log(o);
                    $("#tellme").html(o);
                    });
 }
@@ -152,7 +160,7 @@ function finalize() {
            type 		: 'POST',
            url          : url,
            data 		: formData }).done(function(o) {
-                                           console.log(o);
+                                           //   console.log(o);
                                            $("#tellme").html(o);
                                            });
 }
@@ -176,14 +184,14 @@ function refreshIssues() {
         'id'               : $('#id').val(),
         'encounter'        : $('#encounter').val(),
         'pid'              : $('#pid').val(),
-        'refresh'           : 'PMSFH'
+        'refresh'          : 'PMSFH'
     };
     $.ajax({
            type 		: 'GET',
            url          : url,
            data 		: formData
-           }).done(function(o) {
-                   $("#PMSFH_sections").html(result);
+           }).done(function(PMSFH) {
+                   $("#PMSFH_sections").html(PMSFH);
                    });
 }
 
@@ -219,9 +227,9 @@ function hide_right() {
     $("#HPI_right").hide().css("display","none");
     $("#PMH_right").hide();
     $("#EXT_right").hide().css("display","none");
-    $("#ANTSEG_right").hide();
-    $("#NEURO_right").hide();
-    $("#RETINA_right").hide();
+    $("#ANTSEG_right").hide().css("display","none");;
+    $("#NEURO_right").hide().css("display","none");;
+    $("#RETINA_right").hide().css("display","none");;
     $("#PMH_1").removeClass("clear_both");
     $("#ANTSEG_1").removeClass("clear_both");
     $("#RETINA_1").removeClass("clear_both");
@@ -250,24 +258,37 @@ function show_DRAW_section(zone) {
         //hide_QP();
         //hide_TEXT();
         //hide_PRIORS();
-    
+    $("#QP_"+zone).hide();
     $("#"+zone+"_1").show();
     $("#"+zone+"_left").show();
-    $("#"+zone+"_right").show();
-    $("#DRAW_"+zone).addClass('canvas').show();
+    $("#"+zone+"_right").addClass('canvas').show();
+    $("#Draw_"+zone).addClass('canvas');
     
+    $("#Draw_"+zone).show();
+   /*
+    $("#"+zone+"_1").show();
+    $("#"+zone+"_right").addClass('canvas').show();
+    $("#QP_"+zone).hide();
+    $("#PRIORS_"+zone+"_left_text").hide();
+    $("#DRAW_"+zone).show();
+    */
+    $("#PREFS_"+zone+"_DRAW").val(1);
+    
+
 }
 
 function show_TEXT() {
-    show_left();
-    hide_QP();
-    hide_DRAW();
-    hide_PRIORS();
-    hide_right(); //this hides the right half
-    $("#PMH_1").show();
+        //   alert("show_TEXT");
+     $("#PMH_1").show();
     $("#NEURO_1").show();
     $("#IMPPLAN_1").show();
     $(".TEXT_class").show();
+    show_left();
+    hide_right(); //this hides the right half
+                hide_QP();
+        hide_DRAW();
+        hide_PRIORS();
+   
 }
 function show_PRIORS() {
     $("#NEURO_sections").show();
@@ -332,7 +353,23 @@ function show_QP() {
 function show_QP_section(zone) {
         //show_left();
     $("#"+zone+"_right").addClass('canvas').show();
+    
     $("#QP_"+zone).show();
+    
+    $("#DRAW_"+zone).hide();
+    $("#"+zone+"_1").show();
+    $("#"+zone+"_left").show();
+    /*
+     $("#"+zone+"_1").show();
+     $("#"+zone+"_right").addClass('canvas').show();
+     $("#QP_"+zone).hide();
+     $("#PRIORS_"+zone+"_left_text").hide();
+     $("#DRAW_"+zone).show();
+     */
+    $("#PREFS_"+zone+"_RIGHT").val('QP');
+
+    
+    
         // $(".QP_class").show();
     if (zone == "PMH") {
         alter_issue('','');
@@ -387,13 +424,14 @@ function hide_TEXT() {
     $(".TEXT_class").hide();
 }
 function hide_PRIORS() {
-    $(".PRIORS_class").hide();
-    $(".PRIORS_class").css("display","none");
+        // $(".PRIORS_class").hide();
+        //  $(".PRIORS_class").css("display","none");
     $("#EXT_right").removeClass("PRIORS_color");
     $("#PRIORS_EXT_left_text").hide();
     $("#PRIORS_ANTSEG_left_text").hide();
     $("#PRIORS_RETINA_left_text").hide();
     $("#PRIORS_NEURO_left_text").hide();
+    $(".PRIORS_class").hide();
 }
 
 function printElem(options){
@@ -549,36 +587,35 @@ $(document).ready(function() {
                                                    // $(this).css("background-color","white");
                                                    $(this).css("border-bottom","2pt solid black");
                                                    //$("#selWidth_"+zone).value = $(this).val();
-
+                                                   
                                                    });
                   
-                  //$("#tabs li").removeClass('active');
                   $("#tab1_CC1").trigger("click");
                   alter_issue('',''); // on ready displays the PMH engine.
-                    $("#tabs li").click(function() {
-                            //  First remove class "active" from currently active tab
-                            $("#tabs li").removeClass('active');
-                            
-                            //  Now add class "active" to the selected/clicked tab
-                            $(this).addClass("active");
-                            
-                            //  Hide all tab content
-                            $(".tab_content").hide();
-                            
-                            //  Here we get the href value of the selected tab
-                            var selected_tab = $(this).find("a").attr("href");
-                                        //alert(selected_tab);
-                            //  Show the selected tab content
-                                        
-                            $(selected_tab).show().addClass('active');
-                                        $(selected_tab+"_CC").addClass('active');
-                                        $(selected_tab+"_HPI").addClass('active');
-                                        $(selected_tab+"_HPI_text").show().addClass('active');
-                            
-                            //  At the end, we add return false so that the click on the link is not executed
-                            return false;
-                            });
-                  $("[id^='CONSTRUCTION_']").addClass('nodisplay');
+                  $("#tabs li").click(function() {
+                                      //  First remove class "active" from currently active tab
+                                      $("#tabs li").removeClass('active');
+                                      
+                                      //  Now add class "active" to the selected/clicked tab
+                                      $(this).addClass("active");
+                                      
+                                      //  Hide all tab content
+                                      $(".tab_content").hide();
+                                      
+                                      //  Here we get the href value of the selected tab
+                                      var selected_tab = $(this).find("a").attr("href");
+                                      //alert(selected_tab);
+                                      //  Show the selected tab content
+                                      
+                                      $(selected_tab).show().addClass('active');
+                                      $(selected_tab+"_CC").addClass('active');
+                                      $(selected_tab+"_HPI").addClass('active');
+                                      $(selected_tab+"_HPI_text").show().addClass('active');
+                                      
+                                      //  At the end, we add return false so that the click on the link is not executed
+                                      return false;
+                                      });
+                  $("[id^='CONSTRUCTION_']").toggleClass('nodisplay');
                   $("input,textarea,text").css("background-color","#FFF8DC");
                   $("#IOPTIME").css("background-color","#FFFFFF");
                   $("#refraction_width").css("width","8.5in");
@@ -602,9 +639,10 @@ $(document).ready(function() {
                                    
                                    });
                   $(window).resize();
-                  //  $("#PRIOR_ALL").val("128").trigger("change");
+                  
                   var hash_tag = '<i class="fa fa-minus"></i>';
                   var index;
+                  // display any stored MOTILITY values
                   $("#MOTILITY_RS").value = parseInt($("#MOTILITY_RS").val());
                   if ($("#MOTILITY_RS").val() > '0') {
                   $("#MOTILITYNORMAL").removeAttr('checked');
@@ -664,6 +702,8 @@ $(document).ready(function() {
                   }
                   }
                   
+                  
+                  //  functions to improve flow of refraction input
                   $("input[name$='PRISM']").blur(function() {
                                                  //make it all caps
                                                  var str = $(this).val();
@@ -822,6 +862,7 @@ $(document).ready(function() {
                   $("input,textarea,text").focus(function(){
                                                  $(this).css("background-color","#ffff99");
                                                  });
+                  //fullscreen menu functions
                   $("[class='dropdown-toggle']").hover(function(){
                                                        $("[class='dropdown-toggle']").parent().removeClass('open');
                                                        var menuitem = this.id.match(/(.*)/)[1];
@@ -860,6 +901,17 @@ $(document).ready(function() {
                                              $("#menustate").val('1');
                                              menu_select(menuitem);
                                              });
+                  // set display functions for Draw panel appearance
+                  // for each DRAW area, if the value AREA_DRAW = 1, show it.
+                  
+                  var zones = ["PMH","HPI","EXT","ANTSEG","RETINA","NEURO","IMPPLAN"];
+                  for (index = '0'; index < zones.length; ++index) {
+                  if ($("#PREFS_"+zones[index]+"_RIGHT").val() =='DRAW') {
+                    show_DRAW_section(zones[index]);
+                  } else if ($("#PREFS_"+zones[index]+"_RIGHT").val() =='QP') {
+                    show_QP_section(zones[index]);
+                  }                  }
+                  
                   $("input,textarea,text,checkbox").change(function(){
                                                            $(this).css("background-color","#F0F8FF");
                                                            submit_form($(this));
@@ -1464,14 +1516,18 @@ $(document).ready(function() {
                                             // we want to show text_only which are found on left half
                                             $("#PREFS_CLINICAL").val('1');
                                             $("#PREFS_EXAM").val('TEXT');
-                                            // also hide QP, DRAWs, and PRIORS
-                                            hide_DRAW();
-                                            hide_QP();
-                                            hide_PRIORS();
-                                            hide_right();
-                                            show_TEXT();
-                                            update_PREFS();
                                         }
+                                        // also hide QP, DRAWs, and PRIORS
+                                        hide_DRAW();
+                                        hide_QP();
+                                        hide_PRIORS();
+                                        hide_right();
+                                        show_TEXT();
+                                        for (index = '0'; index < zones.length; ++index) {
+                                        $("#PREFS_"+zones[index]+"_RIGHT").val(0);
+                                        }
+                                        update_PREFS();
+                                        
                                         $("#EXAM_DRAW").removeClass('button_selected');
                                         $("#EXAM_QP").removeClass('button_selected');
                                         $("#EXAM_TEXT").addClass('button_selected');
@@ -1484,7 +1540,8 @@ $(document).ready(function() {
                                                   $("#"+zone+"_right").css("display","none");
                                                   $("#"+zone+"_left").css("display","block");
                                                   $("#"+zone+"_left_text").css("display","block");
-                                                  
+                                                  $("#PREFS_"+zone+"_RIGHT").val(0);
+                                                  update_PREFS();
                                                   }
                                                   });
                   $("[id^='BUTTON_TEXTD_']").click(function() {
@@ -1658,7 +1715,8 @@ $(document).ready(function() {
                                                   $("#QP_"+zone).hide();
                                                   $("#PRIORS_"+zone+"_left_text").hide();
                                                   $("#Draw_"+zone).show();
-                                                  
+                                                  $("#PREFS_"+zone+"_RIGHT").val('DRAW');
+                                                  update_PREFS();
                                                   }
                                                   });
                   $("[id^='BUTTON_QP_']").click(function() {
@@ -1667,6 +1725,8 @@ $(document).ready(function() {
                                                 $("#PRIORS_"+zone+"_left_text").hide();
                                                 $("#Draw_"+zone).hide();
                                                 show_QP_section(zone);
+                                                $("#PREFS_"+zone+"_RIGHT").val('QP');
+                                                update_PREFS();
                                                 });
                   
                   $("#construction").click(function() {

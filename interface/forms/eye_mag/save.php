@@ -156,40 +156,41 @@ if ($_REQUEST['AJAX_PREFS']) {
 
     $query = "REPLACE INTO form_eye_mag_prefs (PEZONE,LOCATION,LOCATION_text,id,selection,ZONE_ORDER,VALUE,ordering) 
               VALUES 
-              ('PREFS','HPI_DRAW','HPI DRAW',?,'HPI_DRAW','70',?,'16') 
+              ('PREFS','HPI_RIGHT','HPI DRAW',?,'HPI_RIGHT','70',?,'16') 
               ";
-    sqlQuery($query,array($_SESSION['authId'],$_REQUEST['PREFS_HPI_DRAW'],$_REQUEST['PREFS_HPI_DRAW)'])); 
+    sqlQuery($query,array($_SESSION['authId'],$_REQUEST['PREFS_HPI_RIGHT'],$_REQUEST['PREFS_HPI_RIGHT)'])); 
 
     $query = "REPLACE INTO form_eye_mag_prefs (PEZONE,LOCATION,LOCATION_text,id,selection,ZONE_ORDER,VALUE,ordering) 
               VALUES 
-              ('PREFS','PMH_DRAW','PMH DRAW',?,'PMH_DRAW','71',?,'16') 
+              ('PREFS','PMH_RIGHT','PMH DRAW',?,'PMH_RIGHT','71',?,'16') 
               ";
-    sqlQuery($query,array($_SESSION['authId'],$_REQUEST['PREFS_PMH_DRAW'],$_REQUEST['PREFS_PMH_DRAW)'])); 
+    sqlQuery($query,array($_SESSION['authId'],$_REQUEST['PREFS_PMH_RIGHT'],$_REQUEST['PREFS_PMH_RIGHT)'])); 
     $query = "REPLACE INTO form_eye_mag_prefs (PEZONE,LOCATION,LOCATION_text,id,selection,ZONE_ORDER,VALUE,ordering) 
               VALUES 
-              ('PREFS','EXT_DRAW','EXT DRAW',?,'EXT_DRAW','72',?,'16') 
+              ('PREFS','EXT_RIGHT','EXT DRAW',?,'EXT_RIGHT','72',?,'16') 
               ";
-    sqlQuery($query,array($_SESSION['authId'],$_REQUEST['PREFS_EXT_DRAW'],$_REQUEST['PREFS_EXT_DRAW)'])); 
+    sqlQuery($query,array($_SESSION['authId'],$_REQUEST['PREFS_EXT_RIGHT'],$_REQUEST['PREFS_EXT_RIGHT)'])); 
     $query = "REPLACE INTO form_eye_mag_prefs (PEZONE,LOCATION,LOCATION_text,id,selection,ZONE_ORDER,VALUE,ordering) 
               VALUES 
-              ('PREFS','ANTSEG_DRAW','ANTSEG DRAW',?,'ANTSEG_DRAW','73',?,'16') 
+              ('PREFS','ANTSEG_RIGHT','ANTSEG DRAW',?,'ANTSEG_RIGHT','73',?,'16') 
               ";
-    sqlQuery($query,array($_SESSION['authId'],$_REQUEST['PREFS_ANTSEG_DRAW'],$_REQUEST['PREFS_ANTSEG_DRAW)'])); 
+    $result = sqlQuery($query,array($_SESSION['authId'],$_REQUEST['PREFS_ANTSEG_RIGHT'],$_REQUEST['PREFS_ANTSEG_RIGHT)'])); 
+
     $query = "REPLACE INTO form_eye_mag_prefs (PEZONE,LOCATION,LOCATION_text,id,selection,ZONE_ORDER,VALUE,ordering) 
               VALUES 
-              ('PREFS','RETINA_DRAW','RETINA DRAW',?,'RETINA_DRAW','74',?,'16') 
+              ('PREFS','RETINA_RIGHT','RETINA DRAW',?,'RETINA_RIGHT','74',?,'16') 
               ";
-    sqlQuery($query,array($_SESSION['authId'],$_REQUEST['PREFS_RETINA_DRAW'],$_REQUEST['PREFS_RETINA_DRAW)'])); 
+    sqlQuery($query,array($_SESSION['authId'],$_REQUEST['PREFS_RETINA_RIGHT'],$_REQUEST['PREFS_RETINA_RIGHT)'])); 
     $query = "REPLACE INTO form_eye_mag_prefs (PEZONE,LOCATION,LOCATION_text,id,selection,ZONE_ORDER,VALUE,ordering) 
               VALUES 
-              ('PREFS','NEURO_DRAW','NEURO DRAW',?,'NEURO_DRAW','75',?,'16') 
+              ('PREFS','NEURO_RIGHT','NEURO DRAW',?,'NEURO_RIGHT','75',?,'16') 
               ";
-    sqlQuery($query,array($_SESSION['authId'],$_REQUEST['PREFS_NEURO_DRAW'],$_REQUEST['PREFS_NEURO_DRAW)'])); 
+    sqlQuery($query,array($_SESSION['authId'],$_REQUEST['PREFS_NEURO_RIGHT'],$_REQUEST['PREFS_NEURO_RIGHT)'])); 
  $query = "REPLACE INTO form_eye_mag_prefs (PEZONE,LOCATION,LOCATION_text,id,selection,ZONE_ORDER,VALUE,ordering) 
               VALUES 
-              ('PREFS','IMPPLAN_DRAW','IMPPLAN DRAW',?,'IMPPLAN_DRAW','76',?,'16') 
+              ('PREFS','IMPPLAN_RIGHT','IMPPLAN DRAW',?,'IMPPLAN_RIGHT','76',?,'16') 
               ";
-    sqlQuery($query,array($_SESSION['authId'],$_REQUEST['PREFS_IMPPLAN_DRAW'],$_REQUEST['PREFS_IMPPLAN_DRAW)'])); 
+    sqlQuery($query,array($_SESSION['authId'],$_REQUEST['PREFS_IMPPLAN_RIGHT'],$_REQUEST['PREFS_IMPPLAN_RIGHT)'])); 
 }
 /**
   * ADD ANY NEW PREFERENCES above, and as a hidden field in the body.  I prefer this vs Session items but that would

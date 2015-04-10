@@ -23,19 +23,6 @@
  * @author Ray Magauran <magauran@MedFetch.com> 
  * @link http://www.open-emr.org 
  *   
- *   * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
- *  The HTML5 Sketch plugin stuff:
- *    Copyright (C) 2011 by Michael Bleigh and Intridea, Inc.
- *
- *  Permission is hereby granted, free of charge, to any person obtaining a copy of this software 
- *  and associated documentation files (the "Software"), to deal in the Software without restriction, 
- *  including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense,  
- *  and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so,  
- *  subject to the following conditions:
- *   
- *  The above copyright notice and this permission notice shall be included in all copies or substantial  
- *  portions of the Software.
- *   * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
  */
 
 $fake_register_globals=false;
@@ -145,7 +132,6 @@ if ($refresh and $refresh != 'fullscreen') {
   }
 
   </script>
-  <!-- Add HTML5 Draw program library -->
     
     <!-- Add Font stuff for the look and feel.  -->
     <link rel="stylesheet" href="<?php echo $css_header;?>" type="text/css">
@@ -224,13 +210,13 @@ if ($refresh and $refresh != 'fullscreen') {
         <input type="hidden" name="PREFS_ACT_VIEW"  id="PREFS_ACT_VIEW" value="<?php echo attr($ACT_VIEW); ?>">
 
 
-        <input type="hidden" name="PREFS_PMH_DRAW"  id="PREFS_PMH_DRAW" value="<?php echo attr($PMH_DRAW); ?>">
-        <input type="hidden" name="PREFS_HPI_DRAW"  id="PREFS_HPI_DRAW" value="<?php echo attr($HPI_DRAW); ?>">
-        <input type="hidden" name="PREFS_EXT_DRAW"  id="PREFS_EXT_DRAW" value="<?php echo attr($EXT_DRAW); ?>">
-        <input type="hidden" name="PREFS_ANTSEG_DRAW"  id="PREFS_ANTSEG_DRAW" value="<?php echo attr($ANTSEG_DRAW); ?>">
-        <input type="hidden" name="PREFS_RETINA_DRAW"  id="PREFS_RETINA_DRAW" value="<?php echo attr($RETINA_DRAW); ?>">
-        <input type="hidden" name="PREFS_NEURO_DRAW"  id="PREFS_NEURO_DRAW" value="<?php echo attr($NEURO_DRAW); ?>">
-        <input type="hidden" name="PREFS_IMPPLAN_DRAW"  id="PREFS_IMPPLAN_DRAW" value="<?php echo attr($IMPPLAN_DRAW); ?>">
+        <input type="hidden" name="PREFS_PMH_RIGHT"  id="PREFS_PMH_RIGHT" value="<?php echo attr($PMH_RIGHT); ?>">
+        <input type="hidden" name="PREFS_HPI_RIGHT"  id="PREFS_HPI_RIGHT" value="<?php echo attr($HPI_RIGHT); ?>">
+        <input type="hidden" name="PREFS_EXT_RIGHT"  id="PREFS_EXT_RIGHT" value="<?php echo attr($EXT_RIGHT); ?>">
+        <input type="hidden" name="PREFS_ANTSEG_RIGHT"  id="PREFS_ANTSEG_RIGHT" value="<?php echo attr($ANTSEG_RIGHT); ?>">
+        <input type="hidden" name="PREFS_RETINA_RIGHT"  id="PREFS_RETINA_RIGHT" value="<?php echo attr($RETINA_RIGHT); ?>">
+        <input type="hidden" name="PREFS_NEURO_RIGHT"  id="PREFS_NEURO_RIGHT" value="<?php echo attr($NEURO_RIGHT); ?>">
+        <input type="hidden" name="PREFS_IMPPLAN_RIGHT"  id="PREFS_IMPPLAN_RIGHT" value="<?php echo attr($IMPPLAN_RIGHT); ?>">
         
         <input type="hidden" name="PREFS_ACT_SHOW"  id="PREFS_ACT_SHOW" value="<?php echo attr($ACT_SHOW); ?>">
         <input type="hidden" name="COPY_SECTION"  id="COPY_SECTION" value="">
@@ -1199,7 +1185,7 @@ if ($refresh and $refresh != 'fullscreen') {
                                             <input type="radio" name="WETTYPE" id="Flash" value="Flash" <?php if ($WETTYPE == "Flash") echo "checked='checked'"; ?>/>
                                             <label for="Flash" class="input-helper input-helper--checkbox"><?php echo xlt('Flash'); ?></label>
                                         </td>
-                                        <td colspan="2" rowspan="4" style="text-align:left;width:75px;font-size:0.6em;"><b style="text-align:center;width:70px;text-decoration:underline;"><?php echo xlt('Dilated with'); ?>:</b><br />
+                                        <td colspan="2" rowspan="4" style="text-align:left;width:75px;font-size:0.5em;"><b style="text-align:center;width:70px;text-decoration:underline;"><?php echo xlt('Dilated with'); ?>:</b><br />
                                             <input type="checkbox" id="CycloMydril" name="CYCLOMYDRIL" value="Cyclomydril" <?php if ($CYCLOMYDRIL == 'Cyclomydril') echo "checked='checked'"; ?> />
                                             <label for="CycloMydril" class="input-helper input-helper--checkbox"><?php echo xlt('CycloMydril'); ?></label>
                                             <br />
@@ -1504,7 +1490,7 @@ if ($refresh and $refresh != 'fullscreen') {
             <!-- end of the refraction box -->
 
             <!-- my reporting div for development only remove the "X" to see output from save.php-->
-          <div id="tellmeX" name="tellmeX"></div>
+          <div id="tellme" name="tellme"></div>
             <!-- end reporting div -->
 
           <!-- Start of the exam selection/middle menu row -->

@@ -2225,7 +2225,7 @@ function redirector($url) {
     exit(0);}
 
 /**
- *  
+ *  This is an experiment to start shifting clinical functions into a separate interface.
  */
 function menu_overhaul_top($pid,$encounter,$title="Eye Exam") {
     global $form_folder;
@@ -2451,8 +2451,8 @@ function menu_overhaul_left($pid,$encounter) {
                         <td class="right" >
                             <?php 
                             $age = getPatientAgeDisplay($DOB, $encounter_date);
-                            echo "<b>".xlt('Name').":</b> </td><td>".$fname."  ".$lname."</td></tr>
-                                    <tr><td class='right'><b>".xlt('DOB').":</b></td><td> ".$DOB. "(".$age.")</td></tr>
+                            echo "<b>".xlt('Name').":</b> </td><td> &nbsp;".$fname."  ".$lname."</td></tr>
+                                    <tr><td class='right'><b>".xlt('DOB').":</b></td><td> &nbsp;".$DOB. "(".$age.")</td></tr>
                                     <tr><td class='right'>"; 
                             ?>
                             <form><b><?php echo xlt('Visit'); ?>:</b>  </td><td>
@@ -2484,7 +2484,7 @@ function menu_overhaul_left($pid,$encounter) {
 /**
  *  This is currently just closing up the divs.  It can easily be a footer with the practice info
  *  or whatever you like.  Maybe a placeholder for user groups or link outs to data repositories 
- *  such as Medftech.com/PubMed/UpToDate/DynaMed????
+ *  such as Medfetch.com/PubMed/UpToDate/DynaMed????
  *  It could provide information as to available data imports from connected machines - yes we have 
  *  data from an autorefractor needed to be imported.  The footer can be fixed or floating.
  *  It could have balance info, notes, or an upside down menu mirroring the header menu, maybe allowing
