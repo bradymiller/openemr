@@ -51,7 +51,7 @@ $form_name = "eye_mag";
 $form_folder = "eye_mag";
 
 include_once("../../forms/".$form_folder."/php/".$form_folder."_functions.php");
-@extract($_REQUEST); 
+//@extract($_REQUEST); 
 //@extract($_SESSION);
 $form_id    = $_REQUEST['id'];
 $action     = $_REQUEST['action'];
@@ -72,7 +72,7 @@ while ($prefs= sqlFetchArray($result))   {
     @extract($prefs);    
     $$LOCATION = $VALUE; 
 }
-
+// exit;
 // get pat_data and user_data
 $query = "SELECT * FROM patient_data where pid=?";
 $pat_data =  sqlQuery($query,array($pid));
@@ -222,6 +222,16 @@ if ($refresh and $refresh != 'fullscreen') {
         <input type="hidden" name="PREFS_RETINA_VIEW"  id="PREFS_RETINA_VIEW" value="<?php echo attr($RETINA_VIEW); ?>">
         <input type="hidden" name="PREFS_NEURO_VIEW"  id="PREFS_NEURO_VIEW" value="<?php echo attr($NEURO_VIEW); ?>">
         <input type="hidden" name="PREFS_ACT_VIEW"  id="PREFS_ACT_VIEW" value="<?php echo attr($ACT_VIEW); ?>">
+
+
+        <input type="hidden" name="PREFS_PMH_DRAW"  id="PREFS_PMH_DRAW" value="<?php echo attr($PMH_DRAW); ?>">
+        <input type="hidden" name="PREFS_HPI_DRAW"  id="PREFS_HPI_DRAW" value="<?php echo attr($HPI_DRAW); ?>">
+        <input type="hidden" name="PREFS_EXT_DRAW"  id="PREFS_EXT_DRAW" value="<?php echo attr($EXT_DRAW); ?>">
+        <input type="hidden" name="PREFS_ANTSEG_DRAW"  id="PREFS_ANTSEG_DRAW" value="<?php echo attr($ANTSEG_DRAW); ?>">
+        <input type="hidden" name="PREFS_RETINA_DRAW"  id="PREFS_RETINA_DRAW" value="<?php echo attr($RETINA_DRAW); ?>">
+        <input type="hidden" name="PREFS_NEURO_DRAW"  id="PREFS_NEURO_DRAW" value="<?php echo attr($NEURO_DRAW); ?>">
+        <input type="hidden" name="PREFS_IMPPLAN_DRAW"  id="PREFS_IMPPLAN_DRAW" value="<?php echo attr($IMPPLAN_DRAW); ?>">
+        
         <input type="hidden" name="PREFS_ACT_SHOW"  id="PREFS_ACT_SHOW" value="<?php echo attr($ACT_SHOW); ?>">
         <input type="hidden" name="COPY_SECTION"  id="COPY_SECTION" value="">
         <input type="hidden" name="final"  id="final" value="0">
@@ -1682,7 +1692,7 @@ if ($refresh and $refresh != 'fullscreen') {
                                        
                                   <div id="EXT_QP_block1" name="EXT_QP_block1" class="QP_block borderShadow text_clinical" >
                                       <?
-                                      $query = "SELECT * FROM form_eye_mag_prefs where PEZONE = 'EXT' and (id=? or id=3 ) ORDER BY ZONE_ORDER,ordering";
+                                      $query = "SELECT * FROM form_eye_mag_prefs where PEZONE = 'EXT' and (id=? or id = '2048') ORDER BY ZONE_ORDER,ordering";
                                       $result = sqlStatement($query,array($_SESSION['authUserID']));
                                       $number_rows=0;
                                       while ($Select_data= sqlFetchArray($result))   {
@@ -1847,7 +1857,7 @@ if ($refresh and $refresh != 'fullscreen') {
                           </div>         
                           <div class="QP_block borderShadow text_clinical " >
                              <?
-                                      $query = "SELECT * FROM form_eye_mag_prefs where PEZONE = 'ANTSEG' and (id=? or id=3 ) ORDER BY ZONE_ORDER,ordering";
+                                      $query = "SELECT * FROM form_eye_mag_prefs where PEZONE = 'ANTSEG' and (id=? or id = '2048' ) ORDER BY ZONE_ORDER,ordering";
                                       $result = sqlStatement($query,array($_SESSION['authUserID']));
                                       $number_rows=0;
                                       while ($Select_data= sqlFetchArray($result))   {

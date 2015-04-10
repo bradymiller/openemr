@@ -1425,6 +1425,13 @@ function display_PRIOR_section ($zone,$orig_id,$id_to_show,$pid,$report = '0') {
                     elseif($row['erx_uploaded']==1 && $focustype=='medication')
                     $click_class='';
                     // output the TD row of info
+                // this will link to prior encounters?  It should pull up the list of encounters.
+                // this will be a link from the base openEMR code pulling up the encputer list page (in the no frame fullscreen?)
+                    if ($ierow['count'] > '1') {
+                        echo "  <span id='e_$rowid' class='noclick center' title='" . htmlspecialchars( xl('View related encounters'), ENT_QUOTES) . "'>";
+                        echo "  <input type='button' value='" . htmlspecialchars($ierow['count'],ENT_QUOTES) . "' class='editenc' id='" . htmlspecialchars($rowid,ENT_QUOTES) . "' />";
+                        echo "  </span>";
+                    }
                    if ($focustype == "surgery")    echo "  <span style='text-align:right'>" . htmlspecialchars($row['begdate'],ENT_NOQUOTES) . "&nbsp;</span>\n";
                     
                     echo "<span name='QP_PMH_".$rowid."' href='#PMH_anchor' id='QP_PMH_".$rowid."' onclick=\"alter_issue('".$rowid."','".$row[type]."');\">".xlt($disptitle)."</span>";
@@ -1445,10 +1452,8 @@ function display_PRIOR_section ($zone,$orig_id,$id_to_show,$pid,$report = '0') {
                     else {
                      //   echo "  <td>" . htmlspecialchars($row['referredby'],ENT_NOQUOTES) . "</td>\n";
                     }
-                    //echo "  <td>" . htmlspecialchars($row['comments'],ENT_NOQUOTES) . "</td>\n";
-                    //echo "  <td id='e_$rowid' class='noclick center' title='" . htmlspecialchars( xl('View related encounters'), ENT_QUOTES) . "'>";
-                    //echo "  <input type='button' value='" . htmlspecialchars($ierow['count'],ENT_QUOTES) . "' class='editenc' id='" . htmlspecialchars($rowid,ENT_QUOTES) . "' />";
-                    //echo "  </td>";
+                    //echo "  <td>comments " . htmlspecialchars($row['comments'],ENT_NOQUOTES) . "</td>\n";
+                    
                     
                 }
 
