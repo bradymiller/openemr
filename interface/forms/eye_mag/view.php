@@ -2010,7 +2010,7 @@ if ($refresh and $refresh != 'fullscreen') {
                           </div>         
                           <div class="QP_block borderShadow text_clinical" >
                               <?php
-                                      $query = "SELECT * FROM form_eye_mag_prefs where PEZONE = 'RETINA' and (id=? or id=3 ) ORDER BY ZONE_ORDER,ordering";
+                                      $query = "SELECT * FROM form_eye_mag_prefs where PEZONE = 'RETINA' and (id=? or id='2048' ) ORDER BY ZONE_ORDER,ordering";
                                       $result = sqlStatement($query,array($_SESSION['authUserID']));
                                       $number_rows=0;
                                       while ($Select_data= sqlFetchArray($result))     {
@@ -2749,7 +2749,7 @@ if ($refresh and $refresh != 'fullscreen') {
                       </div>         
                       <div id="NEURO_QP_block" name="NEURO_QP_block" class="QP_block borderShadow text_clinical" >
                           <?php
-                            $query = "SELECT * FROM form_eye_mag_prefs where PEZONE = 'NEURO' and (id=? or id=3 ) ORDER BY ZONE_ORDER,ordering";
+                            $query = "SELECT * FROM form_eye_mag_prefs where PEZONE = 'NEURO' and (id=? or id='2048' ) ORDER BY ZONE_ORDER,ordering";
                             $result = sqlStatement($query,array($_SESSION['authUserID']));
                             $number_rows=0;
                             while ($Select_data= sqlFetchArray($result))     {
