@@ -1471,7 +1471,7 @@ function display_PRIOR_section ($zone,$orig_id,$id_to_show,$pid,$report = '0') {
 
                 // if no issues (will place a 'None' text vs. toggle algorithm here)
                 if ($count_ROS < 1) {
-                    echo  xla("None") ."<br /><br /><br />";
+                    echo  xla("Completed ROS form") ."<br /><br /><br />";
                     echo " ";
                     $counter= $counter-3;
                 } //else { print out a ROS.  Give ?expand option to see full list in a pop-up?}
@@ -2249,8 +2249,7 @@ function menu_overhaul_top($pid,$encounter,$title="Eye Exam") {
             <a class="navbar-brand right" href="/openemr" onclick="window.close();" title="Close this window." style="font-size:0.8em;font-weight:600;">OpenEMR <img src="/openemr/sites/default/images/login_logo.gif" class="little_image left"></a>
         </div>
 
-        <!-- Collect the nav links, forms, and other content for toggling -->
-        <div class="navbar-custom" id="oer-navbar-collapse-1">
+       <div class="navbar-custom" id="oer-navbar-collapse-1">
             <ul class="navbar-nav">
                 <li class="dropdown">
                     <a class="dropdown-toggle" data-toggle="dropdown" id="menu_dropdown_file" role="button" aria-expanded="true">File </a>
@@ -2258,13 +2257,14 @@ function menu_overhaul_top($pid,$encounter,$title="Eye Exam") {
                        <li id="menu_PREFERENCES" name="menu_PREFERENCES"> <a  id="BUTTON_PREFERENCES_menu" href="#">Preferences</a></li>
                         <li id="menu_TEXT" name="menu_TEXT" class="active"> <a  id="BUTTON_SAVE_menu" href="#"> Save </a></li>
                         <li id="menu_DRAW" name="menu_DRAW"> <a href="#" id="BUTTON_PRINT_menu" onclick="window.print();return false;">Print</a></li>
-                     <!--   <ul class="dropdown-menu" role="menu">
-                            <li id="menu_PRINT_screen" name="menu_PRINT_screen"> <a href="#" id="BUTTON_PRINT_screen" onclick="window.print();return false;">Print Screen</a></li>
-                            <li id="menu_PRINT_draw" name="menu_PRINT_draw"> <a href="#" id="BUTTON_PRINT_draw" onclick="window.print();return false;">Print Drawings</a></li>
-                            <li id="menu_PRINT_narrative" name="menu_PRINT_narrative"> <a href="#" id="BUTTON_PRINT_narrative" onclick="window.print();return false;">Print Narrative</a></li>
-                        
-                        </ul>
-                            -->
+                        <li class="dropdown-submenu">
+                            <a href="#">Print2 </a>
+                            <ul class="dropdown-menu" role="menu">
+                                <li id="menu_PRINT_screen" name="menu_PRINT_screen"> <a href="#" id="BUTTON_PRINT_screen" onclick="window.print();return false;">Print Screen</a></li>
+                                <li id="menu_PRINT_draw" name="menu_PRINT_draw"> <a href="#" id="BUTTON_PRINT_draw" onclick="window.print();return false;">Print Drawings</a></li>
+                                <li id="menu_PRINT_narrative" name="menu_PRINT_narrative"> <a href="#" id="BUTTON_PRINT_narrative" onclick="window.print();return false;">Print Narrative</a></li>
+                            </ul>
+                        </li>
                         <li id="menu_QP" name="menu_QP" ><a href="#"  onclick='window.close();'> Close Window</a></li>
                         <li class="divider"></li>
                         <li id="menu_HPI" name="menu_HPI" ><a href="#" onclick='window.close();' >Return to OpenEMR</a></li>
@@ -2445,17 +2445,15 @@ function menu_overhaul_left($pid,$encounter) {
         }
         ?>
         <div style="position:relative;float:left;margin:auto 5px;width:140px;top:0px;right:0px;padding-bottom:20px;">
-                <table style="position:relative;float:left;margin:10px 5px;width:140px;top:0px;right:0px;font-size:12px;border-spacing: 5px;">
-                
+                <table tyle="position:relative;float:left;margin:10px 15px;width:140px;top:0px;right:0px;font-size:1.0em;border-spacing: 15px;">
                     <tr>
                         <td class="right" >
                             <?php 
                             $age = getPatientAgeDisplay($DOB, $encounter_date);
                             echo "<b>".xlt('Name').":</b> </td><td> &nbsp;".$fname."  ".$lname."</td></tr>
                                     <tr><td class='right'><b>".xlt('DOB').":</b></td><td> &nbsp;".$DOB. "(".$age.")</td></tr>
-                                    <tr><td class='right'>"; 
+                                    <tr><td class='middle' colspan='2'>"; 
                             ?>
-                            <form><b><?php echo xlt('Visit'); ?>:</b>  </td><td>
                                 <select>
                                 <option><?php global $visit_date; echo $visit_date; ?> (<?php echo $encounter; ?>)</option>
                                     <?php 

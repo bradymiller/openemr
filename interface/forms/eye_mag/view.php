@@ -137,7 +137,7 @@ if ($refresh and $refresh != 'fullscreen') {
     <link rel="stylesheet" href="<?php echo $css_header;?>" type="text/css">
     <link rel="stylesheet" href="<?php echo $GLOBALS['webroot'] ?>/library/css/pure-min.css">
     <link rel="stylesheet" href="<?php echo $GLOBALS['webroot'] ?>/library/css/bootstrap-3-2-0.min.css">
-    
+    <link rel="stylesheet" href="../../forms/<?php echo $form_folder; ?>/css/bootstrap-responsive.min.css">
     <link rel="stylesheet" href="../../forms/<?php echo $form_folder; ?>/style.css" type="text/css">    
     <link rel=stylesheet href="<?php echo $GLOBALS['css_header']; ?>" type="text/css">
     <link rel="stylesheet" href="<?php echo $GLOBALS['webroot'] ?>/library/css/font-awesome-4.2.0/css/font-awesome.min.css">
@@ -334,7 +334,7 @@ if ($refresh and $refresh != 'fullscreen') {
                       class="PRIORS_class PRIORS"> 
                   <i class="fa fa-spinner fa-spin"></i>
                 </div>
-              -->
+                  -->
                   <!-- start    QP_HPI_Build -->
                 <div id="QP_HPI" name="QP_HPI" class="QP_class" style="text-align:left;overflow:auto;">
                   <div id="HPI_text_list" name="HPI_text_list" class="">
@@ -586,7 +586,7 @@ if ($refresh and $refresh != 'fullscreen') {
             <!-- start    PMH_1 -->
            
             <div id="PMH_1" name="PMH_1" class="<?php echo attr($display_Add); ?> clear_both jquery_anchor">
-            <span class="anchor" id="PMH_anchor"></span>
+              <span class="anchor" id="PMH_anchor"></span>
               <!-- start  HPI Left -->
               <div id="PMH_left" name="PMH_left" class="exam_section_left borderShadow">
                 <div id="PMH_left_text" style="height: 2.5in;text-align:left;" class="TEXT_class">
@@ -618,8 +618,7 @@ if ($refresh and $refresh != 'fullscreen') {
                     </span>
                     <br />&nbsp;
                   </div>
-                </div>  
-                
+                </div>    
               </div>
               <!-- end PMH Right -->
             </div>
@@ -1710,7 +1709,7 @@ if ($refresh and $refresh != 'fullscreen') {
 
               <!-- start Anterior Segment -->
               <div id="ANTSEG_1" class="clear_both">
-              <span class="anchor" id="ANTSEG_anchor"></span>
+                <span class="anchor" id="ANTSEG_anchor"></span>
                
                   <div id="ANTSEG_left" nam="ANTSEG_left" class="exam_section_left borderShadow">
                       <div class="TEXT_class" id="ANTSEG_left_text" style="height: 2.5in;text-align:left;">
@@ -2359,7 +2358,7 @@ if ($refresh and $refresh != 'fullscreen') {
                                   
                                   <div style="float:left;left:0.4in;text-decoration:underline;"><?php echo xlt('OD'); ?></div>
                                   <div style="float:right;right:0.4in;text-decoration:underline;"><?php echo xlt('OS'); ?></div><br />
-                                  <div class="divTable" style="background: url(../../forms/<?php echo $form_folder; ?>/images/eom.bmp) no-repeat center center;background-size: 90% 90%;height:0.7in;width:0.7in;padding:1px;margin:6 1 1 2;">
+                                  <div class="divTable" style="background: url(../../forms/<?php echo $form_folder; ?>/images/eom.bmp) no-repeat center center;background-size: 90% 90%;height:0.77in;width:0.71in;padding:1px;margin:6 1 1 2;">
                                       <div class="divRow">
                                           <div class="divCell">&nbsp;</div>
                                       </div>
@@ -2531,7 +2530,7 @@ if ($refresh and $refresh != 'fullscreen') {
                                       <div class="divRow"><div class="divCell">&nbsp;</div>
                                       </div>
                                   </div> 
-                                  <div class="divTable" style="float:right;background: url(../../forms/<?php echo $form_folder; ?>/images/eom.bmp) no-repeat center center;background-size: 90% 90%;height:0.7in;width:0.7in;padding:1px;margin:6 2 0 0;">
+                                  <div class="divTable" style="float:right;background: url(../../forms/<?php echo $form_folder; ?>/images/eom.bmp) no-repeat center center;background-size: 90% 90%;height:0.77in;width:0.71in;padding:1px;margin:6 2 0 0;">
                                       <div class="divRow">
                                           <div class="divCell">&nbsp;</div>
                                       </div>

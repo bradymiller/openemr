@@ -252,6 +252,11 @@ function show_DRAW() {
     $("#NEURO_right").addClass('canvas');
     $("#IMPPLAN_right").addClass('canvas');
     $(".Draw_class").show();
+    if ($("#PREFS_CLINICAL").val() !='1') {
+            // we want to show text_only which are found on left half
+        $("#PREFS_CLINICAL").val('1');
+        $("#PREFS_EXAM").val('DRAW');
+    }
 }
 
 function show_DRAW_section(zone) {
@@ -288,6 +293,11 @@ function show_TEXT() {
                 hide_QP();
         hide_DRAW();
         hide_PRIORS();
+    if ($("#PREFS_CLINICAL").val() !='1') {
+            // we want to show text_only which are found on left half
+        $("#PREFS_CLINICAL").val('1');
+        $("#PREFS_EXAM").val('TEXT');
+    }
    
 }
 function show_PRIORS() {
@@ -308,6 +318,11 @@ function show_PRIORS() {
     $("#NEURO_right").addClass('canvas');
     $(".PRIORS_class").show();
     $(document).scrollTop( $("#clinical_anchor").offset().top );
+    if ($("#PREFS_CLINICAL").val() !='1') {
+            // we want to show text_only which are found on left half
+        $("#PREFS_CLINICAL").val('1');
+        $("#PREFS_EXAM").val('PRIORS');
+    }
 }
 
 function hide_left() {
@@ -1436,7 +1451,6 @@ $(document).ready(function() {
                                                  
                                                  var zone = this.id.match(/(MOTILITY_..)_(.)/);
                                                  var valued = isNaN($("#"+zone[1]).val());
-                                                 
                                                  if (valued != true && $("#"+zone[1]).val() <'4') {
                                                  valued=$("#"+zone[1]).val();
                                                  valued++;
@@ -1444,7 +1458,7 @@ $(document).ready(function() {
                                                  valued = '0';
                                                  $("#"+zone[1]).val('0');
                                                  }
-                                                 
+                                                
                                                  $("#"+zone[1]).val(valued);
                                                  var section = this.id.match(/MOTILITY_(.)(.)_/);
                                                  var section2 = section[2];
@@ -1512,11 +1526,7 @@ $(document).ready(function() {
                                       });
                   
                   $("#EXAM_TEXT").click(function() {
-                                        if ($("#PREFS_CLINICAL").val() !='1') {
-                                            // we want to show text_only which are found on left half
-                                            $("#PREFS_CLINICAL").val('1');
-                                            $("#PREFS_EXAM").val('TEXT');
-                                        }
+                                        
                                         // also hide QP, DRAWs, and PRIORS
                                         hide_DRAW();
                                         hide_QP();
@@ -1668,7 +1678,7 @@ $(document).ready(function() {
                                             "action"      : "copy",
                                             'copy'        : zone,
                                             'zone'        : zone,
-                                            'copy_to'     : $("#id").val(),
+                                            'copy_to'     : $("#form_id").val(),
                                             'copy_from'   : copy_from,
                                             'pid'         : $("#pid").val()
                                             };
@@ -1681,7 +1691,8 @@ $(document).ready(function() {
                                                    success  : function(result) {
                                                    $.map(result, function(valhere, keyhere) {
                                                          if ($("#"+keyhere).val() != valhere) {  $("#"+keyhere).val(valhere).css("background-color","#CCF");}
-                                                         if (keyhere.match(/MOTILITY_/)) { //copy forward ductions and versions visually
+                                                         if (keyhere.match(/MOTILITY_/)) {
+                                                         //copy forward ductions and versions visually
                                                          //make each blank, and rebuild them
                                                          $("[name='"+keyhere+"_1']").html('');
                                                          $("[name='"+keyhere+"_2']").html('');
@@ -1693,6 +1704,7 @@ $(document).ready(function() {
                                                          hash_tag = '<i class="fa fa-minus rotate-left"></i>';
                                                          }
                                                          for (index =1; index <= valhere; ++index) {
+                                                         //alert(keyhere+" -- "+valhere);
                                                          $("#"+keyhere+"_"+index).html(hash_tag);
                                                          }
                                                          }
