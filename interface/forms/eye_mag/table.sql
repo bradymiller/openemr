@@ -1,10 +1,10 @@
-INSERT INTO categories select (select MAX(id) from categories) + 1, 'Imaging', '', 2048, rght, rght + 1 from categories where name = 'Categories';
+INSERT INTO categories select (select MAX(id) from categories) + 1, 'Imaging', '', 3, rght, rght + 1 from categories where name = 'Categories';
 UPDATE categories SET rght = rght + 2 WHERE name = 'Categories';
 UPDATE categories SET rght = rght + 2 WHERE name = 'Medical Record';
-INSERT INTO categories select (select MAX(id) from categories) + 1, 'Communication', '', 2048, rght, rght + 1 from categories where name = 'Categories';
+INSERT INTO categories select (select MAX(id) from categories) + 1, 'Communication', '', 3, rght, rght + 1 from categories where name = 'Categories';
 UPDATE categories SET rght = rght + 2 WHERE name = 'Categories';
 UPDATE categories SET rght = rght + 2 WHERE name = 'Medical Record';
-INSERT INTO categories select (select MAX(id) from categories) + 1, 'Encounters', '', 2048, rght, rght + 1 from categories where name = 'Categories';
+INSERT INTO categories select (select MAX(id) from categories) + 1, 'Encounters', '', 3, rght, rght + 1 from categories where name = 'Categories';
 UPDATE categories SET rght = rght + 2 WHERE name = 'Categories';
 UPDATE categories SET rght = rght + 2 WHERE name = 'Medical Record';
 

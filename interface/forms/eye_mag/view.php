@@ -255,7 +255,8 @@ if ($refresh and $refresh != 'fullscreen') {
                       </div>
                       <div id="tabs_content_container" style="z-index:1;" class="borderShadow">
                         <div id="tab1" class="tab_content" style="display: block;">
-                          <table border="0" width="100%" cellspacing="0" cellpadding="0" style="font-size:1.1em;min-height: 2.0in;text-align:left;">
+                          <table border="0" width="100%" cellspacing="0" cellpadding="0" 
+                                style="font-size:1.1em;min-height: 2.0in;text-align:left;">
                             <tr>
                               <td class="" style="vertical-align:top;padding:10px;" colspan="2">
                                 <b><span title="<?php echo xla('In the patient\'s words'); ?>"><?php echo xlt('Chief Complaint 1'); ?>:
@@ -276,7 +277,8 @@ if ($refresh and $refresh != 'fullscreen') {
                           </table> 
                         </div>
                         <div id="tab2" class="tab_content">
-                            <table border="0" width="100%" cellspacing="0" cellpadding="0" style="font-size:1.1em;min-height: 2.0in;text-align:left;">
+                            <table border="0" width="100%" cellspacing="0" cellpadding="0" 
+                                style="font-size:1.1em;min-height: 2.0in;text-align:left;">
                               <tr>
                                 <td class="" style="vertical-align:top;padding:10px;" colspan="2">
                                   <b><span title="<?php echo xla('In the patient\'s words'); ?>"><?php echo xlt('Chief Complaint 2'); ?>:
@@ -297,7 +299,7 @@ if ($refresh and $refresh != 'fullscreen') {
                               </table>
                         </div>
                         <div id="tab3" class="tab_content">
-                            <table border="0" width="100%" cellspacing="0" cellpadding="0" style="font-size:1.1em;min-height: 2.0in;text-align:left;">
+                            <table border="0" width="100%" cellspacing="0" cellpadding="0" style="font-size:1.2em;min-height: 2.0in;text-align:left;">
                                             <tr>
                                               <td class="" style="vertical-align:top;padding:10px;" colspan="2">
                                                 <b><span title="<?php echo xla('In the patient\'s words'); ?>"><?php echo xlt('Chief Complaint 3'); ?>:
@@ -328,28 +330,21 @@ if ($refresh and $refresh != 'fullscreen') {
               <!-- start  HPI Right -->
               <div id="HPI_right" name="HPI_right" class="exam_section_right borderShadow">
                 <?php display_draw_section ("HPI",$encounter,$pid); ?>
-                <!--<div id="PRIORS_HPI_left_text" 
-                      style="height: 2.5in;text-align:left;" 
-                      name="PRIORS_HPI_left_text" 
-                      class="PRIORS_class PRIORS"> 
-                  <i class="fa fa-spinner fa-spin"></i>
-                </div>
-                  -->
-                  <!-- start    QP_HPI_Build -->
+                <!-- start    QP_HPI_Build -->
                 <div id="QP_HPI" name="QP_HPI" class="QP_class" style="text-align:left;overflow:auto;">
-                  <div id="HPI_text_list" name="HPI_text_list" class="">
-                    <b>HPI Detail:</b><p>
-                    <div id="tabs_wrapper">
-                      <div id="tabs_container" style="">
+                  <div id="HPI_text_list" name="HPI_text_list">
+                    <b>HPI Detail:</b><br />
+                    <div id="tabs_wrapper2">
+                      <div id="tabs_container2" style="">
                         <ul id="tabs">
-                          <li id="tab1_HPI" ><a type="button" <?php if ($CC1 >'') echo 'class="fa fa-check" '; ?> href="#tab1"> <?php echo xlt('HPI'); ?> 1</a></li>
+                          <li id="tab1_HPI" class="active" ><a type="button" <?php if ($CC1 >'') echo 'class="fa fa-check" '; ?> href="#tab1"> <?php echo xlt('HPI'); ?> 1</a></li>
                           <li id="tab2_HPI" ><a <?php if ($CC2 >'') echo 'class="fa fa-check"'; ?> href="#tab2"><?php echo xlt('HPI'); ?> 2</a></li>
                           <li id="tab3_HPI" ><a <?php if ($CC3 >'') echo 'class="fa fa-check"'; ?> href="#tab3"><?php echo xlt('HPI'); ?> 3</a></li>
                         </ul>
                       </div>
                       <div id="tabs_content_container" style="z-index:1;" class="borderShadow">
                         <div id="tab1_HPI_text" class="tab_content" style="display: block;min-height: 2.0in;text-align:left;">                 
-                          <table style="font-size:1.0em;border-spacing: 2px;border-collapse: separate;">
+                          <table style="font-size:1.1em;">
                             <tr>
                               <td class="right"><b><?php echo xlt('Timing'); ?>:</b></td>
                               <td>
@@ -574,7 +569,7 @@ if ($refresh and $refresh != 'fullscreen') {
                     </div>
                   </div>
                 </div>  
-                  <!-- end      QP_HPI -->
+                <!-- end      QP_HPI -->
               </div>
               <!-- end HPI Right -->
             </div>
@@ -951,6 +946,7 @@ if ($refresh and $refresh != 'fullscreen') {
                       </div>  
                   </div>
                   <!-- end of the Pupils box -->
+
                   <!-- start of slide down pupils_panel --> 
                   <?php ($DIMODPUPILSIZE != '') ? ($display_dim_pupils_panel = "display") : ($display_dim_pupils_panel = "nodisplay"); ?>
                   <div id="dim_pupils_panel" class="vitals <?php echo attr($display_dim_pupils_panel); ?>" style="position:relative;float:left;height: 1.05in; width:2.3in;padding: 0.02in; border: 1.00pt solid #000000; ">                     

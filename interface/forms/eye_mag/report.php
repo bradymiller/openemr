@@ -110,13 +110,24 @@
 
     ?><html>
         <head>
+            <script src="<?php echo $GLOBALS['webroot'] ?>/library/js/jquery.min.js"></script>
+
+<!-- Latest compiled JavaScript -->
+<script src="<?php echo $GLOBALS['webroot'] ?>/library/js/bootstrap.min.js"></script>  
+
         <script type="text/javascript" src="<?php echo $GLOBALS['webroot'] ?>/library/textformat.js"></script>
             <!-- Add Font stuff for the look and feel.  -->
             <link rel="stylesheet" href="<?php echo $css_header;?>" type="text/css">
             <link rel="stylesheet" href="<?php echo $GLOBALS['webroot'] ?>/library/css/pure-min.css">
             <link rel="stylesheet" href="<?php echo $GLOBALS['webroot'] ?>/library/css/font-awesome-4.2.0/css/font-awesome.min.css">
             <link rel="stylesheet" href="../../forms/<?php echo $form_folder; ?>/style.css" type="text/css">  
-            <style>
+                
+
+    <link rel=stylesheet href="<?php echo $GLOBALS['css_header']; ?>" type="text/css">
+    <link rel="stylesheet" href="<?php echo $GLOBALS['webroot'] ?>/library/css/font-awesome-4.2.0/css/font-awesome.min.css">
+
+
+    <style>
             .report_text {
                 font-size:0.8em;width:200px;
             }
@@ -144,7 +155,14 @@
                 vertical-align:middle;
                 text-align:right;
             }
-            </style>  
+        </style>  
+
+        <script type="text/javascript" >
+             var inputs = document.getElementsByTagName('input');
+            for (var i = inputs.length, n = 0; n < i; n++) {
+                inputs[n].disabled = !inputs[n].disabled;
+            }
+        </script>
         </head>
     <body>
         <?php 
@@ -649,7 +667,7 @@
               
               <div style="position:absolute;text-align:right; top:0.03in;font-size:0.8em;right:0.1in;">
                   <label for="Amsler-Normal" class="input-helper input-helper--checkbox"><?php echo xlt('Normal'); ?></label>
-                  <input id="Amsler-Normal" type="checkbox" <?php echo attr($checked); ?>>
+                  <input id="Amsler-Normal" disabled type="checkbox" <?php echo attr($checked); ?>>
               </div>     
               <div id="Lyr5.1" style="position: absolute; top: 0.2in; left: 0.12in; display:inline-block;border: none; padding: 0.0in;">
                   <table cellpadding=0 cellspacing=0 style="padding:0px;margin:auto;width:90%;align:auto;font-size:0.8em;text-align:center;">
@@ -718,7 +736,7 @@
                   ?>
               <div style="position:relative;text-align:right; top:0.03in;font-size:0.8em;right:0.1in;">
                           <label for="FieldsNormal" class="input-helper input-helper--checkbox"><?php echo xlt('FTCF'); ?></label>
-                          <input id="FieldsNormal" type="checkbox" value="1" <?php echo attr($VFFTCF); ?>>
+                          <input id="FieldsNormal" disabled type="checkbox" value="1" <?php echo attr($VFFTCF); ?>>
               </div>   
               <div id="Lyr5.1" style="position: relative; top: 0.08in; left: 0.0in; border: none; background: white">
                   <table cellpadding='1' cellspacing="1" style="font-size: 0.8em;margin:auto;"> 
@@ -730,39 +748,39 @@
                       </tr> 
                       <tr>    
                           <td style="border-right:1pt solid black;border-bottom:1pt solid black;text-align:right;">
-                              <input name="ODVF1" id="ODVF1" type="checkbox" <?php echo attr($ODVF['1'])?> class="hidden"> 
+                              <input name="ODVF1" id="ODVF1" disabled type="checkbox" <?php echo attr($ODVF['1'])?> class="hidden"> 
                               <label for="ODVF1" class="input-helper input-helper--checkbox boxed"></label>
                           </td>
                           <td style="border-left:1pt solid black;border-bottom:1pt solid black;">
-                              <input name="ODVF2" id="ODVF2" type="checkbox" <?php echo attr($ODVF['2'])?> class="hidden"> 
+                              <input name="ODVF2" id="ODVF2" disabled type="checkbox" <?php echo attr($ODVF['2'])?> class="hidden"> 
                               <label for="ODVF2" class="input-helper input-helper--checkbox boxed"></label>
                           </td>
                           <td></td>
                           <td style="border-right:1pt solid black;border-bottom:1pt solid black;text-align:right;">
-                              <input name="OSVF1" id="OSVF1" type="checkbox" <?php echo attr($OSVF['1']); ?> class="hidden" >
+                              <input name="OSVF1" id="OSVF1" disabled type="checkbox" <?php echo attr($OSVF['1']); ?> class="hidden" >
                               <label for="OSVF1" class="input-helper input-helper--checkbox boxed"></label>
                           </td>
                           <td style="border-left:1pt solid black;border-bottom:1pt solid black;">
-                              <input name="OSVF2" id="OSVF2" type="checkbox" <?php echo attr($OSVF['2']); ?> class="hidden">                                                         
+                              <input name="OSVF2" id="OSVF2" disabled type="checkbox" <?php echo attr($OSVF['2']); ?> class="hidden">                                                         
                               <label for="OSVF2" class="input-helper input-helper--checkbox boxed"> </label>
                           </td>
                       </tr>       
                       <tr>    
                           <td style="border-right:1pt solid black;border-top:1pt solid black;text-align:right;">
-                              <input name="ODVF3" id="ODVF3" type="checkbox"  class="hidden" <?php echo attr($ODVF['3']); ?>> 
+                              <input name="ODVF3" id="ODVF3" disabled type="checkbox"  class="hidden" <?php echo attr($ODVF['3']); ?>> 
                               <label for="ODVF3" class="input-helper input-helper--checkbox boxed"></label>
                           </td>
                           <td style="border-left:1pt solid black;border-top:1pt solid black;">
-                              <input  name="ODVF4" id="ODVF4" type="checkbox"  class="hidden" <?php echo attr($ODVF['4']); ?>>
+                              <input  name="ODVF4" id="ODVF4" disabled type="checkbox"  class="hidden" <?php echo attr($ODVF['4']); ?>>
                               <label for="ODVF4" class="input-helper input-helper--checkbox boxed"></label>  
                           </td>
                           <td></td>
                           <td style="border-right:1pt solid black;border-top:1pt solid black;text-align:right;">
-                              <input name="OSVF3" id="OSVF3" type="checkbox"  class="hidden" <?php echo attr($OSVF['3']); ?>>
+                              <input name="OSVF3" id="OSVF3" disabled type="checkbox"  class="hidden" <?php echo attr($OSVF['3']); ?>>
                               <label for="OSVF3" class="input-helper input-helper--checkbox boxed"></label>
                           </td>
                           <td style="border-left:1pt solid black;border-top:1pt solid black;">
-                              <input name="OSVF4" id="OSVF4" type="checkbox"  class="hidden" <?php echo attr($OSVF['4']); ?>>
+                              <input name="OSVF4" id="OSVF4" disabled type="checkbox"  class="hidden" <?php echo attr($OSVF['4']); ?>>
                               <label for="OSVF4" class="input-helper input-helper--checkbox boxed"></label>
                           </td>                    
                       </tr>
@@ -843,7 +861,7 @@
               <span class="top_left"><b id="pupils"><?php echo xlt('Pupils'); ?>:</b> </span>
               <div style="position:absolute;text-align:right; top:0.03in;font-size:0.8em;right:0.1in;">
                           <label for="Pupil_normal" class="input-helper input-helper--checkbox"><?php echo xlt('Normal'); ?></label>
-                          <input id="Pupil_normal" type="checkbox" value="1" checked="checked">
+                          <input id="Pupil_normal" disabled type="checkbox" value="1" checked="checked">
               </div>
               <div id="Lyr7.0" style="position: absolute; top: 0.3in; left: 0.15in; border: none;">
                   <table cellpadding=2 cellspacing=1 style="font-size: 0.9em;;"> 
@@ -964,13 +982,13 @@
                                 <td rowspan="7" class="right" style="padding:10 0 10 0;">
                                     <b style="font-weight:600;text-decoration:underline;">Rx Type</b><br />
                                     <label for="Single" class="input-helper input-helper--checkbox"><?php echo xlt('Single'); ?></label>
-                                    <input type="radio" value="0" id="Single" name="RX1" <?php if ($RX1 == '0') echo 'checked="checked"'; ?> /></span><br /><br />
+                                    <input type="radio" disabled value="0" id="Single" name="RX1" <?php if ($RX1 == '0') echo 'checked="checked"'; ?> /></span><br /><br />
                                     <label for="Bifocal" class="input-helper input-helper--checkbox"><?php echo xlt('Bifocal'); ?></label>
-                                    <input type="radio" value="1" id="Bifocal" name="RX1" <?php if ($RX1 == '1') echo 'checked="checked"'; ?> /></span><br /><br />
+                                    <input type="radio" disabled value="1" id="Bifocal" name="RX1" <?php if ($RX1 == '1') echo 'checked="checked"'; ?> /></span><br /><br />
                                     <label for="Trifocal" class="input-helper input-helper--checkbox"><?php echo xlt('Trifocal'); ?></label>
-                                    <input type="radio" value="2" id="Trifocal" name="RX1" <?php if ($RX1 == '2') echo 'checked="checked"'; ?> /></span><br /><br />
+                                    <input type="radio" disabled value="2" id="Trifocal" name="RX1" <?php if ($RX1 == '2') echo 'checked="checked"'; ?> /></span><br /><br />
                                     <label for="Progressive" class="input-helper input-helper--checkbox"><?php echo xlt('Prog.'); ?></label>
-                                    <input type="radio" value="3" id="Progressive" name="RX1" <?php if ($RX1 == '3') echo 'checked="checked"'; ?> /></span><br />
+                                    <input type="radio" disabled value="3" id="Progressive" name="RX1" <?php if ($RX1 == '3') echo 'checked="checked"'; ?> /></span><br />
                                 </td>
                             </tr>
                             <tr>
@@ -1031,8 +1049,6 @@
 
                     <?php ($MRODSPH) ? ($display_AR = "display") : ($display_AR = "nodisplay");?>
                     <div id="LayerVision_MR" class="refraction borderShadow <?php echo $display_AR; ?>">
-                        <span class="closeButton fa  fa-close" id="Close_MR" name="Close_MR"></span>
-                        <a class="closeButton2 fa fa-print" href="../../forms/<?php echo $form_folder; ?>/SpectacleRx.php?target=AR&id=<?php echo attr($pid); ?>"></a>
                         <table id="autorefraction">
                             <th colspan=9>Autorefraction Refraction</th>
                             <tr>
@@ -1066,7 +1082,7 @@
                                 <td><input type=text id="AROSPRISM" name="AROSPRISM" value="<?php echo attr($AROSPRISM); ?>"></td>
                             </tr>
                             <th colspan="7">Manifest (Dry) Refraction</th>
-                            <th colspan="2" style="text-align:right;"><a class="fa fa-print" style="margin:0 7;" Xonclick="top.restoreSession();  return false;" href="../../forms/<?php echo attr($form_folder); ?>/SpectacleRx.php?target=MR&id=<?php echo attr($pid); ?>"></a></th>
+                            <th colspan="2" style="text-align:right;"></th>
                             <tr>
                                 <td></td>
                                 <td><?php echo xlt('Sph'); ?></td>
@@ -1102,8 +1118,6 @@
 
                     <?php ($CRODSPH)  ? ($display_Cyclo = "display") : ($display_Cyclo = "nodisplay"); ?>
                     <div id="LayerVision_CR" class="refraction borderShadow <?php echo $display_Cyclo; ?>">
-                        <span class="closeButton fa  fa-close" id="Close_CR" name="Close_CR"></span>
-                        <a class="closeButton2 fa fa-print" onclick="top.restoreSession();  return false;" href="../../forms/<?php echo $form_folder; ?>/SpectacleRx.php?target=CR&id=<?php echo attr($pid); ?>"></a>
                         <table id="cycloplegia">
                             <th colspan=9><?php echo xlt('Cycloplegic (Wet) Refraction'); ?></th>
                             <tr>
@@ -1114,23 +1128,23 @@
                                 <td><?php echo xlt('Acuity'); ?></td>
                                 <td colspan="1" style="text-align:left;width:60px;">
                                     <input type="radio" name="WETTYPE" id="Flash" value="Flash" <?php if ($WETTYPE == "Flash") echo "checked='checked'"; ?>/>
-                                    <label for="Flash" class="input-helper input-helper--checkbox"><?php echo xlt('Flash'); ?></label>
+                                    <label for="Flash" disabled class="input-helper input-helper--checkbox"><?php echo xlt('Flash'); ?></label>
                                 </td>
                                 <td colspan="2" rowspan="4" style="text-align:left;width:75px;font-size:0.5em;"><b style="text-align:center;width:70px;text-decoration:underline;"><?php echo xlt('Dilated with'); ?>:</b><br />
                                     <input type="checkbox" id="CycloMydril" name="CYCLOMYDRIL" value="Cyclomydril" <?php if ($CYCLOMYDRIL == 'Cyclomydril') echo "checked='checked'"; ?> />
-                                    <label for="CycloMydril" class="input-helper input-helper--checkbox"><?php echo xlt('CycloMydril'); ?></label>
+                                    <label for="CycloMydril" disabled class="input-helper input-helper--checkbox"><?php echo xlt('CycloMydril'); ?></label>
                                     <br />
                                     <input type="checkbox" id="Tropicamide" name="TROPICAMIDE" value="Tropicamide 2.5%" <?php if ($TROPICAMIDE == 'Tropicamide 2.5%') echo "checked='checked'"; ?> />
-                                    <label for="Tropicamide" class="input-helper input-helper--checkbox"><?php echo xlt('Tropic 2.5%'); ?></label>
+                                    <label for="Tropicamide" disabled class="input-helper input-helper--checkbox"><?php echo xlt('Tropic 2.5%'); ?></label>
                                     </br>
                                     <input type="checkbox" id="Neo25" name="NEO25" value="Neosynephrine 2.5%"  <?php if ($NEO25 =='Neosynephrine 2.5%') echo "checked='checked'"; ?> />
-                                    <label for="Neo25" class="input-helper input-helper--checkbox"><?php echo xlt('Neo 2.5%'); ?></label>
+                                    <label for="Neo25" disabled class="input-helper input-helper--checkbox"><?php echo xlt('Neo 2.5%'); ?></label>
                                     <br />
                                     <input type="checkbox" id="Cyclogyl" name="CYCLOGYL" value="Cyclopentolate 1%"  <?php if ($CYCLOGYL == 'Cyclopentolate 1%') echo "checked='checked'"; ?> />
-                                    <label for="Cyclogyl" class="input-helper input-helper--checkbox"><?php echo xlt('Cyclo 1%'); ?></label>
+                                    <label for="Cyclogyl" disabled class="input-helper input-helper--checkbox"><?php echo xlt('Cyclo 1%'); ?></label>
                                     </br>
                                     <input type="checkbox" id="Atropine" name="ATROPINE" value="Atropine 1%"  <?php if ($ATROPINE == 'Atropine 1%') echo "checked='checked'"; ?> />
-                                    <label for="Atropine" class="input-helper input-helper--checkbox"><?php echo xlt('Atropine 1%'); ?></label>
+                                    <label for="Atropine" disabled class="input-helper input-helper--checkbox"><?php echo xlt('Atropine 1%'); ?></label>
                                     </br>
                                 </td>
                             </tr>
@@ -1142,7 +1156,7 @@
                                 <td><input type=text id="CRODVA" name="CRODVA"  value="<?php echo attr($CRODVA); ?>"></td>
                                 <td colspan="1" style="text-align:left;">
                                     <input type="radio" name="WETTYPE" id="Auto" value="Auto" <?php if ($WETTYPE == "Auto") echo "checked='checked'"; ?>>
-                                    <label for="Auto" class="input-helper input-helper--checkbox"><?php echo xlt('Auto'); ?></label>
+                                    <label for="Auto" disabled class="input-helper input-helper--checkbox"><?php echo xlt('Auto'); ?></label>
                                 </td>
                             </tr>
                             <tr>
@@ -1153,17 +1167,17 @@
                                 <td><input type=text id="CROSVA" name="CROSVA" value="<?php echo attr($CROSVA); ?>"></td>
                                 <td colspan="1" style="text-align:left;">
                                     <input type="radio" name="WETTYPE" id="Manual" value="Manual" <?php if ($WETTYPE == "Manual") echo "checked='checked'"; ?>>
-                                    <label for="Manual" class="input-helper input-helper--checkbox"><?php echo xlt('Manual'); ?></label>
+                                    <label for="Manual" disabled class="input-helper input-helper--checkbox"><?php echo xlt('Manual'); ?></label>
                                 </td>
                             </tr>
                             <tr>
                                 <td colspan="5" style="vertical-align:text-top;">
                                     <input type="checkbox" id="DIL_RISKS" name="DIL_RISKS" value="on" <?php if ($DIL_RISKS =='on') echo "checked='checked'"; ?>>
-                                    <label for="DIL_RISKS" class="input-helper input-helper--checkbox"><?php echo xlt('Dilation risks reviewed'); ?></label>
+                                    <label for="DIL_RISKS" class="disabled input-helper input-helper--checkbox"><?php echo xlt('Dilation risks reviewed'); ?></label>
                                 </td>
                                 <td colspan="1" style="text-align:left;">
                                     <input type="checkbox" name="BALANCED" id="Balanced" value="on" <?php if ($BALANCED =='on') echo "checked='checked'"; ?>>
-                                    <label for="Balanced" class="input-helper input-helper--checkbox"><?php echo xlt('Balanced'); ?></label>
+                                    <label for="Balanced" class="disabled input-helper input-helper--checkbox"><?php echo xlt('Balanced'); ?></label>
                                 </td>
                             </tr>
                             <tr>
@@ -1751,7 +1765,7 @@
                                                                   <td style="width:40%;font-size:1.0em;margin:0 auto;font-weight:bold;"><?php echo xlt('Motility'); ?>:</td>
                                                                   <td style="font-size:0.9em;vertical-align:top;text-align:right;top:0.0in;right:0.1in;height:0px;">
                                                                       <?php echo xlt('Normal'); ?>
-                                                                      <input id="MOTILITYNORMAL" name="MOTILITYNORMAL" type="checkbox" <?php if ($MOTILITYNORMAL =='on') echo "checked='checked'"; ?>>
+                                                                      <input id="MOTILITYNORMAL" name="MOTILITYNORMAL" disabled type="checkbox" <?php if ($MOTILITYNORMAL =='on') echo "checked='checked'"; ?>>
                                                                   </td>
                                                               </tr>
                                                           </table>

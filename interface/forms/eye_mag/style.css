@@ -577,7 +577,7 @@ textarea {
     font: bold 84% Fontawesome, 'trebuchet ms',helvetica,sans-serif; 
 }
 
-#tabs_wrapper {
+#tabs_wrapper, #tabs_wrapper2 {
   font-size:0.9em;
 }
 #tabs_container {
@@ -594,10 +594,10 @@ textarea {
   border: 2px solid #ccc;
   padding: 4px 6px;
   text-decoration: none;
-  background-color: #eeeeee;
+  background-color: #CCCC99;
   border-bottom: none;
   outline: none;
-  color:navy;
+  color:black;
   box-shadow: 0px 5px 9px #888;
   font-size:1.4em;
   border-radius: 5px 5px 0 0;
@@ -607,12 +607,15 @@ textarea {
 }
 #tabs li a:hover {
   background-color: #dddddd;
+  color:navy;
 
 }
 #tabs li.active a {
   background-color: #fff;
   padding: 4px 6px 5px 6px;
   border-bottom: none;
+  color:navy;
+
 }
 #tabs li.active a:hover {
   background-color: #eeeeee;
@@ -1335,44 +1338,7 @@ list-style:none;
     text-decoration: none;
     background-color: #1C5ECF; /*#3E76C2;*/
 }
-.dropdown-menu>li /* To prevent selection of text */
-{   position:relative;
-    -webkit-user-select: none; /* Chrome/Safari */        
-    -moz-user-select: none; /* Firefox */
-    -ms-user-select: none; /* IE10+ */
-    /* Rules below not implemented in browsers yet */
-    -o-user-select: none;
-    user-select: none;
-    cursor:pointer;
-}
-.dropdown-menu .sub-menu 
-{
-    left: 100%;
-    position: absolute;
-    top: 0;
-    display:block;
-    margin-top: -1px;
-    border-top-left-radius:0;
-    border-bottom-left-radius:0;
-    border-left-color:#fff;
-    box-shadow:none;
-}
-.right-caret:after,.left-caret:after
- {  content:"";
-    border-bottom: 5px solid transparent;
-    border-top: 5px solid transparent;
-    display: inline-block;
-    height: 0;
-    vertical-align: middle;
-    width: 0;
-    margin-left:5px;
-}
-.right-caret:after
-{   border-left: 5px solid #ffaf46;
-}
-.left-caret:after
-{   border-right: 5px solid #ffaf46;
-}
+
 
 
 .navbar-brand {
