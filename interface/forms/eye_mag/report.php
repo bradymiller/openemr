@@ -49,7 +49,6 @@
     include_once("$srcdir/sql.inc");
     require_once("$srcdir/formatting.inc.php");
 
-
     $form_name = "eye_mag";
     $form_folder = "eye_mag";
 
@@ -400,10 +399,10 @@
                        
                         //echo "<br />";
                         echo "
-                        <table style='margin-bottom:20px;max-height:1.5in;max-width:1.5in;
+                        <table style='max-height:1.5in;max-width:1.5in;
                         background-color: #fff; font-size:0.8em;overflow:auto;' class='borderShadow'>
                             <tr>
-                                <td style='min-height:1.2in;min-width:1.5in;padding-left:5px;'>
+                                <td style='min-height:1.2in;min-width:1.5in;padding-left:5px;padding-top:5px;padding-bottom:5px;'>
                                 ";
 
                         // if no issues (will place a 'None' text vs. toggle algorithm here)

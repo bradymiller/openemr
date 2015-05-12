@@ -2444,30 +2444,40 @@ function menu_overhaul_left($pid,$encounter) {
                 <?php
         }
         ?>
-        <div style="position:relative;float:left;margin:auto 5px;width:140px;top:0px;right:0px;padding-bottom:20px;">
-                <table tyle="position:relative;float:left;margin:10px 15px;width:140px;top:0px;right:0px;font-size:1.0em;border-spacing: 15px;">
+        <div style="position:relative;float:left;margin:auto 5px;width:140px;top:0px;right:0px;">
+                <table style="position:relative;float:left;margin:10px 15px;width:140px;top:0px;right:0px;font-size:1.0em;">
                     <tr>
                         <td class="right" >
                             <?php 
                             $age = getPatientAgeDisplay($DOB, $encounter_date);
                             echo "<b>".xlt('Name').":</b> </td><td> &nbsp;".$fname."  ".$lname."</td></tr>
-                                    <tr><td class='right'><b>".xlt('DOB').":</b></td><td> &nbsp;".$DOB. "(".$age.")</td></tr>
-                                    <tr><td class='middle' colspan='2'>"; 
+                                    <tr><td class='right'><b>".xlt('DOB').":</b></td><td> &nbsp;".$DOB. "&nbsp;(".$age.")</td></tr>
+                                    "; 
                             ?>
-                                <select>
-                                <option><?php global $visit_date; echo $visit_date; ?> (<?php echo $encounter; ?>)</option>
                                     <?php 
                                         /**
+                                          * ?>
+                                          * <tr><td class='middle' colspan='2'>
+                                          *     <select>
+                                          *         <option><?php global $visit_date; echo $visit_date; ?> (<?php echo $encounter; ?>)</option>
+                                          * <?
                                           * List out the prior eye_mag encounters as options.  
                                           * The one above is today.  
                                           * This will run a function to go back a day, changing all the form's values to that day, 
                                           * and if e-signed and locked, changes are disabled.  Perhaps if locked what is shown is the PDF of this?
+                                          * Or the report.php version?
                                           * Too slow?  Loss of javascript control of presentation.  Unable to widen or narrow or flip to the drawings,
                                           * which must also be brought into the DOM from the records area, or just be another page in the PDF.  Not so much fun.
-                                          * So, same form, all fields disabled, but display JS actions active, and no saving allowed.
+                                          * So, same form, all fields disabled, but display JS actions active, and no saving allowed, or report.php.
+                                          * We'll see.  For now just list the Visit Date: and don't allow look backs yet.
+                                          *
+                                          * ?>
+                                          *     </select>
+                                          * </td></tr>
                                           */
+                                        global $visit_date;
+                                        echo "<tr><td class='right'><b>".xlt('Date').":</b></td><td>&nbsp;".$visit_date."</td></tr>";
                                     ?>
-                                </select>
                             </form>
                         </td>
                     </tr>

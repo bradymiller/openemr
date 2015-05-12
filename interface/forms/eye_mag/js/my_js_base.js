@@ -28,7 +28,7 @@
  *  Since Default values give the field a bgcolor of rgb(245, 245, 220), we can use that.  OK for now.
  *  In the future, we can make an array of default values an see if this matches the fields current value.
  */
-function fill_QP_field(PEZONE, ODOSOU, LOCATION_text, selection,mult) {
+function fill_QP_field(PEZONE, ODOSOU, LOCATION_text, selection,fill_action) {
     if (ODOSOU > '') {
         var FIELDID =  ODOSOU  + LOCATION_text;
     } else {
@@ -39,14 +39,20 @@ function fill_QP_field(PEZONE, ODOSOU, LOCATION_text, selection,mult) {
     var Fvalue = document.getElementById(FIELDID).value;
     if (prefix > '' && prefix !='off') {prefix = prefix + " ";}
     if (prefix =='off') { prefix=''; }
+   
+    if (fill_action =="REPLACE") {
+        $("#" +FIELDID).val(prefix +selection);
+        $("#" +FIELDID).css("background-color","#F0F8FF");
+    } else {
     if (($("#" +FIELDID).css("background-color")=="rgb(245, 245, 220)") || (Fvalue ==''))  {
         $("#" +FIELDID).val(prefix+selection);
-        $("#" +FIELDID).css("background-color","#C0C0C0");
+        $("#" +FIELDID).css("background-color","#F0F8FF");
     } else {
         if (Fvalue >'') prefix = ", "+prefix;
         $("#" +FIELDID).val(Fvalue + prefix +selection);
-        $("#" +FIELDID).css("background-color","#C0C0C0");
+        $("#" +FIELDID).css("background-color","#F0F8FF");
             //$("#" +FIELDID).css("background-color","red");
+    }
     }
     submit_form(FIELDID);
 }
@@ -1166,12 +1172,80 @@ $(document).ready(function() {
                                              $("[name^='RETINA_prefix_']").removeClass('eye_button_selected');
                                              $("#RETINA_prefix_"+ newValue).addClass("eye_button_selected");
                                              });
-                  $("#NEURO_prefix").change(function() {
-                                            var newValue = $("#NEURO_prefix").val().replace('+', '');
-                                            if ($(this).value =="off") {$(this).val('');}
-                                            $("[name^='NEURO_prefix_']").removeClass('eye_button_selected');
-                                            $("#NEURO_prefix_"+ newValue).addClass("eye_button_selected");
-                                            });
+                  $("#NEURO_ACT_zone").change(function() {
+                                              var newValue = $(this).val();
+                                              $("[name^='NEURO_ACT_zone']").removeClass('eye_button_selected');
+                                              $("#NEURO_ACT_zone_"+ newValue).addClass("eye_button_selected");
+                                              $("#PREFS_ACT_SHOW").val(newValue);
+                                              update_PREFS;
+                                              $("#ACT_tab_"+newValue).trigger('click');
+                                              });
+                  $("#NEURO_side").change(function() {
+                                          var newValue = $(this).val();
+                                          $("[name^='NEURO_side']").removeClass('eye_button_selected');
+                                          $("#NEURO_side_"+ newValue).addClass("eye_button_selected");
+                                          });
+                  $('.ACT').focus(function() {
+                                  var id = this.id.match(/ACT(\d*)/);
+                                  $('#NEURO_field').val(''+id[1]).trigger('change');
+                                  });
+                  $("#NEURO_field").change(function() {
+                                           var newValue = $(this).val();
+                                           $("[name^='NEURO_field']").removeClass('eye_button_selected');
+                                           $("#NEURO_field_"+ newValue).addClass("eye_button_selected");
+                                           $('.ACT').each(function(i){
+                                                          var color = $(this).css('background-color');
+                                                          //alert ($(this).title);
+                                                          if (color == 'rgb(255, 255, 153)') {// =='blue' <- IE hack
+                                                          $(this).css("background-color","rgb(255, 248, 220)");
+                                                          }
+                                                          });
+                                           //change to highlight field in zone entry is for
+                                           var zone = $("#NEURO_ACT_zone").val();
+                                           $("#ACT"+newValue+zone).css("background-color","yellow");
+                                           });
+                  $("[name^='NEURO_ACT_strab']").click(function() {
+                                           var newValue = $(this).val();
+                                           $("[name^='NEURO_ACT_strab']").removeClass('eye_button_selected');
+                                           $(this).addClass("eye_button_selected");
+                                           });
+                  $("#NEURO_value").change(function() {
+                                               var newValue = $(this).val();
+                                               $("[name^='NEURO_value']").removeClass('eye_button_selected');
+                                               $("#NEURO_value_"+ newValue).addClass("eye_button_selected");
+                                           if (newValue == "ortho") {
+                                            $("#NEURO_ACT_strab").val('');
+                                            $("[name^='NEURO_ACT_strab']").removeClass('eye_button_selected');
+                                            $("#NEURO_side").val('');
+                                            $("[name^='NEURO_side']").removeClass('eye_button_selected');
+                                           }
+                                               });
+                  $("#NEURO_RECORD").mouseover(function() {
+                                               $("#NEURO_RECORD").addClass('borderShadow2');
+                                               });
+                  $("#NEURO_RECORD").mouseout(function() {
+                                              $("#NEURO_RECORD").removeClass('borderShadow2');
+                                              });
+                  $("#NEURO_RECORD").mousedown(function() {
+                                               $("#NEURO_RECORD").removeClass('borderShadow2');
+                                               $(this).toggleClass('button_over');
+                                               });
+                  $("#NEURO_RECORD").mouseup(function() {
+                                               $("#NEURO_RECORD").removeClass('borderShadow2');
+                                               $(this).toggleClass('button_over');
+                                               });
+                  $("#NEURO_RECORD").click(function() {
+                                           //find out the field we are updating
+                                           var number = $("#NEURO_field").val();
+                                           var zone = $("#NEURO_ACT_zone").val();
+                                           var strab = $("#NEURO_value").val() + ' '+ $("#NEURO_side").val() + $("#NEURO_ACT_strab").val();
+                                           //alert(number + ' ' +zone +' '+strab);
+                                           
+                                           $("#ACT"+number+zone).val(strab).css("background-color","#F0F8FF");
+                                           
+
+                                               });
+                  
                   $("AntSegSpan,#AntSegOD,#AntSegOU,#AntSegOS,#EXTOD,#EXTOU,#EXTOS,#RETINAOD,#RETINAOU,#RETINAOS").mouseover(function() {
                                                                                                                              $(this).toggleClass('button_over');
                                                                                                                              
@@ -1581,6 +1655,10 @@ $(document).ready(function() {
                                                 $("#ACT_tab_" + section).addClass('ACT_selected').removeClass('ACT_deselected');
                                                 $("#ACT_" + section).removeClass('nodisplay');
                                                 $("#PREFS_ACT_SHOW").val(section);
+                                                //selection correctt QP zone
+                                                $("[name^='NEURO_ACT_zone']").removeClass('eye_button_selected');
+                                                $("#NEURO_ACT_zone_"+ section).addClass("eye_button_selected");
+                                                $("#NEURO_ACT_zone").val(section);
                                                 update_PREFS();
                                                 });
                   $("#ACTTRIGGER").mouseover(function() {

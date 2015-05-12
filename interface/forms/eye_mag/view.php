@@ -121,7 +121,8 @@ if ($refresh and $refresh != 'fullscreen') {
         <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
     <![endif]-->
   <script language="JavaScript">    
-  <?php   require_once("$srcdir/restoreSession.php"); ?>
+  <?php  require_once("$srcdir/restoreSession.php"); 
+  ?>
      
   function dopclick(id) {
     <?php if ($thisauth != 'write'): ?>
@@ -140,7 +141,7 @@ if ($refresh and $refresh != 'fullscreen') {
     <link rel="stylesheet" href="../../forms/<?php echo $form_folder; ?>/css/bootstrap-responsive.min.css">
     <link rel="stylesheet" href="../../forms/<?php echo $form_folder; ?>/style.css" type="text/css">    
     <link rel=stylesheet href="<?php echo $GLOBALS['css_header']; ?>" type="text/css">
-    <link rel="stylesheet" href="<?php echo $GLOBALS['webroot'] ?>/library/css/font-awesome-4.2.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="<?php echo $GLOBALS['webroot'] ?>/library/css/font-awesome-4.2.0/css/font-awesome.css">
     
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -151,7 +152,7 @@ if ($refresh and $refresh != 'fullscreen') {
   </head>
   <body class="bgcolor2" background="<?php echo $GLOBALS['backpic']?>" topmargin=0 rightmargin=0 leftmargin=2 bottommargin=0 marginwidth=2 marginheight=0>
         
-    <div id="stats_div" name="stats_div" style="z-index:100;">
+    <Xdiv id="stats_div" name="stats_div" style="z-index:100;">
     <?php
     if ($display=="fullscreen") { 
       // trial fullscreen with mobile menu will lead to tablet versions and bootstrap menu 
@@ -181,7 +182,8 @@ if ($refresh and $refresh != 'fullscreen') {
       require_once("$incdir/patient_file/encounter/new_form.php");
     }
     ?>
-        </div>
+        </Xdiv>
+        <body class="body_top">
    <div id="Layer1" name="Layer1" class="display">
     <form method="post" action="<?php echo $rootdir;?>/forms/<?php echo $form_folder; ?>/save.php?mode=update" id="eye_mag" class="eye_mag pure-form" name="eye_mag">
       <!-- start container for the main body of the form -->
@@ -299,24 +301,25 @@ if ($refresh and $refresh != 'fullscreen') {
                               </table>
                         </div>
                         <div id="tab3" class="tab_content">
-                            <table border="0" width="100%" cellspacing="0" cellpadding="0" style="font-size:1.2em;min-height: 2.0in;text-align:left;">
-                                            <tr>
-                                              <td class="" style="vertical-align:top;padding:10px;" colspan="2">
-                                                <b><span title="<?php echo xla('In the patient\'s words'); ?>"><?php echo xlt('Chief Complaint 3'); ?>:
-                                                </span>  </b>
-                                                <br />
-                                                <textarea name="CC3" id="CC3" class="HPI_text" tabindex="10"><?php echo text($CC3); ?></textarea>
-                                              </td>
-                                            </tr> 
-                                            <tr>
-                                              <td class="" style="vertical-align:top;padding:10px;">
-                                                <span title="<?php echo xla('History of Present Illness:  A detailed HPI may be completed by using either four or more HPI elements OR the status of three chronic or inactive problems.'); ?>" style="height:1in;font-weight:600;vertical-align:text-top;"><?php echo xlt('HPI'); ?>:
-                                                </span>
-                                                <br />
-                                                <textarea name="HPI3" id="HPI3" class="HPI_text" tabindex="21" style="min-height:1.5in;max-height:2.0in;width:4.2in;"><?php echo text($HPI3); ?></textarea>
-                                                <br />
-                                              </td>
-                                            </tr> 
+                            <table border="0" width="100%" cellspacing="0" cellpadding="0" 
+                                style="font-size:1.1em;min-height: 2.0in;text-align:left;">
+                              <tr>
+                                <td class="" style="vertical-align:top;padding:10px;" colspan="2">
+                                  <b><span title="<?php echo xla('In the patient\'s words'); ?>"><?php echo xlt('Chief Complaint 3'); ?>:
+                                  </span>  </b>
+                                  <br />
+                                  <textarea name="CC3" id="CC3" class="HPI_text" tabindex="10"><?php echo text($CC3); ?></textarea>
+                                </td>
+                              </tr> 
+                              <tr>
+                                <td class="" style="vertical-align:top;padding:10px;">
+                                  <span title="<?php echo xla('History of Present Illness:  A detailed HPI may be completed by using either four or more HPI elements OR the status of three chronic or inactive problems.'); ?>" style="height:1in;font-weight:600;vertical-align:text-top;"><?php echo xlt('HPI'); ?>:
+                                  </span>
+                                  <br />
+                                  <textarea name="HPI3" id="HPI3" class="HPI_text" tabindex="21" style="min-height:1.5in;max-height:2.0in;width:4.2in;"><?php echo text($HPI3); ?></textarea>
+                                  <br />
+                                </td>
+                              </tr> 
                             </table>
                         </div>
                       </div>
@@ -331,11 +334,11 @@ if ($refresh and $refresh != 'fullscreen') {
               <div id="HPI_right" name="HPI_right" class="exam_section_right borderShadow">
                 <?php display_draw_section ("HPI",$encounter,$pid); ?>
                 <!-- start    QP_HPI_Build -->
-                <div id="QP_HPI" name="QP_HPI" class="QP_class" style="text-align:left;overflow:auto;">
+                <div id="QP_HPI" name="QP_HPI" class="QP_class" style="text-align:left;">
                   <div id="HPI_text_list" name="HPI_text_list">
                     <b>HPI Detail:</b><br />
-                    <div id="tabs_wrapper2">
-                      <div id="tabs_container2" style="">
+                    <div id="tabs_wrapper" >
+                      <div id="tabs_container" style="margin-top:10px;">
                         <ul id="tabs">
                           <li id="tab1_HPI" class="active" ><a type="button" <?php if ($CC1 >'') echo 'class="fa fa-check" '; ?> href="#tab1"> <?php echo xlt('HPI'); ?> 1</a></li>
                           <li id="tab2_HPI" ><a <?php if ($CC2 >'') echo 'class="fa fa-check"'; ?> href="#tab2"><?php echo xlt('HPI'); ?> 2</a></li>
@@ -418,7 +421,7 @@ if ($refresh and $refresh != 'fullscreen') {
                           </center>
                         </div>
                         <div id="tab2_HPI_text" class="tab_content" style="min-height: 2.0in;text-align:left;">                 
-                          <table style="font-size:1.0em;border-spacing: 2px;border-collapse: separate;">
+                          <table style="font-size:1.1em;">
                             <tr>
                               <td class="right"><b><?php echo xlt('Timing'); ?>:</b></td>
                               <td>
@@ -473,9 +476,9 @@ if ($refresh and $refresh != 'fullscreen') {
                               <td>
                                 <textarea name="QUALITY2" id="QUALITY2" tabindex="36" style="width:250px;"><?php echo text($QUALITY2); ?></textarea>
                                     
-                            </td><td>
-                            <i><?php echo xlt('eg. aching, burning, radiating pain'); ?></i>
-                          </td>
+                              </td><td>
+                              <i><?php echo xlt('eg. aching, burning, radiating pain'); ?></i>
+                              </td>
                             </tr> 
                             <tr>
                               <td class="right"><b><?php echo xlt('Duration'); ?>:</b></td>
@@ -492,7 +495,7 @@ if ($refresh and $refresh != 'fullscreen') {
                           </center>
                         </div>
                         <div id="tab3_HPI_text" class="tab_content" style="min-height: 2.0in;text-align:left;">                 
-                          <table style="font-size:1.0em;border-spacing: 2px;border-collapse: separate;">
+                          <table style="font-size:1.1em;">
                             <tr>
                               <td class="right"><b><?php echo xlt('Timing'); ?>:</b></td>
                               <td>
@@ -1682,9 +1685,9 @@ if ($refresh and $refresh != 'fullscreen') {
                                           $string = (strlen($string) > 14) ? substr($string,0,12).'...' : $string;         
 
                                           ?>
-                                          <a class="underline QP" onclick="fill_QP_field('EXT','R','<?php echo attr($Select_data['LOCATION_text']); ?>','<?php echo attr($Select_data['selection']); ?>',1);"><?php echo xlt('R'); ?></a> | 
-                                          <a class="underline QP" onclick="fill_QP_field('EXT','L','<?php echo attr($Select_data['LOCATION_text']); ?>','<?php echo attr($Select_data['selection']); ?>',1);"><?php echo xlt('L'); ?></a> | 
-                                          <a class="underline QP" onclick="fill_QP_field('EXT','R','<?php echo attr($Select_data['LOCATION_text']); ?>','<?php echo attr($Select_data['selection']); ?>',2);fill_QP_field('EXT','L','<?php echo attr($Select_data['LOCATION_text']); ?>','<?php echo attr($Select_data['selection']); ?>',1);"><?php echo xlt('B'); ?></a> </span>
+                                          <a class="underline QP" onclick="fill_QP_field('EXT','R','<?php echo attr($Select_data['LOCATION_text']); ?>','<?php echo attr($Select_data['selection']); ?>','<?php echo attr($Select_data['FILL_ACTION']); ?>');"><?php echo xlt('R'); ?></a> | 
+                                          <a class="underline QP" onclick="fill_QP_field('EXT','L','<?php echo attr($Select_data['LOCATION_text']); ?>','<?php echo attr($Select_data['selection']); ?>','<?php echo attr($Select_data['FILL_ACTION']); ?>');"><?php echo xlt('L'); ?></a> | 
+                                          <a class="underline QP" onclick="fill_QP_field('EXT','R','<?php echo attr($Select_data['LOCATION_text']); ?>','<?php echo attr($Select_data['selection']); ?>','<?php echo attr($Select_data['FILL_ACTION']); ?>');fill_QP_field('EXT','L','<?php echo attr($Select_data['LOCATION_text']); ?>','<?php echo attr($Select_data['selection']); ?>','<?php echo attr($Select_data['FILL_ACTION']); ?>');"><?php echo xlt('B'); ?></a> </span>
                                           &nbsp;    <?php echo text($Select_data['LOCATION']); ?>: <?php echo text($string); ?>
                                           <br />
                                           <?
@@ -1846,9 +1849,9 @@ if ($refresh and $refresh != 'fullscreen') {
                                   $string = $Select_data['selection'] ;
                                   $string = (strlen($string) > 12) ? substr($string,0,10).'...' : $string;   
                                   ?> <span>
-                                  <a class="underline QP" onclick="fill_QP_field('ANTSEG','OD','<?php echo attr($Select_data['LOCATION_text']); ?>','<?php echo attr($Select_data['selection']); ?>',1);"><?php echo xlt('OD'); ?></a> | 
-                                  <a class="underline QP" onclick="fill_QP_field('ANTSEG','OS','<?php echo attr($Select_data['LOCATION_text']); ?>','<?php echo attr($Select_data['selection']); ?>',1);"><?php echo xlt('OS'); ?></a> | 
-                                  <a class="underline QP" onclick="fill_QP_field('ANTSEG','OD','<?php echo attr($Select_data['LOCATION_text']); ?>','<?php echo attr($Select_data['selection']); ?>',2);fill_QP_field('ANTSEG','OS','<?php echo attr($Select_data['LOCATION_text']); ?>','<?php echo attr($Select_data['selection']); ?>',1);"><?php echo xlt('OU'); ?></a> </span>
+                                  <a class="underline QP" onclick="fill_QP_field('ANTSEG','OD','<?php echo attr($Select_data['LOCATION_text']); ?>','<?php echo attr($Select_data['selection']); ?>','<?php echo attr($Select_data['FILL_ACTION']); ?>');"><?php echo xlt('OD'); ?></a> | 
+                                  <a class="underline QP" onclick="fill_QP_field('ANTSEG','OS','<?php echo attr($Select_data['LOCATION_text']); ?>','<?php echo attr($Select_data['selection']); ?>','<?php echo attr($Select_data['FILL_ACTION']); ?>');"><?php echo xlt('OS'); ?></a> | 
+                                  <a class="underline QP" onclick="fill_QP_field('ANTSEG','OD','<?php echo attr($Select_data['LOCATION_text']); ?>','<?php echo attr($Select_data['selection']); ?>','<?php echo attr($Select_data['FILL_ACTION']); ?>');fill_QP_field('ANTSEG','OS','<?php echo attr($Select_data['LOCATION_text']); ?>','<?php echo attr($Select_data['selection']); ?>','<?php echo attr($Select_data['FILL_ACTION']); ?>');"><?php echo xlt('OU'); ?></a> </span>
                                   &nbsp;    <?php echo text($Select_data['LOCATION']); ?>: <?php echo text($string); ?>
 
                                   <br />
@@ -2015,9 +2018,9 @@ if ($refresh and $refresh != 'fullscreen') {
                                   $string = $Select_data['selection'] ;
                                   $string = (strlen($string) > 12) ? substr($string,0,12).'...' : $string;   ?>
                               <span>
-                                  <a class="underline QP" onclick="fill_QP_field('RETINA','OD','<?php echo attr($Select_data['LOCATION_text']); ?>','<?php echo attr($Select_data['selection']); ?>',1);"><?php echo xlt('OD'); ?></a>&nbsp;|&nbsp;
-                                  <a class="underline QP" onclick="fill_QP_field('RETINA','OS','<?php echo attr($Select_data['LOCATION_text']); ?>','<?php echo attr($Select_data['selection']); ?>',1);"><?php echo xlt('OS'); ?></a>&nbsp;|&nbsp;
-                                  <a class="underline QP" onclick="fill_QP_field('RETINA','OD','<?php echo attr($Select_data['LOCATION_text']); ?>','<?php echo attr($Select_data['selection']); ?>',2);fill_QP_field('RETINA','OS','<?php echo attr($Select_data['LOCATION_text']); ?>','<?php echo attr($Select_data['selection']); ?>',1);"><?php echo xlt('OU'); ?></a>
+                                  <a class="underline QP" onclick="fill_QP_field('RETINA','OD','<?php echo attr($Select_data['LOCATION_text']); ?>','<?php echo attr($Select_data['selection']); ?>','<?php echo attr($Select_data['FILL_ACTION']); ?>');"><?php echo xlt('OD'); ?></a>&nbsp;|&nbsp;
+                                  <a class="underline QP" onclick="fill_QP_field('RETINA','OS','<?php echo attr($Select_data['LOCATION_text']); ?>','<?php echo attr($Select_data['selection']); ?>','<?php echo attr($Select_data['FILL_ACTION']); ?>');"><?php echo xlt('OS'); ?></a>&nbsp;|&nbsp;
+                                  <a class="underline QP" onclick="fill_QP_field('RETINA','OD','<?php echo attr($Select_data['LOCATION_text']); ?>','<?php echo attr($Select_data['selection']); ?>','<?php echo attr($Select_data['FILL_ACTION']); ?>');fill_QP_field('RETINA','OS','<?php echo attr($Select_data['LOCATION_text']); ?>','<?php echo attr($Select_data['selection']); ?>','<?php echo attr($Select_data['FILL_ACTION']); ?>');"><?php echo xlt('OU'); ?></a>
                                   &nbsp;    <?php echo text($Select_data['LOCATION']); ?>: <?php echo text($string); ?>
 
                                   <br />
@@ -2141,14 +2144,14 @@ if ($refresh and $refresh != 'fullscreen') {
                                                                           <td style="border:1pt solid black;border-left:0pt;text-align:right;">
                                                                           <textarea id="ACT4SCDIST" name="ACT4SCDIST" class="ACT"><?php echo text($ACT4SCDIST); ?></textarea></td>
                                                                           <td style="border:1pt solid black;text-align:center;">
-                                                                          <textarea id="ACTPRIMSCDIST" name="ACTPRIMSCDIST" class="ACT"><?php echo text($ACTPRIMSCDIST); ?></textarea></td>
+                                                                          <textarea id="ACT5SCDIST" name="ACT5SCDIST" class="ACT"><?php echo text($ACT5SCDIST); ?></textarea></td>
                                                                           <td style="border:1pt solid black;border-right:0pt;text-align:left;">
                                                                           <textarea id="ACT6SCDIST" name="ACT6SCDIST" class="ACT"><?php echo text($ACT6SCDIST); ?></textarea></td>
                                                                           <td><i class="fa fa-share rotate-right"></i></td> 
                                                                       </tr> 
                                                                       <tr> 
                                                                           <td style="border:0; border-top:2pt solid black;border-right:2pt solid black;text-align:right;">
-                                                                              <textarea id="ACTRTILTSCDIST" name="ACTRTILTSCDIST" class="ACT"><?php echo text($ACTRTILTSCDIST); ?></textarea></td>
+                                                                              <textarea id="ACT10SCDIST" name="ACT10SCDIST" class="ACT"><?php echo text($ACT10SCDIST); ?></textarea></td>
                                                                           <td style="border-right:1pt solid black;border-top:1pt solid black;text-align:right;">
                                                                               <textarea id="ACT7SCDIST" name="ACT7SCDIST" class="ACT"><?php echo text($ACT7SCDIST); ?></textarea></td>
                                                                           <td style="border:1pt solid black;border-bottom:0pt;text-align:center;">
@@ -2156,7 +2159,7 @@ if ($refresh and $refresh != 'fullscreen') {
                                                                           <td style="border-left:1pt solid black;border-top:1pt solid black;text-align:left;">
                                                                               <textarea id="ACT9SCDIST" name="ACT9SCDIST" class="ACT"><?php echo text($ACT9SCDIST); ?></textarea></td>
                                                                           <td style="border:0; border-top:2pt solid black;border-left:2pt solid black;text-align:left;vertical-align:middle;">
-                                                                              <textarea id="ACTLTILTSCDIST" name="ACTLTILTSCDIST" class="ACT"><?php echo text($ACTLTILTSCDIST); ?></textarea>
+                                                                              <textarea id="ACT11SCDIST" name="ACT11SCDIST" class="ACT"><?php echo text($ACT11SCDIST); ?></textarea>
                                                                           </td>
                                                                       </tr>
                                                                   </table>
@@ -2180,14 +2183,14 @@ if ($refresh and $refresh != 'fullscreen') {
                                                                           <td style="border:1pt solid black;border-left:0pt;text-align:right;">
                                                                           <textarea id="ACT4CCDIST" name="ACT4CCDIST" class="ACT"><?php echo text($ACT4CCDIST); ?></textarea></td>
                                                                           <td style="border:1pt solid black;text-align:center;">
-                                                                          <textarea id="ACTPRIMCCDIST" name="ACTPRIMCCDIST" class="ACT"><?php echo text($ACTPRIMCCDIST); ?></textarea></td>
+                                                                          <textarea id="ACT5CCDIST" name="ACT5CCDIST" class="ACT"><?php echo text($ACT5CCDIST); ?></textarea></td>
                                                                           <td style="border:1pt solid black;border-right:0pt;text-align:left;">
                                                                           <textarea id="ACT6CCDIST" name="ACT6CCDIST" class="ACT"><?php echo text($ACT6CCDIST); ?></textarea></td>
                                                                           <td><i class="fa fa-share rotate-right"></i></td> 
                                                                       </tr> 
                                                                       <tr> 
                                                                           <td style="border:0; border-top:2pt solid black;border-right:2pt solid black;text-align:right;">
-                                                                              <textarea id="ACTRTILTCCDIST" name="ACTRTILTCCDIST" class="ACT"><?php echo text($ACTRTILTCCDIST); ?></textarea></td>
+                                                                              <textarea id="ACT10CCDIST" name="ACT10CCDIST" class="ACT"><?php echo text($ACT10CCDIST); ?></textarea></td>
                                                                           <td style="border-right:1pt solid black;border-top:1pt solid black;text-align:right;">
                                                                               <textarea id="ACT7CCDIST" name="ACT7CCDIST" class="ACT"><?php echo text($ACT7CCDIST); ?></textarea></td>
                                                                           <td style="border:1pt solid black;border-bottom:0pt;text-align:center;">
@@ -2195,7 +2198,7 @@ if ($refresh and $refresh != 'fullscreen') {
                                                                           <td style="border-left:1pt solid black;border-top:1pt solid black;text-align:left;">
                                                                               <textarea id="ACT9CCDIST" name="ACT9CCDIST" class="ACT"><?php echo text($ACT9CCDIST); ?></textarea></td>
                                                                           <td style="border:0; border-top:2pt solid black;border-left:2pt solid black;text-align:left;vertical-align:middle;">
-                                                                              <textarea id="ACTLTILTCCDIST" name="ACTLTILTCCDIST" class="ACT"><?php echo text($ACTLTILTCCDIST); ?></textarea>
+                                                                              <textarea id="ACT11CCDIST" name="ACT11CCDIST" class="ACT"><?php echo text($ACT11CCDIST); ?></textarea>
                                                                           </td>
                                                                       </tr>
                                                                   </table>
@@ -2219,14 +2222,14 @@ if ($refresh and $refresh != 'fullscreen') {
                                                                           <td style="border:1pt solid black;border-left:0pt;text-align:right;">
                                                                           <textarea id="ACT4SCNEAR" name="ACT4SCNEAR" class="ACT"><?php echo text($ACT4SCNEAR); ?></textarea></td>
                                                                           <td style="border:1pt solid black;text-align:center;">
-                                                                          <textarea id="ACTPRIMSCNEAR" name="ACTPRIMSCNEAR" class="ACT"><?php echo text($ACTPRIMSCNEAR); ?></textarea></td>
+                                                                          <textarea id="ACT5SCNEAR" name="ACT5SCNEAR" class="ACT"><?php echo text($ACT5SCNEAR); ?></textarea></td>
                                                                           <td style="border:1pt solid black;border-right:0pt;text-align:left;">
                                                                           <textarea id="ACT6SCNEAR" name="ACT6SCNEAR" class="ACT"><?php echo text($ACT6SCNEAR); ?></textarea></td>
                                                                           <td><i class="fa fa-share rotate-right"></i></td> 
                                                                       </tr> 
                                                                       <tr> 
                                                                           <td style="border:0; border-top:2pt solid black;border-right:2pt solid black;text-align:right;">
-                                                                              <textarea id="ACTRTILTSCNEAR" name="ACTRTILTSCNEAR" class="ACT"><?php echo text($ACTRTILTSCNEAR); ?></textarea></td>
+                                                                              <textarea id="ACT10SCNEAR" name="ACT10SCNEAR" class="ACT"><?php echo text($ACT10SCNEAR); ?></textarea></td>
                                                                           <td style="border-right:1pt solid black;border-top:1pt solid black;text-align:right;">
                                                                               <textarea id="ACT7SCNEAR" name="ACT7SCNEAR" class="ACT"><?php echo text($ACT7SCNEAR); ?></textarea></td>
                                                                           <td style="border:1pt solid black;border-bottom:0pt;text-align:center;">
@@ -2234,7 +2237,7 @@ if ($refresh and $refresh != 'fullscreen') {
                                                                           <td style="border-left:1pt solid black;border-top:1pt solid black;text-align:left;">
                                                                               <textarea id="ACT9SCNEAR" name="ACT9SCNEAR" class="ACT"><?php echo text($ACT9SCNEAR); ?></textarea></td>
                                                                           <td style="border:0; border-top:2pt solid black;border-left:2pt solid black;text-align:left;vertical-align:middle;">
-                                                                              <textarea id="ACTLTILTSCNEAR" name="ACTLTILTSCNEAR" class="ACT"><?php echo text($ACTLTILTSCNEAR); ?></textarea>
+                                                                              <textarea id="ACT11SCNEAR" name="ACT11SCNEAR" class="ACT"><?php echo text($ACT11SCNEAR); ?></textarea>
                                                                           </td>
                                                                       </tr>
                                                                   </table>
@@ -2258,13 +2261,13 @@ if ($refresh and $refresh != 'fullscreen') {
                                                                           <td style="border:1pt solid black;border-left:0pt;text-align:right;">
                                                                           <textarea id="ACT4CCNEAR" name="ACT4CCNEAR" class="ACT"><?php echo text($ACT4CCNEAR); ?></textarea></td>
                                                                           <td style="border:1pt solid black;text-align:center;">
-                                                                          <textarea id="ACTPRIMCCNEAR" name="ACTPRIMCCNEAR" class="ACT"><?php echo text($ACTPRIMCCNEAR); ?></textarea></td>
+                                                                          <textarea id="ACT5CCNEAR" name="ACT5CCNEAR" class="ACT"><?php echo text($ACT5CCNEAR); ?></textarea></td>
                                                                           <td style="border:1pt solid black;border-right:0pt;text-align:left;">
                                                                           <textarea id="ACT6CCNEAR" name="ACT6CCNEAR" class="ACT"><?php echo text($ACT6CCNEAR); ?></textarea></td><td><i class="fa fa-share rotate-right"></i></td> 
                                                                       </tr> 
                                                                       <tr> 
                                                                           <td style="border:0; border-top:2pt solid black;border-right:2pt solid black;text-align:right;">
-                                                                              <textarea id="ACTRTILTCCNEAR" name="ACTRTILTCCNEAR" class="ACT"><?php echo text($ACTRTILTCCNEAR); ?></textarea></td>
+                                                                              <textarea id="ACT10CCNEAR" name="ACT10CCNEAR" class="ACT"><?php echo text($ACT10CCNEAR); ?></textarea></td>
                                                                           <td style="border-right:1pt solid black;border-top:1pt solid black;text-align:right;">
                                                                               <textarea id="ACT7CCNEAR" name="ACT7CCNEAR" class="ACT"><?php echo text($ACT7CCNEAR); ?></textarea></td>
                                                                           <td style="border:1pt solid black;border-bottom:0pt;text-align:center;">
@@ -2272,7 +2275,7 @@ if ($refresh and $refresh != 'fullscreen') {
                                                                           <td style="border-left:1pt solid black;border-top:1pt solid black;text-align:left;">
                                                                               <textarea id="ACT9CCNEAR" name="ACT9CCNEAR" class="ACT"><?php echo text($ACT9CCNEAR); ?></textarea></td>
                                                                           <td style="border:0; border-top:2pt solid black;border-left:2pt solid black;text-align:left;vertical-align:middle;">
-                                                                              <textarea id="ACTLTILTCCNEAR" name="ACTLTILTCCNEAR" class="ACT"><?php echo text($ACTLTILTCCNEAR); ?></textarea>
+                                                                              <textarea id="ACT11CCNEAR" name="ACT11CCNEAR" class="ACT"><?php echo text($ACT11CCNEAR); ?></textarea>
                                                                           </td>
                                                                       </tr>
                                                                   </table>
@@ -2714,66 +2717,101 @@ if ($refresh and $refresh != 'fullscreen') {
                     <div id="PRIORS_NEURO_left_text" style="height: 2.5in;text-align:left;font-size: 0.9em;" name="PRIORS_NEURO_left_text" class="PRIORS_class PRIORS"><i class="fa fa-spinner fa-spin"></i>
                     </div>
                     <div id="QP_NEURO" name="QP_NEURO" class="QP_class" style="text-align:left;height: 2.5in;">
-                      <input type="hidden" id="NEURO_prefix" name="NEURO_prefix" value="">
-                      <div style="position:relative;top:0.0in;left:0.00in;margin: auto;">
-                          <span class="eye_button eye_button_selected" id="NEURO_prefix_off" name="NEURO_prefix_off"  onclick="$('#NEURO_prefix').val('').trigger('change');"><?php echo xlt('Off'); ?></span>
-                          <span class="eye_button" id="NEURO_defaults" name="NEURO_defaults"><?php echo xlt('Defaults'); ?></span> 
-                          <span class="eye_button" id="NEURO_prefix_no" name="NEURO_prefix_no" onclick="$('#NEURO_prefix').val('no').trigger('change');"> <?php echo xlt('no'); ?> </span> 
-                          <span class="eye_button" id="NEURO_prefix_trace" name="NEURO_prefix_trace"  onclick="$('#NEURO_prefix').val('trace').trigger('change');"> <?php echo xlt('tr'); ?> </span> 
-                          <span class="eye_button" id="NEURO_prefix_1" names="NEURO_prefix_1"  onclick="$('#NEURO_prefix').val('+1').trigger('change');"> <?php echo xlt('+1'); ?> </span> 
-                          <span class="eye_button" id="NEURO_prefix_2" name="NEURO_prefix_2"  onclick="$('#NEURO_prefix').val('+2').trigger('change');"> <?php echo xlt('+2'); ?> </span> 
-                          <span class="eye_button" id="NEURO_prefix_3" name="NEURO_prefix_3"  onclick="$('#NEURO_prefix').val('+3').trigger('change');"> <?php echo xlt('+3'); ?> </span> 
-                          <div style="position:absolute;top:0.0in;right:0.241in;">
+                      <input type="hidden" id="NEURO_ACT_zone" name="NEURO_ACT_zone" value="<?php echo $ACT_SHOW; ?>">
+                      <input type="hidden" id="NEURO_ACT_strab" name="NEURO_ACT_strab" value="">
+                      <input type="hidden" id="NEURO_field" name="NEURO_field" value="5">
+                      <input type="hidden" id="NEURO_value" name="NEURO_value" value="ortho">
+                      <input type="hidden" id="NEURO_side" name="NEURO_side" value="">
+                      <div style="position:absolute;top:0.05in;right:0.241in;">
                               <?php echo priors_select("NEURO",$id,$id,$pid); ?>
-                          </div>
                       </div>
-                      <div style="float:left;width:40px;text-align:left;">
+                      <div style="float:right;top:1.0in;right:0.0in;margin: 20 25;">
+                        <div class="borderShadow" style="width:190px;text-align:center;border:1pt solid black;padding:4 10 4 10;margin:4;font-weight:600;"><span class="underline">Laterality</span><br />
+                          <span class="eye_button" id="NEURO_side_R" name="NEURO_side" style="padding-left:0.06in;padding-right:0.06in;"  onclick="$('#NEURO_side').val('R').trigger('change');"><?php echo xlt('Right'); ?></span>  
+                          <span class="eye_button" id="NEURO_side_L" name="NEURO_side" style="padding-left:0.06in;padding-right:0.06in;"  onclick="$('#NEURO_side').val('L').trigger('change');"><?php echo xlt('Left'); ?></span> <br />
+                          <span class="eye_button eye_button_selected" id="NEURO_side_None" name="NEURO_side"  onclick="$('#NEURO_side').val('').trigger('change');"><?php echo xlt('None'); ?></span> <br />
+                        </div>
+                        <div class="borderShadow" style="width:190px;text-align:center;border:1pt solid black;padding:4 10 4 10;margin:4;font-weight:600;"><span class="underline">Deviation</span><br />
+                          <span class="eye_button" id="NEURO_ACT_strab_E" name="NEURO_ACT_strab"  onclick="$('#NEURO_ACT_strab').val('E').trigger('change');"><?php echo xlt('E'); ?></span> 
+                          <span class="eye_button" id="NEURO_ACT_strab_ET_int" name="NEURO_ACT_strab"  onclick="$('#NEURO_ACT_strab').val('E\(T\)').trigger('change');"><?php echo xlt('E(T)'); ?></span> 
+                          <span class="eye_button" id="NEURO_ACT_strab_ET" name="NEURO_ACT_strab"  onclick="$('#NEURO_ACT_strab').val('ET').trigger('change');"><?php echo xlt('ET'); ?></span> 
+                         <br />
+                          <span class="eye_button" id="NEURO_ACT_strab_X" name="NEURO_ACT_strab"  onclick="$('#NEURO_ACT_strab').val('X').trigger('change');"><?php echo xlt('X'); ?></span> 
+                          <span class="eye_button" id="NEURO_ACT_strab_XT_int" name="NEURO_ACT_strab"  onclick="$('#NEURO_ACT_strab').val('X\(T\)').trigger('change');"><?php echo xlt('X(T)'); ?></span> 
+                          <span class="eye_button" id="NEURO_ACT_strab_XT" name="NEURO_ACT_strab"  onclick="$('#NEURO_ACT_strab').val('XT').trigger('change');"><?php echo xlt('XT'); ?></span> 
+                          
+                          <br />
+                          <span class="eye_button" id="NEURO_ACT_strab_H" name="NEURO_ACT_strab"  onclick="$('#NEURO_ACT_strab').val('HT').trigger('change');"><?php echo xlt('HT'); ?></span> 
+                          <span class="eye_button" id="NEURO_ACT_strab_HT_int" name="NEURO_ACT_strab"  onclick="$('#NEURO_ACT_strab').val('H\(T\)').trigger('change');"><?php echo xlt('H(T)'); ?></span> 
+                          <span class="eye_button" id="NEURO_ACT_strab_hypoT" name="NEURO_ACT_strab"  onclick="$('#NEURO_ACT_strab').val('hypoT').trigger('change');"><?php echo xlt('hypoT'); ?></span> 
+                          <span class="eye_button" id="NEURO_ACT_strab_hypoT_int" name="NEURO_ACT_strab"  onclick="$('#NEURO_ACT_strab').val('hypo\(T\)').trigger('change');"><?php echo xlt('hypo(T)'); ?></span> 
+                          <br />
+                        </div>  
+                       <!--
+                         <div class="borderShadow" style="width:190px;text-align:center;border:1pt solid black;padding:4 10 4 10;margin:4;font-weight:600;"><span class="underline">Keyboard Entry</span><br />
+                          <textarea id="ACT_manual" name="ACT_manual" onfocus="this.value='';" style="color:#C0C0C0;size=0.5em;">position#= #PD deviation,
+eg. 5=8 XT,6=ortho,4=12XT,2=10XT,8=4XT</textarea>
+                        </div>
+-->                       
+                          
+                      </div>
+                      <div style="position:left;top:0.0in;left:0.10in;margin: auto;">
+                        <div class="borderShadow" style="width:190px;text-align:center;border:1pt solid black;padding:4 5 4 5;margin:4;font-weight:600;"><span class="underline"><?php echo xlt('Rx/Distance'); ?></span><br />
+                          <span class="eye_button <?php if ($ACT_SHOW =='SCDIST') echo "eye_button_selected"; ?>" id="NEURO_ACT_zone_SCDIST" name="NEURO_ACT_zone" style="padding-left:0.06in;padding-right:0.06in;" onclick="$('#NEURO_ACT_zone').val('SCDIST').trigger('change');"> <?php echo xlt('scDist'); ?> </span> 
+                          <span class="eye_button <?php if ($ACT_SHOW =='CCDIST') echo "eye_button_selected"; ?>" id="NEURO_ACT_zone_CCDIST" name="NEURO_ACT_zone" style="padding-left:0.06in;padding-right:0.06in;" onclick="$('#NEURO_ACT_zone').val('CCDIST').trigger('change');"> <?php echo xlt('ccDist'); ?> </span> 
+                          <span class="eye_button <?php if ($ACT_SHOW =='SCNEAR') echo "eye_button_selected"; ?>" id="NEURO_ACT_zone_SCNEAR" name="NEURO_ACT_zone" style="padding-left:0.06in;padding-right:0.06in;" onclick="$('#NEURO_ACT_zone').val('SCNEAR').trigger('change');"> <?php echo xlt('scNear'); ?> </span> 
+                          <span class="eye_button <?php if ($ACT_SHOW =='CCNEAR') echo "eye_button_selected"; ?>" id="NEURO_ACT_zone_CCNEAR" name="NEURO_ACT_zone" style="padding-left:0.06in;padding-right:0.06in;" onclick="$('#NEURO_ACT_zone').val('CCNEAR').trigger('change');"> <?php echo xlt('ccNear'); ?> </span> 
+                         
+                        </div>
+                        <div class="borderShadow" style="width:190px;text-align:center;border:1pt solid black;padding:4 10 4 10;margin:4;font-weight:600;"><span class="underline"><?php echo xlt('Position of Gaze'); ?></span><br />
+                          <span class="eye_button_blank"> <?php echo xlt('R'); ?> </span> 
+                          <span class="eye_button" id="NEURO_field_1" name="NEURO_field"  onclick="$('#NEURO_field').val('1').trigger('change');"> <?php echo xlt('1'); ?> </span> 
+                          <span class="eye_button" id="NEURO_field_2" name="NEURO_field"  onclick="$('#NEURO_field').val('2').trigger('change');"> <?php echo xlt('2'); ?> </span> 
+                          <span class="eye_button" id="NEURO_field_3" name="NEURO_field"  onclick="$('#NEURO_field').val('3').trigger('change');"> <?php echo xlt('3'); ?> </span> 
+                          <span class="eye_button_blank"> <?php echo xlt('L'); ?> </span> 
+                        
+                          <span class="eye_button_blank"> <?php echo xlt(''); ?><i class="fa fa-reply rotate-left"></i></span> 
+                          <span class="eye_button" id="NEURO_field_4" name="NEURO_field"  onclick="$('#NEURO_field').val('4').trigger('change');"> <?php echo xlt('4'); ?> </span> 
+                          <span class="eye_button eye_button_selected" id="NEURO_field_5" name="NEURO_field"  onclick="$('#NEURO_field').val('5').trigger('change');"> <?php echo xlt('5'); ?> </span> 
+                          <span class="eye_button" id="NEURO_field_6" name="NEURO_field"  onclick="$('#NEURO_field').val('6').trigger('change');"><?php echo xlt('6'); ?></span>  
+                          <span class="eye_button_blank"> <?php echo xlt(''); ?><i class="fa fa-share rotate-right"></i></span> 
+                    
+                          <span class="eye_button" id="NEURO_field_10" name="NEURO_field"  onclick="$('#NEURO_field').val('10').trigger('change');"><?php echo xlt('10'); ?></span>  
+                          <span class="eye_button" id="NEURO_field_7" name="NEURO_field"  onclick="$('#NEURO_field').val('7').trigger('change');"><?php echo xlt('7'); ?></span> 
+                          <span class="eye_button" id="NEURO_field_8" name="NEURO_field"  onclick="$('#NEURO_field').val('8').trigger('change');"><?php echo xlt('8'); ?></span> 
+                          <span class="eye_button" id="NEURO_field_9" name="NEURO_field"  onclick="$('#NEURO_field').val('9').trigger('change');"><?php echo xlt('9'); ?></span>
+                          <span class="eye_button" id="NEURO_field_11" name="NEURO_field"  onclick="$('#NEURO_field').val('11').trigger('change');"><?php echo xlt('11'); ?></span>  
+                          
+                          </div>
+                   
+                        <div class="borderShadow" style="width:190px;text-align:center;margin:4;font-weight:600;padding:2 2 10 2;"><span class="underline">Prism Diopters</span><br />
+                          <span class="eye_button" id="NEURO_value_ortho" name="NEURO_value"  onclick="$('#NEURO_value').val('ortho').trigger('change');"><?php echo xlt('Ortho'); ?></span>  
+                          <span class="eye_button" id="NEURO_value_1" name="NEURO_value"  onclick="$('#NEURO_value').val('1').trigger('change');"><?php echo xlt('1'); ?></span> 
+                          <span class="eye_button" id="NEURO_value_2" name="NEURO_value"  onclick="$('#NEURO_value').val('2').trigger('change');"><?php echo xlt('2'); ?></span> 
+                          <span class="eye_button" id="NEURO_value_3" name="NEURO_value"  onclick="$('#NEURO_value').val('3').trigger('change');"><?php echo xlt('3'); ?></span> 
+                          <span class="eye_button" id="NEURO_value_4" name="NEURO_value"  onclick="$('#NEURO_value').val('4').trigger('change');"><?php echo xlt('4'); ?></span> 
+                          <span class="eye_button" id="NEURO_value_5" name="NEURO_value"  onclick="$('#NEURO_value').val('5').trigger('change');"><?php echo xlt('5'); ?></span> 
+                          <span class="eye_button" id="NEURO_value_6" name="NEURO_value"  onclick="$('#NEURO_value').val('6').trigger('change');"><?php echo xlt('6'); ?></span> 
+                          <span class="eye_button" id="NEURO_value_8" name="NEURO_value"  onclick="$('#NEURO_value').val('8').trigger('change');"><?php echo xlt('8'); ?></span> 
+                          <span class="eye_button" id="NEURO_value_10" name="NEURO_value"  onclick="$('#NEURO_value').val('10').trigger('change');"><?php echo xlt('10'); ?></span> 
+                          <span class="eye_button" id="NEURO_value_12" name="NEURO_value"  onclick="$('#NEURO_value').val('12').trigger('change');"><?php echo xlt('12'); ?></span> 
+                          <span class="eye_button" id="NEURO_value_14" name="NEURO_value"  onclick="$('#NEURO_value').val('14').trigger('change');"><?php echo xlt('14'); ?></span> 
+                          <span class="eye_button" id="NEURO_value_16" name="NEURO_value"  onclick="$('#NEURO_value').val('16').trigger('change');"><?php echo xlt('16'); ?></span> 
+                          <span class="eye_button" id="NEURO_value_18" name="NEURO_value"  onclick="$('#NEURO_value').val('18').trigger('change');"><?php echo xlt('18'); ?></span> 
+                          <span class="eye_button" id="NEURO_value_20" name="NEURO_value"  onclick="$('#NEURO_value').val('20').trigger('change');"><?php echo xlt('20'); ?></span> 
+                          <span class="eye_button" id="NEURO_value_25" name="NEURO_value"  onclick="$('#NEURO_value').val('25').trigger('change');"><?php echo xlt('25'); ?></span> 
+                          <span class="eye_button" id="NEURO_value_30" name="NEURO_value"  onclick="$('#NEURO_value').val('30').trigger('change');"><?php echo xlt('30'); ?></span> 
+                          <span class="eye_button" id="NEURO_value_35" name="NEURO_value"  onclick="$('#NEURO_value').val('35').trigger('change');"><?php echo xlt('35'); ?></span> 
+                          <span class="eye_button" id="NEURO_value_40" name="NEURO_value"  onclick="$('#NEURO_value').val('40').trigger('change');"><?php echo xlt('40'); ?></span> 
+                          
+                        </div>
+                        <div style="width:190px;text-align:center;margin:4;font-weight:600;padding:10 2 10 2;">
 
-                      <span class="eye_button" id="NEURO_prefix_1mm" name="NEURO_prefix_1mm"  onclick="$('#NEURO_prefix').val('1mm').trigger('change');"> <?php echo xlt('1mm'); ?> </span> <br />
-                      <span class="eye_button" id="NEURO_prefix_2mm" name="NEURO_prefix_2mm"  onclick="$('#NEURO_prefix').val('2mm').trigger('change');"> <?php echo xlt('2mm'); ?> </span> <br />
-                      <span class="eye_button" id="NEURO_prefix_3mm" name="NEURO_prefix_3mm"  onclick="$('#NEURO_prefix').val('3mm').trigger('change');"> <?php echo xlt('3mm'); ?> </span> <br />
-                      <span class="eye_button" id="NEURO_prefix_4mm" name="NEURO_prefix_4mm"  onclick="$('#NEURO_prefix').val('4mm').trigger('change');"> <?php echo xlt('4mm'); ?> </span> <br />
-                      <span class="eye_button" id="NEURO_prefix_5mm" name="NEURO_prefix_5mm"  onclick="$('#NEURO_prefix').val('5mm').trigger('change');"> <?php echo xlt('5mm'); ?> </span> <br />
-                      <span class="eye_button" id="NEURO_prefix_medial" name="NEURO_prefix_medial"  onclick="$('#NEURO_prefix').val('medial').trigger('change');"><?php echo xlt('med'); ?></span>  
-                      <span class="eye_button" id="NEURO_prefix_lateral" name="NEURO_prefix_lateral"  onclick="$('#NEURO_prefix').val('lateral').trigger('change');"><?php echo xlt('lat'); ?></span> 
-                      <span class="eye_button" id="NEURO_prefix_superior" name="NEURO_prefix_superior"  onclick="$('#NEURO_prefix').val('superior').trigger('change');"><?php echo xlt('sup'); ?></span> 
-                      <span class="eye_button" id="NEURO_prefix_inferior" name="NEURO_prefix_inferior"  onclick="$('#NEURO_prefix').val('inferior').trigger('change');"><?php echo xlt('inf'); ?></span>
-                      <span class="eye_button" id="NEURO_prefix_anterior" name="NEURO_prefix_anterior"  onclick="$('#NEURO_prefix').val('anterior').trigger('change');"><?php echo xlt('ant'); ?></span>  
-                      <span class="eye_button" id="NEURO_prefix_mid" name="NEURO_prefix_mid"  onclick="$('#NEURO_prefix').val('mid').trigger('change');"><?php echo xlt('mid'); ?></span> 
-                      <span class="eye_button" id="NEURO_prefix_posterior" name="NEURO_prefix_posterior"  onclick="$('#NEURO_prefix').val('posterior').trigger('change');"><?php echo xlt('post'); ?></span> 
-                      <span class="eye_button" id="NEURO_prefix_deep" name="NEURO_prefix_deep"  onclick="$('#NEURO_prefix').val('deep').trigger('change');"><?php echo xlt('deep'); ?></span>
-                      </div>         
-                      <div id="NEURO_QP_block" name="NEURO_QP_block" class="QP_block borderShadow text_clinical" >
-                          <?php
-                            $query = "SELECT * FROM form_eye_mag_prefs where PEZONE = 'NEURO' and (id=? or id='2048' ) ORDER BY ZONE_ORDER,ordering";
-                            $result = sqlStatement($query,array($_SESSION['authUserID']));
-                            $number_rows=0;
-                            while ($Select_data= sqlFetchArray($result))     {
-
-                                $number_rows++; 
-                                $string = $Select_data['selection'] ;
-                                $string = (strlen($string) > 12) ? substr($string,0,12).'...' : $string;   ?>
-                                <span >
-                                    <a class="underline QP" onclick="fill_QP_field('RETINA','OD','<?php echo attr($Select_data['LOCATION_text']); ?>','<?php echo attr($Select_data['selection']); ?>',1);"><?php echo xlt('OD'); ?></a>&nbsp;|&nbsp;
-                                    <a class="underline QP" onclick="fill_QP_field('RETINA','OS','<?php echo attr($Select_data['LOCATION_text']); ?>','<?php echo attr($Select_data['selection']); ?>',1);"><?php echo xlt('OS'); ?></a>&nbsp;|&nbsp;
-                                    <a class="underline QP" onclick="fill_QP_field('RETINA','OD','<?php echo attr($Select_data['LOCATION_text']); ?>','<?php echo attr($Select_data['selection']); ?>',2);fill_QP_field('RETINA','OS','<?php echo attr($Select_data['LOCATION_text']); ?>','<?php echo attr($Select_data['selection']); ?>',1);"><?php echo xlt('OU'); ?></a>
-                                    &nbsp;|&nbsp;
-                                </span>
-                                &nbsp;    <?php echo text($string); ?>
-
-                                <br />
-                                <?
-                                if ($number_rows==15) {
-                                    ?>
-                                    </div>
-                                    <div id="NEURO_QP_block2" name="NEURO_QP_block2" class="QP_block_outer  borderShadow text_clinical" ><?
-                                     }
-                                 if ($number_rows== 30) break;
-                            } ?>     
-                             <br /><br />
-                      </div>    
+                          <span class="borderShadow" style="margin:4;bottom:0;right:0.01in;height:20px;" id="NEURO_RECORD" name="NEURO_RECORD"><?php echo xlt(' RECORD '); ?></span> 
+                        </div>
+                      </DIV>
                     </div>
-                  </div>   
+                  </div>
               </div>
               <!-- end Neuro -->
 
