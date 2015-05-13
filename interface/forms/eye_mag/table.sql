@@ -511,10 +511,11 @@ CREATE TABLE IF NOT EXISTS `form_eye_mag_prefs` (
 `LOCATION` char(25) NOT NULL,
 `LOCATION_text` varchar(25) NOT NULL,
 `id` bigint(20) NOT NULL,
-`selection` varchar(255) NOT NULL,
+`selection` char(255) NOT NULL,
 `ZONE_ORDER` int(11) DEFAULT NULL,
-`VALUE` varchar(10) DEFAULT '0',
+`VALUE` char(10) DEFAULT '0',
 `ordering` tinyint(4) DEFAULT NULL,
+`FILL_ACTION` char(10) NOT NULL DEFAULT 'ADD' COMMENT 'ADD, REPLACE, INSERT',
 UNIQUE KEY `id` (`id`,`PEZONE`,`LOCATION`,`selection`)
 ) ENGINE=MyISAM;
 
