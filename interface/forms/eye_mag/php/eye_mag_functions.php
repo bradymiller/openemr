@@ -631,14 +631,14 @@ function display_PRIOR_section ($zone,$orig_id,$id_to_show,$pid,$report = '0') {
                                                         <td style="border:1pt solid black;border-left:0pt;text-align:right;">
                                                         <textarea disabled id="PRIOR_ACT4SCDIST" name="PRIOR_ACT4SCDIST" class="ACT"><?php echo text($ACT4SCDIST); ?></textarea></td>
                                                         <td style="border:1pt solid black;text-align:center;">
-                                                        <textarea disabled id="PRIOR_ACTPRIMSCDIST" name="PRIOR_ACTPRIMSCDIST" class="ACT"><?php echo text($ACTPRIMSCDIST); ?></textarea></td>
+                                                        <textarea disabled id="PRIOR_ACT5SCDIST" name="PRIOR_ACT5SCDIST" class="ACT"><?php echo text($ACT5SCDIST); ?></textarea></td>
                                                         <td style="border:1pt solid black;border-right:0pt;text-align:left;">
                                                         <textarea disabled id="PRIOR_ACT6SCDIST" name="PRIOR_ACT6SCDIST" class="ACT"><?php echo text($ACT6SCDIST); ?></textarea></td>
                                                         <td><i class="fa fa-share rotate-right"></i></td> 
                                                     </tr> 
                                                     <tr> 
                                                         <td style="border:0; border-top:2pt solid black;border-right:2pt solid black;text-align:right;">
-                                                            <textarea disabled id="PRIOR_ACTRTILTSCDIST" name="PRIOR_ACTRTILTSCDIST" class="ACT"><?php echo text($ACTRTILTSCDIST); ?></textarea></td>
+                                                            <textarea disabled id="PRIOR_ACT10SCDIST" name="PRIOR_ACT10SCDIST" class="ACT"><?php echo text($ACT10SCDIST); ?></textarea></td>
                                                         <td style="border-right:1pt solid black;border-top:1pt solid black;text-align:right;">
                                                             <textarea disabled id="PRIOR_ACT7SCDIST" name="PRIOR_ACT7SCDIST" class="ACT"><?php echo text($ACT7SCDIST); ?></textarea></td>
                                                         <td style="border:1pt solid black;border-bottom:0pt;text-align:center;">
@@ -646,7 +646,7 @@ function display_PRIOR_section ($zone,$orig_id,$id_to_show,$pid,$report = '0') {
                                                         <td style="border-left:1pt solid black;border-top:1pt solid black;text-align:left;">
                                                             <textarea disabled id="PRIOR_ACT9SCDIST" name="PRIOR_ACT9SCDIST" class="ACT"><?php echo text($ACT9SCDIST); ?></textarea></td>
                                                         <td style="border:0; border-top:2pt solid black;border-left:2pt solid black;text-align:left;vertical-align:middle;">
-                                                            <textarea disabled id="PRIOR_ACTLTILTSCDIST" name="PRIOR_ACTLTILTSCDIST" class="ACT"><?php echo text($ACTLTILTSCDIST); ?></textarea>
+                                                            <textarea disabled id="PRIOR_ACT11SCDIST" name="PRIOR_ACT11SCDIST" class="ACT"><?php echo text($ACT11SCDIST); ?></textarea>
                                                         </td>
                                                     </tr>
                                                 </table>
@@ -670,14 +670,14 @@ function display_PRIOR_section ($zone,$orig_id,$id_to_show,$pid,$report = '0') {
                                                         <td style="border:1pt solid black;border-left:0pt;text-align:right;">
                                                         <textarea disabled id="PRIOR_ACT4CCDIST" name="PRIOR_ACT4CCDIST" class="ACT"><?php echo text($ACT4CCDIST); ?></textarea></td>
                                                         <td style="border:1pt solid black;text-align:center;">
-                                                        <textarea disabled id="PRIOR_ACTPRIMCCDIST" name="PRIOR_ACTPRIMCCDIST" class="ACT"><?php echo text($ACTPRIMCCDIST); ?></textarea></td>
+                                                        <textarea disabled id="PRIOR_ACT5CCDIST" name="PRIOR_ACT5CCDIST" class="ACT"><?php echo text($ACT5CCDIST); ?></textarea></td>
                                                         <td style="border:1pt solid black;border-right:0pt;text-align:left;">
                                                         <textarea disabled id="PRIOR_ACT6CCDIST" name="PRIOR_ACT6CCDIST" class="ACT"><?php echo text($ACT6CCDIST); ?></textarea></td>
                                                         <td><i class="fa fa-share rotate-right"></i></td> 
                                                     </tr> 
                                                     <tr> 
                                                         <td style="border:0; border-top:2pt solid black;border-right:2pt solid black;text-align:right;">
-                                                            <textarea disabled id="PRIOR_ACTRTILTCCDIST" name="PRIOR_ACTRTILTCCDIST" class="ACT"><?php echo text($ACTRTILTCCDIST); ?></textarea></td>
+                                                            <textarea disabled id="PRIOR_ACT10CCDIST" name="PRIOR_ACT10CCDIST" class="ACT"><?php echo text($ACT10CCDIST); ?></textarea></td>
                                                         <td style="border-right:1pt solid black;border-top:1pt solid black;text-align:right;">
                                                             <textarea disabled id="PRIOR_ACT7CCDIST" name="PRIOR_ACT7CCDIST" class="ACT"><?php echo text($ACT7CCDIST); ?></textarea></td>
                                                         <td style="border:1pt solid black;border-bottom:0pt;text-align:center;">
@@ -685,7 +685,7 @@ function display_PRIOR_section ($zone,$orig_id,$id_to_show,$pid,$report = '0') {
                                                         <td style="border-left:1pt solid black;border-top:1pt solid black;text-align:left;">
                                                             <textarea disabled id="PRIOR_ACT9CCDIST" name="PRIOR_ACT9CCDIST" class="ACT"><?php echo text($ACT9CCDIST); ?></textarea></td>
                                                         <td style="border:0; border-top:2pt solid black;border-left:2pt solid black;text-align:left;vertical-align:middle;">
-                                                            <textarea disabled id="PRIOR_ACTLTILTCCDIST" name="PRIOR_ACTLTILTCCDIST" class="ACT"><?php echo text($ACTLTILTCCDIST); ?></textarea>
+                                                            <textarea disabled id="PRIOR_ACT11CCDIST" name="PRIOR_ACT11CCDIST" class="ACT"><?php echo text($ACT11CCDIST); ?></textarea>
                                                         </td>
                                                     </tr>
                                                 </table>
@@ -709,14 +709,14 @@ function display_PRIOR_section ($zone,$orig_id,$id_to_show,$pid,$report = '0') {
                                                         <td style="border:1pt solid black;border-left:0pt;text-align:right;">
                                                         <textarea disabled id="PRIOR_ACT4SCNEAR" name="PRIOR_ACT4SCNEAR" class="ACT"><?php echo text($ACT4SCNEAR); ?></textarea></td>
                                                         <td style="border:1pt solid black;text-align:center;">
-                                                        <textarea disabled id="PRIOR_ACTPRIMSCNEAR" name="PRIOR_ACTPRIMSCNEAR" class="ACT"><?php echo text($ACTPRIMSCNEAR); ?></textarea></td>
+                                                        <textarea disabled id="PRIOR_ACT5SCNEAR" name="PRIOR_ACT5SCNEAR" class="ACT"><?php echo text($ACT5SCNEAR); ?></textarea></td>
                                                         <td style="border:1pt solid black;border-right:0pt;text-align:left;">
                                                         <textarea disabled id="PRIOR_ACT6SCNEAR" name="PRIOR_ACT6SCNEAR" class="ACT"><?php echo text($ACT6SCNEAR); ?></textarea></td>
                                                         <td><i class="fa fa-share rotate-right"></i></td> 
                                                     </tr> 
                                                     <tr> 
                                                         <td style="border:0; border-top:2pt solid black;border-right:2pt solid black;text-align:right;">
-                                                            <textarea disabled id="PRIOR_ACTRTILTSCNEAR" name="PRIOR_ACTRTILTSCNEAR" class="ACT"><?php echo text($ACTRTILTSCNEAR); ?></textarea></td>
+                                                            <textarea disabled id="PRIOR_ACT10SCNEAR" name="PRIOR_ACT10SCNEAR" class="ACT"><?php echo text($ACT10SCNEAR); ?></textarea></td>
                                                         <td style="border-right:1pt solid black;border-top:1pt solid black;text-align:right;">
                                                             <textarea disabled id="PRIOR_ACT7SCNEAR" name="PRIOR_ACT7SCNEAR" class="ACT"><?php echo text($ACT7SCNEAR); ?></textarea></td>
                                                         <td style="border:1pt solid black;border-bottom:0pt;text-align:center;">
@@ -724,7 +724,7 @@ function display_PRIOR_section ($zone,$orig_id,$id_to_show,$pid,$report = '0') {
                                                         <td style="border-left:1pt solid black;border-top:1pt solid black;text-align:left;">
                                                             <textarea disabled id="PRIOR_ACT9SCNEAR" name="PRIOR_ACT9SCNEAR" class="ACT"><?php echo text($ACT9SCNEAR); ?></textarea></td>
                                                         <td style="border:0; border-top:2pt solid black;border-left:2pt solid black;text-align:left;vertical-align:middle;">
-                                                            <textarea disabled id="PRIOR_ACTLTILTSCNEAR" name="PRIOR_ACTLTILTSCNEAR" class="ACT"><?php echo text($ACTLTILTSCNEAR); ?></textarea>
+                                                            <textarea disabled id="PRIOR_ACT11SCNEAR" name="PRIOR_ACT11SCNEAR" class="ACT"><?php echo text($ACT11SCNEAR); ?></textarea>
                                                         </td>
                                                     </tr>
                                                 </table>
@@ -748,13 +748,13 @@ function display_PRIOR_section ($zone,$orig_id,$id_to_show,$pid,$report = '0') {
                                                         <td style="border:1pt solid black;border-left:0pt;text-align:right;">
                                                         <textarea disabled id="PRIOR_ACT4CCNEAR" name="PRIOR_ACT4CCNEAR" class="ACT"><?php echo text($ACT4CCNEAR); ?></textarea></td>
                                                         <td style="border:1pt solid black;text-align:center;">
-                                                        <textarea disabled id="PRIOR_ACTPRIMCCNEAR" name="PRIOR_ACTPRIMCCNEAR" class="ACT"><?php echo text($ACTPRIMCCNEAR); ?></textarea></td>
+                                                        <textarea disabled id="PRIOR_ACT5CCNEAR" name="PRIOR_ACT5CCNEAR" class="ACT"><?php echo text($ACT5CCNEAR); ?></textarea></td>
                                                         <td style="border:1pt solid black;border-right:0pt;text-align:left;">
                                                         <textarea disabled id="PRIOR_ACT6CCNEAR" name="PRIOR_ACT6CCNEAR" class="ACT"><?php echo text($ACT6CCNEAR); ?></textarea></td><td><i class="fa fa-share rotate-right"></i></td> 
                                                     </tr> 
                                                     <tr> 
                                                         <td style="border:0; border-top:2pt solid black;border-right:2pt solid black;text-align:right;">
-                                                            <textarea disabled id="PRIOR_ACTRTILTCCNEAR" name="PRIOR_ACTRTILTCCNEAR" class="ACT"><?php echo text($ACTRTILTCCNEAR); ?></textarea></td>
+                                                            <textarea disabled id="PRIOR_ACT10CCNEAR" name="PRIOR_ACT10CCNEAR" class="ACT"><?php echo text($ACT10CCNEAR); ?></textarea></td>
                                                         <td style="border-right:1pt solid black;border-top:1pt solid black;text-align:right;">
                                                             <textarea disabled id="PRIOR_ACT7CCNEAR" name="PRIOR_ACT7CCNEAR" class="ACT"><?php echo text($ACT7CCNEAR); ?></textarea></td>
                                                         <td style="border:1pt solid black;border-bottom:0pt;text-align:center;">
@@ -762,7 +762,7 @@ function display_PRIOR_section ($zone,$orig_id,$id_to_show,$pid,$report = '0') {
                                                         <td style="border-left:1pt solid black;border-top:1pt solid black;text-align:left;">
                                                             <textarea disabled id="PRIOR_ACT9CCNEAR" name="PRIOR_ACT9CCNEAR" class="ACT"><?php echo text($ACT9CCNEAR); ?></textarea></td>
                                                         <td style="border:0; border-top:2pt solid black;border-left:2pt solid black;text-align:left;vertical-align:middle;">
-                                                            <textarea disabled id="PRIOR_ACTLTILTCCNEAR" name="PRIOR_ACTLTILTCCNEAR" class="ACT"><?php echo text($ACTLTILTCCNEAR); ?></textarea>
+                                                            <textarea disabled id="PRIOR_ACT11CCNEAR" name="PRIOR_ACT11CCNEAR" class="ACT"><?php echo text($ACT11CCNEAR); ?></textarea>
                                                         </td>
                                                     </tr>
                                                 </table>
@@ -908,7 +908,7 @@ function display_PRIOR_section ($zone,$orig_id,$id_to_show,$pid,$report = '0') {
                 
                 <div style="float:left;left:0.4in;text-decoration:underline;"><?php echo xlt('OD'); ?></div>
                 <div style="float:right;right:0.4in;text-decoration:underline;"><?php echo xlt('OS'); ?></div><br />
-                <div class="divTable" style="left:-0.1in;background: url(../../forms/<?php echo $form_folder; ?>/images/eom.bmp) no-repeat center center;background-size: 90% 90%;height:0.7in;width:0.7in;padding:1px;margin:6 1 0 0;">
+                <div class="divTable" style="left:-0.01in;background: url(../../forms/<?php echo $form_folder; ?>/images/eom.bmp) no-repeat center center;background-size: 90% 90%;height:0.75in;width:0.7in;padding:1px;margin:0 1 0 0;">
                     <div class="divRow">
                         <div class="divCell">&nbsp;</div>
                     </div>
@@ -1080,7 +1080,7 @@ function display_PRIOR_section ($zone,$orig_id,$id_to_show,$pid,$report = '0') {
                     <div class="divRow"><div class="divCell">&nbsp;</div>
                     </div>
                 </div> 
-                <div class="divTable" style="left:-0.1in;background: url(../../forms/<?php echo $form_folder; ?>/images/eom.bmp) no-repeat center center;background-size: 90% 90%;height:0.7in;width:0.7in;padding:1px;margin:6 1 0 0;">
+                <div class="divTable" style="left:-0.01in;background: url(../../forms/<?php echo $form_folder; ?>/images/eom.bmp) no-repeat center center;background-size: 90% 90%;height:0.75in;width:0.7in;padding:1px;margin:0 1 0 0;">
                     <div class="divRow">
                         <div class="divCell">&nbsp;</div>
                     </div>
@@ -1794,7 +1794,7 @@ function copy_forward($zone,$copy_from,$copy_to,$pid) {
         echo json_encode($result); 
     } elseif ($zone =="NEURO") {
         $result['ACT']=$objQuery['ACT'];
-        $result['ACTPRIMCCDIST']=$objQuery['ACTPRIMCCDIST'];
+        $result['ACT5CCDIST']=$objQuery['ACT5CCDIST'];
         $result['ACT1CCDIST']=$objQuery['ACT1CCDIST'];
         $result['ACT2CCDIST']=$objQuery['ACT2CCDIST'];
         $result['ACT3CCDIST']=$objQuery['ACT3CCDIST'];
@@ -1803,37 +1803,37 @@ function copy_forward($zone,$copy_from,$copy_to,$pid) {
         $result['ACT7CCDIST']=$objQuery['ACT7CCDIST'];
         $result['ACT8CCDIST']=$objQuery['ACT8CCDIST'];
         $result['ACT9CCDIST']=$objQuery['ACT9CCDIST'];
-        $result['ACTRTILTCCDIST']=$objQuery['ACTRTILTCCDIST'];
-        $result['ACTLTILTCCDIST']=$objQuery['ACTLTILTCCDIST'];
+        $result['ACT10CCDIST']=$objQuery['ACT10CCDIST'];
+        $result['ACT11CCDIST']=$objQuery['ACT11CCDIST'];
         $result['ACT1SCDIST']=$objQuery['ACT1SCDIST'];
         $result['ACT2SCDIST']=$objQuery['ACT2SCDIST'];
         $result['ACT3SCDIST']=$objQuery['ACT3SCDIST'];
         $result['ACT4SCDIST']=$objQuery['ACT4SCDIST'];
-        $result['ACTPRIMSCDIST']=$objQuery['ACTPRIMSCDIST'];
+        $result['ACT5SCDIST']=$objQuery['ACT5SCDIST'];
         $result['ACT6SCDIST']=$objQuery['ACT6SCDIST'];
         $result['ACT7SCDIST']=$objQuery['ACT7SCDIST'];
         $result['ACT8SCDIST']=$objQuery['ACT8SCDIST'];
         $result['ACT9SCDIST']=$objQuery['ACT9SCDIST'];
-        $result['ACTRTILTSCDIST']=$objQuery['ACTRTILTSCDIST'];
-        $result['ACTLTILTSCDIST']=$objQuery['ACTLTILTSCDIST'];
+        $result['ACT10SCDIST']=$objQuery['ACT10SCDIST'];
+        $result['ACT11SCDIST']=$objQuery['ACT11SCDIST'];
         $result['ACT1SCNEAR']=$objQuery['ACT1SCNEAR'];
         $result['ACT2SCNEAR']=$objQuery['ACT2SCNEAR'];
         $result['ACT3SCNEAR']=$objQuery['ACT3SCNEAR'];
         $result['ACT4SCNEAR']=$objQuery['ACT4SCNEAR'];
-        $result['ACTPRIMCCNEAR']=$objQuery['ACTPRIMCCNEAR'];
+        $result['ACT5CCNEAR']=$objQuery['ACT5CCNEAR'];
         $result['ACT6CCNEAR']=$objQuery['ACT6CCNEAR'];
         $result['ACT7CCNEAR']=$objQuery['ACT7CCNEAR'];
         $result['ACT8CCNEAR']=$objQuery['ACT8CCNEAR'];
         $result['ACT9CCNEAR']=$objQuery['ACT9CCNEAR'];
-        $result['ACTRTILTCCNEAR']=$objQuery['ACTRTILTCCNEAR'];
-        $result['ACTLTILTCCNEAR']=$objQuery['ACTLTILTCCNEAR'];
-        $result['ACTPRIMSCNEAR']=$objQuery['ACTPRIMSCNEAR'];
+        $result['ACT10CCNEAR']=$objQuery['ACT10CCNEAR'];
+        $result['ACT11CCNEAR']=$objQuery['ACT11CCNEAR'];
+        $result['ACT5SCNEAR']=$objQuery['ACT5SCNEAR'];
         $result['ACT6SCNEAR']=$objQuery['ACT6SCNEAR'];
         $result['ACT7SCNEAR']=$objQuery['ACT7SCNEAR'];
         $result['ACT8SCNEAR']=$objQuery['ACT8SCNEAR'];
         $result['ACT9SCNEAR']=$objQuery['ACT9SCNEAR'];
-        $result['ACTRTILTSCNEAR']=$objQuery['ACTRTILTSCNEAR'];
-        $result['ACTLTILTSCNEAR']=$objQuery['ACTLTILTSCNEAR'];
+        $result['ACT10SCNEAR']=$objQuery['ACT10SCNEAR'];
+        $result['ACT11SCNEAR']=$objQuery['ACT11SCNEAR'];
         $result['ACT1CCNEAR']=$objQuery['ACT1CCNEAR'];
         $result['ACT2CCNEAR']=$objQuery['ACT2CCNEAR'];
         $result['ACT3CCNEAR']=$objQuery['ACT3CCNEAR'];
@@ -1955,7 +1955,7 @@ function copy_forward($zone,$copy_from,$copy_to,$pid) {
         $result['RETINA_COMMENTS']=$objQuery['RETINA_COMMENTS'];
 
         $result['ACT']=$objQuery['ACT'];
-        $result['ACTPRIMCCDIST']=$objQuery['ACTPRIMCCDIST'];
+        $result['ACT5CCDIST']=$objQuery['ACT5CCDIST'];
         $result['ACT1CCDIST']=$objQuery['ACT1CCDIST'];
         $result['ACT2CCDIST']=$objQuery['ACT2CCDIST'];
         $result['ACT3CCDIST']=$objQuery['ACT3CCDIST'];
@@ -1964,37 +1964,37 @@ function copy_forward($zone,$copy_from,$copy_to,$pid) {
         $result['ACT7CCDIST']=$objQuery['ACT7CCDIST'];
         $result['ACT8CCDIST']=$objQuery['ACT8CCDIST'];
         $result['ACT9CCDIST']=$objQuery['ACT9CCDIST'];
-        $result['ACTRTILTCCDIST']=$objQuery['ACTRTILTCCDIST'];
-        $result['ACTLTILTCCDIST']=$objQuery['ACTLTILTCCDIST'];
+        $result['ACT10CCDIST']=$objQuery['ACT10CCDIST'];
+        $result['ACT11CCDIST']=$objQuery['ACT11CCDIST'];
         $result['ACT1SCDIST']=$objQuery['ACT1SCDIST'];
         $result['ACT2SCDIST']=$objQuery['ACT2SCDIST'];
         $result['ACT3SCDIST']=$objQuery['ACT3SCDIST'];
         $result['ACT4SCDIST']=$objQuery['ACT4SCDIST'];
-        $result['ACTPRIMSCDIST']=$objQuery['ACTPRIMSCDIST'];
+        $result['ACT5SCDIST']=$objQuery['ACT5SCDIST'];
         $result['ACT6SCDIST']=$objQuery['ACT6SCDIST'];
         $result['ACT7SCDIST']=$objQuery['ACT7SCDIST'];
         $result['ACT8SCDIST']=$objQuery['ACT8SCDIST'];
         $result['ACT9SCDIST']=$objQuery['ACT9SCDIST'];
-        $result['ACTRTILTSCDIST']=$objQuery['ACTRTILTSCDIST'];
-        $result['ACTLTILTSCDIST']=$objQuery['ACTLTILTSCDIST'];
+        $result['ACT10SCDIST']=$objQuery['ACT10SCDIST'];
+        $result['ACT11SCDIST']=$objQuery['ACT11SCDIST'];
         $result['ACT1SCNEAR']=$objQuery['ACT1SCNEAR'];
         $result['ACT2SCNEAR']=$objQuery['ACT2SCNEAR'];
         $result['ACT3SCNEAR']=$objQuery['ACT3SCNEAR'];
         $result['ACT4SCNEAR']=$objQuery['ACT4SCNEAR'];
-        $result['ACTPRIMCCNEAR']=$objQuery['ACTPRIMCCNEAR'];
+        $result['ACT5CCNEAR']=$objQuery['ACT5CCNEAR'];
         $result['ACT6CCNEAR']=$objQuery['ACT6CCNEAR'];
         $result['ACT7CCNEAR']=$objQuery['ACT7CCNEAR'];
         $result['ACT8CCNEAR']=$objQuery['ACT8CCNEAR'];
         $result['ACT9CCNEAR']=$objQuery['ACT9CCNEAR'];
-        $result['ACTRTILTCCNEAR']=$objQuery['ACTRTILTCCNEAR'];
-        $result['ACTLTILTCCNEAR']=$objQuery['ACTLTILTCCNEAR'];
-        $result['ACTPRIMSCNEAR']=$objQuery['ACTPRIMSCNEAR'];
+        $result['ACT10CCNEAR']=$objQuery['ACT10CCNEAR'];
+        $result['ACT11CCNEAR']=$objQuery['ACT11CCNEAR'];
+        $result['ACT5SCNEAR']=$objQuery['ACT5SCNEAR'];
         $result['ACT6SCNEAR']=$objQuery['ACT6SCNEAR'];
         $result['ACT7SCNEAR']=$objQuery['ACT7SCNEAR'];
         $result['ACT8SCNEAR']=$objQuery['ACT8SCNEAR'];
         $result['ACT9SCNEAR']=$objQuery['ACT9SCNEAR'];
-        $result['ACTRTILTSCNEAR']=$objQuery['ACTRTILTSCNEAR'];
-        $result['ACTLTILTSCNEAR']=$objQuery['ACTLTILTSCNEAR'];
+        $result['ACT10SCNEAR']=$objQuery['ACT10SCNEAR'];
+        $result['ACT11SCNEAR']=$objQuery['ACT11SCNEAR'];
         $result['ACT1CCNEAR']=$objQuery['ACT1CCNEAR'];
         $result['ACT2CCNEAR']=$objQuery['ACT2CCNEAR'];
         $result['ACT3CCNEAR']=$objQuery['ACT3CCNEAR'];

@@ -595,6 +595,38 @@ function show_CC(CC_X) {
 
 
 $(document).ready(function() {
+                  $('#ACT_manual').on('keydown', function(e) {
+                                      // This will take the keyboard ACT textarea values and store them in the correct zone
+                                      // Formatting rules for this textarea:  zone selected in quick pick area
+                                      //  TEXTAREA DATA:  fieldnumberA.#PD(i?)(\w)+ ; fieldnumberB.#PD(i?)(\w)+
+                                      // convert auto to caps
+                                      // save some typing steps to speed it up: iX=X(T) ie=E(T) rh=RHT lih=LH(T)
+                                      // triggered by the enter key
+                                      // fieldnumbers can be entered individually, followed by "RETURN/ENTER" each time OR
+                                      // separated by semicolons, then hit enter.  Semi-colons speed it up.  May make the peds/strabismus guys
+                                      // actually like the entry susytem.
+                                      // The other ways are pretty clunky and rarely used by most doctors.
+                                      if (e.which == 13|| e.keyCode == 13) {  //if its not the enter key, ignore it.
+                                          e.preventDefault();
+                                          var zone = $("#NEURO_ACT_zone").val();
+                                          var data1 = $('#ACT_manual').val();
+                                      //                                      if (data1 != /$;/) data1 = data1 + ';';
+                                      data_seg = data1.match(/([^;]*)/g);
+                                      alert(data_seg);
+                                        for (index=0; index < data_seg.length; ++index) {
+                                            //for each segment separated by a semicolon
+                                      if (data_seg[index] =='') continue;
+                                      //alert(data_seg[index][1]);
+                                            var data = data_seg[index].match(/(\d{1,2})\.(\d{0,2})(.*)/);
+                                            var field = data[1];
+                                            var PD = data[2];
+                                            var strab = data[3].toUpperCase().replace (/I(.)/g,"$1(T)");
+                                            $('#ACT'+field+zone).val(PD+' '+strab);
+                                            $('#ACT'+field+zone).css("background-color","yellow");
+                                            $('#ACT_manual').val('');
+                                        }
+                                      }
+                                      });
                   $("[id^='sketch_tools_']").click(function() {
                                                    var zone = this.id.match(/sketch_tools_(.*)/)[1];
                                                    $("[id^='sketch_tools_"+zone+"']").css("height","30px");
@@ -1196,8 +1228,8 @@ $(document).ready(function() {
                                            $('.ACT').each(function(i){
                                                           var color = $(this).css('background-color');
                                                           //alert ($(this).title);
-                                                          if (color == 'rgb(255, 255, 153)') {// =='blue' <- IE hack
-                                                          $(this).css("background-color","rgb(255, 248, 220)");
+                                                          if ((color == 'rgb(255, 255, 153)')) {// =='blue' <- IE hack
+                                                            $(this).css("background-color","red");
                                                           }
                                                           });
                                            //change to highlight field in zone entry is for

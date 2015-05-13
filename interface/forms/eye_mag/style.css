@@ -787,9 +787,9 @@ h1 {
 .eye_button {
     -moz-box-shadow:inset 0px 1px 0px 0px #97c4fe;
     -webkit-box-shadow:inset 0px 1px 0px 0px #97c4fe;
-    box-shadow:inset 0px 1px 0px 0px #97c4fe;
-    background:-webkit-gradient( linear, left top, left bottom, color-stop(0.05, #9eedff), color-stop(0.1, #1e62ff) );
-    background:-moz-linear-gradient( center top, #99ccff 50%, #1e62d1 100% );
+    box-shadow:inset 1px 1px 1px 0px black;
+    background:-webkit-gradient( linear, left top, left bottom, color-stop(0.6, #F6F9ED), color-stop(0.6, #F6F9ED) );
+    background:-moz-linear-gradient( center top, #F6F9ED 80%, #F6F9ED 100% );
     filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#9eedf0', endColorstr='#1e62d0');
     background-color:#3d94f6;
     -webkit-border-top-left-radius:3px;
@@ -815,14 +815,14 @@ h1 {
     text-decoration:none;
     text-align:center;
 
-    xtext-shadow:1px 1px 0px #1570cd;
+    xtext-shadow:0px 1px 0px #fff;
     padding:0.03in 0.03in 0.04in;
     min-width:30px;
 max-height: 18px;
 margin: 2 auto 2 auto;
 border: black;
 color: black;
-border-radius: 7px 7px 7px 7px;
+border-radius: 2px 2px 2px 2px;
 height: 18px;
 }
 .eye_button_blank {
@@ -880,13 +880,13 @@ height: 18px;
     line-height:12px;
     text-decoration:none;
     text-align:center;
-    text-shadow:1px 1px 0px #1570cd;
+    xtext-shadow:1px 1px 0px #1570cd;
     padding:0.03in;
     min-width:30px;
     max-height: 18px;
     margin: 2 auto 2 auto;
     border: white;
-    border-radius: 7px 7px 7px 7px;
+    border-radius: 2px 2px 2px 2px;
     color: white;
     background:-webkit-gradient( linear, left top, left bottom, color-stop(0.05, navy), color-stop(1, #3d94f6) );
     background:-moz-linear-gradient( center top, navy 5%, #3d94f6 100% );

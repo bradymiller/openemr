@@ -1998,8 +1998,8 @@ if ($refresh and $refresh != 'fullscreen') {
                               <span  class="eye_button" id="RETINA_prefix_3mm" name="RETINA_prefix_3mm"  onclick="$('#RETINA_prefix').val('3mm').trigger('change');"> <?php echo xlt('3mm'); ?> </span>  <br />
                               <span  class="eye_button" id="RETINA_prefix_4mm" name="RETINA_prefix_4mm"  onclick="$('#RETINA_prefix').val('4mm').trigger('change');"> <?php echo xlt('4mm'); ?> </span>  <br />
                               <span  class="eye_button" id="RETINA_prefix_5mm" name="RETINA_prefix_5mm"  onclick="$('#RETINA_prefix').val('5mm').trigger('change');"> <?php echo xlt('5mm'); ?> </span>  <br />
-                              <span  class="eye_button" id="RETINA_prefix_medial" name="RETINA_prefix_medial"  onclick="$('#RETINA_prefix').val('medial').trigger('change');"><?php echo xlt('med'); ?></span>   
-                              <span  class="eye_button" id="RETINA_prefix_lateral" name="RETINA_prefix_lateral"  onclick="$('#RETINA_prefix').val('lateral').trigger('change');"><?php echo xlt('lat'); ?></span>  
+                              <span  class="eye_button" id="RETINA_prefix_nasal" name="RETINA_prefix_nasal"  onclick="$('#RETINA_prefix').val('nasal).trigger('change');"><?php echo xlt('nasal'); ?></span>   
+                              <span  class="eye_button" id="RETINA_prefix_temp" name="RETINA_prefix_temp"  onclick="$('#RETINA_prefix').val('temp').trigger('change');"><?php echo xlt('temp'); ?></span>  
                               <span  class="eye_button" id="RETINA_prefix_superior" name="RETINA_prefix_superior"  onclick="$('#RETINA_prefix').val('superior').trigger('change');"><?php echo xlt('sup'); ?></span>  
                               <span  class="eye_button" id="RETINA_prefix_inferior" name="RETINA_prefix_inferior"  onclick="$('#RETINA_prefix').val('inferior').trigger('change');"><?php echo xlt('inf'); ?></span> 
                               <span  class="eye_button" id="RETINA_prefix_anterior" name="RETINA_prefix_anterior"  onclick="$('#RETINA_prefix').val('anterior').trigger('change');"><?php echo xlt('ant'); ?></span>  <br /> 
@@ -2747,23 +2747,25 @@ if ($refresh and $refresh != 'fullscreen') {
                           <span class="eye_button" id="NEURO_ACT_strab_hypoT_int" name="NEURO_ACT_strab"  onclick="$('#NEURO_ACT_strab').val('hypo\(T\)').trigger('change');"><?php echo xlt('hypo(T)'); ?></span> 
                           <br />
                         </div>  
-                       <!--
+                       
                          <div class="borderShadow" style="width:190px;text-align:center;border:1pt solid black;padding:4 10 4 10;margin:4;font-weight:600;"><span class="underline">Keyboard Entry</span><br />
-                          <textarea id="ACT_manual" name="ACT_manual" onfocus="this.value='';" style="color:#C0C0C0;size=0.5em;">position#= #PD deviation,
-eg. 5=8 XT,6=ortho,4=12XT,2=10XT,8=4XT</textarea>
+                          <textarea id="ACT_manual" name="ACT_manual" onfocus="this.value='';" style="color:#0C0C0C;size=0.9em;"></textarea>
+                          <span style="font-size:0.9em;font-weight:400;color:#0C0C0C;">Type: fieldnumber.PD deviation ENTER<br />
+                            egs. 10PD X(T) in Primary postion: 5.10ix
+                            <br />B VIs:
+                            5.1ie;4.10et;6.10et;</span>
                         </div>
--->                       
+                 
                           
                       </div>
                       <div style="position:left;top:0.0in;left:0.10in;margin: auto;">
-                        <div class="borderShadow" style="width:190px;text-align:center;border:1pt solid black;padding:4 5 4 5;margin:4;font-weight:600;"><span class="underline"><?php echo xlt('Rx/Distance'); ?></span><br />
+                        <div class="borderShadow" style="width:195px;text-align:center;border:1pt solid black;padding:4 5 4 5;margin:4;font-weight:600;"><span class="underline"><?php echo xlt('Rx/Distance'); ?></span><br />
                           <span class="eye_button <?php if ($ACT_SHOW =='SCDIST') echo "eye_button_selected"; ?>" id="NEURO_ACT_zone_SCDIST" name="NEURO_ACT_zone" style="padding-left:0.06in;padding-right:0.06in;" onclick="$('#NEURO_ACT_zone').val('SCDIST').trigger('change');"> <?php echo xlt('scDist'); ?> </span> 
                           <span class="eye_button <?php if ($ACT_SHOW =='CCDIST') echo "eye_button_selected"; ?>" id="NEURO_ACT_zone_CCDIST" name="NEURO_ACT_zone" style="padding-left:0.06in;padding-right:0.06in;" onclick="$('#NEURO_ACT_zone').val('CCDIST').trigger('change');"> <?php echo xlt('ccDist'); ?> </span> 
                           <span class="eye_button <?php if ($ACT_SHOW =='SCNEAR') echo "eye_button_selected"; ?>" id="NEURO_ACT_zone_SCNEAR" name="NEURO_ACT_zone" style="padding-left:0.06in;padding-right:0.06in;" onclick="$('#NEURO_ACT_zone').val('SCNEAR').trigger('change');"> <?php echo xlt('scNear'); ?> </span> 
                           <span class="eye_button <?php if ($ACT_SHOW =='CCNEAR') echo "eye_button_selected"; ?>" id="NEURO_ACT_zone_CCNEAR" name="NEURO_ACT_zone" style="padding-left:0.06in;padding-right:0.06in;" onclick="$('#NEURO_ACT_zone').val('CCNEAR').trigger('change');"> <?php echo xlt('ccNear'); ?> </span> 
-                         
                         </div>
-                        <div class="borderShadow" style="width:190px;text-align:center;border:1pt solid black;padding:4 10 4 10;margin:4;font-weight:600;"><span class="underline"><?php echo xlt('Position of Gaze'); ?></span><br />
+                        <div class="borderShadow" style="width:195px;text-align:center;border:1pt solid black;padding:4 10 4 10;margin:4;font-weight:600;"><span class="underline"><?php echo xlt('Position of Gaze'); ?></span><br />
                           <span class="eye_button_blank"> <?php echo xlt('R'); ?> </span> 
                           <span class="eye_button" id="NEURO_field_1" name="NEURO_field"  onclick="$('#NEURO_field').val('1').trigger('change');"> <?php echo xlt('1'); ?> </span> 
                           <span class="eye_button" id="NEURO_field_2" name="NEURO_field"  onclick="$('#NEURO_field').val('2').trigger('change');"> <?php echo xlt('2'); ?> </span> 
@@ -2781,10 +2783,9 @@ eg. 5=8 XT,6=ortho,4=12XT,2=10XT,8=4XT</textarea>
                           <span class="eye_button" id="NEURO_field_8" name="NEURO_field"  onclick="$('#NEURO_field').val('8').trigger('change');"><?php echo xlt('8'); ?></span> 
                           <span class="eye_button" id="NEURO_field_9" name="NEURO_field"  onclick="$('#NEURO_field').val('9').trigger('change');"><?php echo xlt('9'); ?></span>
                           <span class="eye_button" id="NEURO_field_11" name="NEURO_field"  onclick="$('#NEURO_field').val('11').trigger('change');"><?php echo xlt('11'); ?></span>  
-                          
-                          </div>
+                        </div>
                    
-                        <div class="borderShadow" style="width:190px;text-align:center;margin:4;font-weight:600;padding:2 2 10 2;"><span class="underline">Prism Diopters</span><br />
+                        <div class="borderShadow" style="width:195px;text-align:center;margin:4 0;font-weight:600;padding:2 2 10 2;"><span class="underline">Prism Diopters</span><br />
                           <span class="eye_button" id="NEURO_value_ortho" name="NEURO_value"  onclick="$('#NEURO_value').val('ortho').trigger('change');"><?php echo xlt('Ortho'); ?></span>  
                           <span class="eye_button" id="NEURO_value_1" name="NEURO_value"  onclick="$('#NEURO_value').val('1').trigger('change');"><?php echo xlt('1'); ?></span> 
                           <span class="eye_button" id="NEURO_value_2" name="NEURO_value"  onclick="$('#NEURO_value').val('2').trigger('change');"><?php echo xlt('2'); ?></span> 
@@ -2805,11 +2806,10 @@ eg. 5=8 XT,6=ortho,4=12XT,2=10XT,8=4XT</textarea>
                           <span class="eye_button" id="NEURO_value_40" name="NEURO_value"  onclick="$('#NEURO_value').val('40').trigger('change');"><?php echo xlt('40'); ?></span> 
                           
                         </div>
-                        <div style="width:190px;text-align:center;margin:4;font-weight:600;padding:10 2 10 2;">
-
+                        <div style="width:195px;text-align:center;margin:4;font-weight:600;padding:10 2 10 2;">
                           <span class="borderShadow" style="margin:4;bottom:0;right:0.01in;height:20px;" id="NEURO_RECORD" name="NEURO_RECORD"><?php echo xlt(' RECORD '); ?></span> 
                         </div>
-                      </DIV>
+                      </div>
                     </div>
                   </div>
               </div>
