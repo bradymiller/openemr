@@ -964,7 +964,41 @@ height: 18px;
     .red {
         text-decoration: underline;
     }
-    
+    .ident {
+        text-align:center;
+        font-size:0.8em;
+        padding:0px;
+    }
+    .kb_left {
+        position:relative;float:left;
+        vertical-align: bottom;
+        font-size:0.8em;
+        color:#c0c0c0;
+        text-align:left;
+        left:0.0in;
+        bottom:0.0in;
+        padding:0px;
+    }
+    .kb_right {
+        position:relative;float:right;
+        vertical-align: bottom;
+        font-size:0.8em;
+        color:#c0c0c0;
+        text-align:right;
+        right:0.0in;
+        bottom:0.0in;
+    }
+    .kb_center {
+        position:relative;
+        vertical-align: bottom;
+        font-size:0.7em;
+        color:#c0c0c0;
+        margin:auto;
+        bottom:0.0in;
+    }
+    .yellow {
+        background-color: yellow;
+    }
     textarea.EXTTEXT {
         width:1.0in;
         max-width: 1.0in;
@@ -986,7 +1020,7 @@ height: 18px;
         max-width: 1.8in;
         max-height: 0.44in;
         height: 0.44in;
-        font-size:0.9em;
+        font-size:0.8em;
     }
     .wide_textarea th {
         text-align:center;
@@ -1236,7 +1270,7 @@ vertical-align:bottom;
     padding:0.1in;
     text-align:left;
     font-size: 0.8em;
-    margin:4 auto;
+    margin:4 8;
 }
 
 .QP_block {

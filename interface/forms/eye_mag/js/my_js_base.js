@@ -595,7 +595,16 @@ function show_CC(CC_X) {
 
 
 $(document).ready(function() {
-                  $('#ACT_manual').on('keydown', function(e) {
+                  $(".kb").addClass('nodisplay');
+                  $('.ke').mouseover(function() {
+                                     
+                                     $(this).toggleClass('yellow');
+                                     });
+                  $('.ke').mouseout(function() {
+                                     
+                                     $(this).toggleClass('yellow');
+                                     });
+                  $("[id$='_keyboard']").on('keydown', function(e) {
                                       // This will take the keyboard ACT textarea values and store them in the correct zone
                                       // Formatting rules for this textarea:  zone selected in quick pick area
                                       //  TEXTAREA DATA:  fieldnumberA.#PD(i?)(\w)+ ; fieldnumberB.#PD(i?)(\w)+
@@ -607,25 +616,432 @@ $(document).ready(function() {
                                       // actually like the entry susytem.
                                       // The other ways are pretty clunky and rarely used by most doctors.
                                       if (e.which == 13|| e.keyCode == 13) {  //if its not the enter key, ignore it.
-                                          e.preventDefault();
-                                          var zone = $("#NEURO_ACT_zone").val();
-                                          var data1 = $('#ACT_manual').val();
-                                      //                                      if (data1 != /$;/) data1 = data1 + ';';
-                                      data_seg = data1.match(/([^;]*)/g);
-                                      alert(data_seg);
-                                        for (index=0; index < data_seg.length; ++index) {
-                                            //for each segment separated by a semicolon
-                                      if (data_seg[index] =='') continue;
-                                      //alert(data_seg[index][1]);
-                                            var data = data_seg[index].match(/(\d{1,2})\.(\d{0,2})(.*)/);
-                                            var field = data[1];
-                                            var PD = data[2];
-                                            var strab = data[3].toUpperCase().replace (/I(.)/g,"$1(T)");
-                                            $('#ACT'+field+zone).val(PD+' '+strab);
-                                            $('#ACT'+field+zone).css("background-color","yellow");
-                                            $('#ACT_manual').val('');
-                                        }
-                                      }
+                                        e.preventDefault();
+                                        var exam = this.id.match(/(.*)_keyboard/)[1];
+                                            //      alert(exam);
+                                            
+                                        switch (exam) {
+                                            case 'EXT':
+                                                var data1 = $("#EXT_keyboard").val();
+                                                var data_seg = data1.match(/([^;]*)/g);
+                                                for (index=0; index < data_seg.length; ++index) {
+                                                    if (data_seg[index] =='') continue;
+                                                    if ((index =='0') && (data1.match(/^D/i))) {
+                                                        $("#EXT_defaults").trigger("click");
+                                                        continue;
+                                                    }
+                                                    
+                                                    var data = data_seg[index].match(/^(\w*)\.(.*)/);
+                                                    var appendix =".a";
+                                                    (data[2].match(/\.a$/))?(data[2] = data[2].replace(/\.a$/,'')):(appendix = "nope");
+                                                    var field = data[1].toUpperCase();
+                                                    var field2 ='';
+                                                    var text = data[2];
+                                                    text = text.replace(/(\s*)inf(\s*)/g,"$1inferior$2")
+                                                        .replace(/(\s*)sup(\s*)/g,"$1superior$2")
+                                                        .replace(/(\s*)nas /g,"$1nasal$2")
+                                                        .replace(/(\s*)temp /g,"$1temporal$2")
+                                                        .replace(/(\s*)med(\s*)/g,"$1medial$2")
+                                                        .replace(/(\s*)lat(\s*)/g,"$1lateral$2")
+                                                        .replace(/(\s*)dermato(\s*)/g,"$1dermatochalasis$2")
+                                                        .replace(/w\/ /g,"$1with$2")
+                                                        .replace(/(\s*)lac(\s+)/g,"$1laceration$2")
+                                                        .replace(/(\s*)lacr(\s*)/g,'$1lacrimal$2')
+                                                        .replace(/(\s*)dcr(\s*)/ig,"$1DCR$2")
+                                                        .replace(/(\s*)bcc(\s*)/ig,"$1BCC$2")
+                                                        .replace(/(\s*)scc(\s*)/ig,"$1SCC$2")
+                                                        .replace(/(\s*)sebc(\s*)/ig,"$1sebaceous cell carcinoma$2")
+                                                        .replace(/(\s*)fh(\s*)/ig,"$1forehead$2")
+                                                        .replace(/(\s*)glab(\s*)/ig,"$1glabellar$2")
+                                                        .replace(/(\s*)cic(\s*)/ig,"$1cicatricial$2")
+                                                        .replace(/(\s*)entrop(\s*)/i,"$1entropion$2")
+                                                        .replace(/(\s*)ectrop(\s*)/i,"$1ectropion$2")
+                                                        .replace(/(\s*)ect(\s*)/,"$1ectropion$2")
+                                                        .replace(/(\s*)ent(\s*)/i,"$1entropion$2");
+                                                    if (field == 'RB')  field2 = "RBROW";
+                                                    if (field == 'LB')  field2 = "LBROW";
+                                                    if (field == 'RUL') field2 = "RUL";
+                                                    if (field == 'LUL') field2 = "LUL";
+                                                    if (field == 'RLL') field2 = "RLL";
+                                                    if (field == 'LLL') field2 = "LLL";
+                                                    if (field == 'RMC') field2 = "RMCT";
+                                                    if (field == 'LMC') field2 = "LMCT";
+                                                    if (field == 'RAD') field2 = "RADNEXA";
+                                                    if (field == 'LAD') field2 = "LADNEXA";
+                                                    if (field == 'RLF') field2 = "RLF";
+                                                    if (field == 'LLF') field2 = "LLF";
+                                                    if (field == 'RMRD') field2 = "RMRD";
+                                                    if (field == 'LMRD') field2 = "LMRD";
+                                                    if (field == 'RVF') field2 = "RVFISSURE";
+                                                    if (field == 'LVF') field2 = "LVFISSURE";
+                                                    if (field == 'RCAR') field2 = "RCAROTID";
+                                                    if (field == 'LCAR') field2 = "LCAROTID";
+                                                    if (field == 'RTA') field2 = "RTEMPART";
+                                                    if (field == 'LTA') field2 = "LTEMPART";
+                                                    if (field == 'RCN5') field2 = "RCNV";
+                                                    if (field == 'LCN5') field2 = "LCNVI";
+                                                    if (field == 'RCN7') field2 = "RCMVII";
+                                                    if (field == 'LCN7') field2 = "LCNVII";
+                                                    if (field == 'RCNV') field2 = "RCNV";
+                                                    if (field == 'LCNV') field2 = "LCNV";
+                                                    if (field == 'RCNVII') field2 = "RCNVII";
+                                                    if (field == 'LCNVII') field2 = "LCNVII";
+                                                    if ((field == 'BLF')||(field == 'LF')) {
+                                                        field = "RLF";
+                                                        (appendix == ".a") ? ($('#'+field).val($('#'+field).val() +', '+text)) : $('#'+field).val(text);
+                                                        field = "LLF";
+                                                        (appendix == ".a") ? ($('#'+field).val($('#'+field).val() +', '+text)) : $('#'+field).val(text);
+                                                        $('#RLF').css("background-color","#F0F8FF");
+                                                        $('#LLF').css("background-color","#F0F8FF");
+                                                    } else if (field == 'BMRD') {
+                                                        field = "RMRD";
+                                                        (appendix == ".a") ? ($('#'+field).val($('#'+field).val() +', '+text)) : $('#'+field).val(text);
+                                                        field = "LMRD";
+                                                        (appendix == ".a") ? ($('#'+field).val($('#'+field).val() +', '+text)) : $('#'+field).val(text);
+                                                        $('#RMRD').css("background-color","#F0F8FF");
+                                                        $('#LMRD').css("background-color","#F0F8FF");
+                                                    } else if (field == 'BVF') {
+                                                        field = "RVFISSURE";
+                                                        (appendix == ".a") ? ($('#'+field).val($('#'+field).val() +', '+text)) : $('#'+field).val(text);
+                                                        field = "LVFISSURE";
+                                                        (appendix == ".a") ? ($('#'+field).val($('#'+field).val() +', '+text)) : $('#'+field).val(text);
+                                                        $('#RVFISSURE').css("background-color","#F0F8FF");
+                                                        $('#LVFISSURE').css("background-color","#F0F8FF");
+                                                    } else if ((field == 'BCAR')||(field == 'CAR')) {
+                                                        field = "RCAROTID";
+                                                        (appendix == ".a") ? ($('#'+field).val($('#'+field).val() +', '+text)) : $('#'+field).val(text);
+                                                        field = "LCAROTID";
+                                                        (appendix == ".a") ? ($('#'+field).val($('#'+field).val() +', '+text)) : $('#'+field).val(text);
+                                                        $('#RCAROTID').css("background-color","#F0F8FF");
+                                                        $('#LCAROTID').css("background-color","#F0F8FF");
+                                                    } else if ((field == 'BTA')||(field == 'TA')) {
+                                                        field = "RTEMPART";
+                                                        (appendix == ".a") ? ($('#'+field).val($('#'+field).val() +', '+text)) : $('#'+field).val(text);
+                                                        field = "LTEMPART";
+                                                        (appendix == ".a") ? ($('#'+field).val($('#'+field).val() +', '+text)) : $('#'+field).val(text);
+                                                        $('#RTEMPART').css("background-color","#F0F8FF");
+                                                        $('#LTEMPART').css("background-color","#F0F8FF");
+                                                    } else if ((field == 'BCNV') || (field == 'BCN5')||(field == 'CNV')||(field=='CN5')) {
+                                                        field = "RCNV";
+                                                        (appendix == ".a") ? ($('#'+field).val($('#'+field).val() +', '+text)) : $('#'+field).val(text);
+                                                        field = "LCNV";
+                                                        (appendix == ".a") ? ($('#'+field).val($('#'+field).val() +', '+text)) : $('#'+field).val(text);
+                                                        $('#RCNV').css("background-color","#F0F8FF");
+                                                        $('#LCNV').css("background-color","#F0F8FF");
+                                                    if ((field == 'BCNVII') || (field == 'BCNVII')||(field=='CNVII')||(field=='CN7')) {
+                                                        field = "RCNV";
+                                                        (appendix == ".a") ? ($('#'+field).val($('#'+field).val() +', '+text)) : $('#'+field).val(text);
+                                                        field = "LCNV";
+                                                        (appendix == ".a") ? ($('#'+field).val($('#'+field).val() +', '+text)) : $('#'+field).val(text);
+                                                        $('#RCNV').css("background-color","#F0F8FF");
+                                                        $('#LCNV').css("background-color","#F0F8FF");
+                                                    } else if ((field == 'BLL')||(field=='LL')) {
+                                                        field = "RLL";
+                                                        (appendix == ".a") ? ($('#'+field).val($('#'+field).val() +', '+text)) : $('#'+field).val(text);
+                                                        field = "LLL";
+                                                        (appendix == ".a") ? ($('#'+field).val($('#'+field).val() +', '+text)) : $('#'+field).val(text);
+                                                        $('#RLL').css("background-color","#F0F8FF");
+                                                        $('#LLL').css("background-color","#F0F8FF");
+                                                    } else if ((field == '4XL')||(field == 'Lx4')||(field=='LL')) {
+                                                        field = "RLL";
+                                                        (appendix == ".a") ? ($('#'+field).val($('#'+field).val() +', '+text)) : $('#'+field).val(text);
+                                                        field = "RUL";
+                                                        (appendix == ".a") ? ($('#'+field).val($('#'+field).val() +', '+text)) : $('#'+field).val(text);
+                                                        field = "LUL";
+                                                        (appendix == ".a") ? ($('#'+field).val($('#'+field).val() +', '+text)) : $('#'+field).val(text);
+                                                        field = "LLL";
+                                                        (appendix == ".a") ? ($('#'+field).val($('#'+field).val() +', '+text)) : $('#'+field).val(text);
+                                                        $('#RLL').css("background-color","#F0F8FF");
+                                                        $('#LLL').css("background-color","#F0F8FF");
+                                                        $('#RUL').css("background-color","#F0F8FF");
+                                                        $('#LUL').css("background-color","#F0F8FF");
+                                                    } else if ((field == 'BUL')||(field=='UL')) {
+                                                        field = "RUL";
+                                                        (appendix == ".a") ? ($('#'+field).val($('#'+field).val() +', '+text)) : $('#'+field).val(text);
+                                                        field = "LUL";
+                                                        (appendix == ".a") ? ($('#'+field).val($('#'+field).val() +', '+text)) : $('#'+field).val(text);
+                                                        $('#RUL').css("background-color","#F0F8FF");
+                                                        $('#LUL').css("background-color","#F0F8FF");
+                                                    } else if ((field == 'FH')||(field == "BB")) {
+                                                        field = "RBROW";
+                                                        (appendix == ".a") ? ($('#'+field).val($('#'+field).val() +', '+text)) : $('#'+field).val(text);
+                                                        field = "LBROW";
+                                                        (appendix == ".a") ? ($('#'+field).val($('#'+field).val() +', '+text)) : $('#'+field).val(text);
+                                                        $('#RBROW').val(text).css("background-color","#F0F8FF");
+                                                        $('#LBROW').val(text).css("background-color","#F0F8FF");
+                                                    } else {
+                                                        (appendix == ".a") ? ($('#'+field2).val($('#'+field2).val() +", "+text)) : $('#'+field2).val(text);
+                                                        $('#'+field2).css("background-color","#F0F8FF");
+                                                    }
+                                                    //  alert($("#RLL").val());
+                                                }
+                                            }
+                                                submit_form();
+                                                $('#EXT_keyboard').val('');
+                                            
+                                            case 'ANTSEG':
+                                                var data1 = $("#ANTSEG_keyboard").val();
+                                                var data_seg = data1.match(/([^;]*)/g);
+                                                for (index=0; index < data_seg.length; ++index) {
+                                                    if (data_seg[index] =='') continue;
+                                                    if ((index =='0') && (data1.match(/^D/i))) {
+                                                        $("#ANTSEG_defaults").trigger("click");
+                                                        continue;
+                                                    }
+
+                                                    var data = data_seg[index].match(/^(\w*)\.(.*)/);
+                                                    var appendix =".a";
+                                                    (data[2].match(/\.a$/))?(data[2] = data[2].replace(/\.a$/,'')):(appendix = "nope");
+                                                    var field = data[1].toUpperCase();
+                                                    var field2 ='';
+                                                    var text = data[2];
+                                                    text = text.replace(/(\s*)inf(\s*)/g,"$1inferior$2")
+                                                                .replace(/(\s*)sup(\s*)/g,"$1superior$2")
+                                                                .replace(/(\s*)nas(\s*)/g,"$1nasal$2")
+                                                                .replace(/(\s*)temp(\s*)/g,"$1temporal$2")
+                                                                .replace(/(\s*)med(\s*)/g,"$1medial$2")
+                                                                .replace(/(\s*)lat(\s*)/g,"$1lateral$2")
+                                                                .replace(/(\s*)gut(\s*)/g,"$1guttatae$2")
+                                                                .replace(/w\/ /g,"$1with$2")
+                                                                .replace(/(\s*)lac(\s+)/g,"$1laceration$2")
+                                                                .replace(/(\s*)pter(\s*)/g,'$1pterygium$2')
+                                                                .replace(/(\s*)inj(\s*)/ig,"$1injection$2")
+                                                                .replace(/(\s*)fc(\s*)/ig,"$1flare/cell$2")
+                                                                .replace(/(\s*)ks(\s*)/ig,"$1kruckenberg spindle$2")
+                                                                .replace(/(\s*)sebc(\s*)/ig,"$1sebaceous cell carcinoma$2")
+                                                                .replace(/(\s*)spk(\s*)/ig,"$1SPK$2")
+                                                                .replace(/(\s*)pek(\s*)/ig,"$1PEK$2")
+                                                                .replace(/(\s*)str(\s*)/ig,"$1stromal$2")
+                                                                .replace(/(\s*)endo(\s*)/ig,"$1endothelial$2")
+                                                                .replace(/(\s*)end([\W]\s*)/ig,"$1endothelial$2")
+                                                                .replace(/(\s*)rec(\s*)/ig,"$1reession$2")
+                                                                .replace(/(\s*)1 o(\s*)/ig,"$11 o'clock$2")
+                                                                .replace(/(\s*)2 o(\s*)/ig,"$12 o'clock$2")
+                                                                .replace(/(\s*)3 o(\s*)/ig,"$13 o'clock$2")
+                                                                .replace(/(\s*)4 o(\s*)/ig,"$14 o'clock$2")
+                                                                .replace(/(\s*)5 o(\s*)/ig,"$15 o'clock$2")
+                                                                .replace(/(\s*)6 o(\s*)/ig,"$16 o'clock$2")
+                                                                .replace(/(\s*)7 o(\s*)/ig,"$17 o'clock$2")
+                                                                .replace(/(\s*)8 o(\s*)/ig,"$18 o'clock$2")
+                                                                .replace(/(\s*)9 o(\s*)/ig,"$19 o'clock$2")
+                                                                .replace(/(\s*)10 o(\s*)/ig,"$110 o'clock$2")
+                                                                .replace(/(\s*)11 o(\s*)/ig,"$111 o'clock$2")
+                                                                .replace(/(\s*)12 o(\s*)/ig,"$112 o'clock$2")
+                                                                .replace(/(\s*)limb(\s*)/i,"$1limbus$2")
+                                                                .replace(/(\s*)tl(\s*)/i,"$1tear lake$2");
+                                                    if (field == 'RC')  field2 = "ODCONJ";
+                                                    if (field == 'LC')  field2 = "OSCONJ";
+                                                    if (field == 'RK') field2 = "ODCORNEA";
+                                                    if (field == 'LK') field2 = "OSCORNEA";
+                                                    if (field == 'RAC') field2 = "ODAC";
+                                                    if (field == 'LAC') field2 = "OSAC";
+                                                    if (field == 'RL') field2 = "ODLENS";
+                                                    if (field == 'LL') field2 = "OSLENS";
+                                                    if (field == 'RI') field2 = "ODIRIS";
+                                                    if (field == 'LI') field2 = "OSIRIS";
+                                                    if (field == 'RG') field2 = "OSGONIO";
+                                                    if (field == 'LG') field2 = "OSGONIO";
+                                                    if (field == 'RPACH') field2 = "OSKTHICKNESS";
+                                                    if (field == 'LPACH') field2 = "OSKTHICKNESS";
+                                                    if (field == 'RSCH1') field2 = "OSSCHIRMER1";
+                                                    if (field == 'LSCH1') field2 = "OSSCHIRMER1";
+                                                    if (field == 'RSCH2') field2 = "OSSCHIRMER2";
+                                                    if (field == 'LSCH2') field2 = "OSSCHIRMER2";
+                                                    if (field == 'RTBUT') field2 = "ODTBUT";
+                                                    if (field == 'LTBUT') field2 = "OSTBUT";
+                                                    if ((field == 'BC')||(field=='C')) {
+                                                        field = "ODCONJ";
+                                                        (appendix == ".a") ? ($('#'+field).val($('#'+field).val() +', '+text)) : $('#'+field).val(text);
+                                                        field = "OSCONJ";
+                                                        (appendix == ".a") ? ($('#'+field).val($('#'+field).val() +', '+text)) : $('#'+field).val(text);
+                                                        $('#ORCONJ').css("background-color","#F0F8FF");
+                                                        $('#OSCONJ').css("background-color","#F0F8FF");
+                                                    } else if ((field == 'BK')||(field=='K')) {
+                                                        field = "ODCORNEA";
+                                                        (appendix == ".a") ? ($('#'+field).val($('#'+field).val() +', '+text)) : $('#'+field).val(text);
+                                                        field = "OSCORNEA";
+                                                        (appendix == ".a") ? ($('#'+field).val($('#'+field).val() +', '+text)) : $('#'+field).val(text);
+                                                        $('#ODCORNEA').css("background-color","#F0F8FF");
+                                                        $('#OSCORNEA').css("background-color","#F0F8FF");
+                                                    } else if ((field == 'BAC')||(field=='AC')) {
+                                                        field = "ODAC";
+                                                        (appendix == ".a") ? ($('#'+field).val($('#'+field).val() +', '+text)) : $('#'+field).val(text);
+                                                        field = "OSAC";
+                                                        (appendix == ".a") ? ($('#'+field).val($('#'+field).val() +', '+text)) : $('#'+field).val(text);
+                                                        $('#ODAC').css("background-color","#F0F8FF");
+                                                        $('#OSAC').css("background-color","#F0F8FF");
+                                                    } else if ((field == 'BL')||(field=='L')) {
+                                                        field = "ODLENS";
+                                                        (appendix == ".a") ? ($('#'+field).val($('#'+field).val() +', '+text)) : $('#'+field).val(text);
+                                                        field = "OSLENS";
+                                                        (appendix == ".a") ? ($('#'+field).val($('#'+field).val() +', '+text)) : $('#'+field).val(text);
+                                                        $('#ODLENS').css("background-color","#F0F8FF");
+                                                        $('#OSLENS').css("background-color","#F0F8FF");
+                                                    } else if ((field == 'BI')||(field=='I')) {
+                                                        field = "ODIRIS";
+                                                        (appendix == ".a") ? ($('#'+field).val($('#'+field).val() +', '+text)) : $('#'+field).val(text);
+                                                        field = "OSIRIS";
+                                                        (appendix == ".a") ? ($('#'+field).val($('#'+field).val() +', '+text)) : $('#'+field).val(text);
+                                                        $('#ODIRIS').css("background-color","#F0F8FF");
+                                                        $('#OSIRIS').css("background-color","#F0F8FF");
+                                                    } else if ((field == 'BPACH')||(field=='PACH')) {
+                                                        field = "ODKTHICKNESS";
+                                                        (appendix == ".a") ? ($('#'+field).val($('#'+field).val() +', '+text)) : $('#'+field).val(text);
+                                                        field = "OSKTHICKNESS";
+                                                        (appendix == ".a") ? ($('#'+field).val($('#'+field).val() +', '+text)) : $('#'+field).val(text);
+                                                        $('#ODKTHICKNESS').css("background-color","#F0F8FF");
+                                                        $('#OSKTHICKNESS').css("background-color","#F0F8FF");
+                                                    } else if ((field == 'BG')||(field=='G')) {
+                                                        field = "ODGONIO";
+                                                        (appendix == ".a") ? ($('#'+field).val($('#'+field).val() +', '+text)) : $('#'+field).val(text);
+                                                        field = "OSGONIO";
+                                                        (appendix == ".a") ? ($('#'+field).val($('#'+field).val() +', '+text)) : $('#'+field).val(text);
+                                                        $('#ODGONIO').css("background-color","#F0F8FF");
+                                                        $('#OSGONIO').css("background-color","#F0F8FF");
+                                                    } else if ((field == 'BTBUT')||(field=='TBUT')) {
+                                                        field = "ODTBUT";
+                                                        (appendix == ".a") ? ($('#'+field).val($('#'+field).val() +', '+text)) : $('#'+field).val(text);
+                                                        field = "OSTBUT";
+                                                        (appendix == ".a") ? ($('#'+field).val($('#'+field).val() +', '+text)) : $('#'+field).val(text);
+                                                        $('#ODTBUT').css("background-color","#F0F8FF");
+                                                        $('#OSTBUT').css("background-color","#F0F8FF");
+                                                    } else {
+                                                        (appendix == ".a") ? ($('#'+field2).val($('#'+field2).val() +", "+text)) : $('#'+field2).val(text);
+                                                        $('#'+field2).css("background-color","#F0F8FF");
+                                                    }
+                                            }
+                                            submit_form();
+                                            $('#ANTSEG_keyboard').val('');
+                                            
+                                            
+                                           case 'RETINA':
+                                                var data1 = $("#RETINA_keyboard").val();
+                                                var data_seg = data1.match(/([^;]*)/g);
+                                                for (index=0; index < data_seg.length; ++index) {
+                                                if (data_seg[index] =='') continue;
+                                                if ((index =='0') && (data1.match(/^D/i))) {
+                                                $("#RETINA_defaults").trigger("click");
+                                                continue;
+                                                }
+                                                
+                                                var data = data_seg[index].match(/^(\w*)\.(.*)/);
+                                                var appendix =".a";
+                                                (data[2].match(/\.a$/))?(data[2] = data[2].replace(/\.a$/,'')):(appendix = "nope");
+                                                var field = data[1].toUpperCase();
+                                                var field2 ='';
+                                                var text = data[2];
+                                                text = text.replace(/(\s*)inf(\s*)/g,"$1inferior$2")
+                                                    .replace(/(\s*)sup(\s*)/g,"$1superior$2")
+                                                    .replace(/(\s*)nas(\s*)/g,"$1nasal$2")
+                                                    .replace(/(\s*)temp(\s*)/g,"$1temporal$2")
+                                                    .replace(/(\s*)med(\s*)/g,"$1medial$2")
+                                                    .replace(/(\s*)lat(\s*)/g,"$1lateral$2")
+                                                    .replace(/(\s*)csme(\s*)/ig,"$1CSME$2")
+                                                    .replace(/w\/ /g,"$1with$2")
+                                                    .replace(/(\s*)bdr(\s+)/ig,"$1BDR$2")
+                                                    .replace(/(\s*)ppdr(\s*)/g,'$1PPDR$2')
+                                                    .replace(/(\s*)ht(\s*)/ig,"$1horsheshoe tear$2")
+                                                    .replace(/(\s*)ab(\s*)/ig,"$1air bubble$2")
+                                                    .replace(/(\s*)c3f8(\s*)/ig,"$1C3F8$2")
+                                                    .replace(/(\s*)ma(\s*)/ig,"$1macroaneurysm$2")
+                                                    .replace(/(\s*)mias(\s*)/ig,"$1microaneurysm$2")
+                                                    .replace(/(\s*)ped(\s*)/ig,"$1PED$2")
+                                                    .replace(/(\s*)1 o(\s*)/ig,"$11 o'clock$2")
+                                                    .replace(/(\s*)2 o(\s*)/ig,"$12 o'clock$2")
+                                                    .replace(/(\s*)3 o(\s*)/ig,"$13 o'clock$2")
+                                                    .replace(/(\s*)4 o(\s*)/ig,"$14 o'clock$2")
+                                                    .replace(/(\s*)5 o(\s*)/ig,"$15 o'clock$2")
+                                                    .replace(/(\s*)6 o(\s*)/ig,"$16 o'clock$2")
+                                                    .replace(/(\s*)7 o(\s*)/ig,"$17 o'clock$2")
+                                                    .replace(/(\s*)8 o(\s*)/ig,"$18 o'clock$2")
+                                                    .replace(/(\s*)9 o(\s*)/ig,"$19 o'clock$2")
+                                                    .replace(/(\s*)10 o(\s*)/ig,"$110 o'clock$2")
+                                                    .replace(/(\s*)11 o(\s*)/ig,"$111 o'clock$2")
+                                                    .replace(/(\s*)12 o(\s*)/ig,"$112 o'clock$2")
+                                                    .replace(/(\s*)mac(\s*)/i,"$1macula$2")
+                                                    .replace(/(\s*)vh(\s*)/i,"$1vitreous hemorrhage$2");
+                                                if (field == 'RD')  field2 = "ODDISC";
+                                                if (field == 'LD')  field2 = "OSDISC";
+                                                if (field == 'RC') field2 = "ODCUP";
+                                                if (field == 'LC') field2 = "OSCUP";
+                                                if (field == 'RMAC') field2 = "ODMACULA";
+                                                if (field == 'LMAC') field2 = "OSMACULA";
+                                                if (field == 'RV') field2 = "ODVESSELS";
+                                                if (field == 'LV') field2 = "OSVESSELS";
+                                                if (field == 'RP') field2 = "ODPERIPH";
+                                                if (field == 'LP') field2 = "OSPERIPH";
+                                            
+                                                if (field == 'BD') {
+                                                    field = "ODDISC";
+                                                    (appendix == ".a") ? ($('#'+field).val($('#'+field).val() +', '+text)) : $('#'+field).val(text);
+                                                    field = "OSDISC";
+                                                    (appendix == ".a") ? ($('#'+field).val($('#'+field).val() +', '+text)) : $('#'+field).val(text);
+                                                    $('#ORDISC').css("background-color","#F0F8FF");
+                                                    $('#OSDISC').css("background-color","#F0F8FF");
+                                                } else if ((field == 'BC')||(field=='C')) {
+                                                    field = "ODCUP";
+                                                    (appendix == ".a") ? ($('#'+field).val($('#'+field).val() +', '+text)) : $('#'+field).val(text);
+                                                    field = "OSCUP";
+                                                    (appendix == ".a") ? ($('#'+field).val($('#'+field).val() +', '+text)) : $('#'+field).val(text);
+                                                    $('#ODCUP').css("background-color","#F0F8FF");
+                                                    $('#OSCUP').css("background-color","#F0F8FF");
+                                                } else if ((field == 'BMAC')||(field=='MAC')) {
+                                                    field = "ODMAC";
+                                                    (appendix == ".a") ? ($('#'+field).val($('#'+field).val() +', '+text)) : $('#'+field).val(text);
+                                                    field = "OSMAC";
+                                                    (appendix == ".a") ? ($('#'+field).val($('#'+field).val() +', '+text)) : $('#'+field).val(text);
+                                                    $('#ODMAC').css("background-color","#F0F8FF");
+                                                    $('#OSMAC').css("background-color","#F0F8FF");
+                                                } else if ((field == 'BV')||(field=='V')) {
+                                                    field = "ODVESSELS";
+                                                    (appendix == ".a") ? ($('#'+field).val($('#'+field).val() +', '+text)) : $('#'+field).val(text);
+                                                    field = "OSVESSELS";
+                                                    (appendix == ".a") ? ($('#'+field).val($('#'+field).val() +', '+text)) : $('#'+field).val(text);
+                                                    $('#ODVESSELS').css("background-color","#F0F8FF");
+                                                    $('#OSVESSELS').css("background-color","#F0F8FF");
+                                                } else if ((field == 'BP')||(field=='P')) {
+                                                    field = "ODPERIPH";
+                                                    (appendix == ".a") ? ($('#'+field).val($('#'+field).val() +', '+text)) : $('#'+field).val(text);
+                                                    field = "OSPERIPH";
+                                                    (appendix == ".a") ? ($('#'+field).val($('#'+field).val() +', '+text)) : $('#'+field).val(text);
+                                                    $('#ODPERIPH').css("background-color","#F0F8FF");
+                                                    $('#OSPERIPH').css("background-color","#F0F8FF");
+                                                } else if ((field == 'BCMT')||(field=='CMT')) {
+                                                    field = "ODCMT";
+                                                    (appendix == ".a") ? ($('#'+field).val($('#'+field).val() +', '+text)) : $('#'+field).val(text);
+                                                    field = "OSCMT";
+                                                    (appendix == ".a") ? ($('#'+field).val($('#'+field).val() +', '+text)) : $('#'+field).val(text);
+                                                    $('#ODCMT').css("background-color","#F0F8FF");
+                                                    $('#OSCMT').css("background-color","#F0F8FF");
+                                                } else {
+                                                    (appendix == ".a") ? ($('#'+field2).val($('#'+field2).val() +", "+text)) : $('#'+field2).val(text);
+                                                    $('#'+field2).css("background-color","#F0F8FF");
+                                                }
+                                                }
+                                                submit_form();
+                                                $('#RETINA_keyboard').val('');
+                                            
+                                           case 'NEURO':
+                                               var zone = $("#NEURO_ACT_zone").val();
+                                               var data1 = $("#NEURO_keyboard").val();
+                                               data_seg = data1.match(/([^;]*)/g);
+                                               for (index=0; index < data_seg.length; ++index) {
+                                                   //for each segment separated by a semicolon
+                                                   if (data_seg[index] =='') continue;
+
+                                                   var data = data_seg[index].match(/(\d{1,2})\.(\d{0,2}||ortho)(.*)/);
+                                                   var field = data[1];
+                                                   var PD = data[2];
+                                                   if (PD >'') PD = PD + ' ';
+                                                   var strab = data[3].toUpperCase().replace (/I(.)/g,"$1(T)");
+                                                   $('#ACT'+field+zone).val(PD+strab);
+                                                   $('#ACT'+field+zone).css("background-color","#F0F8FF");
+                                            
+                                               }
+                                               $('#NEURO_keyboard').val('');
+                                           
+                                            
+                                            }}
                                       });
                   $("[id^='sketch_tools_']").click(function() {
                                                    var zone = this.id.match(/sketch_tools_(.*)/)[1];

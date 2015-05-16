@@ -501,27 +501,27 @@ function display_PRIOR_section ($zone,$orig_id,$id_to_show,$pid,$report = '0') {
                                                 </tr>
                                                 <tr>
                                                     <td><textarea disabled name="ODDISC" id="ODDISC" class="right"><?php echo text($ODDISC); ?></textarea></td>
-                                                    <td style="text-align:center;font-size:0.9em;"><?php echo xlt('Disc'); ?></td>
+                                                    <td style="text-align:center;font-size:0.9em;"><?php echo xlt('<u>D</u>isc'); ?></td>
                                                     <td><textarea disabled name="OSDISC" id="OSDISC" class=""><?php echo text($OSDISC); ?></textarea></td>
                                                 </tr> 
                                                 <tr>
                                                     <td><textarea disabled name="ODCUP" id="ODCUP" class="right"><?php echo text($ODCUP); ?></textarea></td>
-                                                    <td style="text-align:center;font-size:0.9em;"><?php echo xlt('Cup'); ?></td>
+                                                    <td style="text-align:center;font-size:0.9em;"><?php echo xla('<u>C</u>up</u>'); ?></td>
                                                     <td><textarea disabled name="OSCUP" id="OSCUP" class=""><?php echo text($OSCUP); ?></textarea></td>
                                                 </tr> 
                                                 <tr>
                                                     <td><textarea disabled name="ODMACULA" id="ODMACULA" class="right"><?php echo text($ODMACULA); ?></textarea></td>
-                                                    <td style="text-align:center;font-size:0.9em;"><?php echo xlt('Macula'); ?></td>
+                                                    <td style="text-align:center;font-size:0.9em;"><?php echo xlt('<u>M</u>acula'); ?></td>
                                                     <td><textarea disabled name="OSMACULA" id="OSMACULA" class=""><?php echo text($OSMACULA); ?></textarea></td>
                                                 </tr>
                                                 <tr>
                                                     <td><textarea disabled name="ODVESSELS" id="ODVESSELS" class="right"><?php echo text($ODVESSELS); ?></textarea></td>
-                                                    <td style="text-align:center;font-size:0.9em;" class=""><?php echo xlt('Vessels'); ?></td>
+                                                    <td style="text-align:center;font-size:0.9em;" class=""><?php echo xlt('<u>V</u>essels'); ?></td>
                                                     <td><textarea disabled name="OSVESSELS" id="OSVESSELS" class=""><?php echo text($OSVESSELS); ?></textarea></td>
                                                 </tr>
                                                 <tr>
                                                     <td><textarea disabled name="ODPERIPH" id="ODPERIPH" class="right"><?php echo text($ODPERIPH); ?></textarea></td>
-                                                    <td style="text-align:center;font-size:0.9em;" class=""><?php echo xlt('Periph'); ?></td>
+                                                    <td style="text-align:center;font-size:0.9em;" class=""><?php echo xlt('<u>P</u>eriph'); ?></td>
                                                     <td><textarea disabled name="OSPERIPH" id="OSPERIPH" class=""><?php echo text($OSPERIPH); ?></textarea></td>
                                                 </tr>
                                         </table>
@@ -1748,7 +1748,20 @@ function copy_forward($zone,$copy_from,$copy_to,$pid) {
         $result['LLF']=$objQuery['LLF'];
         $result['RVFISSURE']=$objQuery['RVFISSURE'];
         $result['LVFISSURE']=$objQuery['LVFISSURE'];
-        $result['ODHERTEL']=$objQuery['ODHERTEL'];
+        $result['RCAROTID']=$objQuery['RCAROTID'];
+        $result['LCAROTID']=$objQuery['LCAROTID'];
+        $result['RTEMPART']=$objQuery['RTEMPART'];
+        $result['LTEMPART']=$objQuery['LTEMPART'];
+        $result['RCNV']=$objQuery['RCNV'];
+        $result['LCNV']=$objQuery['LCNV'];
+        $result['RCNVII']=$objQuery['RCNVII'];
+        $result['LCNVII']=$objQuery['LCNVII'];
+        $result['ODSCHIRMER1']=$objQuery['ODSCHIRMER1'];
+        $result['OSSCHIRMER1']=$objQuery['OSSCHIRMER1'];
+        $result['ODSCHIRMER2']=$objQuery['ODSCHIRMER2'];
+        $result['OSSCHIRMER2']=$objQuery['OSSCHIRMER2'];
+        $result['ODTBUT']=$objQuery['ODTBUT'];
+        $result['OSTBUT']=$objQuery['OSTBUT'];
         $result['OSHERTEL']=$objQuery['OSHERTEL'];
         $result['HERTELBASE']=$objQuery['HERTELBASE'];
         $result['ODPIC']=$objQuery['ODPIC'];
@@ -1771,6 +1784,12 @@ function copy_forward($zone,$copy_from,$copy_to,$pid) {
         $result['OSKTHICKNESS']=$objQuery['OSKTHICKNESS'];
         $result['ODGONIO']=$objQuery['ODGONIO'];
         $result['OSGONIO']=$objQuery['OSGONIO'];
+        $result['ODSHRIMER1']=$objQuery['ODSHIRMER1'];
+        $result['OSSHRIMER1']=$objQuery['OSSHIRMER1'];
+        $result['ODSHRIMER2']=$objQuery['ODSHIRMER2'];
+        $result['OSSHRIMER2']=$objQuery['OSSHIRMER2'];
+        $result['ODTBUT']=$objQuery['ODTBUT'];
+        $result['OSTBUT']=$objQuery['OSTBUT'];
         $result['ANTSEG_COMMENTS']=$objQuery['ANTSEG_COMMENTS'];
         $result["json"] = json_encode($result);
         echo json_encode($result); 

@@ -1605,27 +1605,32 @@ if ($refresh and $refresh != 'fullscreen') {
                                   </tr>
                                   <tr>
                                       <td><textarea name="RBROW" id="RBROW" class="right "><?php echo text($RBROW); ?></textarea></td>
-                                      <td style="text-align:center;font-size:0.9em;"><?php echo xlt('Brow'); ?></td>
+                                      <td><div class="ident"><?php echo xlt('Brow'); ?></div>
+                                          <div class="kb kb_left">rb</div><div class="kb kb_right">lb</div></td>
                                       <td><textarea name="LBROW" id="LBROW" class=""><?php echo text($LBROW); ?></textarea></td>
                                   </tr> 
                                   <tr>
                                       <td><textarea name="RUL" id="RUL" class="right"><?php echo text($RUL); ?></textarea></td>
-                                      <td style="text-align:center;font-size:0.9em;"><?php echo xlt('Upper Lids'); ?></td>
+                                      <td><div class="ident"><?php echo xlt('Upper Lids'); ?></div>
+                                            <div class="kb kb_left">rul</div><div class="kb kb_right">lul</div></td>
                                       <td><textarea name="LUL" id="LUL" class=""><?php echo text($LUL); ?></textarea></td>
                                   </tr> 
                                   <tr>
                                       <td><textarea name="RLL" id="RLL" class="right"><?php echo text($RLL); ?></textarea></td>
-                                      <td style="text-align:center;font-size:0.9em;"><?php echo xlt('Lower Lids'); ?></td>
+                                      <td><div class="ident"><?php echo xlt('Lower Lids'); ?></div>
+                                            <div class="kb kb_left">rll</div><div class="kb kb_right">lll</div></td>
                                       <td><textarea name="LLL" id="LLL" class=""><?php echo text($LLL); ?></textarea></td>
                                   </tr>
                                   <tr>
                                       <td><textarea name="RMCT" id="RMCT" class="right"><?php echo text($RMCT); ?></textarea></td>
-                                      <td style="text-align:center;font-size:0.9em;"><?php echo xlt('Medial Canthi'); ?></td>
+                                      <td><div class="ident"><?php echo xlt('Medial Canthi'); ?></div>
+                                            <div class="kb kb_left">rmc</div><div class="kb kb_right">lmc</div></td>
                                       <td><textarea name="LMCT" id="LMCT" class=""><?php echo text($LMCT); ?></textarea></td>
                                   </tr>
                                    <tr>
                                       <td><textarea name="RADNEXA" id="RADNEXA" class="right"><?php echo text($RADNEXA); ?></textarea></td>
-                                      <td style="text-align:center;font-size:0.9em;"><?php echo xlt('Adnexa'); ?></td>
+                                      <td><div class="ident"><?php echo xlt('Adnexa'); ?></div>
+                                            <div class="kb kb_left">rad</div><div class="kb kb_right">lad</div></td>
                                       <td><textarea name="LADNEXA" id="LADNEXA" class=""><?php echo text($LADNEXA); ?></textarea></td>
                                   </tr>
                               </table>
@@ -1697,10 +1702,17 @@ if ($refresh and $refresh != 'fullscreen') {
                                                <div id="EXT_QP_block2" name="EXT_QP_block2" class="QP_block_outer  borderShadow text_clinical" >
                                                   <?
                                           }
-                                          if ($number_rows==30) break;
+                                          if ($number_rows==23) break;
                                       }
                                           ?>   
-                                  </div>                
+                                  </div>      
+                                  <div class="QP_block_outer borderShadow " style="z-index:1;text-align:center;border:1pt solid black;padding:4 10 4 10;font-weight:600;">
+                            <span onclick="$('.kb').toggleClass('nodisplay');" class="ke underline">Keyboard Entry</span>&nbsp;<a onclick="goto_url('<?php echo $GLOBALS['webroot']; ?>/interface/forms/eye_mag/help.php?zone=ext');"><i class="fa fa-info-circle fa-1"></i></a><br />
+                            <textarea id="EXT_keyboard" name="EXT_keyboard" style="color:#0C0C0C;size:0.8em;height: 0.48in;" tabindex='1000'></textarea>
+                            <span style="font-size:0.9em;font-weight:400;color:#0C0C0C;">Type: location.text; ENTER<br />
+                            eg. right lower lid stye laterally:<br /> <b>RLL.stye lat;</b>
+                            </span>
+                          </div>            
                       </div>
                   </div>
               </div>
@@ -1775,28 +1787,34 @@ if ($refresh and $refresh != 'fullscreen') {
                                           <th><?php echo xlt('OD'); ?></th><td style="width:100px;"></td><th><?php echo xlt('OS'); ?></th></td>
                                       </tr>
                                       <tr>
-                                          <td><textarea name="ODCONJ" id="ODCONJ" class=" right"><?php echo text($ODCONJ); ?></textarea></td>
-                                          <td style="text-align:center;font-size:0.9em;"><?php echo xlt('Conj'); ?> / <?php echo xlt('Sclera'); ?></td>
+                                          <td>
+                                            <textarea name="ODCONJ" id="ODCONJ" class=" right"><?php echo text($ODCONJ); ?></textarea></td>
+                                          <td><div class="ident"><?php echo xlt('Conj'); ?> / <?php echo xlt('Sclera'); ?></div>
+                                            <div class="kb kb_left">rc</div><div class="kb kb_right">lc</div></td>
                                           <td><textarea name="OSCONJ" id="OSCONJ" class=""><?php echo text($OSCONJ); ?></textarea></td>
                                       </tr> 
                                       <tr>
                                           <td><textarea name="ODCORNEA" id="ODCORNEA" class=" right"><?php echo text($ODCORNEA); ?></textarea></td>
-                                          <td style="text-align:center;font-size:0.9em;"><?php echo xlt('Cornea'); ?></td>
+                                          <td><div class="ident"><?php echo xlt('Cornea'); ?></div>
+                                            <div class="kb kb_left">rk</div><div class="kb kb_right">lk</div></td></td>
                                           <td><textarea name="OSCORNEA" id="OSCORNEA" class=""><?php echo text($OSCORNEA); ?></textarea></td>
                                       </tr> 
                                       <tr>
                                           <td><textarea name="ODAC" id="ODAC" class=" right"><?php echo text($ODAC); ?></textarea></td>
-                                          <td style="text-align:center;font-size:0.9em;"><?php echo xlt('A/C'); ?></td>
+                                          <td><div class="ident"><?php echo xlt('A/C'); ?></div>
+                                            <div class="kb kb_left">rac</div><div class="kb kb_right">lac</div></td></td>
                                           <td><textarea name="OSAC" id="OSAC" class=""><?php echo text($OSAC); ?></textarea></td>
                                       </tr>
                                       <tr>
                                           <td><textarea name="ODLENS" id="ODLENS" class=" right"><?php echo text($ODLENS); ?></textarea></td>
-                                          <td style="text-align:center;font-size:0.9em;font-size:0.9em;" class="dropShadow"><?php echo xlt('Lens'); ?></td>
+                                          <td><div class="ident dropShadow"><?php echo xlt('Lens'); ?></div>
+                                            <div class="kb kb_left">rl</div><div class="kb kb_right">ll</div></td></td>
                                           <td><textarea name="OSLENS" id="OSLENS" class=""><?php echo text($OSLENS); ?></textarea></td>
                                       </tr>
                                       <tr>
                                           <td><textarea name="ODIRIS" id="ODIRIS" class="right"><?php echo text($ODIRIS); ?></textarea></td>
-                                          <td style="text-align:center;"><?php echo xlt('Iris'); ?></td>
+                                          <td><div class="ident"><?php echo xlt('Iris'); ?></div>
+                                            <div class="kb kb_left">ri</div><div class="kb kb_right">li</div></td></td>
                                           <td><textarea name="OSIRIS" id="OSIRIS" class=""><?php echo text($OSIRIS); ?></textarea></td>
                                       </tr>
                                   </table>
@@ -1858,9 +1876,16 @@ if ($refresh and $refresh != 'fullscreen') {
                                   <?php if ($number_rows==15) {  ?>
                                       </div>
                                       <div class="QP_block_outer  borderShadow text_clinical" ><?php  
-                                      }  if ($number_rows == 30) break;
+                                      }  if ($number_rows == 23) break;
                                   } 
                                       ?>      
+                          </div>  
+                          <div class="QP_block_outer borderShadow " style="z-index:1;text-align:center;border:1pt solid black;padding:4 10 4 10;font-weight:600;">
+                            <span onclick="$('.kb').toggleClass('nodisplay');" class="ke underline">Keyboard Entry</span>&nbsp;<a onclick="goto_url('<?php echo $GLOBALS['webroot']; ?>/interface/forms/eye_mag/help.php?zone=antseg');"><i class="fa fa-info-circle fa-1"></i></a><br />
+                            <textarea id="ANTSEG_keyboard" name="ANTSEG_keyboard" style="color:#0C0C0C;size:0.8em;height: 0.48in;" tabindex='1000'></textarea>
+                            <span style="font-size:0.9em;font-weight:400;color:#0C0C0C;">Type: location.text; ENTER<br />
+                            eg. OU cornea +2 kruckenberg spindle:<br /> <b>k.+2 ks;</b>
+                            </span>
                           </div>  
                       </div>
                   </div>
@@ -1916,7 +1941,7 @@ if ($refresh and $refresh != 'fullscreen') {
                                           <input name="ODCMT" size="4" id="ODCMT" value="<?php echo attr($ODCMT); ?>">
                                       </td>
                                       <td>
-                                          <input name="OSCMT" size="4" id="ODCMT" value="<?php echo attr($OSCMT); ?>">
+                                          <input name="OSCMT" size="4" id="OSCMT" value="<?php echo attr($OSCMT); ?>">
                                       </td>
                                   </tr>
                               </table>
@@ -1940,27 +1965,32 @@ if ($refresh and $refresh != 'fullscreen') {
                                           </tr>
                                           <tr>
                                               <td><textarea name="ODDISC" id="ODDISC" class="right"><?php echo text($ODDISC); ?></textarea></td>
-                                              <td style="text-align:center;font-size:0.9em;"><?php echo xlt('Disc'); ?></td>
+                                              <td><div class="ident"><?php echo xlt('Disc'); ?></div>
+                                            <div class="kb kb_left">rd</div><div class="kb kb_right">ld</div></td>
                                               <td><textarea name="OSDISC" id="OSDISC" class=""><?php echo text($OSDISC); ?></textarea></td>
                                           </tr> 
                                           <tr>
                                               <td><textarea name="ODCUP" id="ODCUP" class="right"><?php echo text($ODCUP); ?></textarea></td>
-                                              <td style="text-align:center;font-size:0.9em;"><?php echo xlt('Cup'); ?></td>
+                                              <td><div class="ident"><?php echo xlt('Cup'); ?></div>
+                                            <div class="kb kb_left">rc</div><div class="kb kb_right">lc</div></td>
                                               <td><textarea name="OSCUP" id="OSCUP" class=""><?php echo text($OSCUP); ?></textarea></td>
                                           </tr> 
                                           <tr>
                                               <td><textarea name="ODMACULA" id="ODMACULA" class="right"><?php echo text($ODMACULA); ?></textarea></td>
-                                              <td style="text-align:center;font-size:0.9em;"><?php echo xlt('Macula'); ?></td>
+                                              <td><div class="ident"><?php echo xlt('Macula'); ?></div>
+                                            <div class="kb kb_left">rmac</div><div class="kb kb_right">lmac</div></td>
                                               <td><textarea name="OSMACULA" id="OSMACULA" class=""><?php echo text($OSMACULA); ?></textarea></td>
                                           </tr>
                                           <tr>
                                               <td><textarea name="ODVESSELS" id="ODVESSELS" class="right"><?php echo text($ODVESSELS); ?></textarea></td>
-                                              <td style="text-align:center;font-size:0.9em;" class=""><?php echo xlt('Vessels'); ?></td>
+                                              <td><div class="ident"><?php echo xlt('Vessels'); ?></div>
+                                            <div class="kb kb_left">rv</div><div class="kb kb_right">lv</div></td>
                                               <td><textarea name="OSVESSELS" id="OSVESSELS" class=""><?php echo text($OSVESSELS); ?></textarea></td>
                                           </tr>
                                           <tr>
                                               <td><textarea name="ODPERIPH" id="ODPERIPH" class="right"><?php echo text($ODPERIPH); ?></textarea></td>
-                                              <td style="text-align:center;font-size:0.9em;" class=""><?php echo xlt('Periph'); ?></td>
+                                              <td><div class="ident"><?php echo xlt('Periph'); ?></div>
+                                            <div class="kb kb_left">rp</div><div class="kb kb_right">lp</div></td>
                                               <td><textarea name="OSPERIPH" id="OSPERIPH" class=""><?php echo text($OSPERIPH); ?></textarea></td>
                                           </tr>
                                   </table>
@@ -1981,6 +2011,7 @@ if ($refresh and $refresh != 'fullscreen') {
                       <?php display_draw_section ("RETINA",$encounter,$pid); ?>
                       <div id="QP_RETINA" name="QP_RETINA" class="QP_class" style="text-align:left;height: 2.5in;">
                           <input type="hidden" id="RETINA_prefix" name="RETINA_prefix" value="" />
+
                           <div style="position:relative;top:0.0in;left:0.00in;margin: auto;">
                                <span  class="eye_button  eye_button_selected" id="RETINA_prefix_off" name="RETINA_prefix_off"  onclick="$('#RETINA_prefix').val('').trigger('change');"><?php echo xlt('Off'); ?></span> 
                                <span  class="eye_button" id="RETINA_defaults" name="RETINA_defaults"><?php echo xlt('Defaults'); ?></span>  
@@ -2030,12 +2061,20 @@ if ($refresh and $refresh != 'fullscreen') {
                                   </div>
                                   <div class="QP_block_outer  borderShadow text_clinical" ><?php 
                               }
-                              if ($number_rows == 30) break;
+                              if ($number_rows == 23) break;
 
                               } ?>     
-                                   <br /><br />
-                          </div>    
+                                   <br />
+                          </div>
+                          <div class="QP_block_outer borderShadow " style="z-index:1;text-align:center;border:1pt solid black;padding:4 10 4 10;font-weight:600;">
+                            <span onclick="$('.kb').toggleClass('nodisplay');" class="ke underline">Keyboard Entry</span>&nbsp;<a onclick="goto_url('<?php echo $GLOBALS['webroot']; ?>/interface/forms/eye_mag/help.php?zone=retina');"><i class="fa fa-info-circle fa-1"></i></a><br />
+                            <textarea id="RETINA_keyboard" name="RETINA_keyboard" style="color:#0C0C0C;size:0.8em;height: 0.48in;" tabindex='1000'></textarea>
+                            <span style="font-size:0.9em;font-weight:400;color:#0C0C0C;">Type: location.text; ENTER<br />
+                            eg. OD C/D 0.5 with inferior notch:<br /> <b>RC.0.5 w/ inf notch;</b>
+                            </span>
+                          </div>  
                       </div>
+
                   </div>
               </div>
               <!-- end Retina -->
@@ -2748,12 +2787,12 @@ if ($refresh and $refresh != 'fullscreen') {
                           <br />
                         </div>  
                        
-                         <div class="borderShadow" style="width:190px;text-align:center;border:1pt solid black;padding:4 10 4 10;margin:4;font-weight:600;"><span class="underline">Keyboard Entry</span><br />
-                          <textarea id="ACT_manual" name="ACT_manual" onfocus="this.value='';" style="color:#0C0C0C;size=0.9em;"></textarea>
+                         <div class="borderShadow" style="width:190px;text-align:center;border:1pt solid black;padding:4 10 4 10;margin:4;font-weight:600;"><span onclick="$('.kb').toggleClass('nodisplay');" class="ke underline">Keyboard Entry</span><br />
+                          <textarea id="NEURO_keyboard" name="NEURO_keyboard" style="color:#0C0C0C;size:0.9em;" tabindex='1002'></textarea>
                           <span style="font-size:0.9em;font-weight:400;color:#0C0C0C;">Type: fieldnumber.PD deviation ENTER<br />
-                            egs. 10PD X(T) in Primary postion: 5.10ix
-                            <br />B VIs:
-                            5.1ie;4.10et;6.10et;</span>
+                            eg. 10 X(T) in Primary postion: <b>5.10ix</b>
+                            <br />Bilateral VIs:
+                            <b>5.Ortho;4.10et;6.10et;</b></span>
                         </div>
                  
                           
