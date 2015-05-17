@@ -1503,29 +1503,29 @@
                                                   <td class="report_text title" style="text-align:left;text-decoration:underline;"><?php echo xlt('Left'); ?></td>
                                                 </tr>
                                                 <tr>
-                                                  <td class="report_text right"><?php echo text($RBROW); ?></td>
-                                                  <td class="middle"><?php echo xlt('Brow'); ?></td>
-                                                  <td class="report_text"><?php echo text($LBROW); ?></td>
+                                                  <td class="report_text right"><?php echo text($ODCONJ); ?></td>
+                                                  <td class="middle"><?php echo xlt('Conj'); ?></td>
+                                                  <td class="report_text"><?php echo text($OSCONJ); ?></td>
                                                 </tr> 
                                                 <tr>
-                                                  <td class="report_text right "><?php echo text($RUL); ?></td>
-                                                  <td  class="middle"><?php echo xlt('Upper Lids'); ?></td>
-                                                  <td class="report_text"><?php echo text($LUL); ?></td>
+                                                  <td class="report_text right "><?php echo text($ODCORNEA); ?></td>
+                                                  <td  class="middle"><?php echo xlt('Cornea'); ?></td>
+                                                  <td class="report_text"><?php echo text($OSCORNEA); ?></td>
                                                 </tr> 
                                                 <tr>
-                                                  <td class="report_text right "><?php echo text($RLL); ?></td>
-                                                  <td class="middle"><?php echo xlt('Lower Lids'); ?></td>
-                                                  <td class="report_text"><?php echo text($LLL); ?></td>
+                                                  <td class="report_text right "><?php echo text($ODAC); ?></td>
+                                                  <td class="middle"><?php echo xlt('A/C'); ?></td>
+                                                  <td class="report_text"><?php echo text($OSAC); ?></td>
                                                 </tr>
                                                 <tr>
-                                                  <td class="report_text right "><?php echo text($RMCT); ?></td>
-                                                  <td class="middle"><?php echo xlt('Medial Canthi'); ?></td>
-                                                  <td class="report_text"><?php echo text($LMCT); ?></td>
+                                                  <td class="report_text right "><?php echo text($ODLENS); ?></td>
+                                                  <td class="middle"><?php echo xlt('Lens'); ?></td>
+                                                  <td class="report_text"><?php echo text($OSLENS); ?></td>
                                                 </tr>
                                                 <tr>
-                                                  <td class="report_text right"><?php echo text($RADNEXA); ?></td>
-                                                  <td class="middle"><?php echo xlt('Adnexa'); ?></td>
-                                                  <td class="report_text"><?php echo text($LADNEXA); ?></td>
+                                                  <td class="report_text right"><?php echo text($ODIRIS); ?></td>
+                                                  <td class="middle"><?php echo xlt('Iris'); ?></td>
+                                                  <td class="report_text"><?php echo text($OSIRIS); ?></td>
                                                 </tr>
                                                 </tr>
                                             </table>
@@ -1541,56 +1541,31 @@
                                                 </tr>
                                                 
                                                 <tr>
-                                                  <td class="report_text right" style="width:100px;"><?php echo $RLF; ?></td>
-                                                  <td class="middle"><?php echo xlt('Levator Function'); ?></td>
-                                                  <td class="report_text" style="width:100px;"><?php echo text($LLF); ?></td>
+                                                  <td class="report_text right" style="width:100px;"><?php echo $ODGONIO; ?></td>
+                                                  <td class="middle"><?php echo xlt('Gonioscopy'); ?></td>
+                                                  <td class="report_text" style="width:100px;"><?php echo text($OSGONIO); ?></td>
                                                 </tr> 
                                                 
                                                 <tr>
-                                                  <td class="report_text right"><?php echo text($RMRD); ?></td>
-                                                  <td class="middle" title="<?php echo xla('Marginal Reflex Distance'); ?>"><?php echo xlt('MRD'); ?></td>
-                                                  <td  class="report_text"><?php echo text($LMRD); ?></td>
+                                                  <td class="report_text right"><?php echo text($ODKTHICKNESS); ?></td>
+                                                  <td class="middle" title="<?php echo xla('Pachymetry'); ?>"><?php echo xlt('Pachymetry'); ?></td>
+                                                  <td  class="report_text"><?php echo text($OSKTHICKNESS); ?></td>
                                                 </tr>
                                                 <tr>
-                                                  <td class="report_text right"><?php echo attr($RVFISSURE); ?></td>
-                                                  <td class="middle" title="<?php echo xla('Vertical Fissure: central height between lid margins'); ?>"><?php echo xlt('Vert Fissure'); ?></td>
-                                                  <td class="report_text"><?php echo attr($LVFISSURE); ?></td>
+                                                  <td class="report_text right"><?php echo attr($ODSCHIRMER1); ?></td>
+                                                  <td class="middle" title="<?php echo xla('Schirmers I'); ?>"><?php echo xlt('Schirmers I'); ?></td>
+                                                  <td class="report_text"><?php echo attr($OSSCHIRMER1); ?></td>
                                                 </tr>
                                                 <tr>
-                                                  <td class="report_text right"><?php echo attr($RCAROTID); ?></td>
-                                                  <td class="middle" title="<?php echo xla('Any carotid bruits appreciated?'); ?>"><?php echo xlt('Carotid'); ?></td>
-                                                  <td class="report_text"><?php echo attr($LCAROTID); ?></td>
+                                                  <td class="report_text right"><?php echo attr($ODSCHIRMER2); ?></td>
+                                                  <td class="middle" title="<?php echo xla('Schirmers II'); ?>"><?php echo xlt('Schirmers II'); ?></td>
+                                                  <td class="report_text"><?php echo attr($OSSCHIRMER2); ?></td>
                                                 </tr>
                                                 <tr>
-                                                  <td class="report_text right"><?php echo attr($RTEMPART); ?></td>
-                                                  <td class="middle" title="<?php echo xla('Temporal Arteries'); ?>"><?php echo xlt('Temp. Art.'); ?></td>
-                                                  <td class="report_text"><?php echo attr($LTEMPART); ?></td>
+                                                  <td class="report_text right"><?php echo attr($ODTBUT); ?></td>
+                                                  <td class="middle" title="<?php echo xla('Tear Break Up Time'); ?>"><?php echo xlt('TBUT'); ?></td>
+                                                  <td class="report_text"><?php echo attr($OSTBUT); ?></td>
                                                 </tr>
-                                                <tr>
-                                                  <td class="report_text right"><?php echo attr($RCNV); ?></td>
-                                                  <td class="middle" title="<?php echo xla('Cranial Nerve 5: Trigeminal Nerve'); ?>"><?php echo xlt('CN V'); ?></td>
-                                                  <td class="report_text"><?php echo attr($LCNV); ?></td>
-                                                </tr>
-                                                <tr>
-                                                  <td class="report_text right"><?php echo text($RCNVII); ?></td>
-                                                  <td class="middle" title="<?php echo xla('Cranial Nerve 7: Facial Nerve'); ?>"><?php echo xlt('CN VII'); ?></td>
-                                                  <td class="report_text"><?php echo attr($LCNVII); ?></td>
-                                                </tr>
-                                            
-                                                <tr>
-                                                    <td colspan="3" style="padding-top:0.02in;text-align:center;"><br />
-                                                        <span style="text-decoration:underline;"><?php echo xlt('Hertel Exophthalmometry'); ?>
-                                                        </span>
-                                                        <br />
-                                                        <? if ($HERTELBASE) { ?>
-                                                  
-                                                    <?php echo attr($ODHERTEL); ?> <i class="fa fa-minus"></i> <?php echo attr($HERTELBASE); ?>
-                                                    <i class="fa fa-minus"></i> <?php echo attr($OSHERTEL); ?>
-                                                    <br />
-                                                <? } ?>
-                                                  </td>
-                                                </tr>
-                                            
                                             </table>
                                         </td>
                                     </tr>

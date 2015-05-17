@@ -630,34 +630,34 @@ $(document).ready(function() {
                                                         $("#EXT_defaults").trigger("click");
                                                         continue;
                                                     }
-                                                    
+                                                    data_seg[index] = data_seg[index].replace(/^[\s]*/,'');
                                                     var data = data_seg[index].match(/^(\w*)\.(.*)/);
                                                     var appendix =".a";
                                                     (data[2].match(/\.a$/))?(data[2] = data[2].replace(/\.a$/,'')):(appendix = "nope");
                                                     var field = data[1].toUpperCase();
                                                     var field2 ='';
                                                     var text = data[2];
-                                                    text = text.replace(/(\s*)inf(\s*)/g,"$1inferior$2")
-                                                        .replace(/(\s*)sup(\s*)/g,"$1superior$2")
-                                                        .replace(/(\s*)nas /g,"$1nasal$2")
-                                                        .replace(/(\s*)temp /g,"$1temporal$2")
-                                                        .replace(/(\s*)med(\s*)/g,"$1medial$2")
-                                                        .replace(/(\s*)lat(\s*)/g,"$1lateral$2")
-                                                        .replace(/(\s*)dermato(\s*)/g,"$1dermatochalasis$2")
-                                                        .replace(/w\/ /g,"$1with$2")
-                                                        .replace(/(\s*)lac(\s+)/g,"$1laceration$2")
-                                                        .replace(/(\s*)lacr(\s*)/g,'$1lacrimal$2')
-                                                        .replace(/(\s*)dcr(\s*)/ig,"$1DCR$2")
-                                                        .replace(/(\s*)bcc(\s*)/ig,"$1BCC$2")
-                                                        .replace(/(\s*)scc(\s*)/ig,"$1SCC$2")
-                                                        .replace(/(\s*)sebc(\s*)/ig,"$1sebaceous cell carcinoma$2")
-                                                        .replace(/(\s*)fh(\s*)/ig,"$1forehead$2")
-                                                        .replace(/(\s*)glab(\s*)/ig,"$1glabellar$2")
-                                                        .replace(/(\s*)cic(\s*)/ig,"$1cicatricial$2")
-                                                        .replace(/(\s*)entrop(\s*)/i,"$1entropion$2")
-                                                        .replace(/(\s*)ectrop(\s*)/i,"$1ectropion$2")
-                                                        .replace(/(\s*)ect(\s*)/,"$1ectropion$2")
-                                                        .replace(/(\s*)ent(\s*)/i,"$1entropion$2");
+                                                    text = text.replace(/\binf\b/g,"inferior")
+                                                        .replace(/\bsup\b/g,"superior")
+                                                        .replace(/\bnas /g,"nasal")
+                                                        .replace(/\btemp /g,"temporal")
+                                                        .replace(/\bmed\b/g,"medial")
+                                                        .replace(/\blat\b/g,"lateral")
+                                                        .replace(/\bdermato\b/g,"dermatochalasis")
+                                                        .replace(/w\/ /g,"with")
+                                                        .replace(/\blac(\s+)/g,"laceration")
+                                                        .replace(/\blacr\b/g,'lacrimal')
+                                                        .replace(/\bdcr\b/ig,"DCR")
+                                                        .replace(/\bbcc\b/ig,"BCC")
+                                                        .replace(/\bscc\b/ig,"SCC")
+                                                        .replace(/\bsebc\b/ig,"sebaceous cell carcinoma")
+                                                        .replace(/\bfh\b/ig,"forehead")
+                                                        .replace(/\bglab\b/ig,"glabellar")
+                                                        .replace(/\bcic\b/ig,"cicatricial")
+                                                        .replace(/\bentrop\b/i,"entropion")
+                                                        .replace(/\bectrop\b/i,"ectropion")
+                                                        .replace(/\bect\b/,"ectropion")
+                                                        .replace(/\bent\b/i,"entropion");
                                                     if (field == 'RB')  field2 = "RBROW";
                                                     if (field == 'LB')  field2 = "LBROW";
                                                     if (field == 'RUL') field2 = "RUL";
@@ -685,7 +685,15 @@ $(document).ready(function() {
                                                     if (field == 'RCNV') field2 = "RCNV";
                                                     if (field == 'LCNV') field2 = "LCNV";
                                                     if (field == 'RCNVII') field2 = "RCNVII";
-                                                    if (field == 'LCNVII') field2 = "LCNVII";
+                                            if (field == 'LCNVII') field2 = "LCNVII";
+                                            
+                                            if (field == 'RH') field2 = "ODHERTEL";
+                                            if (field == 'LH') field2 = "OLHERTEL";
+                                            if (field == 'LHERT') field2 = "HERTELBASE";
+                                            if (field == 'HERT') {
+                                            $('#ODHERTEL').val(text.match(/(\d{2})-(\d{1,3})-(\d{2})/)[1]).css("background-color","#F0F8FF");
+                                            $('#OSHERTEL').val(text.match(/(\d{2})-(\d{1,3})-(\d{2})/)[3]).css("background-color","#F0F8FF");
+                                            $('#HERTELBASE').val(text.match(/(\d{2})-(\d{1,3})-(\d{2})/)[2]).css("background-color","#F0F8FF");                                            }
                                                     if ((field == 'BLF')||(field == 'LF')) {
                                                         field = "RLF";
                                                         (appendix == ".a") ? ($('#'+field).val($('#'+field).val() +', '+text)) : $('#'+field).val(text);
@@ -728,7 +736,7 @@ $(document).ready(function() {
                                                         (appendix == ".a") ? ($('#'+field).val($('#'+field).val() +', '+text)) : $('#'+field).val(text);
                                                         $('#RCNV').css("background-color","#F0F8FF");
                                                         $('#LCNV').css("background-color","#F0F8FF");
-                                                    if ((field == 'BCNVII') || (field == 'BCNVII')||(field=='CNVII')||(field=='CN7')) {
+                                                    } else if ((field == 'BCNVII') || (field == 'BCNVII')||(field == 'CNVII')||(field == 'CN7')) {
                                                         field = "RCNV";
                                                         (appendix == ".a") ? ($('#'+field).val($('#'+field).val() +', '+text)) : $('#'+field).val(text);
                                                         field = "LCNV";
@@ -773,11 +781,11 @@ $(document).ready(function() {
                                                         (appendix == ".a") ? ($('#'+field2).val($('#'+field2).val() +", "+text)) : $('#'+field2).val(text);
                                                         $('#'+field2).css("background-color","#F0F8FF");
                                                     }
-                                                    //  alert($("#RLL").val());
                                                 }
-                                            }
+                                            
                                                 submit_form();
                                                 $('#EXT_keyboard').val('');
+                                            break;
                                             
                                             case 'ANTSEG':
                                                 var data1 = $("#ANTSEG_keyboard").val();
@@ -788,67 +796,67 @@ $(document).ready(function() {
                                                         $("#ANTSEG_defaults").trigger("click");
                                                         continue;
                                                     }
-
-                                                    var data = data_seg[index].match(/^(\w*)\.(.*)/);
+                                                    data_seg[index] = data_seg[index].replace(/^[\s]*/,'');
+                                                    var data = data_seg[index].match(/^(\W*)\.(.*)/);
                                                     var appendix =".a";
                                                     (data[2].match(/\.a$/))?(data[2] = data[2].replace(/\.a$/,'')):(appendix = "nope");
                                                     var field = data[1].toUpperCase();
                                                     var field2 ='';
                                                     var text = data[2];
-                                                    text = text.replace(/(\s*)inf(\s*)/g,"$1inferior$2")
-                                                                .replace(/(\s*)sup(\s*)/g,"$1superior$2")
-                                                                .replace(/(\s*)nas(\s*)/g,"$1nasal$2")
-                                                                .replace(/(\s*)temp(\s*)/g,"$1temporal$2")
-                                                                .replace(/(\s*)med(\s*)/g,"$1medial$2")
-                                                                .replace(/(\s*)lat(\s*)/g,"$1lateral$2")
-                                                                .replace(/(\s*)gut(\s*)/g,"$1guttatae$2")
-                                                                .replace(/w\/ /g,"$1with$2")
-                                                                .replace(/(\s*)lac(\s+)/g,"$1laceration$2")
-                                                                .replace(/(\s*)pter(\s*)/g,'$1pterygium$2')
-                                                                .replace(/(\s*)inj(\s*)/ig,"$1injection$2")
-                                                                .replace(/(\s*)fc(\s*)/ig,"$1flare/cell$2")
-                                                                .replace(/(\s*)ks(\s*)/ig,"$1kruckenberg spindle$2")
-                                                                .replace(/(\s*)sebc(\s*)/ig,"$1sebaceous cell carcinoma$2")
-                                                                .replace(/(\s*)spk(\s*)/ig,"$1SPK$2")
-                                                                .replace(/(\s*)pek(\s*)/ig,"$1PEK$2")
-                                                                .replace(/(\s*)str(\s*)/ig,"$1stromal$2")
-                                                                .replace(/(\s*)endo(\s*)/ig,"$1endothelial$2")
-                                                                .replace(/(\s*)end([\W]\s*)/ig,"$1endothelial$2")
-                                                                .replace(/(\s*)rec(\s*)/ig,"$1reession$2")
-                                                                .replace(/(\s*)1 o(\s*)/ig,"$11 o'clock$2")
-                                                                .replace(/(\s*)2 o(\s*)/ig,"$12 o'clock$2")
-                                                                .replace(/(\s*)3 o(\s*)/ig,"$13 o'clock$2")
-                                                                .replace(/(\s*)4 o(\s*)/ig,"$14 o'clock$2")
-                                                                .replace(/(\s*)5 o(\s*)/ig,"$15 o'clock$2")
-                                                                .replace(/(\s*)6 o(\s*)/ig,"$16 o'clock$2")
-                                                                .replace(/(\s*)7 o(\s*)/ig,"$17 o'clock$2")
-                                                                .replace(/(\s*)8 o(\s*)/ig,"$18 o'clock$2")
-                                                                .replace(/(\s*)9 o(\s*)/ig,"$19 o'clock$2")
-                                                                .replace(/(\s*)10 o(\s*)/ig,"$110 o'clock$2")
-                                                                .replace(/(\s*)11 o(\s*)/ig,"$111 o'clock$2")
-                                                                .replace(/(\s*)12 o(\s*)/ig,"$112 o'clock$2")
-                                                                .replace(/(\s*)limb(\s*)/i,"$1limbus$2")
-                                                                .replace(/(\s*)tl(\s*)/i,"$1tear lake$2");
-                                                    if (field == 'RC')  field2 = "ODCONJ";
-                                                    if (field == 'LC')  field2 = "OSCONJ";
-                                                    if (field == 'RK') field2 = "ODCORNEA";
-                                                    if (field == 'LK') field2 = "OSCORNEA";
-                                                    if (field == 'RAC') field2 = "ODAC";
-                                                    if (field == 'LAC') field2 = "OSAC";
-                                                    if (field == 'RL') field2 = "ODLENS";
-                                                    if (field == 'LL') field2 = "OSLENS";
-                                                    if (field == 'RI') field2 = "ODIRIS";
-                                                    if (field == 'LI') field2 = "OSIRIS";
-                                                    if (field == 'RG') field2 = "OSGONIO";
-                                                    if (field == 'LG') field2 = "OSGONIO";
-                                                    if (field == 'RPACH') field2 = "OSKTHICKNESS";
-                                                    if (field == 'LPACH') field2 = "OSKTHICKNESS";
-                                                    if (field == 'RSCH1') field2 = "OSSCHIRMER1";
-                                                    if (field == 'LSCH1') field2 = "OSSCHIRMER1";
-                                                    if (field == 'RSCH2') field2 = "OSSCHIRMER2";
-                                                    if (field == 'LSCH2') field2 = "OSSCHIRMER2";
-                                                    if (field == 'RTBUT') field2 = "ODTBUT";
-                                                    if (field == 'LTBUT') field2 = "OSTBUT";
+                                                    text = text.replace(/\binf\b/g,"inferior")
+                                                        .replace(/\bsup\b/g,"superior")
+                                                        .replace(/\bnas\b/g,"nasal")
+                                                        .replace(/\btemp\b/g,"temporal")
+                                                        .replace(/\bmed\b/g,"medial")
+                                                        .replace(/\blat\b/g,"lateral")
+                                                        .replace(/\bgut\b/g,"guttata")
+                                                        .replace(/\bw\/\b/g,"with")
+                                                        .replace(/\blac\b/g,"laceration")
+                                                        .replace(/\bpter\b/g,'pterygium')
+                                                        .replace(/\bpig\b/g,'pigmented')
+                                                        .replace(/\binj\b/ig,"injection")
+                                                        .replace(/\bfc\b/ig,"flare/cell")
+                                                        .replace(/\bks\b/ig,"kruckenberg spindle")
+                                                        .replace(/\bsebc\b/ig,"sebaceous cell carcinoma")
+                                                        .replace(/\bspk\b/ig,"SPK")
+                                                        .replace(/\bpek\b/ig,"PEK")
+                                                        .replace(/\bstr\b/ig,"stromal")
+                                                        .replace(/\bendo?\b/ig,"endothelial")
+                                                        .replace(/\brec\b/ig,"recession")
+                                                        .replace(/\b1 o\b/ig,"1 o'clock")
+                                                        .replace(/\b2 o\b/ig,"2 o'clock")
+                                                        .replace(/\b3 o\b/ig,"3 o'clock")
+                                                        .replace(/\b4 o\b/ig,"4 o'clock")
+                                                        .replace(/\b5 o\b/ig,"5 o'clock")
+                                                        .replace(/\b6 o\b/ig,"6 o'clock")
+                                                        .replace(/\b7 o\b/ig,"7 o'clock")
+                                                        .replace(/\b8 o\b/ig,"8 o'clock")
+                                                        .replace(/\b9 o\b/ig,"9 o'clock")
+                                                        .replace(/\b10 o\b/ig,"10 o'clock")
+                                                        .replace(/\b11 o\b/ig,"11 o'clock")
+                                                        .replace(/\b12 o\b/ig,"12 o'clock")
+                                                        .replace(/\blimb\b/i,"limbus")
+                                                        .replace(/\btl\b/i,"tear lake");
+                                                    if (field == 'RC')      field2 = "ODCONJ";
+                                                    if (field == 'LC')      field2 = "OSCONJ";
+                                                    if (field == 'RK')      field2 = "ODCORNEA";
+                                                    if (field == 'LK')      field2 = "OSCORNEA";
+                                                    if (field == 'RAC')     field2 = "ODAC";
+                                                    if (field == 'LAC')     field2 = "OSAC";
+                                                    if (field == 'RL')      field2 = "ODLENS";
+                                                    if (field == 'LL')      field2 = "OSLENS";
+                                                    if (field == 'RI')      field2 = "ODIRIS";
+                                                    if (field == 'LI')      field2 = "OSIRIS";
+                                                    if (field == 'RG')      field2 = "OSGONIO";
+                                                    if (field == 'LG')      field2 = "OSGONIO";
+                                                    if (field == 'RPACH')   field2 = "OSKTHICKNESS";
+                                                    if (field == 'LPACH')   field2 = "OSKTHICKNESS";
+                                                    if (field == 'RSCH1')   field2 = "OSSCHIRMER1";
+                                                    if (field == 'LSCH1')   field2 = "OSSCHIRMER1";
+                                                    if (field == 'RSCH2')   field2 = "OSSCHIRMER2";
+                                                    if (field == 'LSCH2')   field2 = "OSSCHIRMER2";
+                                                    if (field == 'RTBUT')   field2 = "ODTBUT";
+                                                    if (field == 'LTBUT')   field2 = "OSTBUT";
                                                     if ((field == 'BC')||(field=='C')) {
                                                         field = "ODCONJ";
                                                         (appendix == ".a") ? ($('#'+field).val($('#'+field).val() +', '+text)) : $('#'+field).val(text);
@@ -912,137 +920,139 @@ $(document).ready(function() {
                                             }
                                             submit_form();
                                             $('#ANTSEG_keyboard').val('');
+                                            break;
                                             
-                                            
-                                           case 'RETINA':
+                                            case 'RETINA':
                                                 var data1 = $("#RETINA_keyboard").val();
                                                 var data_seg = data1.match(/([^;]*)/g);
                                                 for (index=0; index < data_seg.length; ++index) {
-                                                if (data_seg[index] =='') continue;
-                                                if ((index =='0') && (data1.match(/^D/i))) {
-                                                $("#RETINA_defaults").trigger("click");
-                                                continue;
-                                                }
-                                                
-                                                var data = data_seg[index].match(/^(\w*)\.(.*)/);
-                                                var appendix =".a";
-                                                (data[2].match(/\.a$/))?(data[2] = data[2].replace(/\.a$/,'')):(appendix = "nope");
-                                                var field = data[1].toUpperCase();
-                                                var field2 ='';
-                                                var text = data[2];
-                                                text = text.replace(/(\s*)inf(\s*)/g,"$1inferior$2")
-                                                    .replace(/(\s*)sup(\s*)/g,"$1superior$2")
-                                                    .replace(/(\s*)nas(\s*)/g,"$1nasal$2")
-                                                    .replace(/(\s*)temp(\s*)/g,"$1temporal$2")
-                                                    .replace(/(\s*)med(\s*)/g,"$1medial$2")
-                                                    .replace(/(\s*)lat(\s*)/g,"$1lateral$2")
-                                                    .replace(/(\s*)csme(\s*)/ig,"$1CSME$2")
-                                                    .replace(/w\/ /g,"$1with$2")
-                                                    .replace(/(\s*)bdr(\s+)/ig,"$1BDR$2")
-                                                    .replace(/(\s*)ppdr(\s*)/g,'$1PPDR$2')
-                                                    .replace(/(\s*)ht(\s*)/ig,"$1horsheshoe tear$2")
-                                                    .replace(/(\s*)ab(\s*)/ig,"$1air bubble$2")
-                                                    .replace(/(\s*)c3f8(\s*)/ig,"$1C3F8$2")
-                                                    .replace(/(\s*)ma(\s*)/ig,"$1macroaneurysm$2")
-                                                    .replace(/(\s*)mias(\s*)/ig,"$1microaneurysm$2")
-                                                    .replace(/(\s*)ped(\s*)/ig,"$1PED$2")
-                                                    .replace(/(\s*)1 o(\s*)/ig,"$11 o'clock$2")
-                                                    .replace(/(\s*)2 o(\s*)/ig,"$12 o'clock$2")
-                                                    .replace(/(\s*)3 o(\s*)/ig,"$13 o'clock$2")
-                                                    .replace(/(\s*)4 o(\s*)/ig,"$14 o'clock$2")
-                                                    .replace(/(\s*)5 o(\s*)/ig,"$15 o'clock$2")
-                                                    .replace(/(\s*)6 o(\s*)/ig,"$16 o'clock$2")
-                                                    .replace(/(\s*)7 o(\s*)/ig,"$17 o'clock$2")
-                                                    .replace(/(\s*)8 o(\s*)/ig,"$18 o'clock$2")
-                                                    .replace(/(\s*)9 o(\s*)/ig,"$19 o'clock$2")
-                                                    .replace(/(\s*)10 o(\s*)/ig,"$110 o'clock$2")
-                                                    .replace(/(\s*)11 o(\s*)/ig,"$111 o'clock$2")
-                                                    .replace(/(\s*)12 o(\s*)/ig,"$112 o'clock$2")
-                                                    .replace(/(\s*)mac(\s*)/i,"$1macula$2")
-                                                    .replace(/(\s*)vh(\s*)/i,"$1vitreous hemorrhage$2");
-                                                if (field == 'RD')  field2 = "ODDISC";
-                                                if (field == 'LD')  field2 = "OSDISC";
-                                                if (field == 'RC') field2 = "ODCUP";
-                                                if (field == 'LC') field2 = "OSCUP";
-                                                if (field == 'RMAC') field2 = "ODMACULA";
-                                                if (field == 'LMAC') field2 = "OSMACULA";
-                                                if (field == 'RV') field2 = "ODVESSELS";
-                                                if (field == 'LV') field2 = "OSVESSELS";
-                                                if (field == 'RP') field2 = "ODPERIPH";
-                                                if (field == 'LP') field2 = "OSPERIPH";
-                                            
-                                                if (field == 'BD') {
-                                                    field = "ODDISC";
-                                                    (appendix == ".a") ? ($('#'+field).val($('#'+field).val() +', '+text)) : $('#'+field).val(text);
-                                                    field = "OSDISC";
-                                                    (appendix == ".a") ? ($('#'+field).val($('#'+field).val() +', '+text)) : $('#'+field).val(text);
-                                                    $('#ORDISC').css("background-color","#F0F8FF");
-                                                    $('#OSDISC').css("background-color","#F0F8FF");
-                                                } else if ((field == 'BC')||(field=='C')) {
-                                                    field = "ODCUP";
-                                                    (appendix == ".a") ? ($('#'+field).val($('#'+field).val() +', '+text)) : $('#'+field).val(text);
-                                                    field = "OSCUP";
-                                                    (appendix == ".a") ? ($('#'+field).val($('#'+field).val() +', '+text)) : $('#'+field).val(text);
-                                                    $('#ODCUP').css("background-color","#F0F8FF");
-                                                    $('#OSCUP').css("background-color","#F0F8FF");
-                                                } else if ((field == 'BMAC')||(field=='MAC')) {
-                                                    field = "ODMAC";
-                                                    (appendix == ".a") ? ($('#'+field).val($('#'+field).val() +', '+text)) : $('#'+field).val(text);
-                                                    field = "OSMAC";
-                                                    (appendix == ".a") ? ($('#'+field).val($('#'+field).val() +', '+text)) : $('#'+field).val(text);
-                                                    $('#ODMAC').css("background-color","#F0F8FF");
-                                                    $('#OSMAC').css("background-color","#F0F8FF");
-                                                } else if ((field == 'BV')||(field=='V')) {
-                                                    field = "ODVESSELS";
-                                                    (appendix == ".a") ? ($('#'+field).val($('#'+field).val() +', '+text)) : $('#'+field).val(text);
-                                                    field = "OSVESSELS";
-                                                    (appendix == ".a") ? ($('#'+field).val($('#'+field).val() +', '+text)) : $('#'+field).val(text);
-                                                    $('#ODVESSELS').css("background-color","#F0F8FF");
-                                                    $('#OSVESSELS').css("background-color","#F0F8FF");
-                                                } else if ((field == 'BP')||(field=='P')) {
-                                                    field = "ODPERIPH";
-                                                    (appendix == ".a") ? ($('#'+field).val($('#'+field).val() +', '+text)) : $('#'+field).val(text);
-                                                    field = "OSPERIPH";
-                                                    (appendix == ".a") ? ($('#'+field).val($('#'+field).val() +', '+text)) : $('#'+field).val(text);
-                                                    $('#ODPERIPH').css("background-color","#F0F8FF");
-                                                    $('#OSPERIPH').css("background-color","#F0F8FF");
-                                                } else if ((field == 'BCMT')||(field=='CMT')) {
-                                                    field = "ODCMT";
-                                                    (appendix == ".a") ? ($('#'+field).val($('#'+field).val() +', '+text)) : $('#'+field).val(text);
-                                                    field = "OSCMT";
-                                                    (appendix == ".a") ? ($('#'+field).val($('#'+field).val() +', '+text)) : $('#'+field).val(text);
-                                                    $('#ODCMT').css("background-color","#F0F8FF");
-                                                    $('#OSCMT').css("background-color","#F0F8FF");
-                                                } else {
-                                                    (appendix == ".a") ? ($('#'+field2).val($('#'+field2).val() +", "+text)) : $('#'+field2).val(text);
-                                                    $('#'+field2).css("background-color","#F0F8FF");
-                                                }
-                                                }
+                                                    if (data_seg[index] =='') continue;
+                                                    if ((index =='0') && (data1.match(/^D/i))) {
+                                                        $("#RETINA_defaults").trigger("click");
+                                                        continue;
+                                                    }
+                                                    data_seg[index] = data_seg[index].replace(/^[\s]*/,'');
+                                                    var data = data_seg[index].match(/^(\w*)\.(.*)/);
+                                                    var appendix =".a";
+                                                    (data[2].match(/\.a$/))?(data[2] = data[2].replace(/\.a$/,'')):(appendix = "nope");
+                                                    var field = data[1].toUpperCase();
+                                                    var field2 ='';
+                                                    var text = data[2];
+                                                    text = text.replace(/\binf\b/g,"inferior")
+                                                        .replace(/\bsup\b/g,"superior")
+                                                        .replace(/\bnas\b/g,"nasal")
+                                                        .replace(/\btemp\b/g,"temporal")
+                                                        .replace(/\bmed\b/g,"medial")
+                                                        .replace(/\blat\b/g,"lateral")
+                                                        .replace(/\bcsme\b/ig,"CSME")
+                                                        .replace(/\bw\/\b/g,"with")
+                                                        .replace(/\bbdr(\s+)/ig,"BDR")
+                                                        .replace(/\bppdr\b/g,'PPDR')
+                                                        .replace(/\bht\b/ig,"horsheshoe tear")
+                                                        .replace(/(\b)ab(\b)/ig,"air bubble")
+                                                        .replace(/\bc3f8\b/ig,"C3F8")
+                                                        .replace(/\bma\b/ig,"macroaneurysm")
+                                                        .replace(/\bmias\b/ig,"microaneurysm")
+                                                        .replace(/\bped\b/ig,"PED")
+                                                        .replace(/\b1 o\b/ig," 1 o'clock")
+                                                        .replace(/\b2 o\b/ig,"2 o'clock")
+                                                        .replace(/\b3 o\b/ig," 3 o'clock")
+                                                        .replace(/\b4 o\b/ig," 4 o'clock")
+                                                        .replace(/\b5 o\b/ig," 5 o'clock")
+                                                        .replace(/\b6 o\b/ig," 6 o'clock")
+                                                        .replace(/\b7 o\b/ig," 7 o'clock")
+                                                        .replace(/\b8 o\b/ig," 8 o'clock")
+                                                        .replace(/\b9 o\b/ig," 9 o'clock")
+                                                        .replace(/\b10 o\b/ig," 10 o'clock")
+                                                        .replace(/\b11 o\b/ig," 11 o'clock")
+                                                        .replace(/(\b)12 o(\b)/ig," 12 o'clock")
+                                                        .replace(/\bmac\b/i,"macula")
+                                                        .replace(/\bfovea\b/i,"fovea")
+                                                        .replace(/\bvh\b/i,"vitreous hemorrhage");
+                                                    if (field == 'RD')      field2 = "ODDISC";
+                                                    if (field == 'LD')      field2 = "OSDISC";
+                                                    if (field == 'RC')      field2 = "ODCUP";
+                                                    if (field == 'LC')      field2 = "OSCUP";
+                                                    if (field == 'RMAC')    field2 = "ODMACULA";
+                                                    if (field == 'LMAC')    field2 = "OSMACULA";
+                                                    if (field == 'RV')      field2 = "ODVESSELS";
+                                                    if (field == 'LV')      field2 = "OSVESSELS";
+                                                    if (field == 'RP')      field2 = "ODPERIPH";
+                                                    if (field == 'LP')      field2 = "OSPERIPH";
+                                                    if (field == 'RMCT')    field2 = "RMCT";
+                                                    if (field == 'LMCT')    field2 = "LMCT";
+                                                    if (field == 'BD') {
+                                                        field = "ODDISC";
+                                                        (appendix == ".a") ? ($('#'+field).val($('#'+field).val() +', '+text)) : $('#'+field).val(text);
+                                                        field = "OSDISC";
+                                                        (appendix == ".a") ? ($('#'+field).val($('#'+field).val() +', '+text)) : $('#'+field).val(text);
+                                                        $('#ORDISC').css("background-color","#F0F8FF");
+                                                        $('#OSDISC').css("background-color","#F0F8FF");
+                                                    } else if ((field == 'BC')||(field == 'C')) {
+                                                        field = "ODCUP";
+                                                        (appendix == ".a") ? ($('#'+field).val($('#'+field).val() +', '+text)) : $('#'+field).val(text);
+                                                        field = "OSCUP";
+                                                        (appendix == ".a") ? ($('#'+field).val($('#'+field).val() +', '+text)) : $('#'+field).val(text);
+                                                        $('#ODCUP').css("background-color","#F0F8FF");
+                                                        $('#OSCUP').css("background-color","#F0F8FF");
+                                                    } else if ((field == 'BMAC')||(field == 'MAC')) {
+                                                        field = "ODMACULA";
+                                                        (appendix == ".a") ? ($('#'+field).val($('#'+field).val() +', '+text)) : $('#'+field).val(text);
+                                                        field = "OSMACULA";
+                                                        (appendix == ".a") ? ($('#'+field).val($('#'+field).val() +', '+text)) : $('#'+field).val(text);
+                                                        $('#ODMACULA').css("background-color","#F0F8FF");
+                                                        $('#OSMACULA').css("background-color","#F0F8FF");
+                                                    } else if ((field == 'BV')||(field == 'V')) {
+                                                        field = "ODVESSELS";
+                                                        (appendix == ".a") ? ($('#'+field).val($('#'+field).val() +', '+text)) : $('#'+field).val(text);
+                                                        field = "OSVESSELS";
+                                                        (appendix == ".a") ? ($('#'+field).val($('#'+field).val() +', '+text)) : $('#'+field).val(text);
+                                                        $('#ODVESSELS').css("background-color","#F0F8FF");
+                                                        $('#OSVESSELS').css("background-color","#F0F8FF");
+                                                    } else if ((field == 'BP')||(field == 'P')) {
+                                                        field = "ODPERIPH";
+                                                        (appendix == ".a") ? ($('#'+field).val($('#'+field).val() +', '+text)) : $('#'+field).val(text);
+                                                        field = "OSPERIPH";
+                                                        (appendix == ".a") ? ($('#'+field).val($('#'+field).val() +', '+text)) : $('#'+field).val(text);
+                                                        $('#ODPERIPH').css("background-color","#F0F8FF");
+                                                        $('#OSPERIPH').css("background-color","#F0F8FF");
+                                                    } else if ((field == 'BCMT')||(field == 'CMT')) {
+                                                        field = "ODCMT";
+                                                        (appendix == ".a") ? ($('#'+field).val($('#'+field).val() +', '+text)) : $('#'+field).val(text);
+                                                        field = "OSCMT";
+                                                        (appendix == ".a") ? ($('#'+field).val($('#'+field).val() +', '+text)) : $('#'+field).val(text);
+                                                        $('#ODCMT').css("background-color","#F0F8FF");
+                                                        $('#OSCMT').css("background-color","#F0F8FF");
+                                                    } else {
+                                                        (appendix == ".a") ? ($('#'+field2).val($('#'+field2).val() +", "+text)) : $('#'+field2).val(text);
+                                                        $('#'+field2).css("background-color","#F0F8FF");
+                                                    }
+                                                    }
                                                 submit_form();
                                                 $('#RETINA_keyboard').val('');
-                                            
-                                           case 'NEURO':
+                                            break;
+                                           
+                                            case 'NEURO':
                                                var zone = $("#NEURO_ACT_zone").val();
                                                var data1 = $("#NEURO_keyboard").val();
                                                data_seg = data1.match(/([^;]*)/g);
                                                for (index=0; index < data_seg.length; ++index) {
                                                    //for each segment separated by a semicolon
                                                    if (data_seg[index] =='') continue;
-
                                                    var data = data_seg[index].match(/(\d{1,2})\.(\d{0,2}||ortho)(.*)/);
                                                    var field = data[1];
                                                    var PD = data[2];
                                                    if (PD >'') PD = PD + ' ';
-                                                   var strab = data[3].toUpperCase().replace (/I(.)/g,"$1(T)");
+                                                   var strab = data[3].toUpperCase().replace (/I(.)/g,"$1(T)").replace(/\s*(\d)/,'\n$1');
                                                    $('#ACT'+field+zone).val(PD+strab);
                                                    $('#ACT'+field+zone).css("background-color","#F0F8FF");
-                                            
-                                               }
+                                                }
+                                                submit_form();
                                                $('#NEURO_keyboard').val('');
-                                           
-                                            
-                                            }}
-                                      });
+                                            break;
+                                            } //end switch
+                                            } //end if enter/return pressed
+                                });
                   $("[id^='sketch_tools_']").click(function() {
                                                    var zone = this.id.match(/sketch_tools_(.*)/)[1];
                                                    $("[id^='sketch_tools_"+zone+"']").css("height","30px");

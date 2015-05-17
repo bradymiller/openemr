@@ -108,7 +108,8 @@ textarea.ACT {
     width:38px;
     outline: none;
     top:50%;
-    font-size: 0.7em;
+    font-size:0.6em;
+    text-align: center;
 }
 .input-helper {
     position: relative;
@@ -1158,7 +1159,9 @@ height: 18px;
 /* ACT_TEXT test */
 .ACT_TEXT {
     font-weight: bold;
-    font-size:0.9em;
+    font-size:0.6em;
+        display: table-cell; vertical-align:middle;
+
 }
 
 .ACT_selected {

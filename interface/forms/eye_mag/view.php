@@ -229,7 +229,7 @@ if ($refresh and $refresh != 'fullscreen') {
     
           <!-- start    HPI Zone -->
             <!-- start    HPI spinner -->
-          <div style="margin: 0 auto;width:10px;text-align: center;font-size:1.0em;overflow:auto;" class="" id="HPI_sections_loading" 
+          <div style="margin: 0 auto;width:10px;text-align: center;font-size:1.0em;" class="" id="HPI_sections_loading" 
               name="HPI_sections_loading">
                <i class="fa fa-spinner fa-spin"></i>
           </div> 
@@ -1752,12 +1752,12 @@ if ($refresh and $refresh != 'fullscreen') {
                                   <tr>
                                       <td class="right" title="<?php echo xla('Schirmers I (w/o anesthesia)'); ?>"><?php echo xlt('Schirmers I'); ?> </td>
                                       <td><input type="text" size="1" name="ODSCHIRMER1" id="ODSCHIRMER1" value="<?php echo attr($ODSCHIRMER1); ?>"></td>
-                                      <td><input type="text" size="1" name="OSSCHRIMER1" id="OSSCHIRMER1" value="<?php echo attr($OSSCHIRMER1); ?>"></td>
+                                      <td><input type="text" size="1" name="OSSCHIRMER1" id="OSSCHIRMER1" value="<?php echo attr($OSSCHIRMER1); ?>"></td>
                                   </tr>
                                    <tr>
-                                      <td class="right" title="<?php echo xla('Schirmers II (w/ anesthesia)'); ?>"><?php echo xlt('Schirners II'); ?> </td>
+                                      <td class="right" title="<?php echo xla('Schirmers II (w/ anesthesia)'); ?>"><?php echo xlt('Schirmers II'); ?> </td>
                                       <td><input type="text" size="1" name="ODSCHIRMER2" id="ODSCHIRMER2" value="<?php echo attr($ODSCHIRMER2); ?>"></td>
-                                      <td><input type="text" size="1" name="OSSCHRIMER2" id="OSSCHIRMER2" value="<?php echo attr($OSSCHIRMER2); ?>"></td>
+                                      <td><input type="text" size="1" name="OSSCHIRMER2" id="OSSCHIRMER2" value="<?php echo attr($OSSCHIRMER2); ?>"></td>
                                   </tr>
                                   <tr>
                                       <td class="right" title="<?php echo xla('Tear Break Up Time'); ?>"><?php echo xlt('TBUT'); ?> </td>
@@ -2157,7 +2157,7 @@ if ($refresh and $refresh != 'fullscreen') {
                                       <tr>
                                           <td colspan="2" style="text-align:center;"> 
                                               <div id="ACTMAIN" name="ACTMAIN" class="nodisplay ACT_TEXT" style="position:relative;z-index:1;margin auto;">
-                                                <table cellpadding="0" style="position:relative;text-align:center;font-size:0.9em;margin: 7 5 10 5;border-collapse: separate;">
+                                                <table cellpadding="0" style="position:relative;text-align:center;font-size:1.0em;margin: 7 5 10 5;border-collapse: separate;">
                                                       <tr>
                                                           <td id="ACT_tab_SCDIST" name="ACT_tab_SCDIST" class="ACT_selected"> <?php echo xlt('scDist'); ?> </td>
                                                           <td id="ACT_tab_CCDIST" name="ACT_tab_CCDIST" class="ACT_deselected"> <?php echo xlt('ccDist'); ?> </td>
@@ -2771,13 +2771,13 @@ if ($refresh and $refresh != 'fullscreen') {
                           <span class="eye_button eye_button_selected" id="NEURO_side_None" name="NEURO_side"  onclick="$('#NEURO_side').val('').trigger('change');"><?php echo xlt('None'); ?></span> <br />
                         </div>
                         <div class="borderShadow" style="width:190px;text-align:center;border:1pt solid black;padding:4 10 4 10;margin:4;font-weight:600;"><span class="underline">Deviation</span><br />
-                          <span class="eye_button" id="NEURO_ACT_strab_E" name="NEURO_ACT_strab"  onclick="$('#NEURO_ACT_strab').val('E').trigger('change');"><?php echo xlt('E'); ?></span> 
-                          <span class="eye_button" id="NEURO_ACT_strab_ET_int" name="NEURO_ACT_strab"  onclick="$('#NEURO_ACT_strab').val('E\(T\)').trigger('change');"><?php echo xlt('E(T)'); ?></span> 
-                          <span class="eye_button" id="NEURO_ACT_strab_ET" name="NEURO_ACT_strab"  onclick="$('#NEURO_ACT_strab').val('ET').trigger('change');"><?php echo xlt('ET'); ?></span> 
+                          <span class="eye_button" id="NEURO_ACT_strab_E" name="NEURO_ACT_strab" alt="Esophoria" onclick="$('#NEURO_ACT_strab').val('E').trigger('change');"><?php echo xlt('E'); ?></span> 
+                          <span class="eye_button" id="NEURO_ACT_strab_ET_int" name="NEURO_ACT_strab" alt="Intermittent Esotropia" onclick="$('#NEURO_ACT_strab').val('E\(T\)').trigger('change');"><?php echo xlt('E(T)'); ?></span> 
+                          <span class="eye_button" id="NEURO_ACT_strab_ET" name="NEURO_ACT_strab" alt="Esotropia" onclick="$('#NEURO_ACT_strab').val('ET').trigger('change');"><?php echo xlt('ET'); ?></span> 
                          <br />
-                          <span class="eye_button" id="NEURO_ACT_strab_X" name="NEURO_ACT_strab"  onclick="$('#NEURO_ACT_strab').val('X').trigger('change');"><?php echo xlt('X'); ?></span> 
-                          <span class="eye_button" id="NEURO_ACT_strab_XT_int" name="NEURO_ACT_strab"  onclick="$('#NEURO_ACT_strab').val('X\(T\)').trigger('change');"><?php echo xlt('X(T)'); ?></span> 
-                          <span class="eye_button" id="NEURO_ACT_strab_XT" name="NEURO_ACT_strab"  onclick="$('#NEURO_ACT_strab').val('XT').trigger('change');"><?php echo xlt('XT'); ?></span> 
+                          <span class="eye_button" id="NEURO_ACT_strab_X" name="NEURO_ACT_strab" alt="Exophoria" onclick="$('#NEURO_ACT_strab').val('X').trigger('change');"><?php echo xlt('X'); ?></span> 
+                          <span class="eye_button" id="NEURO_ACT_strab_XT_int" name="NEURO_ACT_strab" alt="Intermittent Exotropia" onclick="$('#NEURO_ACT_strab').val('X\(T\)').trigger('change');"><?php echo xlt('X(T)'); ?></span> 
+                          <span class="eye_button" id="NEURO_ACT_strab_XT" name="NEURO_ACT_strab" alt="Exotropia" onclick="$('#NEURO_ACT_strab').val('XT').trigger('change');"><?php echo xlt('XT'); ?></span> 
                           
                           <br />
                           <span class="eye_button" id="NEURO_ACT_strab_H" name="NEURO_ACT_strab"  onclick="$('#NEURO_ACT_strab').val('HT').trigger('change');"><?php echo xlt('HT'); ?></span> 
@@ -2787,9 +2787,10 @@ if ($refresh and $refresh != 'fullscreen') {
                           <br />
                         </div>  
                        
-                         <div class="borderShadow" style="width:190px;text-align:center;border:1pt solid black;padding:4 10 4 10;margin:4;font-weight:600;"><span onclick="$('.kb').toggleClass('nodisplay');" class="ke underline">Keyboard Entry</span><br />
-                          <textarea id="NEURO_keyboard" name="NEURO_keyboard" style="color:#0C0C0C;size:0.9em;" tabindex='1002'></textarea>
-                          <span style="font-size:0.9em;font-weight:400;color:#0C0C0C;">Type: fieldnumber.PD deviation ENTER<br />
+                <div class="QP_block_outer borderShadow " style="z-index:1;text-align:center;border:1pt solid black;padding:4 10 4 10;font-weight:600;">
+                            <span onclick="$('.kb').toggleClass('nodisplay');" class="ke underline">Keyboard Entry</span>&nbsp;<a onclick="goto_url('<?php echo $GLOBALS['webroot']; ?>/interface/forms/eye_mag/help.php?zone=neuro');"><i class="fa fa-info-circle fa-1"></i></a><br />
+                            <textarea id="NEURO_keyboard" name="NEURO_keyboard" style="color:#0C0C0C;size:0.8em;height: 0.48in;" tabindex='1002'></textarea>
+                          <span style="font-size:0.9em;font-weight:400;color:#0C0C0C;">Type: fieldnumber.PD strab ENTER<br />
                             eg. 10 X(T) in Primary postion: <b>5.10ix</b>
                             <br />Bilateral VIs:
                             <b>5.Ortho;4.10et;6.10et;</b></span>
