@@ -982,8 +982,10 @@ $(document).ready(function() {
                                             if (field == 'LV')      field2 = "OSVESSELS";
                                             if (field == 'RP')      field2 = "ODPERIPH";
                                             if (field == 'LP')      field2 = "OSPERIPH";
-                                            if (field == 'RMCT')    field2 = "RMCT";
-                                            if (field == 'LMCT')    field2 = "LMCT";
+                                            if (field == 'RCMT')    field2 = "ODCMT";
+                                            if (field == 'LCMT')    field2 = "OSCMT";
+                                            if (field == 'ODCMT')   field2 = "ODCMT";
+                                            if (field == 'OSCMT')   field2 = "OSCMT";
                                             if (field == 'BD') {
                                             field = "ODDISC";
                                             (appendix == ".a") ? ($('#'+field).val($('#'+field).val() +', '+text)) : $('#'+field).val(text);
