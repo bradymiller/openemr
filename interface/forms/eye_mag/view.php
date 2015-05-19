@@ -1542,37 +1542,44 @@ if ($refresh and $refresh != 'fullscreen') {
                                       <td></td><td><?php echo xlt('R'); ?></td><td><?php echo xlt('L'); ?></td>
                                   </tr>
                                   <tr>
-                                      <td class="right" title="<?php echo xla('Levator Function'); ?>"><?php echo xlt('Lev Fn'); ?></td>
+                                      <td class="right" title="<?php echo xla('Levator Function'); ?>">
+                                        <div class="kb kb_left">LF</div><?php echo xlt('Lev Fn'); ?></td>
                                       <td><input  type="text"  name="RLF" id="RLF" value="<?php echo attr($RLF); ?>"></td>
                                       <td><input  type="text"  name="LLF" id="LLF" value="<?php echo attr($LLF); ?>"></td>
                                   </tr>
                                   <tr>
-                                      <td class="right" title="<?php echo xla('Marginal Reflex Distance'); ?>"><?php echo xlt('MRD'); ?></td>
+                                      <td class="right" title="<?php echo xla('Marginal Reflex Distance'); ?>">
+                                        <div class="kb kb_left">MRD</div><?php echo xlt('MRD'); ?></td>
                                       <td><input type="text" size="1" name="RMRD" id="RMRD" value="<?php echo attr($RMRD); ?>"></td>
                                       <td><input type="text" size="1" name="LMRD" id="LMRD" value="<?php echo attr($LMRD); ?>"></td>
                                   </tr>
                                   <tr>
-                                      <td class="right" title="<?php echo xla('Vertical Fissure: central height between lid margins'); ?>"><?php echo xlt('Vert Fissure'); ?></td>
+                                      <td class="right" title="<?php echo xla('Vertical Fissure: central height between lid margins'); ?>">
+                                        <div class="kb kb_left">VF</div><?php echo xlt('Vert Fissure'); ?></td>
                                       <td><input type="text" size="1" name="RVFISSURE" id="RVFISSURE" value="<?php echo attr($RVFISSURE); ?>"></td>
                                       <td><input type="text" size="1" name="LVFISSURE" id="LVFISSURE" value="<?php echo attr($LVFISSURE); ?>"></td>
                                   </tr>
                                                                  <tr>
-                                      <td class="right" title="<?php echo xla('Any carotid bruits appreciated?'); ?>"><?php echo xlt('Carotid'); ?></td>
+                                      <td class="right" title="<?php echo xla('Any carotid bruits appreciated?'); ?>">
+                                        <div class="kb kb_left">CAR</div><?php echo xlt('Carotid'); ?></td>
                                       <td><input  type="text"  name="RCAROTID" id="RCAROTID" value="<?php echo attr($RCAROTID); ?>"></td>
                                       <td><input  type="text"  name="LCAROTID" id="LCAROTID" value="<?php echo attr($LCAROTID); ?>"></td>
                                   </tr>
                                   <tr>
-                                      <td class="right" title="<?php echo xla('Temporal Arteries'); ?>"><?php echo xlt('Temp. Art.'); ?></td>
+                                      <td class="right" title="<?php echo xla('Temporal Arteries'); ?>">
+                                        <div class="kb kb_left">TA</div><?php echo xlt('Temp. Art.'); ?></td>
                                       <td><input type="text" size="1" name="RTEMPART" id="RTEMPART" value="<?php echo attr($RTEMPART); ?>"></td>
                                       <td><input type="text" size="1" name="LTEMPART" id="LTEMPART" value="<?php echo attr($LTEMPART); ?>"></td>
                                   </tr>
                                   <tr>
-                                      <td class="right" title="<?php echo xla('Cranial Nerve 5: Trigeminal Nerve'); ?>"><?php echo xlt('CN V'); ?></td>
+                                      <td class="right" title="<?php echo xla('Cranial Nerve 5: Trigeminal Nerve'); ?>">
+                                        <div class="kb kb_left">CN5</div><?php echo xlt('CN V'); ?></td>
                                       <td><input type="text" size="1" name="RCNV" id="RCNV" value="<?php echo attr($RCNV); ?>"></td>
                                       <td><input type="text" size="1" name="LCNV" id="LCNV" value="<?php echo attr($LCNV); ?>"></td>
                                   </tr>
                                   <tr>
-                                      <td class="right" title="<?php echo xla('Cranial Nerve 7: Facial Nerve'); ?>"><?php echo xlt('CN VII'); ?></td>
+                                      <td class="right" title="<?php echo xla('Cranial Nerve 7: Facial Nerve'); ?>">
+                                        <div class="kb kb_left">CN7</div><?php echo xlt('CN VII'); ?></td>
                                       <td><input type="text" size="1" name="RCNVII" id="RCNVII" value="<?php echo attr($RCNVII); ?>"></td>
                                       <td><input type="text" size="1" name="LCNVII" id="LCNVII" value="<?php echo attr($LCNVII); ?>"></td>
                                   </tr>
@@ -1582,13 +1589,15 @@ if ($refresh and $refresh != 'fullscreen') {
                                       <td>
                                           <input type="text" size="1" id="ODHERTEL" name="ODHERTEL" value="<?php echo attr($ODHERTEL); ?>">
                                           <i class="fa fa-minus"></i>
+                                          <div class="kb kb_center">RH</div>
                                       </td>
                                       <td>
                                           <input type=text size=3  id="HERTELBASE" name="HERTELBASE" value="<?php echo attr($HERTELBASE); ?>">
-                                          <i class="fa fa-minus"></i>
+                                          <i class="fa fa-minus"></i><div class="kb kb_center">HERT</div>
                                       </td>
                                       <td>
                                           <input type=text size=1  id="OSHERTEL" name="OSHERTEL" value="<?php echo attr($OSHERTEL); ?>">
+                                          <div class="kb kb_center">LH</div>
                                       </td>
                                   </tr>
                                   <tr><td>&nbsp;</td></tr>
@@ -1707,7 +1716,8 @@ if ($refresh and $refresh != 'fullscreen') {
                                           ?>   
                                   </div>      
                                   <div class="QP_block_outer borderShadow " style="z-index:1;text-align:center;border:1pt solid black;padding:4 10 4 10;font-weight:600;">
-                            <span onclick="$('.kb').toggleClass('nodisplay');" class="ke underline">Keyboard Entry</span>&nbsp;<a onclick="goto_url('<?php echo $GLOBALS['webroot']; ?>/interface/forms/eye_mag/help.php?zone=ext');"><i class="fa fa-info-circle fa-1"></i></a><br />
+                            <span onclick="$('.kb').toggleClass('nodisplay');" title="<?php echo xla('Click to display shorthand field names.'); ?>" class="ke underline">Keyboard Entry</span>&nbsp;<a onclick="goto_url('<?php echo $GLOBALS['webroot']; ?>/interface/forms/eye_mag/help.php?zone=ext');">
+                            <i title="<?php echo xla('Click for External shorthand Help.'); ?>" class="fa fa-info-circle fa-1"></i></a><br />
                             <textarea id="EXT_keyboard" name="EXT_keyboard" style="color:#0C0C0C;size:0.8em;height: 0.48in;" tabindex='1000'></textarea>
                             <span style="font-size:0.9em;font-weight:400;color:#0C0C0C;">Type: location.text; ENTER<br />
                             eg. right lower lid stye laterally:<br /> <b>RLL.stye lat;</b>
@@ -1735,34 +1745,49 @@ if ($refresh and $refresh != 'fullscreen') {
                                   echo $episode;
                               ?>
                             </table>
-                              <table style="text-align:center;font-size:0.7em;font-weight:600;width:160px;"> 
+                              <table style="text-align:center;font-size:0.8em;font-weight:600;width:160px;"> 
                                   <tr >
                                       <td></td><td><?php echo xlt('R'); ?></td><td><?php echo xlt('L'); ?></td>
                                   </tr>
                                   <tr>
-                                      <td class="right" title="<?php echo xla('Gonioscopy'); ?>"><?php echo xlt('Gonio'); ?> </td>
-                                      <td><input  type="text" class="" name="ODGONIO" id="ODGONIO" value="<?php echo attr($ODGONIO); ?>"></td>
-                                      <td><input  type="text" size="2" name="OSGONIO" id="OSGONIO" value="<?php echo attr($OSGONIO); ?>"></td>
+                                      <td class="right" title="<?php echo xla('Gonioscopy'); ?>">
+                                        <?php echo xlt('Gonio'); ?> </td>
+                                      <td><input  type="text" class="" name="ODGONIO" id="ODGONIO" value="<?php echo attr($ODGONIO); ?>">
+                                        <div class="kb kb_center">RG</div></td>
+                                      <td><input  type="text" size="2" name="OSGONIO" id="OSGONIO" value="<?php echo attr($OSGONIO); ?>">
+                                        <div class="kb kb_center">LG</div></td>
                                   </tr>
                                   <tr>
-                                      <td class="right" title="<?php echo xla('Pachymetry: Central Corneal Thickness'); ?>"><?php echo xlt('Pachy'); ?> </td>
-                                      <td><input type="text" size="1" name="ODKTHICKNESS" id="ODKTHICKNESS" value="<?php echo attr($ODKTHICKNESS); ?>"></td>
-                                      <td><input type="text" size="1" name="OSKTHICKNESS" id="OSKTHICKNESS" value="<?php echo attr($OSKTHICKNESS); ?>"></td>
+                                      <td class="right" title="<?php echo xla('Pachymetry: Central Corneal Thickness'); ?>">
+                                        <?php echo xlt('Pachy'); ?> </td>
+                                      <td><input type="text" size="1" name="ODKTHICKNESS" id="ODKTHICKNESS" value="<?php echo attr($ODKTHICKNESS); ?>">
+                                      <div class="kb kb_center">RPACH</div></td>
+                                      <td><input type="text" size="1" name="OSKTHICKNESS" id="OSKTHICKNESS" value="<?php echo attr($OSKTHICKNESS); ?>">
+                                      <div class="kb kb_center">LPACH</div></td>
                                   </tr>
                                   <tr>
-                                      <td class="right" title="<?php echo xla('Schirmers I (w/o anesthesia)'); ?>"><?php echo xlt('Schirmers I'); ?> </td>
-                                      <td><input type="text" size="1" name="ODSCHIRMER1" id="ODSCHIRMER1" value="<?php echo attr($ODSCHIRMER1); ?>"></td>
-                                      <td><input type="text" size="1" name="OSSCHIRMER1" id="OSSCHIRMER1" value="<?php echo attr($OSSCHIRMER1); ?>"></td>
+                                      <td class="right" title="<?php echo xla('Schirmers I (w/o anesthesia)'); ?>">
+                                        <?php echo xlt('Schirmers I'); ?> </td>
+                                      <td><input type="text" size="1" name="ODSCHIRMER1" id="ODSCHIRMER1" value="<?php echo attr($ODSCHIRMER1); ?>">
+                                        <div class="kb kb_center">RSCH1</div></td>
+                                      <td><input type="text" size="1" name="OSSCHIRMER1" id="OSSCHIRMER1" value="<?php echo attr($OSSCHIRMER1); ?>">
+                                        <div class="kb kb_center">LSCH1</div></td>
                                   </tr>
                                    <tr>
-                                      <td class="right" title="<?php echo xla('Schirmers II (w/ anesthesia)'); ?>"><?php echo xlt('Schirmers II'); ?> </td>
-                                      <td><input type="text" size="1" name="ODSCHIRMER2" id="ODSCHIRMER2" value="<?php echo attr($ODSCHIRMER2); ?>"></td>
-                                      <td><input type="text" size="1" name="OSSCHIRMER2" id="OSSCHIRMER2" value="<?php echo attr($OSSCHIRMER2); ?>"></td>
+                                      <td class="right" title="<?php echo xla('Schirmers II (w/ anesthesia)'); ?>">
+                                        <?php echo xlt('Schirmers II'); ?> </td>
+                                      <td><input type="text" size="1" name="ODSCHIRMER2" id="ODSCHIRMER2" value="<?php echo attr($ODSCHIRMER2); ?>">
+                                      <div class="kb kb_center">RSCH2</div></td>
+                                      <td><input type="text" size="1" name="OSSCHIRMER2" id="OSSCHIRMER2" value="<?php echo attr($OSSCHIRMER2); ?>">
+                                      <div class="kb kb_center">LSCH2</div></td>
                                   </tr>
                                   <tr>
-                                      <td class="right" title="<?php echo xla('Tear Break Up Time'); ?>"><?php echo xlt('TBUT'); ?> </td>
-                                      <td><input type="text" size="1" name="ODTBUT" id="ODTBUT" value="<?php echo attr($ODTBUT); ?>"></td>
-                                      <td><input type="text" size="1" name="OSTBUT" id="OSTBUT" value="<?php echo attr($OSTBUT); ?>"></td>
+                                      <td class="right" title="<?php echo xla('Tear Break Up Time'); ?>">
+                                        <?php echo xlt('TBUT'); ?> </td>
+                                      <td><input type="text" size="1" name="ODTBUT" id="ODTBUT" value="<?php echo attr($ODTBUT); ?>">
+                                      <div class="kb kb_center">RTBUT</div></td>
+                                      <td><input type="text" size="1" name="OSTBUT" id="OSTBUT" value="<?php echo attr($OSTBUT); ?>">
+                                        <div class="kb kb_center">LTBUT</div></td>
                                   </tr>
                                   <tr style="text-align:center;">
                                       <td style="width:59px;text-align:right;">
@@ -1790,31 +1815,31 @@ if ($refresh and $refresh != 'fullscreen') {
                                           <td>
                                             <textarea name="ODCONJ" id="ODCONJ" class=" right"><?php echo text($ODCONJ); ?></textarea></td>
                                           <td><div class="ident"><?php echo xlt('Conj'); ?> / <?php echo xlt('Sclera'); ?></div>
-                                            <div class="kb kb_left">rc</div><div class="kb kb_right">lc</div></td>
+                                            <div class="kb kb_left">RC</div><div class="kb kb_right">LC</div></td>
                                           <td><textarea name="OSCONJ" id="OSCONJ" class=""><?php echo text($OSCONJ); ?></textarea></td>
                                       </tr> 
                                       <tr>
                                           <td><textarea name="ODCORNEA" id="ODCORNEA" class=" right"><?php echo text($ODCORNEA); ?></textarea></td>
                                           <td><div class="ident"><?php echo xlt('Cornea'); ?></div>
-                                            <div class="kb kb_left">rk</div><div class="kb kb_right">lk</div></td></td>
+                                            <div class="kb kb_left">RK</div><div class="kb kb_right">LK</div></td></td>
                                           <td><textarea name="OSCORNEA" id="OSCORNEA" class=""><?php echo text($OSCORNEA); ?></textarea></td>
                                       </tr> 
                                       <tr>
                                           <td><textarea name="ODAC" id="ODAC" class=" right"><?php echo text($ODAC); ?></textarea></td>
                                           <td><div class="ident"><?php echo xlt('A/C'); ?></div>
-                                            <div class="kb kb_left">rac</div><div class="kb kb_right">lac</div></td></td>
+                                            <div class="kb kb_left">RAC</div><div class="kb kb_right">LAC</div></td></td>
                                           <td><textarea name="OSAC" id="OSAC" class=""><?php echo text($OSAC); ?></textarea></td>
                                       </tr>
                                       <tr>
                                           <td><textarea name="ODLENS" id="ODLENS" class=" right"><?php echo text($ODLENS); ?></textarea></td>
                                           <td><div class="ident dropShadow"><?php echo xlt('Lens'); ?></div>
-                                            <div class="kb kb_left">rl</div><div class="kb kb_right">ll</div></td></td>
+                                            <div class="kb kb_left">RL</div><div class="kb kb_right">LL</div></td></td>
                                           <td><textarea name="OSLENS" id="OSLENS" class=""><?php echo text($OSLENS); ?></textarea></td>
                                       </tr>
                                       <tr>
                                           <td><textarea name="ODIRIS" id="ODIRIS" class="right"><?php echo text($ODIRIS); ?></textarea></td>
                                           <td><div class="ident"><?php echo xlt('Iris'); ?></div>
-                                            <div class="kb kb_left">ri</div><div class="kb kb_right">li</div></td></td>
+                                            <div class="kb kb_left">RI</div><div class="kb kb_right">LI</div></td></td>
                                           <td><textarea name="OSIRIS" id="OSIRIS" class=""><?php echo text($OSIRIS); ?></textarea></td>
                                       </tr>
                                   </table>
@@ -1881,7 +1906,10 @@ if ($refresh and $refresh != 'fullscreen') {
                                       ?>      
                           </div>  
                           <div class="QP_block_outer borderShadow " style="z-index:1;text-align:center;border:1pt solid black;padding:4 10 4 10;font-weight:600;">
-                            <span onclick="$('.kb').toggleClass('nodisplay');" class="ke underline">Keyboard Entry</span>&nbsp;<a onclick="goto_url('<?php echo $GLOBALS['webroot']; ?>/interface/forms/eye_mag/help.php?zone=antseg');"><i class="fa fa-info-circle fa-1"></i></a><br />
+                            <span onclick="$('.kb').toggleClass('nodisplay');" title="<?php echo xla('Click to display shorthand field names.'); ?>" class="ke underline">Keyboard Entry</span>
+                            &nbsp;
+                            <a onclick="goto_url('<?php echo $GLOBALS['webroot']; ?>/interface/forms/eye_mag/help.php?zone=antseg');" title="<?php echo xla('Click for Ant. Seg. shorthand help.'); ?>">
+                              <i class="fa fa-info-circle fa-1"></i></a><br />
                             <textarea id="ANTSEG_keyboard" name="ANTSEG_keyboard" style="color:#0C0C0C;size:0.8em;height: 0.48in;" tabindex='1000'></textarea>
                             <span style="font-size:0.9em;font-weight:400;color:#0C0C0C;">Type: location.text; ENTER<br />
                             eg. OU cornea +2 kruckenberg spindle:<br /> <b>k.+2 ks;</b>
@@ -1939,9 +1967,11 @@ if ($refresh and $refresh != 'fullscreen') {
                                       </td>
                                       <td>
                                           <input name="ODCMT" size="4" id="ODCMT" value="<?php echo attr($ODCMT); ?>">
+                                          <div class="kb kb_center">RCMT</div>
                                       </td>
                                       <td>
                                           <input name="OSCMT" size="4" id="OSCMT" value="<?php echo attr($OSCMT); ?>">
+                                          <div class="kb kb_center">LCMT</div>
                                       </td>
                                   </tr>
                               </table>
@@ -1966,31 +1996,31 @@ if ($refresh and $refresh != 'fullscreen') {
                                           <tr>
                                               <td><textarea name="ODDISC" id="ODDISC" class="right"><?php echo text($ODDISC); ?></textarea></td>
                                               <td><div class="ident"><?php echo xlt('Disc'); ?></div>
-                                            <div class="kb kb_left">rd</div><div class="kb kb_right">ld</div></td>
+                                            <div class="kb kb_left">RD</div><div class="kb kb_right">LD</div></td>
                                               <td><textarea name="OSDISC" id="OSDISC" class=""><?php echo text($OSDISC); ?></textarea></td>
                                           </tr> 
                                           <tr>
                                               <td><textarea name="ODCUP" id="ODCUP" class="right"><?php echo text($ODCUP); ?></textarea></td>
                                               <td><div class="ident"><?php echo xlt('Cup'); ?></div>
-                                            <div class="kb kb_left">rc</div><div class="kb kb_right">lc</div></td>
+                                            <div class="kb kb_left">RC</div><div class="kb kb_right">LC</div></td>
                                               <td><textarea name="OSCUP" id="OSCUP" class=""><?php echo text($OSCUP); ?></textarea></td>
                                           </tr> 
                                           <tr>
                                               <td><textarea name="ODMACULA" id="ODMACULA" class="right"><?php echo text($ODMACULA); ?></textarea></td>
                                               <td><div class="ident"><?php echo xlt('Macula'); ?></div>
-                                            <div class="kb kb_left">rmac</div><div class="kb kb_right">lmac</div></td>
+                                            <div class="kb kb_left">RMAC</div><div class="kb kb_right">LMAC</div></td>
                                               <td><textarea name="OSMACULA" id="OSMACULA" class=""><?php echo text($OSMACULA); ?></textarea></td>
                                           </tr>
                                           <tr>
                                               <td><textarea name="ODVESSELS" id="ODVESSELS" class="right"><?php echo text($ODVESSELS); ?></textarea></td>
                                               <td><div class="ident"><?php echo xlt('Vessels'); ?></div>
-                                            <div class="kb kb_left">rv</div><div class="kb kb_right">lv</div></td>
+                                            <div class="kb kb_left">RV</div><div class="kb kb_right">LV</div></td>
                                               <td><textarea name="OSVESSELS" id="OSVESSELS" class=""><?php echo text($OSVESSELS); ?></textarea></td>
                                           </tr>
                                           <tr>
                                               <td><textarea name="ODPERIPH" id="ODPERIPH" class="right"><?php echo text($ODPERIPH); ?></textarea></td>
                                               <td><div class="ident"><?php echo xlt('Periph'); ?></div>
-                                            <div class="kb kb_left">rp</div><div class="kb kb_right">lp</div></td>
+                                            <div class="kb kb_left">RP</div><div class="kb kb_right">LP</div></td>
                                               <td><textarea name="OSPERIPH" id="OSPERIPH" class=""><?php echo text($OSPERIPH); ?></textarea></td>
                                           </tr>
                                   </table>
@@ -2067,7 +2097,9 @@ if ($refresh and $refresh != 'fullscreen') {
                                    <br />
                           </div>
                           <div class="QP_block_outer borderShadow " style="z-index:1;text-align:center;border:1pt solid black;padding:4 10 4 10;font-weight:600;">
-                            <span onclick="$('.kb').toggleClass('nodisplay');" class="ke underline">Keyboard Entry</span>&nbsp;<a onclick="goto_url('<?php echo $GLOBALS['webroot']; ?>/interface/forms/eye_mag/help.php?zone=retina');"><i class="fa fa-info-circle fa-1"></i></a><br />
+                            <span onclick="$('.kb').toggleClass('nodisplay');" title="<?php echo xla('Click to display shorthand field names.'); ?>" class="ke underline">Keyboard Entry</span>&nbsp;
+                            <a onclick="goto_url('<?php echo $GLOBALS['webroot']; ?>/interface/forms/eye_mag/help.php?zone=retina');">
+                            <i title="<?php echo xla('Click for Ant. Seg. shorthand Help.'); ?>" class="fa fa-info-circle fa-1"></i></a><br />
                             <textarea id="RETINA_keyboard" name="RETINA_keyboard" style="color:#0C0C0C;size:0.8em;height: 0.48in;" tabindex='1000'></textarea>
                             <span style="font-size:0.9em;font-weight:400;color:#0C0C0C;">Type: location.text; ENTER<br />
                             eg. OD C/D 0.5 with inferior notch:<br /> <b>RC.0.5 w/ inf notch;</b>
@@ -2788,7 +2820,8 @@ if ($refresh and $refresh != 'fullscreen') {
                         </div>  
                        
                 <div class="QP_block_outer borderShadow " style="z-index:1;text-align:center;border:1pt solid black;padding:4 10 4 10;font-weight:600;">
-                            <span onclick="$('.kb').toggleClass('nodisplay');" class="ke underline">Keyboard Entry</span>&nbsp;<a onclick="goto_url('<?php echo $GLOBALS['webroot']; ?>/interface/forms/eye_mag/help.php?zone=neuro');"><i class="fa fa-info-circle fa-1"></i></a><br />
+                            <span onclick="$('.kb').toggleClass('nodisplay');" title="<?php echo xla('Click to display shorthand field names.'); ?>" class="ke underline">Keyboard Entry</span>&nbsp;<a onclick="goto_url('<?php echo $GLOBALS['webroot']; ?>/interface/forms/eye_mag/help.php?zone=neuro');">
+                            <i title="<?php echo xla('Click for Neuro/Strabismus shorthand Help.'); ?>" class="fa fa-info-circle fa-1"></i></a><br />
                             <textarea id="NEURO_keyboard" name="NEURO_keyboard" style="color:#0C0C0C;size:0.8em;height: 0.48in;" tabindex='1002'></textarea>
                           <span style="font-size:0.9em;font-weight:400;color:#0C0C0C;">Type: fieldnumber.PD strab ENTER<br />
                             eg. 10 X(T) in Primary postion: <b>5.10ix</b>

@@ -152,7 +152,10 @@
                 top:50%;
                 font-size: 0.8em;
                 vertical-align:middle;
-                text-align:right;
+                text-align:center;
+            }
+            .ACT_deselected {
+                font-size:14px;
             }
         </style>  
 
@@ -2211,7 +2214,7 @@
                                                                           <td style="border:1pt solid black;border-left:0pt;text-align:right;">
                                                                           <textarea id="ACT4SCDIST" name="ACT4SCDIST" class="ACT"><?php echo text($ACT4SCDIST); ?></textarea></td>
                                                                           <td style="border:1pt solid black;text-align:center;">
-                                                                          <textarea id="ACTPRIMSCDIST" name="ACTPRIMSCDIST" class="ACT"><?php echo text($ACTPRIMSCDIST); ?></textarea></td>
+                                                                          <textarea id="ACT5SCDIST" name="ACT5SCDIST" class="ACT"><?php echo text($ACT5SCDIST); ?></textarea></td>
                                                                           <td style="border:1pt solid black;border-right:0pt;text-align:left;">
                                                                           <textarea id="ACT6SCDIST" name="ACT6SCDIST" class="ACT"><?php echo text($ACT6SCDIST); ?></textarea></td>
                                                                           <td><i class="fa fa-share rotate-right"></i></td> 
@@ -2262,7 +2265,7 @@
                                                                         <td style="border:1pt solid black;border-left:0pt;text-align:right;">
                                                                         <textarea id="ACT4CCDIST" name="ACT4CCDIST" class="ACT"><?php echo text($ACT4CCDIST); ?></textarea></td>
                                                                         <td style="border:1pt solid black;text-align:center;">
-                                                                        <textarea id="ACTPRIMCCDIST" name="ACTPRIMCCDIST" class="ACT"><?php echo text($ACTPRIMCCDIST); ?></textarea></td>
+                                                                        <textarea id="ACT5CCDIST" name="ACT5CCDIST" class="ACT"><?php echo text($ACT5CCDIST); ?></textarea></td>
                                                                         <td style="border:1pt solid black;border-right:0pt;text-align:left;">
                                                                         <textarea id="ACT6CCDIST" name="ACT6CCDIST" class="ACT"><?php echo text($ACT6CCDIST); ?></textarea></td>
                                                                         <td><i class="fa fa-share rotate-right"></i></td> 
@@ -2315,7 +2318,7 @@
                                                                           <td style="border:1pt solid black;border-left:0pt;text-align:right;">
                                                                           <textarea id="ACT4SCNEAR" name="ACT4SCNEAR" class="ACT"><?php echo text($ACT4SCNEAR); ?></textarea></td>
                                                                           <td style="border:1pt solid black;text-align:center;">
-                                                                          <textarea id="ACTPRIMSCNEAR" name="ACTPRIMSCNEAR" class="ACT"><?php echo text($ACTPRIMSCNEAR); ?></textarea></td>
+                                                                          <textarea id="ACT5SCNEAR" name="ACT5SCNEAR" class="ACT"><?php echo text($ACT5SCNEAR); ?></textarea></td>
                                                                           <td style="border:1pt solid black;border-right:0pt;text-align:left;">
                                                                           <textarea id="ACT6SCNEAR" name="ACT6SCNEAR" class="ACT"><?php echo text($ACT6SCNEAR); ?></textarea></td>
                                                                           <td><i class="fa fa-share rotate-right"></i></td> 
@@ -2366,7 +2369,7 @@
                                                                           <td style="border:1pt solid black;border-left:0pt;text-align:right;">
                                                                           <textarea id="ACT4CCNEAR" name="ACT4CCNEAR" class="ACT"><?php echo text($ACT4CCNEAR); ?></textarea></td>
                                                                           <td style="border:1pt solid black;text-align:center;">
-                                                                          <textarea id="ACTPRIMCCNEAR" name="ACTPRIMCCNEAR" class="ACT"><?php echo text($ACTPRIMCCNEAR); ?></textarea></td>
+                                                                          <textarea id="ACT5CCNEAR" name="ACT5CCNEAR" class="ACT"><?php echo text($ACT5CCNEAR); ?></textarea></td>
                                                                           <td style="border:1pt solid black;border-right:0pt;text-align:left;">
                                                                           <textarea id="ACT6CCNEAR" name="ACT6CCNEAR" class="ACT"><?php echo text($ACT6CCNEAR); ?></textarea></td><td><i class="fa fa-share rotate-right"></i></td> 
                                                                       </tr> 

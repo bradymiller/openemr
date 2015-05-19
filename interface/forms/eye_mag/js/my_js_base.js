@@ -39,20 +39,20 @@ function fill_QP_field(PEZONE, ODOSOU, LOCATION_text, selection,fill_action) {
     var Fvalue = document.getElementById(FIELDID).value;
     if (prefix > '' && prefix !='off') {prefix = prefix + " ";}
     if (prefix =='off') { prefix=''; }
-   
+    
     if (fill_action =="REPLACE") {
         $("#" +FIELDID).val(prefix +selection);
         $("#" +FIELDID).css("background-color","#F0F8FF");
     } else {
-    if (($("#" +FIELDID).css("background-color")=="rgb(245, 245, 220)") || (Fvalue ==''))  {
-        $("#" +FIELDID).val(prefix+selection);
-        $("#" +FIELDID).css("background-color","#F0F8FF");
-    } else {
-        if (Fvalue >'') prefix = ", "+prefix;
-        $("#" +FIELDID).val(Fvalue + prefix +selection);
-        $("#" +FIELDID).css("background-color","#F0F8FF");
-            //$("#" +FIELDID).css("background-color","red");
-    }
+        if (($("#" +FIELDID).css("background-color")=="rgb(245, 245, 220)") || (Fvalue ==''))  {
+            $("#" +FIELDID).val(prefix+selection);
+            $("#" +FIELDID).css("background-color","#F0F8FF");
+        } else {
+            if (Fvalue >'') prefix = ", "+prefix;
+            $("#" +FIELDID).val(Fvalue + prefix +selection);
+            $("#" +FIELDID).css("background-color","#F0F8FF");
+                //$("#" +FIELDID).css("background-color","red");
+        }
     }
     submit_form(FIELDID);
 }
@@ -81,11 +81,11 @@ function submit_form() {
            data 	: formData // our data object
            }).done(function(o) {
                    //  console.log(o);
-                  $("#tellme").html(o);
-                  })
+                   $("#tellme").html(o);
+                   })
 };
 
-           
+
 /*
  * Function to save a canvas by zone
  */
@@ -138,7 +138,7 @@ function update_PREFS() {
         'PREFS_RETINA_RIGHT'     : $('#PREFS_RETINA_RIGHT').val(),
         'PREFS_NEURO_RIGHT'      : $('#PREFS_NEURO_RIGHT').val(),
         'PREFS_IMPPLAN_RIGHT'    : $('#PREFS_IMPPLAN_DRAW').val()
-    
+        
     };
     $.ajax({
            type 		: 'POST',
@@ -276,35 +276,35 @@ function show_DRAW_section(zone) {
     $("#Draw_"+zone).addClass('canvas');
     
     $("#Draw_"+zone).show();
-   /*
-    $("#"+zone+"_1").show();
-    $("#"+zone+"_right").addClass('canvas').show();
-    $("#QP_"+zone).hide();
-    $("#PRIORS_"+zone+"_left_text").hide();
-    $("#DRAW_"+zone).show();
-    */
+    /*
+     $("#"+zone+"_1").show();
+     $("#"+zone+"_right").addClass('canvas').show();
+     $("#QP_"+zone).hide();
+     $("#PRIORS_"+zone+"_left_text").hide();
+     $("#DRAW_"+zone).show();
+     */
     $("#PREFS_"+zone+"_DRAW").val(1);
     
-
+    
 }
 
 function show_TEXT() {
         //   alert("show_TEXT");
-     $("#PMH_1").show();
+    $("#PMH_1").show();
     $("#NEURO_1").show();
     $("#IMPPLAN_1").show();
     $(".TEXT_class").show();
     show_left();
     hide_right(); //this hides the right half
-                hide_QP();
-        hide_DRAW();
-        hide_PRIORS();
+    hide_QP();
+    hide_DRAW();
+    hide_PRIORS();
     if ($("#PREFS_CLINICAL").val() !='1') {
             // we want to show text_only which are found on left half
         $("#PREFS_CLINICAL").val('1');
         $("#PREFS_EXAM").val('TEXT');
     }
-   
+    
 }
 function show_PRIORS() {
     $("#NEURO_sections").show();
@@ -388,7 +388,7 @@ function show_QP_section(zone) {
      $("#DRAW_"+zone).show();
      */
     $("#PREFS_"+zone+"_RIGHT").val('QP');
-
+    
     
     
         // $(".QP_class").show();
@@ -420,7 +420,7 @@ function menu_select(zone,che) {
                }
                });
         
-
+        
     }
 }
 function hide_DRAW() {
@@ -601,90 +601,91 @@ $(document).ready(function() {
                                      $(this).toggleClass('yellow');
                                      });
                   $('.ke').mouseout(function() {
-                                     
-                                     $(this).toggleClass('yellow');
-                                     });
+                                    
+                                    $(this).toggleClass('yellow');
+                                    });
                   $("[id$='_keyboard']").on('keydown', function(e) {
-                                      // This will take the keyboard ACT textarea values and store them in the correct zone
-                                      // Formatting rules for this textarea:  zone selected in quick pick area
-                                      //  TEXTAREA DATA:  fieldnumberA.#PD(i?)(\w)+ ; fieldnumberB.#PD(i?)(\w)+
-                                      // convert auto to caps
-                                      // save some typing steps to speed it up: iX=X(T) ie=E(T) rh=RHT lih=LH(T)
-                                      // triggered by the enter key
-                                      // fieldnumbers can be entered individually, followed by "RETURN/ENTER" each time OR
-                                      // separated by semicolons, then hit enter.  Semi-colons speed it up.  May make the peds/strabismus guys
-                                      // actually like the entry susytem.
-                                      // The other ways are pretty clunky and rarely used by most doctors.
-                                      if (e.which == 13|| e.keyCode == 13) {  //if its not the enter key, ignore it.
-                                        e.preventDefault();
-                                        var exam = this.id.match(/(.*)_keyboard/)[1];
+                                            // This will take the keyboard ACT textarea values and store them in the correct zone
+                                            // Formatting rules for this textarea:  zone selected in quick pick area
+                                            //  TEXTAREA DATA:  fieldnumberA.#PD(i?)(\w)+ ; fieldnumberB.#PD(i?)(\w)+
+                                            // convert auto to caps
+                                            // save some typing steps to speed it up: iX=X(T) ie=E(T) rh=RHT lih=LH(T)
+                                            // triggered by the enter key
+                                            // fieldnumbers can be entered individually, followed by "RETURN/ENTER" each time OR
+                                            // separated by semicolons, then hit enter.  Semi-colons speed it up.  May make the peds/strabismus guys
+                                            // actually like the entry susytem.
+                                            // The other ways are pretty clunky and rarely used by most doctors.
+                                            if (e.which == 13|| e.keyCode == 13) {  //if its not the enter key, ignore it.
+                                            e.preventDefault();
+                                            var exam = this.id.match(/(.*)_keyboard/)[1];
                                             //      alert(exam);
                                             
-                                        switch (exam) {
+                                            switch (exam) {
                                             case 'EXT':
-                                                var data1 = $("#EXT_keyboard").val();
-                                                var data_seg = data1.match(/([^;]*)/g);
-                                                for (index=0; index < data_seg.length; ++index) {
-                                                    if (data_seg[index] =='') continue;
-                                                    if ((index =='0') && (data1.match(/^D/i))) {
-                                                        $("#EXT_defaults").trigger("click");
-                                                        continue;
-                                                    }
-                                                    data_seg[index] = data_seg[index].replace(/^[\s]*/,'');
-                                                    var data = data_seg[index].match(/^(\w*)\.(.*)/);
-                                                    var appendix =".a";
-                                                    (data[2].match(/\.a$/))?(data[2] = data[2].replace(/\.a$/,'')):(appendix = "nope");
-                                                    var field = data[1].toUpperCase();
-                                                    var field2 ='';
-                                                    var text = data[2];
-                                                    text = text.replace(/\binf\b/g,"inferior")
-                                                        .replace(/\bsup\b/g,"superior")
-                                                        .replace(/\bnas /g,"nasal")
-                                                        .replace(/\btemp /g,"temporal")
-                                                        .replace(/\bmed\b/g,"medial")
-                                                        .replace(/\blat\b/g,"lateral")
-                                                        .replace(/\bdermato\b/g,"dermatochalasis")
-                                                        .replace(/w\/ /g,"with")
-                                                        .replace(/\blac(\s+)/g,"laceration")
-                                                        .replace(/\blacr\b/g,'lacrimal')
-                                                        .replace(/\bdcr\b/ig,"DCR")
-                                                        .replace(/\bbcc\b/ig,"BCC")
-                                                        .replace(/\bscc\b/ig,"SCC")
-                                                        .replace(/\bsebc\b/ig,"sebaceous cell carcinoma")
-                                                        .replace(/\bfh\b/ig,"forehead")
-                                                        .replace(/\bglab\b/ig,"glabellar")
-                                                        .replace(/\bcic\b/ig,"cicatricial")
-                                                        .replace(/\bentrop\b/i,"entropion")
-                                                        .replace(/\bectrop\b/i,"ectropion")
-                                                        .replace(/\bect\b/,"ectropion")
-                                                        .replace(/\bent\b/i,"entropion");
-                                                    if (field == 'RB')  field2 = "RBROW";
-                                                    if (field == 'LB')  field2 = "LBROW";
-                                                    if (field == 'RUL') field2 = "RUL";
-                                                    if (field == 'LUL') field2 = "LUL";
-                                                    if (field == 'RLL') field2 = "RLL";
-                                                    if (field == 'LLL') field2 = "LLL";
-                                                    if (field == 'RMC') field2 = "RMCT";
-                                                    if (field == 'LMC') field2 = "LMCT";
-                                                    if (field == 'RAD') field2 = "RADNEXA";
-                                                    if (field == 'LAD') field2 = "LADNEXA";
-                                                    if (field == 'RLF') field2 = "RLF";
-                                                    if (field == 'LLF') field2 = "LLF";
-                                                    if (field == 'RMRD') field2 = "RMRD";
-                                                    if (field == 'LMRD') field2 = "LMRD";
-                                                    if (field == 'RVF') field2 = "RVFISSURE";
-                                                    if (field == 'LVF') field2 = "LVFISSURE";
-                                                    if (field == 'RCAR') field2 = "RCAROTID";
-                                                    if (field == 'LCAR') field2 = "LCAROTID";
-                                                    if (field == 'RTA') field2 = "RTEMPART";
-                                                    if (field == 'LTA') field2 = "LTEMPART";
-                                                    if (field == 'RCN5') field2 = "RCNV";
-                                                    if (field == 'LCN5') field2 = "LCNVI";
-                                                    if (field == 'RCN7') field2 = "RCMVII";
-                                                    if (field == 'LCN7') field2 = "LCNVII";
-                                                    if (field == 'RCNV') field2 = "RCNV";
-                                                    if (field == 'LCNV') field2 = "LCNV";
-                                                    if (field == 'RCNVII') field2 = "RCNVII";
+                                            var data1 = $("#EXT_keyboard").val();
+                                            var data_seg = data1.match(/([^;]*)/g);
+                                            for (index=0; index < data_seg.length; ++index) {
+                                            if (data_seg[index] =='') continue;
+                                            if ((index =='0') && (data1.match(/^D/i))) {
+                                            $("#EXT_defaults").trigger("click");
+                                            continue;
+                                            }
+                                            data_seg[index] = data_seg[index].replace(/^[\s]*/,'');
+                                            var data = data_seg[index].match(/^(\w*)\.(.*)/);
+                                            var appendix =".a";
+                                            (data[2].match(/\.a$/))?(data[2] = data[2].replace(/\.a$/,'')):(appendix = "nope");
+                                            var field = data[1].toUpperCase();
+                                            var field2 ='';
+                                            var text = data[2];
+                                            text = text.replace(/\binf\b/g,"inferior")
+                                            .replace(/\bsup\b/g,"superior")
+                                            .replace(/\bnas /g,"nasal")
+                                            .replace(/\btemp /g,"temporal")
+                                            .replace(/\bmed\b/g,"medial")
+                                            .replace(/\blat\b/g,"lateral")
+                                            .replace(/\bdermato\b/g,"dermatochalasis")
+                                            .replace(/w\/ /g,"with")
+                                            .replace(/\blac(\s+)/g,"laceration")
+                                            .replace(/\blacr\b/g,'lacrimal')
+                                            .replace(/\bdcr\b/ig,"DCR")
+                                            .replace(/\bbcc\b/ig,"BCC")
+                                            .replace(/\bscc\b/ig,"SCC")
+                                            .replace(/\bsebc\b/ig,"sebaceous cell carcinoma")
+                                            .replace(/\bfh\b/ig,"forehead")
+                                            .replace(/\bglab\b/ig,"glabellar")
+                                            .replace(/\bcic\b/ig,"cicatricial")
+                                            .replace(/\bentrop\b/i,"entropion")
+                                            .replace(/\bectrop\b/i,"ectropion")
+                                            .replace(/\bect\b/,"ectropion")
+                                            .replace(/\bent\b/i,"entropion")
+                                            .replace(/\btr\b/ig,"trace");
+                                            if (field == 'RB')  field2 = "RBROW";
+                                            if (field == 'LB')  field2 = "LBROW";
+                                            if (field == 'RUL') field2 = "RUL";
+                                            if (field == 'LUL') field2 = "LUL";
+                                            if (field == 'RLL') field2 = "RLL";
+                                            if (field == 'LLL') field2 = "LLL";
+                                            if (field == 'RMC') field2 = "RMCT";
+                                            if (field == 'LMC') field2 = "LMCT";
+                                            if (field == 'RAD') field2 = "RADNEXA";
+                                            if (field == 'LAD') field2 = "LADNEXA";
+                                            if (field == 'RLF') field2 = "RLF";
+                                            if (field == 'LLF') field2 = "LLF";
+                                            if (field == 'RMRD') field2 = "RMRD";
+                                            if (field == 'LMRD') field2 = "LMRD";
+                                            if (field == 'RVF') field2 = "RVFISSURE";
+                                            if (field == 'LVF') field2 = "LVFISSURE";
+                                            if (field == 'RCAR') field2 = "RCAROTID";
+                                            if (field == 'LCAR') field2 = "LCAROTID";
+                                            if (field == 'RTA') field2 = "RTEMPART";
+                                            if (field == 'LTA') field2 = "LTEMPART";
+                                            if (field == 'RCN5') field2 = "RCNV";
+                                            if (field == 'LCN5') field2 = "LCNVI";
+                                            if (field == 'RCN7') field2 = "RCMVII";
+                                            if (field == 'LCN7') field2 = "LCNVII";
+                                            if (field == 'RCNV') field2 = "RCNV";
+                                            if (field == 'LCNV') field2 = "LCNV";
+                                            if (field == 'RCNVII') field2 = "RCNVII";
                                             if (field == 'LCNVII') field2 = "LCNVII";
                                             
                                             if (field == 'RH') field2 = "ODHERTEL";
@@ -694,365 +695,375 @@ $(document).ready(function() {
                                             $('#ODHERTEL').val(text.match(/(\d{2})-(\d{1,3})-(\d{2})/)[1]).css("background-color","#F0F8FF");
                                             $('#OSHERTEL').val(text.match(/(\d{2})-(\d{1,3})-(\d{2})/)[3]).css("background-color","#F0F8FF");
                                             $('#HERTELBASE').val(text.match(/(\d{2})-(\d{1,3})-(\d{2})/)[2]).css("background-color","#F0F8FF");                                            }
-                                                    if ((field == 'BLF')||(field == 'LF')) {
-                                                        field = "RLF";
-                                                        (appendix == ".a") ? ($('#'+field).val($('#'+field).val() +', '+text)) : $('#'+field).val(text);
-                                                        field = "LLF";
-                                                        (appendix == ".a") ? ($('#'+field).val($('#'+field).val() +', '+text)) : $('#'+field).val(text);
-                                                        $('#RLF').css("background-color","#F0F8FF");
-                                                        $('#LLF').css("background-color","#F0F8FF");
-                                                    } else if (field == 'BMRD') {
-                                                        field = "RMRD";
-                                                        (appendix == ".a") ? ($('#'+field).val($('#'+field).val() +', '+text)) : $('#'+field).val(text);
-                                                        field = "LMRD";
-                                                        (appendix == ".a") ? ($('#'+field).val($('#'+field).val() +', '+text)) : $('#'+field).val(text);
-                                                        $('#RMRD').css("background-color","#F0F8FF");
-                                                        $('#LMRD').css("background-color","#F0F8FF");
-                                                    } else if (field == 'BVF') {
-                                                        field = "RVFISSURE";
-                                                        (appendix == ".a") ? ($('#'+field).val($('#'+field).val() +', '+text)) : $('#'+field).val(text);
-                                                        field = "LVFISSURE";
-                                                        (appendix == ".a") ? ($('#'+field).val($('#'+field).val() +', '+text)) : $('#'+field).val(text);
-                                                        $('#RVFISSURE').css("background-color","#F0F8FF");
-                                                        $('#LVFISSURE').css("background-color","#F0F8FF");
-                                                    } else if ((field == 'BCAR')||(field == 'CAR')) {
-                                                        field = "RCAROTID";
-                                                        (appendix == ".a") ? ($('#'+field).val($('#'+field).val() +', '+text)) : $('#'+field).val(text);
-                                                        field = "LCAROTID";
-                                                        (appendix == ".a") ? ($('#'+field).val($('#'+field).val() +', '+text)) : $('#'+field).val(text);
-                                                        $('#RCAROTID').css("background-color","#F0F8FF");
-                                                        $('#LCAROTID').css("background-color","#F0F8FF");
-                                                    } else if ((field == 'BTA')||(field == 'TA')) {
-                                                        field = "RTEMPART";
-                                                        (appendix == ".a") ? ($('#'+field).val($('#'+field).val() +', '+text)) : $('#'+field).val(text);
-                                                        field = "LTEMPART";
-                                                        (appendix == ".a") ? ($('#'+field).val($('#'+field).val() +', '+text)) : $('#'+field).val(text);
-                                                        $('#RTEMPART').css("background-color","#F0F8FF");
-                                                        $('#LTEMPART').css("background-color","#F0F8FF");
-                                                    } else if ((field == 'BCNV') || (field == 'BCN5')||(field == 'CNV')||(field=='CN5')) {
-                                                        field = "RCNV";
-                                                        (appendix == ".a") ? ($('#'+field).val($('#'+field).val() +', '+text)) : $('#'+field).val(text);
-                                                        field = "LCNV";
-                                                        (appendix == ".a") ? ($('#'+field).val($('#'+field).val() +', '+text)) : $('#'+field).val(text);
-                                                        $('#RCNV').css("background-color","#F0F8FF");
-                                                        $('#LCNV').css("background-color","#F0F8FF");
-                                                    } else if ((field == 'BCNVII') || (field == 'BCNVII')||(field == 'CNVII')||(field == 'CN7')) {
-                                                        field = "RCNV";
-                                                        (appendix == ".a") ? ($('#'+field).val($('#'+field).val() +', '+text)) : $('#'+field).val(text);
-                                                        field = "LCNV";
-                                                        (appendix == ".a") ? ($('#'+field).val($('#'+field).val() +', '+text)) : $('#'+field).val(text);
-                                                        $('#RCNV').css("background-color","#F0F8FF");
-                                                        $('#LCNV').css("background-color","#F0F8FF");
-                                                    } else if ((field == 'BLL')||(field=='LL')) {
-                                                        field = "RLL";
-                                                        (appendix == ".a") ? ($('#'+field).val($('#'+field).val() +', '+text)) : $('#'+field).val(text);
-                                                        field = "LLL";
-                                                        (appendix == ".a") ? ($('#'+field).val($('#'+field).val() +', '+text)) : $('#'+field).val(text);
-                                                        $('#RLL').css("background-color","#F0F8FF");
-                                                        $('#LLL').css("background-color","#F0F8FF");
-                                                    } else if ((field == '4XL')||(field == 'Lx4')||(field=='LL')) {
-                                                        field = "RLL";
-                                                        (appendix == ".a") ? ($('#'+field).val($('#'+field).val() +', '+text)) : $('#'+field).val(text);
-                                                        field = "RUL";
-                                                        (appendix == ".a") ? ($('#'+field).val($('#'+field).val() +', '+text)) : $('#'+field).val(text);
-                                                        field = "LUL";
-                                                        (appendix == ".a") ? ($('#'+field).val($('#'+field).val() +', '+text)) : $('#'+field).val(text);
-                                                        field = "LLL";
-                                                        (appendix == ".a") ? ($('#'+field).val($('#'+field).val() +', '+text)) : $('#'+field).val(text);
-                                                        $('#RLL').css("background-color","#F0F8FF");
-                                                        $('#LLL').css("background-color","#F0F8FF");
-                                                        $('#RUL').css("background-color","#F0F8FF");
-                                                        $('#LUL').css("background-color","#F0F8FF");
-                                                    } else if ((field == 'BUL')||(field=='UL')) {
-                                                        field = "RUL";
-                                                        (appendix == ".a") ? ($('#'+field).val($('#'+field).val() +', '+text)) : $('#'+field).val(text);
-                                                        field = "LUL";
-                                                        (appendix == ".a") ? ($('#'+field).val($('#'+field).val() +', '+text)) : $('#'+field).val(text);
-                                                        $('#RUL').css("background-color","#F0F8FF");
-                                                        $('#LUL').css("background-color","#F0F8FF");
-                                                    } else if ((field == 'FH')||(field == "BB")) {
-                                                        field = "RBROW";
-                                                        (appendix == ".a") ? ($('#'+field).val($('#'+field).val() +', '+text)) : $('#'+field).val(text);
-                                                        field = "LBROW";
-                                                        (appendix == ".a") ? ($('#'+field).val($('#'+field).val() +', '+text)) : $('#'+field).val(text);
-                                                        $('#RBROW').val(text).css("background-color","#F0F8FF");
-                                                        $('#LBROW').val(text).css("background-color","#F0F8FF");
-                                                    } else {
-                                                        (appendix == ".a") ? ($('#'+field2).val($('#'+field2).val() +", "+text)) : $('#'+field2).val(text);
-                                                        $('#'+field2).css("background-color","#F0F8FF");
-                                                    }
-                                                }
+                                            if ((field == 'BLF')||(field == 'LF')) {
+                                            field = "RLF";
+                                            (appendix == ".a") ? ($('#'+field).val($('#'+field).val() +', '+text)) : $('#'+field).val(text);
+                                            field = "LLF";
+                                            (appendix == ".a") ? ($('#'+field).val($('#'+field).val() +', '+text)) : $('#'+field).val(text);
+                                            $('#RLF').css("background-color","#F0F8FF");
+                                            $('#LLF').css("background-color","#F0F8FF");
+                                            } else if (field == 'BMRD') {
+                                            field = "RMRD";
+                                            (appendix == ".a") ? ($('#'+field).val($('#'+field).val() +', '+text)) : $('#'+field).val(text);
+                                            field = "LMRD";
+                                            (appendix == ".a") ? ($('#'+field).val($('#'+field).val() +', '+text)) : $('#'+field).val(text);
+                                            $('#RMRD').css("background-color","#F0F8FF");
+                                            $('#LMRD').css("background-color","#F0F8FF");
+                                            } else if (field == 'BVF') {
+                                            field = "RVFISSURE";
+                                            (appendix == ".a") ? ($('#'+field).val($('#'+field).val() +', '+text)) : $('#'+field).val(text);
+                                            field = "LVFISSURE";
+                                            (appendix == ".a") ? ($('#'+field).val($('#'+field).val() +', '+text)) : $('#'+field).val(text);
+                                            $('#RVFISSURE').css("background-color","#F0F8FF");
+                                            $('#LVFISSURE').css("background-color","#F0F8FF");
+                                            } else if ((field == 'BCAR')||(field == 'CAR')) {
+                                            field = "RCAROTID";
+                                            (appendix == ".a") ? ($('#'+field).val($('#'+field).val() +', '+text)) : $('#'+field).val(text);
+                                            field = "LCAROTID";
+                                            (appendix == ".a") ? ($('#'+field).val($('#'+field).val() +', '+text)) : $('#'+field).val(text);
+                                            $('#RCAROTID').css("background-color","#F0F8FF");
+                                            $('#LCAROTID').css("background-color","#F0F8FF");
+                                            } else if ((field == 'BTA')||(field == 'TA')) {
+                                            field = "RTEMPART";
+                                            (appendix == ".a") ? ($('#'+field).val($('#'+field).val() +', '+text)) : $('#'+field).val(text);
+                                            field = "LTEMPART";
+                                            (appendix == ".a") ? ($('#'+field).val($('#'+field).val() +', '+text)) : $('#'+field).val(text);
+                                            $('#RTEMPART').css("background-color","#F0F8FF");
+                                            $('#LTEMPART').css("background-color","#F0F8FF");
+                                            } else if ((field == 'BCNV') || (field == 'BCN5')||(field == 'CNV')||(field=='CN5')) {
+                                            field = "RCNV";
+                                            (appendix == ".a") ? ($('#'+field).val($('#'+field).val() +', '+text)) : $('#'+field).val(text);
+                                            field = "LCNV";
+                                            (appendix == ".a") ? ($('#'+field).val($('#'+field).val() +', '+text)) : $('#'+field).val(text);
+                                            $('#RCNV').css("background-color","#F0F8FF");
+                                            $('#LCNV').css("background-color","#F0F8FF");
+                                            } else if ((field == 'BCNVII') || (field == 'BCNVII')||(field == 'CNVII')||(field == 'CN7')) {
+                                            field = "RCNV";
+                                            (appendix == ".a") ? ($('#'+field).val($('#'+field).val() +', '+text)) : $('#'+field).val(text);
+                                            field = "LCNV";
+                                            (appendix == ".a") ? ($('#'+field).val($('#'+field).val() +', '+text)) : $('#'+field).val(text);
+                                            $('#RCNV').css("background-color","#F0F8FF");
+                                            $('#LCNV').css("background-color","#F0F8FF");
+                                            } else if ((field == 'BLL')||(field=='LL')) {
+                                            field = "RLL";
+                                            (appendix == ".a") ? ($('#'+field).val($('#'+field).val() +', '+text)) : $('#'+field).val(text);
+                                            field = "LLL";
+                                            (appendix == ".a") ? ($('#'+field).val($('#'+field).val() +', '+text)) : $('#'+field).val(text);
+                                            $('#RLL').css("background-color","#F0F8FF");
+                                            $('#LLL').css("background-color","#F0F8FF");
+                                            } else if ((field == '4XL')||(field == 'Lx4')||(field=='LL')) {
+                                            field = "RLL";
+                                            (appendix == ".a") ? ($('#'+field).val($('#'+field).val() +', '+text)) : $('#'+field).val(text);
+                                            field = "RUL";
+                                            (appendix == ".a") ? ($('#'+field).val($('#'+field).val() +', '+text)) : $('#'+field).val(text);
+                                            field = "LUL";
+                                            (appendix == ".a") ? ($('#'+field).val($('#'+field).val() +', '+text)) : $('#'+field).val(text);
+                                            field = "LLL";
+                                            (appendix == ".a") ? ($('#'+field).val($('#'+field).val() +', '+text)) : $('#'+field).val(text);
+                                            $('#RLL').css("background-color","#F0F8FF");
+                                            $('#LLL').css("background-color","#F0F8FF");
+                                            $('#RUL').css("background-color","#F0F8FF");
+                                            $('#LUL').css("background-color","#F0F8FF");
+                                            } else if ((field == 'BUL')||(field=='UL')) {
+                                            field = "RUL";
+                                            (appendix == ".a") ? ($('#'+field).val($('#'+field).val() +', '+text)) : $('#'+field).val(text);
+                                            field = "LUL";
+                                            (appendix == ".a") ? ($('#'+field).val($('#'+field).val() +', '+text)) : $('#'+field).val(text);
+                                            $('#RUL').css("background-color","#F0F8FF");
+                                            $('#LUL').css("background-color","#F0F8FF");
+                                            } else if ((field == 'FH')||(field == "BB")) {
+                                            field = "RBROW";
+                                            (appendix == ".a") ? ($('#'+field).val($('#'+field).val() +', '+text)) : $('#'+field).val(text);
+                                            field = "LBROW";
+                                            (appendix == ".a") ? ($('#'+field).val($('#'+field).val() +', '+text)) : $('#'+field).val(text);
+                                            $('#RBROW').val(text).css("background-color","#F0F8FF");
+                                            $('#LBROW').val(text).css("background-color","#F0F8FF");
+                                            } else {
+                                            (appendix == ".a") ? ($('#'+field2).val($('#'+field2).val() +", "+text)) : $('#'+field2).val(text);
+                                            $('#'+field2).css("background-color","#F0F8FF");
+                                            }
+                                            }
                                             
-                                                submit_form();
-                                                $('#EXT_keyboard').val('');
+                                            submit_form();
+                                            $('#EXT_keyboard').val('');
                                             break;
                                             
                                             case 'ANTSEG':
-                                                var data1 = $("#ANTSEG_keyboard").val();
-                                                var data_seg = data1.match(/([^;]*)/g);
-                                                for (index=0; index < data_seg.length; ++index) {
-                                                    if (data_seg[index] =='') continue;
-                                                    if ((index =='0') && (data1.match(/^D/i))) {
-                                                        $("#ANTSEG_defaults").trigger("click");
-                                                        continue;
-                                                    }
-                                                    data_seg[index] = data_seg[index].replace(/^[\s]*/,'');
-                                                    var data = data_seg[index].match(/^(\W*)\.(.*)/);
-                                                    var appendix =".a";
-                                                    (data[2].match(/\.a$/))?(data[2] = data[2].replace(/\.a$/,'')):(appendix = "nope");
-                                                    var field = data[1].toUpperCase();
-                                                    var field2 ='';
-                                                    var text = data[2];
-                                                    text = text.replace(/\binf\b/g,"inferior")
-                                                        .replace(/\bsup\b/g,"superior")
-                                                        .replace(/\bnas\b/g,"nasal")
-                                                        .replace(/\btemp\b/g,"temporal")
-                                                        .replace(/\bmed\b/g,"medial")
-                                                        .replace(/\blat\b/g,"lateral")
-                                                        .replace(/\bgut\b/g,"guttata")
-                                                        .replace(/\bw\/\b/g,"with")
-                                                        .replace(/\blac\b/g,"laceration")
-                                                        .replace(/\bpter\b/g,'pterygium')
-                                                        .replace(/\bpig\b/g,'pigmented')
-                                                        .replace(/\binj\b/ig,"injection")
-                                                        .replace(/\bfc\b/ig,"flare/cell")
-                                                        .replace(/\bks\b/ig,"kruckenberg spindle")
-                                                        .replace(/\bsebc\b/ig,"sebaceous cell carcinoma")
-                                                        .replace(/\bspk\b/ig,"SPK")
-                                                        .replace(/\bpek\b/ig,"PEK")
-                                                        .replace(/\bstr\b/ig,"stromal")
-                                                        .replace(/\bendo?\b/ig,"endothelial")
-                                                        .replace(/\brec\b/ig,"recession")
-                                                        .replace(/\b1 o\b/ig,"1 o'clock")
-                                                        .replace(/\b2 o\b/ig,"2 o'clock")
-                                                        .replace(/\b3 o\b/ig,"3 o'clock")
-                                                        .replace(/\b4 o\b/ig,"4 o'clock")
-                                                        .replace(/\b5 o\b/ig,"5 o'clock")
-                                                        .replace(/\b6 o\b/ig,"6 o'clock")
-                                                        .replace(/\b7 o\b/ig,"7 o'clock")
-                                                        .replace(/\b8 o\b/ig,"8 o'clock")
-                                                        .replace(/\b9 o\b/ig,"9 o'clock")
-                                                        .replace(/\b10 o\b/ig,"10 o'clock")
-                                                        .replace(/\b11 o\b/ig,"11 o'clock")
-                                                        .replace(/\b12 o\b/ig,"12 o'clock")
-                                                        .replace(/\blimb\b/i,"limbus")
-                                                        .replace(/\btl\b/i,"tear lake");
-                                                    if (field == 'RC')      field2 = "ODCONJ";
-                                                    if (field == 'LC')      field2 = "OSCONJ";
-                                                    if (field == 'RK')      field2 = "ODCORNEA";
-                                                    if (field == 'LK')      field2 = "OSCORNEA";
-                                                    if (field == 'RAC')     field2 = "ODAC";
-                                                    if (field == 'LAC')     field2 = "OSAC";
-                                                    if (field == 'RL')      field2 = "ODLENS";
-                                                    if (field == 'LL')      field2 = "OSLENS";
-                                                    if (field == 'RI')      field2 = "ODIRIS";
-                                                    if (field == 'LI')      field2 = "OSIRIS";
-                                                    if (field == 'RG')      field2 = "OSGONIO";
-                                                    if (field == 'LG')      field2 = "OSGONIO";
-                                                    if (field == 'RPACH')   field2 = "OSKTHICKNESS";
-                                                    if (field == 'LPACH')   field2 = "OSKTHICKNESS";
-                                                    if (field == 'RSCH1')   field2 = "OSSCHIRMER1";
-                                                    if (field == 'LSCH1')   field2 = "OSSCHIRMER1";
-                                                    if (field == 'RSCH2')   field2 = "OSSCHIRMER2";
-                                                    if (field == 'LSCH2')   field2 = "OSSCHIRMER2";
-                                                    if (field == 'RTBUT')   field2 = "ODTBUT";
-                                                    if (field == 'LTBUT')   field2 = "OSTBUT";
-                                                    if ((field == 'BC')||(field=='C')) {
-                                                        field = "ODCONJ";
-                                                        (appendix == ".a") ? ($('#'+field).val($('#'+field).val() +', '+text)) : $('#'+field).val(text);
-                                                        field = "OSCONJ";
-                                                        (appendix == ".a") ? ($('#'+field).val($('#'+field).val() +', '+text)) : $('#'+field).val(text);
-                                                        $('#ORCONJ').css("background-color","#F0F8FF");
-                                                        $('#OSCONJ').css("background-color","#F0F8FF");
-                                                    } else if ((field == 'BK')||(field=='K')) {
-                                                        field = "ODCORNEA";
-                                                        (appendix == ".a") ? ($('#'+field).val($('#'+field).val() +', '+text)) : $('#'+field).val(text);
-                                                        field = "OSCORNEA";
-                                                        (appendix == ".a") ? ($('#'+field).val($('#'+field).val() +', '+text)) : $('#'+field).val(text);
-                                                        $('#ODCORNEA').css("background-color","#F0F8FF");
-                                                        $('#OSCORNEA').css("background-color","#F0F8FF");
-                                                    } else if ((field == 'BAC')||(field=='AC')) {
-                                                        field = "ODAC";
-                                                        (appendix == ".a") ? ($('#'+field).val($('#'+field).val() +', '+text)) : $('#'+field).val(text);
-                                                        field = "OSAC";
-                                                        (appendix == ".a") ? ($('#'+field).val($('#'+field).val() +', '+text)) : $('#'+field).val(text);
-                                                        $('#ODAC').css("background-color","#F0F8FF");
-                                                        $('#OSAC').css("background-color","#F0F8FF");
-                                                    } else if ((field == 'BL')||(field=='L')) {
-                                                        field = "ODLENS";
-                                                        (appendix == ".a") ? ($('#'+field).val($('#'+field).val() +', '+text)) : $('#'+field).val(text);
-                                                        field = "OSLENS";
-                                                        (appendix == ".a") ? ($('#'+field).val($('#'+field).val() +', '+text)) : $('#'+field).val(text);
-                                                        $('#ODLENS').css("background-color","#F0F8FF");
-                                                        $('#OSLENS').css("background-color","#F0F8FF");
-                                                    } else if ((field == 'BI')||(field=='I')) {
-                                                        field = "ODIRIS";
-                                                        (appendix == ".a") ? ($('#'+field).val($('#'+field).val() +', '+text)) : $('#'+field).val(text);
-                                                        field = "OSIRIS";
-                                                        (appendix == ".a") ? ($('#'+field).val($('#'+field).val() +', '+text)) : $('#'+field).val(text);
-                                                        $('#ODIRIS').css("background-color","#F0F8FF");
-                                                        $('#OSIRIS').css("background-color","#F0F8FF");
-                                                    } else if ((field == 'BPACH')||(field=='PACH')) {
-                                                        field = "ODKTHICKNESS";
-                                                        (appendix == ".a") ? ($('#'+field).val($('#'+field).val() +', '+text)) : $('#'+field).val(text);
-                                                        field = "OSKTHICKNESS";
-                                                        (appendix == ".a") ? ($('#'+field).val($('#'+field).val() +', '+text)) : $('#'+field).val(text);
-                                                        $('#ODKTHICKNESS').css("background-color","#F0F8FF");
-                                                        $('#OSKTHICKNESS').css("background-color","#F0F8FF");
-                                                    } else if ((field == 'BG')||(field=='G')) {
-                                                        field = "ODGONIO";
-                                                        (appendix == ".a") ? ($('#'+field).val($('#'+field).val() +', '+text)) : $('#'+field).val(text);
-                                                        field = "OSGONIO";
-                                                        (appendix == ".a") ? ($('#'+field).val($('#'+field).val() +', '+text)) : $('#'+field).val(text);
-                                                        $('#ODGONIO').css("background-color","#F0F8FF");
-                                                        $('#OSGONIO').css("background-color","#F0F8FF");
-                                                    } else if ((field == 'BTBUT')||(field=='TBUT')) {
-                                                        field = "ODTBUT";
-                                                        (appendix == ".a") ? ($('#'+field).val($('#'+field).val() +', '+text)) : $('#'+field).val(text);
-                                                        field = "OSTBUT";
-                                                        (appendix == ".a") ? ($('#'+field).val($('#'+field).val() +', '+text)) : $('#'+field).val(text);
-                                                        $('#ODTBUT').css("background-color","#F0F8FF");
-                                                        $('#OSTBUT').css("background-color","#F0F8FF");
-                                                    } else {
-                                                        (appendix == ".a") ? ($('#'+field2).val($('#'+field2).val() +", "+text)) : $('#'+field2).val(text);
-                                                        $('#'+field2).css("background-color","#F0F8FF");
-                                                    }
+                                            var data1 = $("#ANTSEG_keyboard").val();
+                                            var data_seg = data1.match(/([^;]*)/g);
+                                            for (index=0; index < data_seg.length; ++index) {
+                                            if (data_seg[index] =='') continue;
+                                            if ((index =='0') && (data1.match(/^D/i))) {
+                                            $("#ANTSEG_defaults").trigger("click");
+                                            continue;
+                                            }
+                                            data_seg[index] = data_seg[index].replace(/^[\s]*/,'');
+                                            var data = data_seg[index].match(/^(\W*)\.(.*)/);
+                                            var appendix =".a";
+                                            (data[2].match(/\.a$/))?(data[2] = data[2].replace(/\.a$/,'')):(appendix = "nope");
+                                            var field = data[1].toUpperCase();
+                                            var field2 ='';
+                                            var text = data[2];
+                                            text = text.replace(/\binf\b/g,"inferior")
+                                            .replace(/\bsup\b/g,"superior")
+                                            .replace(/\bnas\b/g,"nasal")
+                                            .replace(/\btemp\b/g,"temporal")
+                                            .replace(/\bmed\b/g,"medial")
+                                            .replace(/\blat\b/g,"lateral")
+                                            .replace(/\bgut\b/g,"guttata")
+                                            .replace(/\bw\/\b/g,"with")
+                                            .replace(/\btr\b/ig,"trace")
+                                            .replace(/\blac\b/g,"laceration")
+                                            .replace(/\bpter\b/g,'pterygium')
+                                            .replace(/\bpig\b/g,'pigmented')
+                                            .replace(/\binj\b/ig,"injection")
+                                            .replace(/\bfc\b/ig,"flare/cell")
+                                            .replace(/\bks\b/ig,"kruckenberg spindle")
+                                            .replace(/\bsebc\b/ig,"sebaceous cell carcinoma")
+                                            .replace(/\bspk\b/ig,"SPK")
+                                            .replace(/\bpek\b/ig,"PEK")
+                                            .replace(/\bstr\b/ig,"stromal")
+                                            .replace(/\bendo?\b/ig,"endothelial")
+                                            .replace(/\brec\b/ig,"recession")
+                                            .replace(/\b1 o\b/ig,"1 o'clock")
+                                            .replace(/\b2 o\b/ig,"2 o'clock")
+                                            .replace(/\b3 o\b/ig,"3 o'clock")
+                                            .replace(/\b4 o\b/ig,"4 o'clock")
+                                            .replace(/\b5 o\b/ig,"5 o'clock")
+                                            .replace(/\b6 o\b/ig,"6 o'clock")
+                                            .replace(/\b7 o\b/ig,"7 o'clock")
+                                            .replace(/\b8 o\b/ig,"8 o'clock")
+                                            .replace(/\b9 o\b/ig,"9 o'clock")
+                                            .replace(/\b10 o\b/ig,"10 o'clock")
+                                            .replace(/\b11 o\b/ig,"11 o'clock")
+                                            .replace(/\b12 o\b/ig,"12 o'clock")
+                                            .replace(/\blimb\b/i,"limbus")
+                                            .replace(/\btl\b/i,"tear lake");
+                                            if (field == 'RC')      field2 = "ODCONJ";
+                                            if (field == 'LC')      field2 = "OSCONJ";
+                                            if (field == 'RK')      field2 = "ODCORNEA";
+                                            if (field == 'LK')      field2 = "OSCORNEA";
+                                            if (field == 'RAC')     field2 = "ODAC";
+                                            if (field == 'LAC')     field2 = "OSAC";
+                                            if (field == 'RL')      field2 = "ODLENS";
+                                            if (field == 'LL')      field2 = "OSLENS";
+                                            if (field == 'RI')      field2 = "ODIRIS";
+                                            if (field == 'LI')      field2 = "OSIRIS";
+                                            if (field == 'RG')      field2 = "OSGONIO";
+                                            if (field == 'LG')      field2 = "OSGONIO";
+                                            if (field == 'RPACH')   field2 = "OSKTHICKNESS";
+                                            if (field == 'LPACH')   field2 = "OSKTHICKNESS";
+                                            if (field == 'RSCH1')   field2 = "OSSCHIRMER1";
+                                            if (field == 'LSCH1')   field2 = "OSSCHIRMER1";
+                                            if (field == 'RSCH2')   field2 = "OSSCHIRMER2";
+                                            if (field == 'LSCH2')   field2 = "OSSCHIRMER2";
+                                            if (field == 'RTBUT')   field2 = "ODTBUT";
+                                            if (field == 'LTBUT')   field2 = "OSTBUT";
+                                            if ((field == 'BC')||(field=='C')) {
+                                            field = "ODCONJ";
+                                            (appendix == ".a") ? ($('#'+field).val($('#'+field).val() +', '+text)) : $('#'+field).val(text);
+                                            field = "OSCONJ";
+                                            (appendix == ".a") ? ($('#'+field).val($('#'+field).val() +', '+text)) : $('#'+field).val(text);
+                                            $('#ORCONJ').css("background-color","#F0F8FF");
+                                            $('#OSCONJ').css("background-color","#F0F8FF");
+                                            } else if ((field == 'BK')||(field=='K')) {
+                                            field = "ODCORNEA";
+                                            (appendix == ".a") ? ($('#'+field).val($('#'+field).val() +', '+text)) : $('#'+field).val(text);
+                                            field = "OSCORNEA";
+                                            (appendix == ".a") ? ($('#'+field).val($('#'+field).val() +', '+text)) : $('#'+field).val(text);
+                                            $('#ODCORNEA').css("background-color","#F0F8FF");
+                                            $('#OSCORNEA').css("background-color","#F0F8FF");
+                                            } else if ((field == 'BAC')||(field=='AC')) {
+                                            field = "ODAC";
+                                            (appendix == ".a") ? ($('#'+field).val($('#'+field).val() +', '+text)) : $('#'+field).val(text);
+                                            field = "OSAC";
+                                            (appendix == ".a") ? ($('#'+field).val($('#'+field).val() +', '+text)) : $('#'+field).val(text);
+                                            $('#ODAC').css("background-color","#F0F8FF");
+                                            $('#OSAC').css("background-color","#F0F8FF");
+                                            } else if ((field == 'BL')||(field=='L')) {
+                                            field = "ODLENS";
+                                            (appendix == ".a") ? ($('#'+field).val($('#'+field).val() +', '+text)) : $('#'+field).val(text);
+                                            field = "OSLENS";
+                                            (appendix == ".a") ? ($('#'+field).val($('#'+field).val() +', '+text)) : $('#'+field).val(text);
+                                            $('#ODLENS').css("background-color","#F0F8FF");
+                                            $('#OSLENS').css("background-color","#F0F8FF");
+                                            } else if ((field == 'BI')||(field=='I')) {
+                                            field = "ODIRIS";
+                                            (appendix == ".a") ? ($('#'+field).val($('#'+field).val() +', '+text)) : $('#'+field).val(text);
+                                            field = "OSIRIS";
+                                            (appendix == ".a") ? ($('#'+field).val($('#'+field).val() +', '+text)) : $('#'+field).val(text);
+                                            $('#ODIRIS').css("background-color","#F0F8FF");
+                                            $('#OSIRIS').css("background-color","#F0F8FF");
+                                            } else if ((field == 'BPACH')||(field=='PACH')) {
+                                            field = "ODKTHICKNESS";
+                                            (appendix == ".a") ? ($('#'+field).val($('#'+field).val() +', '+text)) : $('#'+field).val(text);
+                                            field = "OSKTHICKNESS";
+                                            (appendix == ".a") ? ($('#'+field).val($('#'+field).val() +', '+text)) : $('#'+field).val(text);
+                                            $('#ODKTHICKNESS').css("background-color","#F0F8FF");
+                                            $('#OSKTHICKNESS').css("background-color","#F0F8FF");
+                                            } else if ((field == 'BG')||(field=='G')) {
+                                            field = "ODGONIO";
+                                            (appendix == ".a") ? ($('#'+field).val($('#'+field).val() +', '+text)) : $('#'+field).val(text);
+                                            field = "OSGONIO";
+                                            (appendix == ".a") ? ($('#'+field).val($('#'+field).val() +', '+text)) : $('#'+field).val(text);
+                                            $('#ODGONIO').css("background-color","#F0F8FF");
+                                            $('#OSGONIO').css("background-color","#F0F8FF");
+                                            } else if ((field == 'BTBUT')||(field=='TBUT')) {
+                                            field = "ODTBUT";
+                                            (appendix == ".a") ? ($('#'+field).val($('#'+field).val() +', '+text)) : $('#'+field).val(text);
+                                            field = "OSTBUT";
+                                            (appendix == ".a") ? ($('#'+field).val($('#'+field).val() +', '+text)) : $('#'+field).val(text);
+                                            $('#ODTBUT').css("background-color","#F0F8FF");
+                                            $('#OSTBUT').css("background-color","#F0F8FF");
+                                            } else {
+                                            (appendix == ".a") ? ($('#'+field2).val($('#'+field2).val() +", "+text)) : $('#'+field2).val(text);
+                                            $('#'+field2).css("background-color","#F0F8FF");
+                                            }
                                             }
                                             submit_form();
                                             $('#ANTSEG_keyboard').val('');
                                             break;
                                             
                                             case 'RETINA':
-                                                var data1 = $("#RETINA_keyboard").val();
-                                                var data_seg = data1.match(/([^;]*)/g);
-                                                for (index=0; index < data_seg.length; ++index) {
-                                                    if (data_seg[index] =='') continue;
-                                                    if ((index =='0') && (data1.match(/^D/i))) {
-                                                        $("#RETINA_defaults").trigger("click");
-                                                        continue;
-                                                    }
-                                                    data_seg[index] = data_seg[index].replace(/^[\s]*/,'');
-                                                    var data = data_seg[index].match(/^(\w*)\.(.*)/);
-                                                    var appendix =".a";
-                                                    (data[2].match(/\.a$/))?(data[2] = data[2].replace(/\.a$/,'')):(appendix = "nope");
-                                                    var field = data[1].toUpperCase();
-                                                    var field2 ='';
-                                                    var text = data[2];
-                                                    text = text.replace(/\binf\b/g,"inferior")
-                                                        .replace(/\bsup\b/g,"superior")
-                                                        .replace(/\bnas\b/g,"nasal")
-                                                        .replace(/\btemp\b/g,"temporal")
-                                                        .replace(/\bmed\b/g,"medial")
-                                                        .replace(/\blat\b/g,"lateral")
-                                                        .replace(/\bcsme\b/ig,"CSME")
-                                                        .replace(/\bw\/\b/g,"with")
-                                                        .replace(/\bbdr(\s+)/ig,"BDR")
-                                                        .replace(/\bppdr\b/g,'PPDR')
-                                                        .replace(/\bht\b/ig,"horsheshoe tear")
-                                                        .replace(/(\b)ab(\b)/ig,"air bubble")
-                                                        .replace(/\bc3f8\b/ig,"C3F8")
-                                                        .replace(/\bma\b/ig,"macroaneurysm")
-                                                        .replace(/\bmias\b/ig,"microaneurysm")
-                                                        .replace(/\bped\b/ig,"PED")
-                                                        .replace(/\b1 o\b/ig," 1 o'clock")
-                                                        .replace(/\b2 o\b/ig,"2 o'clock")
-                                                        .replace(/\b3 o\b/ig," 3 o'clock")
-                                                        .replace(/\b4 o\b/ig," 4 o'clock")
-                                                        .replace(/\b5 o\b/ig," 5 o'clock")
-                                                        .replace(/\b6 o\b/ig," 6 o'clock")
-                                                        .replace(/\b7 o\b/ig," 7 o'clock")
-                                                        .replace(/\b8 o\b/ig," 8 o'clock")
-                                                        .replace(/\b9 o\b/ig," 9 o'clock")
-                                                        .replace(/\b10 o\b/ig," 10 o'clock")
-                                                        .replace(/\b11 o\b/ig," 11 o'clock")
-                                                        .replace(/(\b)12 o(\b)/ig," 12 o'clock")
-                                                        .replace(/\bmac\b/i,"macula")
-                                                        .replace(/\bfovea\b/i,"fovea")
-                                                        .replace(/\bvh\b/i,"vitreous hemorrhage");
-                                                    if (field == 'RD')      field2 = "ODDISC";
-                                                    if (field == 'LD')      field2 = "OSDISC";
-                                                    if (field == 'RC')      field2 = "ODCUP";
-                                                    if (field == 'LC')      field2 = "OSCUP";
-                                                    if (field == 'RMAC')    field2 = "ODMACULA";
-                                                    if (field == 'LMAC')    field2 = "OSMACULA";
-                                                    if (field == 'RV')      field2 = "ODVESSELS";
-                                                    if (field == 'LV')      field2 = "OSVESSELS";
-                                                    if (field == 'RP')      field2 = "ODPERIPH";
-                                                    if (field == 'LP')      field2 = "OSPERIPH";
-                                                    if (field == 'RMCT')    field2 = "RMCT";
-                                                    if (field == 'LMCT')    field2 = "LMCT";
-                                                    if (field == 'BD') {
-                                                        field = "ODDISC";
-                                                        (appendix == ".a") ? ($('#'+field).val($('#'+field).val() +', '+text)) : $('#'+field).val(text);
-                                                        field = "OSDISC";
-                                                        (appendix == ".a") ? ($('#'+field).val($('#'+field).val() +', '+text)) : $('#'+field).val(text);
-                                                        $('#ORDISC').css("background-color","#F0F8FF");
-                                                        $('#OSDISC').css("background-color","#F0F8FF");
-                                                    } else if ((field == 'BC')||(field == 'C')) {
-                                                        field = "ODCUP";
-                                                        (appendix == ".a") ? ($('#'+field).val($('#'+field).val() +', '+text)) : $('#'+field).val(text);
-                                                        field = "OSCUP";
-                                                        (appendix == ".a") ? ($('#'+field).val($('#'+field).val() +', '+text)) : $('#'+field).val(text);
-                                                        $('#ODCUP').css("background-color","#F0F8FF");
-                                                        $('#OSCUP').css("background-color","#F0F8FF");
-                                                    } else if ((field == 'BMAC')||(field == 'MAC')) {
-                                                        field = "ODMACULA";
-                                                        (appendix == ".a") ? ($('#'+field).val($('#'+field).val() +', '+text)) : $('#'+field).val(text);
-                                                        field = "OSMACULA";
-                                                        (appendix == ".a") ? ($('#'+field).val($('#'+field).val() +', '+text)) : $('#'+field).val(text);
-                                                        $('#ODMACULA').css("background-color","#F0F8FF");
-                                                        $('#OSMACULA').css("background-color","#F0F8FF");
-                                                    } else if ((field == 'BV')||(field == 'V')) {
-                                                        field = "ODVESSELS";
-                                                        (appendix == ".a") ? ($('#'+field).val($('#'+field).val() +', '+text)) : $('#'+field).val(text);
-                                                        field = "OSVESSELS";
-                                                        (appendix == ".a") ? ($('#'+field).val($('#'+field).val() +', '+text)) : $('#'+field).val(text);
-                                                        $('#ODVESSELS').css("background-color","#F0F8FF");
-                                                        $('#OSVESSELS').css("background-color","#F0F8FF");
-                                                    } else if ((field == 'BP')||(field == 'P')) {
-                                                        field = "ODPERIPH";
-                                                        (appendix == ".a") ? ($('#'+field).val($('#'+field).val() +', '+text)) : $('#'+field).val(text);
-                                                        field = "OSPERIPH";
-                                                        (appendix == ".a") ? ($('#'+field).val($('#'+field).val() +', '+text)) : $('#'+field).val(text);
-                                                        $('#ODPERIPH').css("background-color","#F0F8FF");
-                                                        $('#OSPERIPH').css("background-color","#F0F8FF");
-                                                    } else if ((field == 'BCMT')||(field == 'CMT')) {
-                                                        field = "ODCMT";
-                                                        (appendix == ".a") ? ($('#'+field).val($('#'+field).val() +', '+text)) : $('#'+field).val(text);
-                                                        field = "OSCMT";
-                                                        (appendix == ".a") ? ($('#'+field).val($('#'+field).val() +', '+text)) : $('#'+field).val(text);
-                                                        $('#ODCMT').css("background-color","#F0F8FF");
-                                                        $('#OSCMT').css("background-color","#F0F8FF");
-                                                    } else {
-                                                        (appendix == ".a") ? ($('#'+field2).val($('#'+field2).val() +", "+text)) : $('#'+field2).val(text);
-                                                        $('#'+field2).css("background-color","#F0F8FF");
-                                                    }
-                                                    }
-                                                submit_form();
-                                                $('#RETINA_keyboard').val('');
+                                            var data1 = $("#RETINA_keyboard").val();
+                                            var data_seg = data1.match(/([^;]*)/g);
+                                            for (index=0; index < data_seg.length; ++index) {
+                                            if (data_seg[index] =='') continue;
+                                            if ((index =='0') && (data1.match(/^D/i))) {
+                                            $("#RETINA_defaults").trigger("click");
+                                            continue;
+                                            }
+                                            data_seg[index] = data_seg[index].replace(/^[\s]*/,'');
+                                            var data = data_seg[index].match(/^(\w*)\.(.*)/);
+                                            var appendix =".a";
+                                            (data[2].match(/\.a$/))?(data[2] = data[2].replace(/\.a$/,'')):(appendix = "nope");
+                                            var field = data[1].toUpperCase();
+                                            var field2 ='';
+                                            var text = data[2];
+                                            text = text.replace(/\binf\b/g,"inferior")
+                                            .replace(/\bsup\b/g,"superior")
+                                            .replace(/\bnas\b/g,"nasal")
+                                            .replace(/\btemp\b/g,"temporal")
+                                            .replace(/\bmed\b/g,"medial")
+                                            .replace(/\blat\b/g,"lateral")
+                                            .replace(/\bcsme\b/ig,"CSME")
+                                            .replace(/\bw\/\b/g,"with")
+                                            .replace(/\bbdr(\b)/ig,"BDR")
+                                            .replace(/\bppdr\b/g,'PPDR')
+                                            .replace(/\bht\b/ig,"horseshoe tear")
+                                            .replace(/(\b)ab(\b)/ig,"air bubble")
+                                            .replace(/\bc3f8\b/ig,"C3F8")
+                                            .replace(/\bma\b/ig,"macroaneurysm")
+                                            .replace(/\btr\b/ig,"trace")
+                                            .replace(/\bmias\b/ig,"microaneurysm")
+                                            .replace(/\bped\b/ig,"PED")
+                                            .replace(/\b1 o\b/ig," 1 o'clock")
+                                            .replace(/\b2 o\b/ig,"2 o'clock")
+                                            .replace(/\b3 o\b/ig," 3 o'clock")
+                                            .replace(/\b4 o\b/ig," 4 o'clock")
+                                            .replace(/\b5 o\b/ig," 5 o'clock")
+                                            .replace(/\b6 o\b/ig," 6 o'clock")
+                                            .replace(/\b7 o\b/ig," 7 o'clock")
+                                            .replace(/\b8 o\b/ig," 8 o'clock")
+                                            .replace(/\b9 o\b/ig," 9 o'clock")
+                                            .replace(/\b10 o\b/ig," 10 o'clock")
+                                            .replace(/\b11 o\b/ig," 11 o'clock")
+                                            .replace(/(\b)12 o(\b)/ig," 12 o'clock")
+                                            .replace(/\bmac\b/i,"macula")
+                                            .replace(/\bfov\b/i,"fovea")
+                                            .replace(/\bvh\b/i,"vitreous hemorrhage");
+                                            if (field == 'RD')      field2 = "ODDISC";
+                                            if (field == 'LD')      field2 = "OSDISC";
+                                            if (field == 'RC')      field2 = "ODCUP";
+                                            if (field == 'LC')      field2 = "OSCUP";
+                                            if (field == 'RMAC')    field2 = "ODMACULA";
+                                            if (field == 'LMAC')    field2 = "OSMACULA";
+                                            if (field == 'RV')      field2 = "ODVESSELS";
+                                            if (field == 'LV')      field2 = "OSVESSELS";
+                                            if (field == 'RP')      field2 = "ODPERIPH";
+                                            if (field == 'LP')      field2 = "OSPERIPH";
+                                            if (field == 'RMCT')    field2 = "RMCT";
+                                            if (field == 'LMCT')    field2 = "LMCT";
+                                            if (field == 'BD') {
+                                            field = "ODDISC";
+                                            (appendix == ".a") ? ($('#'+field).val($('#'+field).val() +', '+text)) : $('#'+field).val(text);
+                                            field = "OSDISC";
+                                            (appendix == ".a") ? ($('#'+field).val($('#'+field).val() +', '+text)) : $('#'+field).val(text);
+                                            $('#ODDISC').css("background-color","#F0F8FF");
+                                            $('#OSDISC').css("background-color","#F0F8FF");
+                                            } else if ((field == 'BC')||(field == 'C')) {
+                                            field = "ODCUP";
+                                            (appendix == ".a") ? ($('#'+field).val($('#'+field).val() +', '+text)) : $('#'+field).val(text);
+                                            field = "OSCUP";
+                                            (appendix == ".a") ? ($('#'+field).val($('#'+field).val() +', '+text)) : $('#'+field).val(text);
+                                            $('#ODCUP').css("background-color","#F0F8FF");
+                                            $('#OSCUP').css("background-color","#F0F8FF");
+                                            } else if ((field == 'BMAC')||(field == 'MAC')) {
+                                            field = "ODMACULA";
+                                            (appendix == ".a") ? ($('#'+field).val($('#'+field).val() +', '+text)) : $('#'+field).val(text);
+                                            field = "OSMACULA";
+                                            (appendix == ".a") ? ($('#'+field).val($('#'+field).val() +', '+text)) : $('#'+field).val(text);
+                                            $('#ODMACULA').css("background-color","#F0F8FF");
+                                            $('#OSMACULA').css("background-color","#F0F8FF");
+                                            } else if ((field == 'BV')||(field == 'V')) {
+                                            field = "ODVESSELS";
+                                            (appendix == ".a") ? ($('#'+field).val($('#'+field).val() +', '+text)) : $('#'+field).val(text);
+                                            field = "OSVESSELS";
+                                            (appendix == ".a") ? ($('#'+field).val($('#'+field).val() +', '+text)) : $('#'+field).val(text);
+                                            $('#ODVESSELS').css("background-color","#F0F8FF");
+                                            $('#OSVESSELS').css("background-color","#F0F8FF");
+                                            } else if ((field == 'BP')||(field == 'P')) {
+                                            field = "ODPERIPH";
+                                            (appendix == ".a") ? ($('#'+field).val($('#'+field).val() +', '+text)) : $('#'+field).val(text);
+                                            field = "OSPERIPH";
+                                            (appendix == ".a") ? ($('#'+field).val($('#'+field).val() +', '+text)) : $('#'+field).val(text);
+                                            $('#ODPERIPH').css("background-color","#F0F8FF");
+                                            $('#OSPERIPH').css("background-color","#F0F8FF");
+                                            } else if ((field == 'BCMT')||(field == 'CMT')) {
+                                            field = "ODCMT";
+                                            (appendix == ".a") ? ($('#'+field).val($('#'+field).val() +', '+text)) : $('#'+field).val(text);
+                                            field = "OSCMT";
+                                            (appendix == ".a") ? ($('#'+field).val($('#'+field).val() +', '+text)) : $('#'+field).val(text);
+                                            $('#ODCMT').css("background-color","#F0F8FF");
+                                            $('#OSCMT').css("background-color","#F0F8FF");
+                                            } else {
+                                            (appendix == ".a") ? ($('#'+field2).val($('#'+field2).val() +", "+text)) : $('#'+field2).val(text);
+                                            $('#'+field2).css("background-color","#F0F8FF");
+                                            }
+                                            }
+                                            submit_form();
+                                            $('#RETINA_keyboard').val('');
                                             break;
-                                           
+                                            
                                             case 'NEURO':
-                                               var zone = $("#NEURO_ACT_zone").val();
-                                               var data1 = $("#NEURO_keyboard").val();
-                                               data_seg = data1.match(/([^;]*)/g);
-                                               for (index=0; index < data_seg.length; ++index) {
-                                                   //for each segment separated by a semicolon
-                                                   if (data_seg[index] =='') continue;
-                                                   var data = data_seg[index].match(/(\d{1,2})\.(\d{0,2}||ortho)(.*)/);
-                                                   var field = data[1];
-                                                   var PD = data[2];
-                                                   if (PD >'') PD = PD + ' ';
-                                                   var strab = data[3].toUpperCase().replace (/I(.)/g,"$1(T)").replace(/\s*(\d)/,'\n$1');
-                                                   $('#ACT'+field+zone).val(PD+strab);
-                                                   $('#ACT'+field+zone).css("background-color","#F0F8FF");
+                                            var zone = $("#NEURO_ACT_zone").val();
+                                            var data1 = $("#NEURO_keyboard").val();
+                                            data_seg = data1.match(/([^;]*)/g);
+                                            for (index=0; index < data_seg.length; ++index) {
+                                                //for each segment separated by a semicolon
+                                                if (data_seg[index] =='') continue;
+                                                if (data_seg[index].match(/(DIST|NEAR)/i)) {
+                                                    data_seg[index] = data_seg[index].toUpperCase();
+                                                    if (data_seg[index] == 'SCDIST') $('#NEURO_ACT_zone').val('SCDIST').trigger('change');
+                                                    if (data_seg[index] == 'CCDIST') $('#NEURO_ACT_zone').val('CCDIST').trigger('change');
+                                                    if (data_seg[index] == 'SCNEAR') $('#NEURO_ACT_zone').val('SCNEAR').trigger('change');
+                                                    if (data_seg[index] == 'CCNEAR') $('#NEURO_ACT_zone').val('CCNEAR').trigger('change');
+                                                    continue;
                                                 }
-                                                submit_form();
-                                               $('#NEURO_keyboard').val('');
+                                                var data = data_seg[index].match(/(\d{1,2})\.(\d{0,2}||ortho)(.*)/);
+                                                var field = data[1];
+                                                var PD = data[2];
+                                                if (PD >'') PD = PD + ' ';
+                                                var strab = data[3].toUpperCase().replace (/I(.)/g,"$1(T)").replace(/\s*(\d)/,'\n$1');
+                                                $('#ACT'+field+zone).val(PD+strab);
+                                                $('#ACT'+field+zone).css("background-color","#F0F8FF");
+                                            }
+                                            submit_form();
+                                            $('#NEURO_keyboard').val('');
                                             break;
                                             } //end switch
                                             } //end if enter/return pressed
-                                });
+                                            });
                   $("[id^='sketch_tools_']").click(function() {
                                                    var zone = this.id.match(/sketch_tools_(.*)/)[1];
                                                    $("[id^='sketch_tools_"+zone+"']").css("height","30px");
@@ -1216,34 +1227,34 @@ $(document).ready(function() {
                                                });
                   
                   $("input[name$='AXIS']").blur(function() {
-                                           //hmmn.  Make this a 3 digit leading zeros number.
-                                           // we are not translating text to numbers, just numbers to
-                                           // a 3 digit format with leading zeroes as needed.
-                                           // assume the end user KNOWS there are only numbers presented and
-                                           // more than 3 digits is a mistake...
-                                           // (although this may change with topographic answer)
-                                           var axis = $(this).val();
-                                           // if (!axis.match(/\d/)) return; How do we say this?
-                                           var front = this.id.match(/(.*)AXIS$/)[1];
-                                           var cyl = $("#"+front+"CYL").val();
-                                           if (cyl > '') {
-                                           if (!axis.match(/\d\d\d/)) {
-                                           if (!axis.match(/\d\d/)) {
-                                           if (!axis.match(/\d/)) {
-                                           axis = '0';
-                                           }
-                                           axis = '0' + axis;
-                                           }
-                                           axis = '0' + axis;
-                                           }
-                                           }
-                                           //we can utilize a phoropter dial feature, we can start them at their age appropriate with/against the rule value.
-                                           //requires touch screen. requires complete touch interface development. Exists in refraction lanes. Would
-                                           //be nice to tie them all together.  Would require manufacturers to publish their APIs to communicate with
-                                           //the devices.
-                                           $(this).val(axis);
-                                           submit_form('eye_mag');
-                                           });
+                                                //hmmn.  Make this a 3 digit leading zeros number.
+                                                // we are not translating text to numbers, just numbers to
+                                                // a 3 digit format with leading zeroes as needed.
+                                                // assume the end user KNOWS there are only numbers presented and
+                                                // more than 3 digits is a mistake...
+                                                // (although this may change with topographic answer)
+                                                var axis = $(this).val();
+                                                // if (!axis.match(/\d/)) return; How do we say this?
+                                                var front = this.id.match(/(.*)AXIS$/)[1];
+                                                var cyl = $("#"+front+"CYL").val();
+                                                if (cyl > '') {
+                                                if (!axis.match(/\d\d\d/)) {
+                                                if (!axis.match(/\d\d/)) {
+                                                if (!axis.match(/\d/)) {
+                                                axis = '0';
+                                                }
+                                                axis = '0' + axis;
+                                                }
+                                                axis = '0' + axis;
+                                                }
+                                                }
+                                                //we can utilize a phoropter dial feature, we can start them at their age appropriate with/against the rule value.
+                                                //requires touch screen. requires complete touch interface development. Exists in refraction lanes. Would
+                                                //be nice to tie them all together.  Would require manufacturers to publish their APIs to communicate with
+                                                //the devices.
+                                                $(this).val(axis);
+                                                submit_form('eye_mag');
+                                                });
                   
                   
                   $("input[name$='CYL']").blur(function() {
@@ -1253,36 +1264,36 @@ $(document).ready(function() {
                                                var back  = mid.match(/(\d{0,2})(\d{2})/)[2];
                                                mid = front + "." + back;
                                                }
-
-                                          //if mid is -2.5 make it -2.50
-                                          if (mid.match(/\.\d$/)) {
-                                          mid = mid + '0';
-                                          // mid = this.val() + '0';
-                                          }
-                                          $(this).val(mid);
-                                          if (!$('#PREFS_CYL').val()) {
+                                               
+                                               //if mid is -2.5 make it -2.50
+                                               if (mid.match(/\.\d$/)) {
+                                               mid = mid + '0';
+                                               // mid = this.val() + '0';
+                                               }
+                                               $(this).val(mid);
+                                               if (!$('#PREFS_CYL').val()) {
                                                $('#PREFS_CYL').val('+');
                                                update_PREFS();
-                                          }
-                                          
-                                          if (!mid.match(/^(\+|\-){1}/)) {
-                                              //no +/- sign at the start of the field.
-                                              //ok so there is a preference set
-                                              //Since it doesn't start with + or - then give it the preference value
-                                              var plusminus = $('#PREFS_CYL').val() + mid;
-                                              $(this).val(plusminus);  //set this cyl value to plus or minus
-                                          } else if (mid.match(/^(\+|\-){1}/)) {
+                                               }
+                                               
+                                               if (!mid.match(/^(\+|\-){1}/)) {
+                                               //no +/- sign at the start of the field.
+                                               //ok so there is a preference set
+                                               //Since it doesn't start with + or - then give it the preference value
+                                               var plusminus = $('#PREFS_CYL').val() + mid;
+                                               $(this).val(plusminus);  //set this cyl value to plus or minus
+                                               } else if (mid.match(/^(\+|\-){1}/)) {
                                                pref = mid.match(/^(\+|\-){1}/)[0];
                                                //so they used a value + or - at the start of the field.
                                                //The only reason to work on this is to change to cylinder preference
                                                if ($('#PREFS_CYL').val() != pref){
-                                                //and that is what they are doing here
-                                                $('#PREFS_CYL').val(pref);
-                                                update_PREFS();
+                                               //and that is what they are doing here
+                                               $('#PREFS_CYL').val(pref);
+                                               update_PREFS();
                                                }
-                                          }
-                                          submit_form($(this));
-                                          });
+                                               }
+                                               submit_form($(this));
+                                               });
                   
                   $('#WODADD1').blur(function() {
                                      var mid = $('#WODADD1').val();
@@ -1386,9 +1397,9 @@ $(document).ready(function() {
                   var zones = ["PMH","HPI","EXT","ANTSEG","RETINA","NEURO","IMPPLAN"];
                   for (index = '0'; index < zones.length; ++index) {
                   if ($("#PREFS_"+zones[index]+"_RIGHT").val() =='DRAW') {
-                    show_DRAW_section(zones[index]);
+                  show_DRAW_section(zones[index]);
                   } else if ($("#PREFS_"+zones[index]+"_RIGHT").val() =='QP') {
-                    show_QP_section(zones[index]);
+                  show_QP_section(zones[index]);
                   }                  }
                   
                   $("input,textarea,text,checkbox").change(function(){
@@ -1655,7 +1666,7 @@ $(document).ready(function() {
                                                           var color = $(this).css('background-color');
                                                           //alert ($(this).title);
                                                           if ((color == 'rgb(255, 255, 153)')) {// =='blue' <- IE hack
-                                                            $(this).css("background-color","red");
+                                                          $(this).css("background-color","red");
                                                           }
                                                           });
                                            //change to highlight field in zone entry is for
@@ -1663,21 +1674,21 @@ $(document).ready(function() {
                                            $("#ACT"+newValue+zone).css("background-color","yellow");
                                            });
                   $("[name^='NEURO_ACT_strab']").click(function() {
-                                           var newValue = $(this).val();
-                                           $("[name^='NEURO_ACT_strab']").removeClass('eye_button_selected');
-                                           $(this).addClass("eye_button_selected");
-                                           });
+                                                       var newValue = $(this).val();
+                                                       $("[name^='NEURO_ACT_strab']").removeClass('eye_button_selected');
+                                                       $(this).addClass("eye_button_selected");
+                                                       });
                   $("#NEURO_value").change(function() {
-                                               var newValue = $(this).val();
-                                               $("[name^='NEURO_value']").removeClass('eye_button_selected');
-                                               $("#NEURO_value_"+ newValue).addClass("eye_button_selected");
+                                           var newValue = $(this).val();
+                                           $("[name^='NEURO_value']").removeClass('eye_button_selected');
+                                           $("#NEURO_value_"+ newValue).addClass("eye_button_selected");
                                            if (newValue == "ortho") {
-                                            $("#NEURO_ACT_strab").val('');
-                                            $("[name^='NEURO_ACT_strab']").removeClass('eye_button_selected');
-                                            $("#NEURO_side").val('');
-                                            $("[name^='NEURO_side']").removeClass('eye_button_selected');
+                                           $("#NEURO_ACT_strab").val('');
+                                           $("[name^='NEURO_ACT_strab']").removeClass('eye_button_selected');
+                                           $("#NEURO_side").val('');
+                                           $("[name^='NEURO_side']").removeClass('eye_button_selected');
                                            }
-                                               });
+                                           });
                   $("#NEURO_RECORD").mouseover(function() {
                                                $("#NEURO_RECORD").addClass('borderShadow2');
                                                });
@@ -1689,9 +1700,9 @@ $(document).ready(function() {
                                                $(this).toggleClass('button_over');
                                                });
                   $("#NEURO_RECORD").mouseup(function() {
-                                               $("#NEURO_RECORD").removeClass('borderShadow2');
-                                               $(this).toggleClass('button_over');
-                                               });
+                                             $("#NEURO_RECORD").removeClass('borderShadow2');
+                                             $(this).toggleClass('button_over');
+                                             });
                   $("#NEURO_RECORD").click(function() {
                                            //find out the field we are updating
                                            var number = $("#NEURO_field").val();
@@ -1701,8 +1712,8 @@ $(document).ready(function() {
                                            
                                            $("#ACT"+number+zone).val(strab).css("background-color","#F0F8FF");
                                            
-
-                                               });
+                                           
+                                           });
                   
                   $("AntSegSpan,#AntSegOD,#AntSegOU,#AntSegOS,#EXTOD,#EXTOU,#EXTOS,#RETINAOD,#RETINAOU,#RETINAOS").mouseover(function() {
                                                                                                                              $(this).toggleClass('button_over');
@@ -1735,64 +1746,64 @@ $(document).ready(function() {
                                                    $(this).toggleClass("borderShadow2");
                                                    });
                   $("#LayerVision_W_lightswitch, #LayerVision_CR_lightswitch,#LayerVision_MR_lightswitch,#LayerVision_ADDITIONAL_lightswitch,#LayerVision_CTL_lightswitch,#LayerVision_VAX_lightswitch,#LayerVision_IOP_lightswitch").click(function() {
-                                                                var section = "#"+this.id.match(/(.*)_lightswitch$/)[1];
-                                                                var section2 = this.id.match(/(.*)_(.*)_lightswitch$/)[2];
-                                                                var elem = document.getElementById("PREFS_"+section2);
-                                                                if ($("#PREFS_VA").val() !='1') {
-                                                                    $("#PREFS_VA").val('1');
-                                                                    $("#LayerVision2").show();
-                                                                    elem.value="1";
-                                                                    $(section).removeClass('nodisplay');
-                                                                    if (section2 =="ADDITIONAL") {
-                                                                     $("#LayerVision_ADDITIONAL").removeClass('nodisplay');
-                                                                    }
-                                                                    if (section2 =="VAX") {
-                                                                     $("#LayerVision_ADDITIONAL_VISION").removeClass('nodisplay');
-                                                                    }
-                                                                    if (section2 =="IOP") {
-                                                                     $("#LayerVision_IOP").removeClass('nodisplay');
-                                                                    }
-                                                                   this.addClass("buttonRefraction_selected");
-                                                                } else {
+                                                                                                                                                                                                                                            var section = "#"+this.id.match(/(.*)_lightswitch$/)[1];
+                                                                                                                                                                                                                                            var section2 = this.id.match(/(.*)_(.*)_lightswitch$/)[2];
+                                                                                                                                                                                                                                            var elem = document.getElementById("PREFS_"+section2);
+                                                                                                                                                                                                                                            if ($("#PREFS_VA").val() !='1') {
+                                                                                                                                                                                                                                            $("#PREFS_VA").val('1');
+                                                                                                                                                                                                                                            $("#LayerVision2").show();
+                                                                                                                                                                                                                                            elem.value="1";
+                                                                                                                                                                                                                                            $(section).removeClass('nodisplay');
+                                                                                                                                                                                                                                            if (section2 =="ADDITIONAL") {
+                                                                                                                                                                                                                                            $("#LayerVision_ADDITIONAL").removeClass('nodisplay');
+                                                                                                                                                                                                                                            }
+                                                                                                                                                                                                                                            if (section2 =="VAX") {
+                                                                                                                                                                                                                                            $("#LayerVision_ADDITIONAL_VISION").removeClass('nodisplay');
+                                                                                                                                                                                                                                            }
+                                                                                                                                                                                                                                            if (section2 =="IOP") {
+                                                                                                                                                                                                                                            $("#LayerVision_IOP").removeClass('nodisplay');
+                                                                                                                                                                                                                                            }
+                                                                                                                                                                                                                                            this.addClass("buttonRefraction_selected");
+                                                                                                                                                                                                                                            } else {
                                                                                                                                                                                                                                             
-                                                                   if (elem.value == "0" || elem.value =='') {
-                                                                    elem.value='1';
-                                                                    if (section2 =="ADDITIONAL") {
-                                                                     $("#LayerVision_ADDITIONAL").removeClass('nodisplay');
-                                                                    }
-                                                                    if (section2 =="IOP") {
-                                                                     $("#LayerVision_IOP").removeClass('nodisplay');
-                                                                    }
-                                                                     $(section).removeClass('nodisplay');
-                                                                     $(this).addClass("buttonRefraction_selected");
-                                                                   } else {
-                                                                     elem.value='0';
-                                                                     $(section).addClass('nodisplay');
-                                                                     if (section2 =="VAX") {
-                                                                      $("#LayerVision_ADDITIONAL_VISION").addClass('nodisplay');
-                                                                     }
-                                                                     if (section2 =="IOP") {
-                                                                      $("#LayerVision_IOP").addClass('nodisplay');
-                                                                     }
-                                                                     $(this).removeClass("buttonRefraction_selected");
-                                                                  }
-                                                                }
-                                                                   update_PREFS();
-                                                                   $("#tab1").show();
-                                                                   });
+                                                                                                                                                                                                                                            if (elem.value == "0" || elem.value =='') {
+                                                                                                                                                                                                                                            elem.value='1';
+                                                                                                                                                                                                                                            if (section2 =="ADDITIONAL") {
+                                                                                                                                                                                                                                            $("#LayerVision_ADDITIONAL").removeClass('nodisplay');
+                                                                                                                                                                                                                                            }
+                                                                                                                                                                                                                                            if (section2 =="IOP") {
+                                                                                                                                                                                                                                            $("#LayerVision_IOP").removeClass('nodisplay');
+                                                                                                                                                                                                                                            }
+                                                                                                                                                                                                                                            $(section).removeClass('nodisplay');
+                                                                                                                                                                                                                                            $(this).addClass("buttonRefraction_selected");
+                                                                                                                                                                                                                                            } else {
+                                                                                                                                                                                                                                            elem.value='0';
+                                                                                                                                                                                                                                            $(section).addClass('nodisplay');
+                                                                                                                                                                                                                                            if (section2 =="VAX") {
+                                                                                                                                                                                                                                            $("#LayerVision_ADDITIONAL_VISION").addClass('nodisplay');
+                                                                                                                                                                                                                                            }
+                                                                                                                                                                                                                                            if (section2 =="IOP") {
+                                                                                                                                                                                                                                            $("#LayerVision_IOP").addClass('nodisplay');
+                                                                                                                                                                                                                                            }
+                                                                                                                                                                                                                                            $(this).removeClass("buttonRefraction_selected");
+                                                                                                                                                                                                                                            }
+                                                                                                                                                                                                                                            }
+                                                                                                                                                                                                                                            update_PREFS();
+                                                                                                                                                                                                                                            $("#tab1").show();
+                                                                                                                                                                                                                                            });
                   
-
+                  
                   $("#LayerVision_W_lightswitch, #LayerVision_CR_lightswitch,#LayerVision_MR_lightswitch,#LayerVision_ADDITIONAL_lightswitch,#LayerVision_CTL_lightswitch,#LayerVision_VAX_lightswitch").mouseover(function() {
-                                                                                                                                                                                      $(this).addClass('buttonRefraction_selected');
-                                                                                                                                                                                      });
+                                                                                                                                                                                                                   $(this).addClass('buttonRefraction_selected');
+                                                                                                                                                                                                                   });
                   $("#LayerVision_W_lightswitch, #LayerVision_CR_lightswitch,#LayerVision_MR_lightswitch,#LayerVision_ADDITIONAL_lightswitch,#LayerVision_CTL_lightswitch,#LayerVision_VAX_lightswitch,#LayerVision_IOP_lightswitch").mouseout(function() {
-                                                                                                                                                                                     var section2 = this.id.match(/(.*)_(.*)_lightswitch$/)[2];
-                                                                                                                                                                                     var elem = document.getElementById("PREFS_"+section2);
-                                                                                                                                                                                     
-                                                                                                                                                                                     if (elem.value != "1") {                                                                $(this).removeClass('buttonRefraction_selected');
-                                                                                                                                                                                     } else {
-                                                                                                                                                                                     $(this).addClass('buttonRefraction_selected');
-                                                                                                                                                                                     }                                                                });
+                                                                                                                                                                                                                                               var section2 = this.id.match(/(.*)_(.*)_lightswitch$/)[2];
+                                                                                                                                                                                                                                               var elem = document.getElementById("PREFS_"+section2);
+                                                                                                                                                                                                                                               
+                                                                                                                                                                                                                                               if (elem.value != "1") {                                                                $(this).removeClass('buttonRefraction_selected');
+                                                                                                                                                                                                                                               } else {
+                                                                                                                                                                                                                                               $(this).addClass('buttonRefraction_selected');
+                                                                                                                                                                                                                                               }                                                                });
                   
                   
                   //useful to make two VA fields stay in sync
@@ -1990,7 +2001,7 @@ $(document).ready(function() {
                                                  valued = '0';
                                                  $("#"+zone[1]).val('0');
                                                  }
-                                                
+                                                 
                                                  $("#"+zone[1]).val(valued);
                                                  var section = this.id.match(/MOTILITY_(.)(.)_/);
                                                  var section2 = section[2];
@@ -2027,31 +2038,31 @@ $(document).ready(function() {
                   
                   $("#EXAM_DRAW, #BUTTON_DRAW_menu").click(function() {
                                                            if ($("#PREFS_CLINICAL").value !='0') {
-                                                            show_right();
-                                                            $("#PREFS_CLINICAL").val('0');
-                                                            update_PREFS();
+                                                           show_right();
+                                                           $("#PREFS_CLINICAL").val('0');
+                                                           update_PREFS();
                                                            }
                                                            if ($("#PREFS_EXAM").value != 'DRAW') {
-                                                            $("#PREFS_EXAM").val('DRAW');
-                                                            $("#EXAM_QP").removeClass('button_selected');
-                                                            $("#EXAM_DRAW").addClass('button_selected');
-                                                            $("#EXAM_TEXT").removeClass('button_selected');
-                                                            update_PREFS();
+                                                           $("#PREFS_EXAM").val('DRAW');
+                                                           $("#EXAM_QP").removeClass('button_selected');
+                                                           $("#EXAM_DRAW").addClass('button_selected');
+                                                           $("#EXAM_TEXT").removeClass('button_selected');
+                                                           update_PREFS();
                                                            }
                                                            show_DRAW();
                                                            $(document).scrollTop( $("#clinical_anchor").offset().top );
                                                            });
                   $("#EXAM_QP").click(function() {
                                       if ($("#PREFS_CLINICAL").value !='0') {
-                                        $("#PREFS_CLINICAL").val('0');
-                                        update_PREFS();
+                                      $("#PREFS_CLINICAL").val('0');
+                                      update_PREFS();
                                       }
                                       if ($("#PREFS_EXAM").value != 'QP') {
-                                        $("#PREFS_EXAM").val('QP');
-                                        $("#EXAM_QP").addClass('button_selected');
-                                        $("#EXAM_DRAW").removeClass('button_selected');
-                                        $("#EXAM_TEXT").removeClass('button_selected');
-                                        update_PREFS();
+                                      $("#PREFS_EXAM").val('QP');
+                                      $("#EXAM_QP").addClass('button_selected');
+                                      $("#EXAM_DRAW").removeClass('button_selected');
+                                      $("#EXAM_TEXT").removeClass('button_selected');
+                                      update_PREFS();
                                       }
                                       show_QP();
                                       $(document).scrollTop( $("#clinical_anchor").offset().top );
@@ -2087,18 +2098,18 @@ $(document).ready(function() {
                                                   }
                                                   });
                   $("[id^='BUTTON_TEXTD_']").click(function() {
-                                                  var zone = this.id.match(/BUTTON_TEXTD_(.*)/)[1];
-                                                  if (zone != "menu") {
-                                                  $("#"+zone+"_right").css("display","none");
-                                                  }
-                                                  });
+                                                   var zone = this.id.match(/BUTTON_TEXTD_(.*)/)[1];
+                                                   if (zone != "menu") {
+                                                   $("#"+zone+"_right").css("display","none");
+                                                   }
+                                                   });
                   
                   $("#EXAM_TEXT").addClass('button_selected');
                   if ($("#PREFS_CLINICAL").val() !='1') {
-                    var actionQ = "#EXAM_"+$("#PREFS_EXAM").val();
-                    $(actionQ).trigger('click');
+                  var actionQ = "#EXAM_"+$("#PREFS_EXAM").val();
+                  $(actionQ).trigger('click');
                   } else {
-                    $("#EXAM_TEXT").addClass('button_selected');
+                  $("#EXAM_TEXT").addClass('button_selected');
                   }
                   if ($("#ANTSEG_prefix").val() > '') {
                   $("#ANTSEG_prefix_"+$("#ANTSEG_prefix").val()).addClass('button_selected');
@@ -2190,17 +2201,17 @@ $(document).ready(function() {
                                                   submit_canvas(zone);
                                                   });
                   $("[id^='Undo_']").click(function() {
-                                                  var zone = this.id.match(/Undo_Canvas_(.*)/)[1];
-                                                  submit_canvas(zone);
-                                                  });
+                                           var zone = this.id.match(/Undo_Canvas_(.*)/)[1];
+                                           submit_canvas(zone);
+                                           });
                   $("[id^='Redo_']").click(function() {
-                                                  var zone = this.id.match(/Redo_Canvas_(.*)/)[1];
-                                                  submit_canvas(zone);
-                                                  });
+                                           var zone = this.id.match(/Redo_Canvas_(.*)/)[1];
+                                           submit_canvas(zone);
+                                           });
                   $("[id^='Clear_']").click(function() {
-                                                  var zone = this.id.match(/Clear_Canvas_(.*)/)[1];
-                                                  submit_canvas(zone);
-                                                  });
+                                            var zone = this.id.match(/Clear_Canvas_(.*)/)[1];
+                                            submit_canvas(zone);
+                                            });
                   
                   
                   
@@ -2264,6 +2275,8 @@ $(document).ready(function() {
                                                   $("#PRIORS_"+zone+"_left_text").hide();
                                                   $("#Draw_"+zone).show();
                                                   $("#PREFS_"+zone+"_RIGHT").val('DRAW');
+                                                  $(document).scrollTop( $("#"+zone+"_anchor").offset().top );
+                                                  
                                                   update_PREFS();
                                                   }
                                                   });
@@ -2274,6 +2287,7 @@ $(document).ready(function() {
                                                 $("#Draw_"+zone).hide();
                                                 show_QP_section(zone);
                                                 $("#PREFS_"+zone+"_RIGHT").val('QP');
+                                                $(document).scrollTop( $("#"+zone+"_anchor").offset().top );
                                                 update_PREFS();
                                                 });
                   
@@ -2286,19 +2300,19 @@ $(document).ready(function() {
                   $("[name$='_loading']").hide();
                   $("[name$='_sections']").show();
                   
-                                   /* $('#sidebar').affix({
-                                      offset: {
-                                      top: 245
-                                      }
-                                      });
-                
-                  var $body   = $(document.body);
-                  var navHeight = $('.navbar').outerHeight(true) + 100;
-                  */
+                  /* $('#sidebar').affix({
+                   offset: {
+                   top: 245
+                   }
+                   });
+                   
+                   var $body   = $(document.body);
+                   var navHeight = $('.navbar').outerHeight(true) + 100;
+                   */
                   /*  $body.scrollspy({
-                                  target: '#leftCol',
-                                  offset: navHeight
-                                });
+                   target: '#leftCol',
+                   offset: navHeight
+                   });
                    */
                   
                   });

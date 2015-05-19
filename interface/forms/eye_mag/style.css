@@ -973,7 +973,7 @@ height: 18px;
     .kb_left {
         position:relative;float:left;
         vertical-align: bottom;
-        font-size:0.8em;
+        font-size:0.6em;
         color:#c0c0c0;
         text-align:left;
         left:0.0in;
@@ -983,7 +983,7 @@ height: 18px;
     .kb_right {
         position:relative;float:right;
         vertical-align: bottom;
-        font-size:0.8em;
+        font-size:0.6em;
         color:#c0c0c0;
         text-align:right;
         right:0.0in;
@@ -991,11 +991,10 @@ height: 18px;
     }
     .kb_center {
         position:relative;
-        vertical-align: bottom;
+        vertical-align: top;
         font-size:0.7em;
         color:#c0c0c0;
-        margin:auto;
-        bottom:0.0in;
+        
     }
     .yellow {
         background-color: yellow;
