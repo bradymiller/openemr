@@ -1048,6 +1048,7 @@ $(document).ready(function() {
                                                     if (data_seg[index] == 'CCDIST') $('#NEURO_ACT_zone').val('CCDIST').trigger('change');
                                                     if (data_seg[index] == 'SCNEAR') $('#NEURO_ACT_zone').val('SCNEAR').trigger('change');
                                                     if (data_seg[index] == 'CCNEAR') $('#NEURO_ACT_zone').val('CCNEAR').trigger('change');
+                                                    zone = $("#NEURO_ACT_zone").val();
                                                     continue;
                                                 }
                                                 var data = data_seg[index].match(/(\d{1,2})\.(\d{0,2}||ortho)(.*)/);

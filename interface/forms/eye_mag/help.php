@@ -35,8 +35,9 @@ include_once("$srcdir/api.inc");
 include_once("$srcdir/sql.inc");
 require_once("$srcdir/formatting.inc.php");
 
-$zone    = $_REQUEST['zone'];
-
+$showit    = $_REQUEST['zone'];
+if ($showit=='') $showit="general";
+if ($showit=='ext') $showit="external";
 ?>
 <html>
 	<head>
@@ -52,7 +53,7 @@ $zone    = $_REQUEST['zone'];
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description" content="openEMR: Eye Exam Help">
+    <meta name="description" content="Eye Exam Help">
     <meta name="author" content="openEMR: ophthalmology help">
     <meta name="viewport" content="width=device-width, initial-scale=1">
   <!-- jQuery library -->
@@ -62,31 +63,7 @@ $zone    = $_REQUEST['zone'];
 	<script src="<?php echo $GLOBALS['webroot'] ?>/library/js/bootstrap.min.js"></script>  
 	  <script>
 	 $(function() {
-	$( "#accordion_general_group" ).accordion({
-	heightStyle: "content",
-	collapsible: true,
-	header: "h3",
-	active: 0
-	});
-	$( "#accordion_external_group" ).accordion({
-	heightStyle: "content",
-	collapsible: true,
-	header: "h3",
-	active: 0
-	});
-	$( "#accordion_antseg_group" ).accordion({
-	heightStyle: "content",
-	collapsible: true,
-	header: "h3",
-	active: 0
-	});
-	$( "#accordion_retina_group" ).accordion({
-	heightStyle: "content",
-	collapsible: true,
-	header: "h3",
-	active: 0
-	});
-	$( "#accordion_neuro_group" ).accordion({
+	$("[id^='accordion_']" ).accordion({
 	heightStyle: "content",
 	collapsible: true,
 	header: "h3",
@@ -95,7 +72,8 @@ $zone    = $_REQUEST['zone'];
 });
 	$(document).ready(function() {
 		$("[name^='accordion_']").hide();
-		$("#accordion_general_group").show();
+		$("#accordion_<?php echo $showit; ?>_group").show()
+		$("#<?php echo $showit; ?>_button").css("color","red");
 		$("[id$='_button']").click(function() {
 			var zone = this.id.match(/(.*)_button/)[1];
 			$("[id$='_button']").css("color","black");
@@ -105,6 +83,13 @@ $zone    = $_REQUEST['zone'];
 			var showit = zone+'_0';
 			
 		});
+		
+		$("[id^='accordion_']").click(function() {
+			var active_panel = $(this).accordion( "option", "active" );
+			$("[id^='accordion_']").accordion({	
+				active: active_panel
+			});
+		})
 	});
 	</script>
 	<link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
@@ -166,19 +151,41 @@ $zone    = $_REQUEST['zone'];
 			}
 			.output_EMR {
 				clear:both;float:left;border:1pt solid black;width:50%;padding:0 10;margin:5;
+				height: 322;
 			}
 			.output_reports {
 				float:left;border:1pt solid black;width:45%;padding:0 10;margin:5;
+				height: 322;
 			}
 			.ui-state-active {
 				background: #97C4FE;
 
 			}
+			.field {
+				color:red;
+				font-weight:600;
+			}
+			.bold {
+				font-weight:600;
+			}
 	</style>
 	</head>
 	<body style="font-size:1.2em;padding:25;">
-		
-		<button id="general_button" style="color:red;">General</button>
+		<div style="position:absolute;
+		top:0in;
+		left:0in;
+		width:100%;
+		height:30px;
+		background-color:#C9DBF2;
+		color:black;
+		font-family: FontAwesome;
+		font-weight:400;
+		font-size:1.1em;
+		padding:5 10 5 10;">
+<img class="little_image left" height="18" src="/openemr/sites/default/images/login_logo.gif"></img>  OpenEMR: Eye Exam <span class="bold">Keyboard Entry Help</span>
+		</div>
+<br >
+		<button id="general_button">General</button>
 		<button id="external_button">External</button>
 		<button id="antseg_button">Anterior Segment</button>
 		<button id="retina_button">Retina</button>
@@ -186,7 +193,7 @@ $zone    = $_REQUEST['zone'];
 		<div id="container" name="container_group" style="margin:10;text-align:left;">
 			
 			<div id="accordion_general_group" name="accordion_group" class="ui-accordion" style="text-align:left;margin:10;padding:20;">
-				<h3 class="ui-accordion-header external">Keyboard Shorthand Entry:</h3>
+				<h3 class="ui-accordion-header external">Example Detail:</h3>
 				<div id="general" style="text-align:left;">
 					<h4><b>Usage:</b>  location.text(.a)(;)</h4>
 					<blockquote class="style2"><i>where: <br /></i>
@@ -207,18 +214,7 @@ $zone    = $_REQUEST['zone'];
 				
 			<div id="accordion_external_group" name="accordion_group" class="ui-accordion" style="text-align:left;margin:10;padding:20;">
 				<div name="external">
-					<h3 name="external_group" id="external_0" class="ui-accordion-header external">External: Shorthand example.</h3>
-					<div name="external_group" class="external" style="text-align:left;margin:0;padding:0;">
-						<a name="example_ext"></a>
-						<blockquote class="style2">
-							<h4 class="underline">Keyboard Entry</h4>
-							<textarea class="kb_entry">D;bll.+2 meibomitis;rll.frank ect, 7x6mm lid margin bcc lat.a;bul.2mm ptosis;rul.+3 dermato.a
-							</textarea>
-							<img src="/openemr/interface/forms/eye_mag/images/sh_ext.png" style="width: 90%;" alt="Shorthand Example: Anterior Segment">
-							<br />
-						</blockquote>
-					</div>
-					<h3>External: Shorthand output into openEMR</h3>
+					<h3>External: Example</h3>
 					<div id="external_output" style="text-align:left;margin:0;padding:0;">
 						<a name="output_external"></a>
 						<blockquote class="style2">
@@ -229,7 +225,7 @@ $zone    = $_REQUEST['zone'];
 							Output:
 							<br /><br />
 							<div class="output_EMR" >
-								<h4>openEMR: Eye Exam</h4>
+								<h4>Eye Exam</h4>
 								<img src="/openemr/interface/forms/eye_mag/images/sh_ext_EMR.png" width="95%" alt="Shorthand Example: openEMR">
 							</div>
 							<div class="output_reports">
@@ -238,6 +234,18 @@ $zone    = $_REQUEST['zone'];
 							</div>
 						</blockquote>
 					</div>
+					<h3 name="external_group" id="external_0" class="ui-accordion-header external">External: Example Detail</h3>
+					<div name="external_group" class="external" style="text-align:left;margin:0;padding:0;">
+						<a name="example_ext"></a>
+						<blockquote class="style2">
+							<h4 class="underline">Keyboard Entry</h4>
+							<textarea class="kb_entry">D;bll.+2 meibomitis;rll.frank ect, 7x6mm lid margin bcc lat.a;bul.2mm ptosis;rul.+3 dermato.a
+							</textarea>
+							<img src="/openemr/interface/forms/eye_mag/images/sh_ext.png" style="width: 90%;" alt="Shorthand Example: Anterior Segment">
+							<br />
+						</blockquote>
+					</div>
+					
 					<h3>External: Location Codes and Abbreviations</h3>
 					<div id="external_codes" style="clear:both; border:0pt solid black;text-align:left;">
 						<a name="output_external"></a>
@@ -345,7 +353,26 @@ $zone    = $_REQUEST['zone'];
 			
 			<div id="accordion_antseg_group" name="accordion_group" class="ui-accordion" style="text-align:left;margin:10;padding:20;">
 				<div name="antseg">
-					<h3 class="antseg" id="antseg_0" name="antseg_group">Anterior Segment: Shorthand example.</h3>
+					<h3>Anterior Segment: Example</h3>
+					<div id="external_output" style="text-align:left;margin:0;padding:20;">
+						<a name="output_antseg"></a>
+						<blockquote class="style2">
+							Input:<br /><br />
+							<b>D;bc.+2 inj;bk.med pter;rk.moderate endo gut.a;bac.+1 fc, +1 pig cells</b><br />
+							<br />						 
+							Output:
+							<br /><br />
+							<div class="output_EMR">
+								<h4>Eye Exam</h4>
+								<img src="/openemr/interface/forms/eye_mag/images/sh_antseg_EMR.png" width="95%" alt="Shorthand Example: openEMR">
+							</div>
+							<div class="output_reports">
+								<h4>Reports</h4>
+								<img src="/openemr/interface/forms/eye_mag/images/sh_antseg_report.png" width="95%" alt="Shorthand Example: Reports">
+							</div>	
+						</blockquote>
+					</div>
+					<h3 class="antseg" id="antseg_0" name="antseg_group">Anterior Segment: Example Detail</h3>
 					<div id="antseg_input" class="ANTSEG" style="text-align:left;margin:0;padding:0;">
 							<a name="example_antseg"></a>
 							
@@ -357,25 +384,7 @@ $zone    = $_REQUEST['zone'];
 								<br />
 							</blockquote>
 					</div>
-					<h3>Anterior Segment: Shorthand output into openEMR</h3>
-					<div id="external_output" style="text-align:left;margin:0;padding:20;">
-						<a name="output_antseg"></a>
-						<blockquote class="style2">
-							Input:<br /><br />
-							<b>D;bc.+2 inj;bk.med pter;rk.moderate endo gut.a;bac.+1 fc, +1 pig cells</b><br />
-							<br />						 
-							Output:
-							<br /><br />
-							<div class="output_EMR">
-								<h4>openEMR: Eye Exam</h4>
-								<img src="/openemr/interface/forms/eye_mag/images/sh_antseg_EMR.png" width="95%" alt="Shorthand Example: openEMR">
-							</div>
-							<div class="output_reports">
-								<h4>Reports</h4>
-								<img src="/openemr/interface/forms/eye_mag/images/sh_antseg_report.png" width="95%" alt="Shorthand Example: Reports">
-							</div>	
-						</blockquote>
-					</div>
+					
 					<h3>Anterior Segment: Location Codes and Abbreviations</h3>
 					<div id="antseg_codes" style="clear:both; border:0pt solid black;text-align:left;">
 						<a name="output_antseg"></a>
@@ -385,52 +394,52 @@ $zone    = $_REQUEST['zone'];
 									<th style="width:1in;">Clinical Field</th><th style="width:1.3in;">Shorthand* (location)</th><th>Example Keyboard Entry**</th><th>Example Output to Location</th></tr>
 								<tr >
 									<td>Default values</td><td>D or d</td>
-									<td><b style="color:red">d</b>;<br /><b style="color:red">D</b>;</td>
+									<td><span class="field">d</span>;<br /><span class="field">D</span>;</td>
 									<td>All fields with defined default values are <b>erased</b> and filled with default values.<br />Fields without defined values are not affected. </td>
 								</tr>
 								<tr >
 									<td>Conjunctiva</td><td>Right = rc<br />Left = lc<br />Both = bc or c</td>
-									<td><b style="color:red">rc.</b>+1 inj<br /><b style="color:red">c.</b>med pter</td>
+									<td><span class="field">rc.</span>+1 inj<br /><span class="field">c.</span>med pter</td>
 									<td>"+1 injection" (right conj only)<br />"medial pterygium" (both right and left fields are filled)</td>
 								</tr>
 								<tr>
 									<td>Cornea</td><td>Right = rc<br />Left = lc<br />Both = bk or k</td>
-									<td><b style="color:red">rk.</b>+3 spk<br /><b style="color:red">k.</b>+2 end gut<b style="color:green">;</b><b style="color:red">rk.</b>+1 str edema<b style="color:green">.a</b></td>
+									<td><span class="field">rk.</span>+3 spk<br /><span class="field">k.</span>+2 end gut<b style="color:green">;</b><span class="field">rk.</span>+1 str edema<b style="color:green">.a</b></td>
 									<td>"+3 SPK" (right cornea only)<br />"+2 endothelial guttatae" (both cornea fields) AND "+1 stromal edema" (appended to Right cornea field)</td>
 								</tr>
 								<tr>
 									<td>Anterior Chamber</td><td>Right = rac<br />Left = lac<br />Both = bac or ac</td>
-									<td><b style="color:red">rac.</b>+1 fc<br><b style="color:red">ac.</b>+2 flare</td>
+									<td><span class="field">rac.</span>+1 fc<br><span class="field">ac.</span>+2 flare</td>
 									<td>"+1 flare/cell" (right A/C field only)<br />"+2 flare" (both A/C fields)</td>
 								</tr>
 								<tr>
 									<td>Lens</td><td>Right = rl<br />Left = ll<br />Both = bl or l</td>
-									<td><b style="color:red">RL.</b>+2 NS<br /><b style="color:red">ll.</b>+2 NS<b style="color:green">;</b><b style="color:red">l.</b>+3 ant cort spokes.a</td>
+									<td><span class="field">RL.</span>+2 NS<br /><span class="field">ll.</span>+2 NS<b style="color:green">;</b><span class="field">l.</span>+3 ant cort spokes.a</td>
 									<td>"+2 NS" (right lens only)<br />"+2 NS" (both lens fields) AND "+3 anterior cortical spokes" (appended to both lenses)</td>
 								</tr>
 								<tr>
 									<td>Iris</td><td>Right = ri<br />Left = li<br />Both = bi or i</td>
-									<td><b style="color:red">bi.</b>12 0 iridotomy<br /><b style="color:red">ri.</b>+2 TI defects<b style="color:green">.a</b><b style="color:navy">;</b><b style="color:red">li</b>.round</td>
+									<td><b style="color:red">bi.</b>12 0 iridotomy<br /><span class="field">ri.</span>+2 TI defects<b style="color:green">.a</b><b style="color:navy">;</b><span class="field">li</span>.round</td>
 									<td>"12 o'clock iriditomy" (both iris fields)<br />", +2 TI defects" (right iris field AND "round" (left iris field only)</td>
 								</tr>
 								<tr>
 									<td>Gonio</td><td>Right = rg<br />Left = lg<br />Both = bg or g</td>
-									<td><b style="color:red">rg.</b>ss 360<br /><b style="color:red">lg.</b>3-5 o angle rec</td>
+									<td><span class="field">rg.</span>ss 360<br /><span class="field">lg.</span>3-5 o angle rec</td>
 									<td>SS 360<br />3-5 o'clock angle recession</td>
 								</tr>
 								<tr>
 									<td>Pachymetry</td><td>Right = rp<br />Left = lp<br />Both = bp or p</td>
-									<td><b style="color:red">lp.</b>625 um<br /><b style="color:red">p.</b>550 um</td>
+									<td><span class="field">lp.</span>625 um<br /><span class="field">p.</span>550 um</td>
 									<td>"625 um" (left pachymetry field)<br />"500 um" (both pachymetry fields)</td>
 								</tr>
 								<tr>
 									<td>Schirmer I</td><td>Right = rsch1<br />Left = lsch1<br />Both = bsch1 or sch1</td>
-									<td><b style="color:red">rsch1.</b>5mm<br /><b style="color:red">sch1.</b>> 10mm/5 minutes</td>
+									<td><span class="field">rsch1.</span>5mm<br /><span class="field">sch1.</span>> 10mm/5 minutes</td>
 									<td>"5mm" (right field only)<br />> 10mm/5 minutes" (both fields)</td>
 								</tr>
 								<tr>
 									<td>Schirmer II</td><td>Right = rsch2<br />Left = lsch2<br />Both = bsch2 or sch2</td>
-									<td><b style="color:red">rsch2.</b>9 mm<br /><b style="color:red">sch2.</b>> 10mm/5 minutes</td>
+									<td><span class="field">rsch2.</span>9 mm<br /><span class="field">sch2.</span>> 10mm/5 minutes</td>
 									<td>"9 mm" (right field only)<br />> 10mm/5 minutes" (both fields)</td>
 								</tr>
 								<tr>
@@ -477,7 +486,26 @@ $zone    = $_REQUEST['zone'];
 				
 			<div id="accordion_retina_group" name="accordion_group" class="ui-accordion" style="text-align:left;margin:10;padding:20;">
 				<div name="retina">
-					<h3 class="retina">Retina: Shorthand example.</h3>
+					<h3>Retina: Example</h3>
+					<div id="retina_output" style="text-align:left;margin:0;padding:20;">
+						<a name="output_retina"></a>
+						<blockquote class="style2">
+							Input:<br /><br />
+							<b>D;bc.+2 inj;bk.med pter;rk.moderate endo gut.a;bac.+1 fc, +1 pig cells</b><br />
+							<br />						 
+							Output:
+							<br /><br />
+							<div class="output_EMR">
+								<h4>Eye Exam</h4>
+								<img src="/openemr/interface/forms/eye_mag/images/sh_retina_EMR.png" width="95%" alt="Shorthand Example: openEMR">
+							</div>
+							<div class="output_reports">
+								<h4>Reports</h4>
+								<img src="/openemr/interface/forms/eye_mag/images/sh_retina_report.png" width="95%" alt="Shorthand Example: Reports">
+							</div>	
+						</blockquote>
+					</div>
+					<h3 class="retina">Retina: Example Detail</h3>
 					<div id="retina_input" class="RETINA" style="text-align:left;margin:0;padding:0;">
 						<a name="example_retina"></a>
 						
@@ -489,25 +517,7 @@ $zone    = $_REQUEST['zone'];
 							<br />
 						</blockquote>
 					</div>
-					<h3>Retina: Shorthand output into openEMR</h3>
-					<div id="retina_output" style="text-align:left;margin:0;padding:20;">
-						<a name="output_retina"></a>
-						<blockquote class="style2">
-							Input:<br /><br />
-							<b>D;bc.+2 inj;bk.med pter;rk.moderate endo gut.a;bac.+1 fc, +1 pig cells</b><br />
-							<br />						 
-							Output:
-							<br /><br />
-							<div class="output_EMR">
-								<h4>openEMR: Eye Exam</h4>
-								<img src="/openemr/interface/forms/eye_mag/images/sh_retina_EMR.png" width="95%" alt="Shorthand Example: openEMR">
-							</div>
-							<div class="output_reports">
-								<h4>Reports</h4>
-								<img src="/openemr/interface/forms/eye_mag/images/sh_retina_report.png" width="95%" alt="Shorthand Example: Reports">
-							</div>	
-						</blockquote>
-					</div>
+					
 					<h3>Retina: Location Codes and Abbreviations</h3>
 					<div id="retina_codes" style="clear:both; border:0pt solid black;text-align:left;">
 						<a name="output_retina"></a>
@@ -517,38 +527,38 @@ $zone    = $_REQUEST['zone'];
 										<th style="width:1in;">Clinical Field</th><th style="width:1.5in;">Shorthand* (location)</th><th>Example Keyboard Entry**</th><th>Example Output to Location</th></tr>
 									<tr >
 										<td>Default values</td><td>D or d</td>
-										<td><b style="color:red">d</b>;<br /><b style="color:red">D</b>;</td>
+										<td><span class="field">d</span>;<br /><span class="field">D</span>;</td>
 										<td>All fields with defined default values are <b>erased</b> and filled with default values.<br />Fields without defined values are not affected. </td>
 									</tr>
 									<tr >
 										<td>Disc</td>
 										<td>Right = rd<br />Left = ld<br />Both = bd or d</td>
-										<td><b style="color:red">rd.</b>temp pallor, PPA<br /><b style="color:red">c.</b>NVD at 5 o</td>
+										<td><span class="field">rd.</span>temp pallor, PPA<br /><span class="field">c.</span>NVD at 5 o</td>
 										<td>"temporal pallor, PPA" (right disc only)<br />"NVD at 5 o'clock" (both right and left disc fields)</td>
 									</tr>
 									<tr>
 										<td>Cup</td><td>Right = rc<br />Left = lc<br />Both = bc or c</td>
-										<td><b style="color:red">rc.</b>0.5 w/ inf notch<br /><b style="color:red">c.</b>temp scalloping, 0.5<b style="color:green">.a</b><b style="color:green">;</b><b style="color:red">rk.</b>+1 str edema<b style="color:green">.a</b></td>
+										<td><span class="field">rc.</span>0.5 w/ inf notch<br /><span class="field">c.</span>temp scalloping, 0.5<b style="color:green">.a</b><b style="color:green">;</b><span class="field">rk.</span>+1 str edema<b style="color:green">.a</b></td>
 										<td>"+3 SPK" (right cornea only)<br />"temporal scalloping, 0.5" (appended to both cup fields)</td>
 									</tr>
 									<tr>
 										<td>Macula</td><td>Right = rmac<br />Left = lmac<br />Both = bmac or mac</td>
-										<td><b style="color:red">rmac.</b>central scar 500um<br><b style="color:red">mac.</b>soft drusen, - heme.a</td>
+										<td><span class="field">rmac.</span>central scar 500um<br><span class="field">mac.</span>soft drusen, - heme.a</td>
 										<td>"central scar 500um" (right macular field only)<br />"soft drusen, - heme" (appended to both macular fields)</td>
 									</tr>
 									<tr>
 										<td>Vessels</td><td>Right = rv<br />Left = lv<br />Both = bv or v</td>
-										<td><b style="color:red">RV.</b>1:2, +2 BDR<br /><b style="color:red">lv.</b>+CSME w/ hard exudate sup to fov (300um)<b style="color:green">;</b><b style="color:red">v.</b>narrow arterioles, 1:2<b style="color:green">.a;</b></td>
+										<td><span class="field">RV.</span>1:2, +2 BDR<br /><span class="field">lv.</span>+CSME w/ hard exudate sup to fov (300um)<b style="color:green">;</b><span class="field">v.</span>narrow arterioles, 1:2<b style="color:green">.a;</b></td>
 										<td>"1:2, +2 BDR" (right vessels only)<br />"+CSME with hard exudate superior to fovea (300um)" (left vessel field only) AND "narrow arterioles, 1:2" (appended to both vessel fields)</td>
 									</tr>
 									<tr>
 										<td>Periphery</td><td>Right = rp<br />Left = lp<br />Both = bp or p</td>
-										<td><b style="color:red">rp.</b>12 0 ht, no heme, amenable to bubble<b style="color:green">;</b><br /><b style="color:red">bp.</b>1 clock hour of lattice 2 o<b style="color:green">.a</b><b style="color:navy">;</b><b style="color:red">li</b>.round</td>
+										<td><span class="field">rp.</span>12 0 ht, no heme, amenable to bubble<b style="color:green">;</b><br /><b style="color:red">bp.</b>1 clock hour of lattice 2 o<b style="color:green">.a</b><b style="color:navy">;</b><span class="field">li</span>.round</td>
 										<td>"12 o'clock horseshoe tear, no heme, amenable to bubble" (right periphery field)<br />"1 clock hour of lattice 2 o'clock" (appended to both periphery fields)</td>
 									</tr>
 									<tr>
 										<td>Central Macular Thickness</td><td>Right = rcmt<br />Left = lcmt<br />Both = bcmt or cmt</td>
-										<td><b style="color:red">rcmt.</b>254<br /><b style="color:red">cmt.</b>flat</td>
+										<td><span class="field">rcmt.</span>254<br /><span class="field">cmt.</span>flat</td>
 										<td>254 (right CMT only)<br />flat (both CMT fields)</td>
 									</tr>
 							</table>
@@ -608,35 +618,37 @@ $zone    = $_REQUEST['zone'];
 
 			<div id="accordion_neuro_group" name="accordion_group" class="ui-accordion" style="text-align:left;margin:10;padding:20;">
 				<div name="neuro">
-					<h3 class="neuro">Neuro: Shorthand example.</h3>
-					<div id="neuro_input" class="neuro" style="text-align:left;margin:0;padding:0;">
-						<a name="example_neuro"></a>
-						
-						<blockquote class="style2">
-							<h4 class="underline">Keyboard Entry</h4>
-							<textarea class="kb_entry">scDist;5.8ix;4.10ix;6.6ix;2.15xt;8.5ix;
-							</textarea>
-							<img src="/openemr/interface/forms/eye_mag/images/sh_neuro.png" alt="Shorthand Example: Anterior Segment">
-							<br />
-						</blockquote>
-					</div>
-					<h3>Neuro: Shorthand output into openEMR</h3>
+					<h3>Neuro: Example</h3>
 					<div id="neuro_output" style="text-align:left;margin:0;padding:20;">
 						<a name="output_neuro"></a>
 						<blockquote class="style2">
 							Input:<br /><br />
-							<b>scDist;5.8ix;4.10ix;6.6ix;2.15xt;8.5ix;</b><br />
+							<b>scDist;5.8ix 1rht;4.10ix;6.6ix;2.15xt;8.5ix;ccDist;4.5ix;5.ortho;6.ortho;</b><br />
 							<br />						 
 							Output:
 							<br /><br />
 							<div class="output_EMR">
-								<h4>openEMR: Eye Exam</h4>
-								<img src="/openemr/interface/forms/eye_mag/images/sh_neuro_EMR.png" width="95%" alt="Shorthand Example: openEMR">
+								<h4>Eye Exam</h4>
+								<img src="/openemr/interface/forms/eye_mag/images/sh_neuro_EMR1.png"  style="height: 200;width:45%;margin:12 0 0 20;padding-left:10" alt="Shorthand Example: openEMR">
+								<img src="/openemr/interface/forms/eye_mag/images/sh_neuro_EMR2.png"  style="float:right;height: 200;width:45%;margin:10 0 0 20;padding-left:10" alt="Shorthand Example: openEMR">
 							</div>
 							<div class="output_reports">
 								<h4>Reports</h4>
 								<img src="/openemr/interface/forms/eye_mag/images/sh_neuro_report.png" width="95%" alt="Shorthand Example: Reports">
 							</div>	
+						</blockquote>
+					</div>
+
+					<h3 class="neuro">Neuro: Example Detail</h3>
+					<div id="neuro_input" class="neuro" style="text-align:left;margin:0;padding:0;">
+						<a name="example_neuro"></a>
+						
+						<blockquote class="style2">
+							<h4 class="underline">Keyboard Entry</h4>
+							<textarea class="kb_entry">scDist;5.8ix 1rht;4.10ix;6.6ix;2.15xt;8.5ix;ccDist;4.5ix;5.ortho;6.ortho
+							</textarea>
+							<img src="/openemr/interface/forms/eye_mag/images/sh_neuro.png" alt="Shorthand Example: Anterior Segment">
+							<br />
 						</blockquote>
 					</div>
 					<h3>Neuro: Location Codes and Abbreviations</h3>
@@ -648,7 +660,7 @@ $zone    = $_REQUEST['zone'];
 										<th style="width:1in;">Clinical Field</th><th style="width:1.5in;">Shorthand* (location)</th><th>Example Keyboard Entry**</th><th>Example Output to Location</th></tr>
 									<tr >
 										<td>Default values</td><td>D or d</td>
-										<td><b style="color:red">d</b>;<br /><b style="color:red">D</b>;</td>
+										<td><span class="field">d</span>;<br /><span class="field">D</span>;</td>
 										<td>All fields with defined default values are <b>erased</b> and filled with default values.<br />Fields without defined values are not affected. </td>
 									</tr>
 									<tr>

@@ -2173,7 +2173,7 @@ if ($refresh and $refresh != 'fullscreen') {
                                       </tr>
                                   </table>
                               </div>
-                              <div class="borderShadow" style="position:relative;float:right;text-align:center;width:235px;height:240px;">                               
+                              <div class="borderShadow" style="position:relative;float:right;text-align:center;width:235px;height:240px;z-index:10;">                               
                                   <i class="fa fa-th fa-fw closeButton " id="Close_ACTMAIN" style="right:0.15in;" name="Close_ACTMAIN"></i>
                                   <table style="position:relative;float:left;font-size:1.2em;width:210px;font-weight:600;"> 
                                       <tr style="text-align:left;height:26px;vertical-align:middle;width:180px;">
