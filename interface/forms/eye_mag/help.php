@@ -343,8 +343,6 @@ if ($showit=='ext') $showit="external";
 									<tr><td>scc</td><td>SCC</td></tr>
 									<tr><td>sebca</td><td>sebaceous cell</td></tr>
 									<tr><td>tr</td><td>trace</td></tr>
-
-									<tr><td>vh</td><td>vitreous hemorrhage</td></tr>
 		                    </table>
 						</blockquote>
 					</div>
@@ -491,7 +489,8 @@ if ($showit=='ext') $showit="external";
 						<a name="output_retina"></a>
 						<blockquote class="style2">
 							Input:<br /><br />
-							<b>D;bc.+2 inj;bk.med pter;rk.moderate endo gut.a;bac.+1 fc, +1 pig cells</b><br />
+							<b>D;bd.+2 bowtie pallor;rc.0.6Vx0.4H w/ inf notch;lc.0.5;rmac.+2 BDR, +CSME;lmac.flat, tr BDR;v.+PPDR, ++venous beading;rp.ht 1 o,no vh;
+							</b><br />
 							<br />						 
 							Output:
 							<br /><br />
