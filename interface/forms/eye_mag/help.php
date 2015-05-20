@@ -118,7 +118,7 @@ if ($showit=='ext') $showit="external";
 				margin:20;
 				border:1pt solid black;
 				padding:5;
-				font-size:1.0em;
+				font-size:0.7em;
 			}
 			blockquote.style2 {
 				margin-top: 0px;
@@ -128,7 +128,7 @@ if ($showit=='ext') $showit="external";
 				padding: 10px;
 				border:none;
 				width:98%;
-				font-size:1.0em;
+				font-size:1em;
 			} 
 			.style3 {
 				margin:20;
@@ -144,10 +144,12 @@ if ($showit=='ext') $showit="external";
 				width:85%;
 				min-height:0.5in;
 				text-align:center;
-				margin:10 5 10 5;
+				margin:2 5 20 5;
 				border:1pt solid #129FEA;
 				background-color:#ff9;
-				padding:5;
+				xpadding:20;
+				vertical-align: middle;
+				top:50%;
 			}
 			.output_EMR {
 				clear:both;float:left;border:1pt solid black;width:50%;padding:0 10;margin:5;
@@ -184,8 +186,8 @@ if ($showit=='ext') $showit="external";
 		padding:5 10 5 10;">
 <img class="little_image left" height="18" src="/openemr/sites/default/images/login_logo.gif"></img>  OpenEMR: Eye Exam <span class="bold">Keyboard Entry Help</span>
 		</div>
-<br >
-		<button id="general_button">General</button>
+<br />
+		<button id="general_button">Introduction</button>
 		<button id="external_button">External</button>
 		<button id="antseg_button">Anterior Segment</button>
 		<button id="retina_button">Retina</button>
@@ -193,12 +195,86 @@ if ($showit=='ext') $showit="external";
 		<div id="container" name="container_group" style="margin:10;text-align:left;">
 			
 			<div id="accordion_general_group" name="accordion_group" class="ui-accordion" style="text-align:left;margin:10;padding:20;">
-				<h3 class="ui-accordion-header external">Example Detail:</h3>
+				<h3 class="ui-accordion-header external">Introduction</h3>
+				<div id="general" style="text-align:left;">
+					<blockquote class="style2">
+						You trained.  You learned how to perform an eye exam, to help patients.  <br />
+						You developed your own style and documented all your findings.<br />
+						You used a pen and paper. <br />
+						You were efficient and provided high quality care to thousands of patients.<br />
+						Other eyedocs could decipher your hieroglyphics; regulators and compliance people could not.<br />
+						In the name of quality, they fixed us. 
+						They gave us EHRs.  
+						<br />
+						EHRs that speak at a fourth grade level.<br />
+						They disconnected our brains from our charts.  They slowed us down.<br />
+						We pine for our pen and paper, and the speed our brains are capable of working at.<br />
+						We suffer the agony of slow throughput to "check the box",<br />
+						or we incur the added costs of hiring scribes.<br/>
+						<hr />
+						What we are proposing with openEMR: Eye Exam is not radical.  It's reasonable.<br />
+						We have to give up our pens.  OK.  But we don't have to succumb entirely.<br />
+						<h2 class="bold">What if you could type your shorthand?</h2>
+						In addition to the point-click-type option, the Pull-forward from old records option, 
+						the Fill Defaults feature and the draw programs, 
+						<b>we designed an Eye Shorthand technique to merge our lingua franca with the keyboard</b>.<br />
+						You can customize it to match <b>your brain</b>, but you may not need to.<br />
+						It should already be very familiar.<br /><hr />
+						You know what <b>RUL: 2mm ptosis</b> means. <br />
+						You could click on the field for the right upper lid and type in 2mm ptosis.  <br />
+						Then click on the next field, maybe even tab to it, and type in the next field.<br />
+						What about <b>Right C/D 0.6Vx0.4H with inferior notch.  Left C/D 0.5</b>?<br />
+						Find the fields to click. Lots of hand movement going in.  Two mouse clicks.<br />
+						<br />
+						Does this make any sense to you:<br />
+
+						<div style="text-align:center;font-weight:600;margin:20;background-color:yellow;padding:30 auto;width:75%;border:1pt black solid">rcup.0.6Vx0.4H w/ inf notch;lcup.0.5</span><br />
+						</div>
+						It is the same thing in shorthand.  You can even shorten rcup to rc, lcup to c, or just "c" for both, and go even faster.<br />
+						<b>Field.text;field.text</b><br />
+						It is that simple and doesn't it look familiar?<br />
+						Even slow typers will find the Eye Exam Shorthand can speed up EHR documentation time.<br />
+						It is easy to learn.<br /> 
+						Type the abbreviation for a clinical field, a period/fullstop, followed by your finding, in your shorthand.<br />
+						If our shorthand doesn't include your shorthand terms, your shorthand will be displayed.<br />
+						Ask us and over time, we'll include your shorthand and together we'll build the language for the next openEMR users.<br />
+						That's Open Source and <b>it's why we do what we do the way we do it.</b><br />
+						<hr />
+						This tutorial centers around four lines of typing which 
+						<b>document more than 40 different clinical points.</b> 
+							<br />
+							That's a lot of findings for one mighty complicated patient.<br />
+							Many more than we would see on a routine day with routine patients, but it could happen...  <br />
+						Documenting this many findings would take a little bit of time on paper, and a lifetime in an EHR. <br />
+						With the openEMR Shorthand, the average typist can do it <b>in less than a minute.</b>
+						<hr />
+						Go ahead and paste these lines into a test patient's chart.  Fiddle with them. <br />
+						Read the accompanying help pages if you like.  We tried to make them useful but they look so overwhelming.<br />
+						If you are already an eyedoc, they won't be. <br />
+						It will all make perfect sense in short order. Finally.
+						<hr />
+						</blockquote>
+			<h4 class="bold">External: </h4>
+					<textarea class="kb_entry">D;bll.+2 meibomitis;rll.frank ect, 7x6mm lid margin bcc lat.a;bul.2mm ptosis;rul.+3 dermato.a
+					</textarea>
+					<br /><h4 class="bold">Anterior Segment:</h4>
+					<textarea class="kb_entry">D;bc.+2 inj;bk.med pter;rk.mod endo gut.a;bac.+1 fc, +1 pig cells
+					</textarea>
+					<br />
+					<h4 class="bold">Retina:</h4>
+					<textarea class="kb_entry">D;bd.+2 bowtie pallor;rc.0.6Vx0.4H w/ inf notch;lc.0.5;rmac.+2 BDR, +CSME;lmac.flat, tr BDR;v.+PPDR, ++venous beading;rp.ht 1 o,no vh;
+					</textarea>
+					<h4 class="bold">Strabismus:</h4>
+					<textarea class="kb_entry">scDist;5.8ix 1rht;4.10ix;6.6ix;2.15xt;8.5ix;ccDist;4.5ix;5.ortho;6.ortho
+					</textarea>
+				</div>				
+
+				<h3 class="ui-accordion-header external">Shorthand Keyboard Entry Structure</h3>
 				<div id="general" style="text-align:left;">
 					<h4><b>Usage:</b>  location.text(.a)(;)</h4>
 					<blockquote class="style2"><i>where: <br /></i>
 						<b>location</b> is the shorthand for the field.<br/>
-						<b>text</b> is the complete or shorthand data to enter into this field.
+						<b>text</b> is the complete or shorthand data to enter into this <b>location</b>.
 						<br />
 						<b>location</b> and <b>text</b> are separated by a "<b>.</b>" period/fullstop.
 						<br />
@@ -206,17 +282,27 @@ if ($showit=='ext') $showit="external";
 						is optional and will <b>append</b> the <b>text</b> to the data already in the field, instead of replacing it.<br />
 						The semi-colon "<b>;</b>" is used to divide entries, allowing multiple field entries simultaneously. <br />
 						<small><i>The semi-colon separates entries and cannot be used within a text field.</i></small><br />
-						After pressing <b>Enter/Return</b>	, the data is submitted.  <br />
+						After pressing <b>Enter/Return</b>, the data is submitted.  <br />
 						Pressing <b>TAB</b> will jump to the next clinical area's Keboard/Shorthand entry field.<br />
 					</blockquote>
 				</div>
 			</div>	
 				
 			<div id="accordion_external_group" name="accordion_group" class="ui-accordion" style="text-align:left;margin:10;padding:20;">
-				<div name="external">
-					<h3>External: Example</h3>
+				<div name="external" class="ui-accordion external">
+					<h3 name="external_group" id="external_0">External: Shorthand Walk Through</h3>
+					<div name="external_group" class="external" style="text-align:left;margin:0;padding:0;">
+						<a name="example_ext"></a>
+						<blockquote class="style2">
+							<h4 class="underline">Keyboard Entry</h4>
+							<textarea class="kb_entry">D;bll.+2 meibomitis;rll.frank ect, 7x6mm lid margin bcc lat.a;bul.2mm ptosis;rul.+3 dermato.a
+							</textarea>
+							<img src="/openemr/interface/forms/eye_mag/images/sh_ext.png" style="width: 90%;" alt="Shorthand Example: Anterior Segment">
+							<br />
+						</blockquote>
+					</div>
+					<h3>External: Example Output</h3>
 					<div id="external_output" style="text-align:left;margin:0;padding:0;">
-						<a name="output_external"></a>
 						<blockquote class="style2">
 							Input:<br /><br />
 							<b>D;bll.+2 meibomitis;rll.frank ect, 7x6mm lid margin bcc lat.a;bul.2mm ptosis;rul.+3 dermato.a</b>
@@ -234,18 +320,6 @@ if ($showit=='ext') $showit="external";
 							</div>
 						</blockquote>
 					</div>
-					<h3 name="external_group" id="external_0" class="ui-accordion-header external">External: Example Detail</h3>
-					<div name="external_group" class="external" style="text-align:left;margin:0;padding:0;">
-						<a name="example_ext"></a>
-						<blockquote class="style2">
-							<h4 class="underline">Keyboard Entry</h4>
-							<textarea class="kb_entry">D;bll.+2 meibomitis;rll.frank ect, 7x6mm lid margin bcc lat.a;bul.2mm ptosis;rul.+3 dermato.a
-							</textarea>
-							<img src="/openemr/interface/forms/eye_mag/images/sh_ext.png" style="width: 90%;" alt="Shorthand Example: Anterior Segment">
-							<br />
-						</blockquote>
-					</div>
-					
 					<h3>External: Location Codes and Abbreviations</h3>
 					<div id="external_codes" style="clear:both; border:0pt solid black;text-align:left;">
 						<a name="output_external"></a>
@@ -255,7 +329,7 @@ if ($showit=='ext') $showit="external";
 								<tr >
 									<td>Default values</td><td>D or d</td>
 									<td>d;<br />D;</td>
-									<td>All fields with defined default values are <b>erased</b> and filled with default values.<br />Fields without defined values are not affected. </td>
+									<td>All fields with defined default values are <b>erased</b> and filled with default values.<br />Fields without defined default values are not affected. </td>
 								</tr>
 								<tr >
 									<td>Right Brow</td><td>rb or RB</td>
@@ -351,9 +425,20 @@ if ($showit=='ext') $showit="external";
 			
 			<div id="accordion_antseg_group" name="accordion_group" class="ui-accordion" style="text-align:left;margin:10;padding:20;">
 				<div name="antseg">
-					<h3>Anterior Segment: Example</h3>
+					<h3 class="antseg" id="antseg_0" name="antseg_group">Anterior Segment: Shorthand Walk Through</h3>
+					<div id="antseg_input" class="ANTSEG" style="text-align:left;margin:0;padding:0;">
+							<a name="example_antseg"></a>
+							
+							<blockquote class="style2">
+								<h4 class="underline">Keyboard Entry</h4>
+								<textarea class="kb_entry">D;bc.+2 inj;bk.med pter;rk.moderate endo gut.a;bac.+1 fc, +1 pig cells
+								</textarea>
+								<img src="/openemr/interface/forms/eye_mag/images/sh_antseg.png" alt="Shorthand Example: Anterior Segment">
+								<br />
+							</blockquote>
+					</div>
+					<h3>Anterior Segment: Example Output</h3>
 					<div id="external_output" style="text-align:left;margin:0;padding:20;">
-						<a name="output_antseg"></a>
 						<blockquote class="style2">
 							Input:<br /><br />
 							<b>D;bc.+2 inj;bk.med pter;rk.moderate endo gut.a;bac.+1 fc, +1 pig cells</b><br />
@@ -370,19 +455,6 @@ if ($showit=='ext') $showit="external";
 							</div>	
 						</blockquote>
 					</div>
-					<h3 class="antseg" id="antseg_0" name="antseg_group">Anterior Segment: Example Detail</h3>
-					<div id="antseg_input" class="ANTSEG" style="text-align:left;margin:0;padding:0;">
-							<a name="example_antseg"></a>
-							
-							<blockquote class="style2">
-								<h4 class="underline">Keyboard Entry</h4>
-								<textarea class="kb_entry">D;bc.+2 inj;bk.med pter;rk.moderate endo gut.a;bac.+1 fc, +1 pig cells
-								</textarea>
-								<img src="/openemr/interface/forms/eye_mag/images/sh_antseg.png" alt="Shorthand Example: Anterior Segment">
-								<br />
-							</blockquote>
-					</div>
-					
 					<h3>Anterior Segment: Location Codes and Abbreviations</h3>
 					<div id="antseg_codes" style="clear:both; border:0pt solid black;text-align:left;">
 						<a name="output_antseg"></a>
@@ -393,7 +465,7 @@ if ($showit=='ext') $showit="external";
 								<tr >
 									<td>Default values</td><td>D or d</td>
 									<td><span class="field">d</span>;<br /><span class="field">D</span>;</td>
-									<td>All fields with defined default values are <b>erased</b> and filled with default values.<br />Fields without defined values are not affected. </td>
+									<td>All fields with defined default values are <b>erased</b> and filled with default values.<br />Fields without defined default values are not affected. </td>
 								</tr>
 								<tr >
 									<td>Conjunctiva</td><td>Right = rc<br />Left = lc<br />Both = bc or c</td>
@@ -484,9 +556,18 @@ if ($showit=='ext') $showit="external";
 				
 			<div id="accordion_retina_group" name="accordion_group" class="ui-accordion" style="text-align:left;margin:10;padding:20;">
 				<div name="retina">
-					<h3>Retina: Example</h3>
+					<h3 class="retina">Retina: Shorthand Walk Through</h3>
+					<div id="retina_input" class="RETINA" style="text-align:left;margin:0;padding:0;">
+						<blockquote class="style2">
+							<h4 class="underline">Keyboard Entry</h4>
+							<textarea class="kb_entry">D;bd.+2 bowtie pallor;rc.0.6Vx0.4H w/ inf notch;lc.0.5;rmac.+2 BDR, +CSME;lmac.flat, tr BDR;v.+PPDR, ++venous beading;rp.ht 1 o,no vh;
+							</textarea>
+							<img src="/openemr/interface/forms/eye_mag/images/sh_retina.png" alt="Shorthand Example: Anterior Segment">
+							<br />
+						</blockquote>
+					</div>
+					<h3>Retina: Example Output</h3>
 					<div id="retina_output" style="text-align:left;margin:0;padding:20;">
-						<a name="output_retina"></a>
 						<blockquote class="style2">
 							Input:<br /><br />
 							<b>D;bd.+2 bowtie pallor;rc.0.6Vx0.4H w/ inf notch;lc.0.5;rmac.+2 BDR, +CSME;lmac.flat, tr BDR;v.+PPDR, ++venous beading;rp.ht 1 o,no vh;
@@ -504,22 +585,8 @@ if ($showit=='ext') $showit="external";
 							</div>	
 						</blockquote>
 					</div>
-					<h3 class="retina">Retina: Example Detail</h3>
-					<div id="retina_input" class="RETINA" style="text-align:left;margin:0;padding:0;">
-						<a name="example_retina"></a>
-						
-						<blockquote class="style2">
-							<h4 class="underline">Keyboard Entry</h4>
-							<textarea class="kb_entry">D;bd.+2 bowtie pallor;rc.0.6Vx0.4H w/ inf notch;lc.0.5;rmac.+2 BDR, +CSME;lmac.flat, tr BDR;v.+PPDR, ++venous beading;rp.ht 1 o,no vh;
-							</textarea>
-							<img src="/openemr/interface/forms/eye_mag/images/sh_retina.png" alt="Shorthand Example: Anterior Segment">
-							<br />
-						</blockquote>
-					</div>
-					
 					<h3>Retina: Location Codes and Abbreviations</h3>
 					<div id="retina_codes" style="clear:both; border:0pt solid black;text-align:left;">
-						<a name="output_retina"></a>
 						<blockquote class="style2">
 							<table style="border:1pt solid black;margin:10;width:85%;">
 									<tr style="margin:20;border-bottom:1pt solid black;background-color:#c0C0c0">
@@ -527,7 +594,7 @@ if ($showit=='ext') $showit="external";
 									<tr >
 										<td>Default values</td><td>D or d</td>
 										<td><span class="field">d</span>;<br /><span class="field">D</span>;</td>
-										<td>All fields with defined default values are <b>erased</b> and filled with default values.<br />Fields without defined values are not affected. </td>
+										<td>All fields with defined default values are <b>erased</b> and filled with default values.<br />Fields without defined default values are not affected. </td>
 									</tr>
 									<tr >
 										<td>Disc</td>
@@ -617,7 +684,17 @@ if ($showit=='ext') $showit="external";
 
 			<div id="accordion_neuro_group" name="accordion_group" class="ui-accordion" style="text-align:left;margin:10;padding:20;">
 				<div name="neuro">
-					<h3>Neuro: Example</h3>
+					<h3 class="neuro">Neuro: Shorthand Walk Through</h3>
+					<div id="neuro_input" class="neuro" style="text-align:left;margin:0;padding:0;">
+						<blockquote class="style2">
+							<h4 class="underline">Keyboard Entry</h4>
+							<textarea class="kb_entry">scDist;5.8ix 1rht;4.10ix;6.6ix;2.15xt;8.5ix;ccDist;4.5ix;5.ortho;6.ortho
+							</textarea>
+							<img src="/openemr/interface/forms/eye_mag/images/sh_neuro.png" alt="Shorthand Example: Anterior Segment">
+							<br />
+						</blockquote>
+					</div>
+					<h3>Neuro: Example Output</h3>
 					<div id="neuro_output" style="text-align:left;margin:0;padding:20;">
 						<a name="output_neuro"></a>
 						<blockquote class="style2">
@@ -637,22 +714,8 @@ if ($showit=='ext') $showit="external";
 							</div>	
 						</blockquote>
 					</div>
-
-					<h3 class="neuro">Neuro: Example Detail</h3>
-					<div id="neuro_input" class="neuro" style="text-align:left;margin:0;padding:0;">
-						<a name="example_neuro"></a>
-						
-						<blockquote class="style2">
-							<h4 class="underline">Keyboard Entry</h4>
-							<textarea class="kb_entry">scDist;5.8ix 1rht;4.10ix;6.6ix;2.15xt;8.5ix;ccDist;4.5ix;5.ortho;6.ortho
-							</textarea>
-							<img src="/openemr/interface/forms/eye_mag/images/sh_neuro.png" alt="Shorthand Example: Anterior Segment">
-							<br />
-						</blockquote>
-					</div>
 					<h3>Neuro: Location Codes and Abbreviations</h3>
 					<div id="neuro_codes" style="clear:both; border:0pt solid black;text-align:left;">
-						<a name="output_neuro"></a>
 						<blockquote class="style2">
 							<table style="border:1pt solid black;margin:10;width:85%;">
 									<tr style="margin:20;border-bottom:1pt solid black;background-color:#c0C0c0">
@@ -660,26 +723,26 @@ if ($showit=='ext') $showit="external";
 									<tr >
 										<td>Default values</td><td>D or d</td>
 										<td><span class="field">d</span>;<br /><span class="field">D</span>;</td>
-										<td>All fields with defined default values are <b>erased</b> and filled with default values.<br />Fields without defined values are not affected. </td>
+										<td>All fields with defined default values are <b>erased</b> and filled with default values.<br />Fields without defined default values are not affected. </td>
 									</tr>
 									<tr>
 										<td>Without correction at Distance</td><td>scDist</td>
 										<td><b style="color:red;">scdist</b><b style="color:green;">;</a></td>
-										<td>scDIST is selectd for ensuing values.</td>
+										<td>scDIST is selected for ensuing values.</td>
 									</tr>
 									<tr>
 										<td>With correction at Distance</td><td>scDist</td>
 										<td><b style="color:red;">ccdist</b><b style="color:green;">;</a></td>
-										<td>ccDIST is selectd for ensuing values.</td>
+										<td>ccDIST is selected for ensuing values.</td>
 									</tr><tr>
 										<td>Without correction at Near</td><td>scNear</td>
 										<td><b style="color:red;">scdist</b><b style="color:green;">;</a></td>
-										<td>scDIST is selectd for ensuing values.</td>
+										<td>scDIST is selected for ensuing values.</td>
 									</tr>
 									<tr>
-										<td>With correction at NEAR</td><td>scNear</td>
+										<td>With correction at Near</td><td>scNear</td>
 										<td><b style="color:red;">scdist</b><b style="color:green;">;</a></td>
-										<td>scDIST is selectd for ensuing values.</td>
+										<td>scDIST is selected for ensuing values.</td>
 									</tr>
 							</table>
 							<br />*<i>case insensitive</i><br />
@@ -692,7 +755,7 @@ if ($showit=='ext') $showit="external";
 							
 							<br />
 							<a name="abbrev_neuro"></a>
-							<h2 class="underline">neuro Shorthand Abbreviations:</h2>
+							<h2 class="underline">Neuro Shorthand Abbreviations:</h2>
 							
 							The following terms will be expanded from their shorthand to full expression in the EMR fields:
 					

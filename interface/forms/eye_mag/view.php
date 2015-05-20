@@ -103,12 +103,10 @@ if ($refresh and $refresh != 'fullscreen') {
 }
 
 //formHeader("Chart: ".$pat_data['fname']." ".$pat_data['lname']." ".$visit_date);
-
+require_once("$incdir/patient_file/encounter/new_form.php");
 ?><html>
   <head>
     <title> Chart: <?php echo $pat_data['fname']." ".$pat_data['lname']." ".$visit_date; ?></title>
-        <title><?php echo $title?></title>
-
 <!-- jQuery library -->
 <script src="<?php echo $GLOBALS['webroot'] ?>/library/js/jquery.min.js"></script>
 
@@ -123,7 +121,6 @@ if ($refresh and $refresh != 'fullscreen') {
   <script language="JavaScript">    
   <?php  require_once("$srcdir/restoreSession.php"); 
   ?>
-     
   function dopclick(id) {
     <?php if ($thisauth != 'write'): ?>
     dlgopen('../../patient_file/summary/a_issue.php?issue=0&thistype=' + id, '_blank', 550, 400);
@@ -131,7 +128,7 @@ if ($refresh and $refresh != 'fullscreen') {
     alert("<?php xl('You are not authorized to add/edit issues','e'); ?>");
     <?php endif; ?>
   }
-
+   
   </script>
     
     <!-- Add Font stuff for the look and feel.  -->
@@ -152,7 +149,6 @@ if ($refresh and $refresh != 'fullscreen') {
   </head>
   <body class="bgcolor2" background="<?php echo $GLOBALS['backpic']?>" topmargin=0 rightmargin=0 leftmargin=2 bottommargin=0 marginwidth=2 marginheight=0>
         
-    <Xdiv id="stats_div" name="stats_div" style="z-index:100;">
     <?php
     if ($display=="fullscreen") { 
       // trial fullscreen with mobile menu will lead to tablet versions and bootstrap menu 
@@ -176,15 +172,9 @@ if ($refresh and $refresh != 'fullscreen') {
             <!-- Page Heading -->
             <?php menu_overhaul_left($pid,$encounter);   
              echo    '<div class="col-sm-12"></div>';
-    } else {
-      //now include openEMR encounter menu
-      $hide=1;
-      require_once("$incdir/patient_file/encounter/new_form.php");
-    }
+    } 
     ?>
-        </Xdiv>
-        <body class="body_top">
-   <div id="Layer1" name="Layer1" class="display">
+    <div id="Layer1" name="Layer1" class="display">
     <form method="post" action="<?php echo $rootdir;?>/forms/<?php echo $form_folder; ?>/save.php?mode=update" id="eye_mag" class="eye_mag pure-form" name="eye_mag">
       <!-- start container for the main body of the form -->
       <div class="body_top text-center" id="form_container" name="form_container">
