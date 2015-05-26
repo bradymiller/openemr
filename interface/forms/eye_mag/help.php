@@ -129,6 +129,7 @@ if ($showit=='ext') $showit="external";
 				border:none;
 				width:98%;
 				font-size:1em;
+				display:inline-block;
 			} 
 			.style3 {
 				margin:20;
@@ -153,11 +154,11 @@ if ($showit=='ext') $showit="external";
 			}
 			.output_EMR {
 				clear:both;float:left;border:1pt solid black;width:50%;padding:0 10;margin:5;
-				height: 322;
+				height: 340;
 			}
 			.output_reports {
 				float:left;border:1pt solid black;width:45%;padding:0 10;margin:5;
-				height: 322;
+				height: 340;
 			}
 			.ui-state-active {
 				background: #97C4FE;
@@ -217,41 +218,44 @@ if ($showit=='ext') $showit="external";
 						<h2 class="bold">What if you could type your shorthand?</h2>
 						In addition to the point-click-type option, the Pull-forward from old records option, 
 						the Fill Defaults feature and the draw programs, 
-						<b>we designed an Eye Shorthand technique to merge our lingua franca with the keyboard</b>.<br />
+						<b>we added the Eye Shorthand technique, merging our lingua franca oculī with the keyboard</b>.<br />
 						You can customize it to match <b>your brain</b>, but you may not need to.<br />
-						It should already be very familiar.<br /><hr />
+						It should already be very familiar. It is based on the shorthand we all learned in training.<br /><hr />
 						You know what <b>RUL: 2mm ptosis</b> means. <br />
 						You could click on the field for the right upper lid and type in 2mm ptosis.  <br />
 						Then click on the next field, maybe even tab to it, and type in the next field.<br />
 						What about <b>Right C/D 0.6Vx0.4H with inferior notch.  Left C/D 0.5</b>?<br />
-						Find the fields to click. Lots of hand movement going in.  Two mouse clicks.<br />
+						Find the fields to click. Two mouse clicks at least. Lots of hand movement going in.  <br />
 						<br />
 						Does this make any sense to you:<br />
 
 						<div style="text-align:center;font-weight:600;margin:20;background-color:yellow;padding:30 auto;width:75%;border:1pt black solid">rcup.0.6Vx0.4H w/ inf notch;lcup.0.5</span><br />
 						</div>
-						It is the same thing in shorthand.  You can even shorten rcup to rc, lcup to c, or just "c" for both, and go even faster.<br />
-						<b>Field.text;field.text</b><br />
-						It is that simple and doesn't it look familiar?<br />
+						It is the same thing in shorthand.  You can even shorten rcup to rc, lcup to c, or just "c" for both (if the data to enter is the same), and go even faster.<br />
+						<b>Field.text;field.text;Field.text;field.text</b><br />
+						It is that simple and doesn't the <b>text</b> part look familiar?<br />
 						Even slow typers will find the Eye Exam Shorthand can speed up EHR documentation time.<br />
 						It is easy to learn.<br /> 
 						Type the abbreviation for a clinical field, a period/fullstop, followed by your finding, in your shorthand.<br />
 						If our shorthand doesn't include your shorthand terms, your shorthand will be displayed.<br />
-						Ask us and over time, we'll include your shorthand and together we'll build the language for the next openEMR users.<br />
-						That's Open Source and <b>it's why we do what we do the way we do it.</b><br />
+						Ask us and over time, we'll include your shorthand into this form so together we can build a better EHR for everyone.
+
+						That's Open Source and <b>it's why we do what we do, the way we do it.</b><br />
 						<hr />
 						This tutorial centers around four lines of typing which 
-						<b>document more than 40 different clinical points.</b> 
+						document normal findings <b>and more than 40 different clinical issues</b>. 
 							<br />
-							That's a lot of findings for one mighty complicated patient.<br />
-							Many more than we would see on a routine day with routine patients, but it could happen...  <br />
+							That's a lot to document and one mighty complicated patient!<br />
+							Many more issues than we would see on a routine day with routine patients, but it could happen...  <br />
 						Documenting this many findings would take a little bit of time on paper, and a lifetime in an EHR. <br />
 						With the openEMR Shorthand, the average typist can do it <b>in less than a minute.</b>
 						<hr />
-						Go ahead and paste these lines into a test patient's chart.  Fiddle with them. <br />
+						Go ahead and paste the lines below into a test patient's chart.  Fiddle with them. <br />
 						Read the accompanying help pages if you like.  We tried to make them useful but they look so overwhelming.<br />
-						If you are already an eyedoc, they won't be. <br />
-						It will all make perfect sense in short order. Finally.
+						If you are already an eyedoc, they won't be. 
+						It will all make perfect sense in short order. <br />
+						It's time to plug the EHR into your brain, and work at the speed of your brain.<br />
+						Finally.  
 						<hr />
 						</blockquote>
 			<h4 class="bold">External: </h4>
@@ -273,7 +277,7 @@ if ($showit=='ext') $showit="external";
 				<div id="general" style="text-align:left;">
 					<h4><b>Usage:</b>  location.text(.a)(;)</h4>
 					<blockquote class="style2"><i>where: <br /></i>
-						<b>location</b> is the shorthand for the field.<br/>
+						<b>location</b> is the shorthand term for the clinical field.<br/>
 						<b>text</b> is the complete or shorthand data to enter into this <b>location</b>.
 						<br />
 						<b>location</b> and <b>text</b> are separated by a "<b>.</b>" period/fullstop.

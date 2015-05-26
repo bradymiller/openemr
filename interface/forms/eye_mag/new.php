@@ -27,16 +27,12 @@ $sanitize_all_escapes=true;
 include_once("../../globals.php");
 include_once("$srcdir/api.inc");
 
-if ($_REQUEST['formname']) { $form_name = $_REQUEST['formname']; } else { $form_name = "eye_mag"; }
+$form_name = "Eye Exam"; 
 $table_name = "form_eye_mag";
 $form_folder = "eye_mag";
 include_once("../../forms/".$form_folder."/php/".$form_folder."_functions.php");
 formHeader("Form: ".$form_name);
 $returnurl = $GLOBALS['concurrent_layout'] ? 'encounter_top.php' : 'patient_encounter.php';
-
-//@extract($_REQUEST); 
-//@extract($_SESSION); 
-//where does $id and $authorized come from?
 
 $pid = $_REQUEST['pid'];
 
@@ -53,11 +49,11 @@ $query = "SELECT * " .
     "FROM form_encounter AS fe, forms AS f WHERE " .
     "fe.pid = ? AND fe.date = ? AND " .
     "f.formdir = ? AND f.encounter = fe.encounter AND f.deleted = 0";
-$erow = sqlQuery($query,array($pid,$encounter_date,$form_name));
+$erow = sqlQuery($query,array($pid,$encounter_date,$form_folder));
     
 if ($erow['form_id'] > '0') {
     formHeader("Redirecting....");
-    formJump('./view_form.php?formname='.$form_name.'&id='.attr($erow['form_id']).'&pid='.attr($pid));
+    formJump('./view_form.php?formname='.$form_folder.'&id='.attr($erow['form_id']).'&pid='.attr($pid));
     formFooter();
     exit;
 }  else {
@@ -69,7 +65,7 @@ if ($erow['form_id'] > '0') {
  }
  
     formHeader("Redirecting....");
-    formJump('./view_form.php?formname='.$form_name.'&id='.attr($newid).'&pid='.attr($pid));
+    formJump('./view_form.php?formname='.$form_folder.'&id='.attr($newid).'&pid='.attr($pid));
     formFooter();
     exit;
 ?>

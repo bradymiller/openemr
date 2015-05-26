@@ -803,8 +803,8 @@ function display_PRIOR_section ($zone,$orig_id,$id_to_show,$pid,$report = '0') {
                         <tr><td ></td><td ><?php echo xlt('Distance'); ?></td><td><?php echo xlt('Near'); ?></td></tr>
                         <tr>
                             <td style="text-align:right;"><?php echo xlt('Divergence'); ?></td>
-                            <td><input disabled type="text" id="PRIOR_CASCDIST" name="PRIOR_CASCDIST" value="<?php echo attr($CASCDIST); ?>"></td>
-                            <td><input disabled type="text" id="PRIOR_CASCNEAR" name="PRIOR_CASCNEAR" value="<?php echo attr($CASCNEAR); ?>"></td></tr>
+                            <td><input disabled type="text" id="PRIOR_DACCDIST" name="PRIOR_DACCDIST" value="<?php echo attr($DACCDIST); ?>"></td>
+                            <td><input disabled type="text" id="PRIOR_DACCNEAR" name="PRIOR_DACCNEAR" value="<?php echo attr($DACCNEAR); ?>"></td></tr>
                         <tr>
                             <td style="text-align:right;"><?php echo xlt('Convergence'); ?></td>
                             <td><input disabled type="text" id="PRIOR_CACCDIST" name="PRIOR_CACCDIST" value="<?php echo attr($CACCDIST); ?>"></td>
@@ -1317,7 +1317,7 @@ function display_PRIOR_section ($zone,$orig_id,$id_to_show,$pid,$report = '0') {
          // Collect parameter(s)
         $category = empty($_REQUEST['category']) ? '' : $_REQUEST['category'];
         ?>
-        <div id="PMFSH_block_1" name="PMFSH_block_1" class="QP_block borderShadow text_clinical" style="height:2.9in;overflow:auto;">
+        <div id="PMSFH_block_1" name="PMSFH_block_1" class="QP_block borderShadow text_clinical" style="height:2.9in;overflow:auto;">
             <?php
             $encount = 0;
             $lasttype = "";
@@ -1349,7 +1349,7 @@ function display_PRIOR_section ($zone,$orig_id,$id_to_show,$pid,$report = '0') {
                     }
                     ?>
                     </div>
-                    <div style="margin-left:10px;height:2.9in;position:relative;overflow:auto;" id="PMFSH_block_2" name="PMFSH_block_2" class="QP_block borderShadow text_clinical">
+                    <div style="margin-left:10px;height:2.9in;position:relative;overflow:auto;" id="PMSFH_block_2" name="PMSFH_block_2" class="QP_block borderShadow text_clinical">
                     <?php
                 }
                    ?>
@@ -1404,7 +1404,7 @@ function display_PRIOR_section ($zone,$orig_id,$id_to_show,$pid,$report = '0') {
                         $diags = explode(";", $row['diagnosis']);
                         foreach ($diags as $diag) {
                             $codedesc = lookup_code_descriptions($diag);
-                            $codetext .= xlt($diag) . " (" . xlt($codedesc) . ")<br>";
+                            $codetext .= xlt($diag) . " (" . xlt($codedesc) . ")<br />";
                         }
                     }
 
@@ -1542,7 +1542,7 @@ function display_PRIOR_section ($zone,$orig_id,$id_to_show,$pid,$report = '0') {
                             $diags = explode(";", $row['diagnosis']);
                             foreach ($diags as $diag) {
                                 $codedesc = lookup_code_descriptions($diag);
-                                $codetext .= xlt($diag) . " (" . xlt($codedesc) . ")<br>";
+                                $codetext .= xlt($diag) . " (" . xlt($codedesc) . ")<br />";
                             }
                         }
 
@@ -1618,19 +1618,15 @@ function display_PRIOR_section ($zone,$orig_id,$id_to_show,$pid,$report = '0') {
  * 
  *  If there is already a drawing for this zone in this encounter, it is pulled from
  *  from its stored location:
- *  $GLOBALS['web_root']."/sites/".$_SESSION['site_id']."/eye_mag/".$pid."/".$encounter."/".$side."_".$zone."_VIEW.png?".rand();
+ *  $GLOBALS['web_root']."/sites/".$_SESSION['site_id']."/".$form_folder."/".$pid."/".$encounter."/".$side."_".$zone."_VIEW.png?".rand();
  *  
  *  Otherwise a "BASE" image is pulled from the images directory of the form...  Customizable.
- *  
- *  The user can replace the given BASE images if they wish.  For Sketch.js and the format we employ, the image 
- *  created must be  in png format and have the dimensions of 432px x 250px.  It is possible to modify the source code to 
- *  accept any image by employing imagecopyresampled but we ran into problems... See more about the image names in save.php
  *
  * @param string $zone options ALL,EXT,ANTSEG,RETINA,NEURO 
  * @param string $visit_date Future functionality to limit result set. UTC DATE Formatted 
  * @param string $pid value = patient id
  * @param string OU by default.  Future functionality will allow OD and OS values- not implemented yet.
- * @return true : when called directly outputs the ZONE specific HTML for a prior record + widget for the desired zone 
+ * @return true : when called directly outputs the ZONE specific HTML5 CANVAS widget 
  */ 
 function display_draw_section ($zone,$encounter,$pid,$side ='OU',$counter='') {
     global $form_folder;
@@ -1676,7 +1672,7 @@ function display_draw_section ($zone,$encounter,$pid,$side ='OU',$counter='') {
              
             <span style="min-width:1in;">&nbsp;</span>
             <!-- now to pencil size -->
-            <img id="sketch_sizes_<?php echo attr($zone); ?>" onclick='$("#selWidth_<?php echo $zone; ?>").val("1");' src="../../forms/<?php echo $form_folder; ?>/images/brush_1.png" style="height:20px;width:20px;">
+            <img id="sketch_sizes_<?php echo attr($zone); ?>" onclick='$("#selWidth_<?php echo $zone; ?>").val("1");' src="../../forms/<?php echo $form_folder; ?>/images/brush_1.png" style="height:20px;width:20px; border-bottom: 2pt solid black;">
             <img id="sketch_sizes_<?php echo attr($zone); ?>" onclick='$("#selWidth_<?php echo $zone; ?>").val("3");' src="../../forms/<?php echo $form_folder; ?>/images/brush_3.png" style="height:20px;width:20px;">
             <img id="sketch_sizes_<?php echo attr($zone); ?>" onclick='$("#selWidth_<?php echo $zone; ?>").val("5");' src="../../forms/<?php echo $form_folder; ?>/images/brush_5.png" style="height:20px;width:20px;">
             <img id="sketch_sizes_<?php echo attr($zone); ?>" onclick='$("#selWidth_<?php echo $zone; ?>").val("10");' src="../../forms/<?php echo $form_folder; ?>/images/brush_10.png" style="height:20px;width:20px;">
@@ -1692,7 +1688,7 @@ function display_draw_section ($zone,$encounter,$pid,$side ='OU',$counter='') {
                 $filetoshow = $GLOBALS['web_root']."/controller.php?document&retrieve&patient_id=$pid&document_id=".$doc['id']."&as_file=false&blahblah=".rand();
             } else {
                 //base image. 
-                $filetoshow = "../../forms/".$form_folder."/images/".$side."_".$zone."_BASE.png"; 
+                $filetoshow = $GLOBALS['web_root']."/interface/forms/".$form_folder."/images/".$side."_".$zone."_BASE.png"; 
             }
         ?>
         <input type="hidden" id="url_<?php echo attr($zone); ?>" name="url_<?php echo attr($zone); ?>" value="<?php echo $filetoshow; ?>">
@@ -1706,6 +1702,8 @@ function display_draw_section ($zone,$encounter,$pid,$side ='OU',$counter='') {
             <button onclick="javascript:cUndo('<?php echo $zone; ?>');return false;" id="Undo_Canvas_<?php echo $zone; ?>">Undo</button>
             <button onclick="javascript:cRedo('<?php echo $zone; ?>');return false;" id="Redo_Canvas_<?php echo $zone; ?>">Redo</button>
             <button onclick="javascript:drawImage('<?php echo $zone; ?>');return false;" id="Clear_Canvas_<?php echo $zone; ?>">Clear</button>
+        <button onclick="return false;" id="Base_Canvas_<?php echo $zone; ?>">Change Base</button>
+        
         </div>
         <br />
     </div>
@@ -1880,8 +1878,8 @@ function copy_forward($zone,$copy_from,$copy_to,$pid) {
         $result['VERTFUSAMPS']=$objQuery['VERTFUSAMPS'];
         $result['DIVERGENCEAMPS']=$objQuery['DIVERGENCEAMPS'];
         $result['NPC']=$objQuery['NPC'];
-        $result['CASCDIST']=$objQuery['CASCDIST'];
-        $result['CASCNEAR']=$objQuery['CASCNEAR'];
+        $result['DACCDIST']=$objQuery['DACCDIST'];
+        $result['DACCNEAR']=$objQuery['DACCNEAR'];
         $result['CACCDIST']=$objQuery['CACCDIST'];
         $result['CACCNEAR']=$objQuery['CACCNEAR'];
         $result['ODCOLOR']=$objQuery['ODCOLOR'];
@@ -2041,8 +2039,8 @@ function copy_forward($zone,$copy_from,$copy_to,$pid) {
         $result['VERTFUSAMPS']=$objQuery['VERTFUSAMPS'];
         $result['DIVERGENCEAMPS']=$objQuery['DIVERGENCEAMPS'];
         $result['NPC']=$objQuery['NPC'];
-        $result['CASCDIST']=$objQuery['CASCDIST'];
-        $result['CASCNEAR']=$objQuery['CASCNEAR'];
+        $result['DACCDIST']=$objQuery['DACCDIST'];
+        $result['DACCNEAR']=$objQuery['DACCNEAR'];
         $result['CACCDIST']=$objQuery['CACCDIST'];
         $result['CACCNEAR']=$objQuery['CACCNEAR'];
         $result['ODCOLOR']=$objQuery['ODCOLOR'];
@@ -2561,7 +2559,7 @@ function undo() {
 function row_deleter($table, $where) {
   $tres = sqlStatement("SELECT * FROM $table WHERE $where");
   $count = 0;
-  echo "hey there";
+ // echo "hey there";
   while ($trow = sqlFetchArray($tres)) {
    $logstring = "";
    foreach ($trow as $key => $value) {
@@ -2574,7 +2572,7 @@ function row_deleter($table, $where) {
   }
   if ($count) {
    $query = "DELETE FROM $table WHERE $where";
-   echo $query . "<br>\n";
+   echo $query . "<br />\n";
    sqlStatement($query);
   }
  }

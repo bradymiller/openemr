@@ -183,7 +183,7 @@ function delete_issue(issue_number,issue_type) {
 }
 
 function refreshIssues() {
-    var url = "../../forms/eye_mag/view.php?display=PMFSH&id=" + $("#form_id").val();
+    var url = "../../forms/eye_mag/view.php?display=PMSFH&id=" + $("#form_id").val();
     var formData = {
         'action'           : "finalize",
         'final'            : "1",
@@ -210,12 +210,12 @@ function show_right() {
     $("#NEURO_1").removeClass("size50").addClass("size100");
     $("#RETINA_1").removeClass("size50").addClass("size100");
     $("#IMPPLAN_1").removeClass("size50").addClass("size100");
-    $("#HPI_right").show();
-    $("#PMH_right").show();
-    $("#EXT_right").show();
-    $("#ANTSEG_right").show();
-    $("#NEURO_right").show();
-    $("#RETINA_right").show();
+    $("#HPI_right").removeClass('nodisplay');
+    $("#PMH_right").removeClass('nodisplay');
+    $("#EXT_right").removeClass('nodisplay');
+    $("#ANTSEG_right").removeClass('nodisplay');
+    $("#NEURO_right").removeClass('nodisplay');
+    $("#RETINA_right").removeClass('nodisplay');
     $("#PMH_1").addClass("clear_both");
     $("#ANTSEG_1").addClass("clear_both");
     $("#RETINA_1").addClass("clear_both");
@@ -230,12 +230,12 @@ function hide_right() {
     $("#NEURO_1").removeClass("size100").addClass("size50");
     $("#RETINA_1").removeClass("size100").addClass("size50");
     $("#IMPPLAN_1").removeClass("size100").addClass("size50");
-    $("#HPI_right").hide().css("display","none");
-    $("#PMH_right").hide();
-    $("#EXT_right").hide().css("display","none");
-    $("#ANTSEG_right").hide().css("display","none");;
-    $("#NEURO_right").hide().css("display","none");;
-    $("#RETINA_right").hide().css("display","none");;
+    $("#HPI_right").addClass('nodisplay');
+    $("#PMH_right").addClass('nodisplay');
+    $("#EXT_right").addClass('nodisplay');
+    $("#ANTSEG_right").addClass('nodisplay');
+    $("#NEURO_right").addClass('nodisplay');
+    $("#RETINA_right").addClass('nodisplay');
     $("#PMH_1").removeClass("clear_both");
     $("#ANTSEG_1").removeClass("clear_both");
     $("#RETINA_1").removeClass("clear_both");
@@ -248,8 +248,8 @@ function show_DRAW() {
     hide_PRIORS();
     hide_left();
     show_right();
-        //$("#LayerTechnical_sections").hide();
-        //$("#REFRACTION_sections").hide();
+        //$("#LayerTechnical_sections").addClass('nodisplay');
+        //$("#REFRACTION_sections").addClass('nodisplay');
     $("#HPI_right").addClass('canvas');
     $("#PMH_right").addClass('canvas');
     $("#EXT_right").addClass('canvas');
@@ -257,7 +257,7 @@ function show_DRAW() {
     $("#RETINA_right").addClass('canvas');
     $("#NEURO_right").addClass('canvas');
     $("#IMPPLAN_right").addClass('canvas');
-    $(".Draw_class").show();
+    $(".Draw_class").removeClass('nodisplay');
     if ($("#PREFS_CLINICAL").val() !='1') {
             // we want to show text_only which are found on left half
         $("#PREFS_CLINICAL").val('1');
@@ -269,19 +269,19 @@ function show_DRAW_section(zone) {
         //hide_QP();
         //hide_TEXT();
         //hide_PRIORS();
-    $("#QP_"+zone).hide();
-    $("#"+zone+"_1").show();
-    $("#"+zone+"_left").show();
-    $("#"+zone+"_right").addClass('canvas').show();
+    $("#QP_"+zone).addClass('nodisplay');
+    $("#"+zone+"_1").removeClass('nodisplay');
+    $("#"+zone+"_left").removeClass('nodisplay');
+    $("#"+zone+"_right").addClass('canvas').removeClass('nodisplay');
     $("#Draw_"+zone).addClass('canvas');
     
-    $("#Draw_"+zone).show();
+    $("#Draw_"+zone).removeClass('nodisplay');
     /*
-     $("#"+zone+"_1").show();
-     $("#"+zone+"_right").addClass('canvas').show();
-     $("#QP_"+zone).hide();
-     $("#PRIORS_"+zone+"_left_text").hide();
-     $("#DRAW_"+zone).show();
+     $("#"+zone+"_1").removeClass('nodisplay');
+     $("#"+zone+"_right").addClass('canvas').removeClass('nodisplay');
+     $("#QP_"+zone).addClass('nodisplay');
+     $("#PRIORS_"+zone+"_left_text").addClass('nodisplay');
+     $("#DRAW_"+zone).removeClass('nodisplay');
      */
     $("#PREFS_"+zone+"_DRAW").val(1);
     
@@ -290,10 +290,10 @@ function show_DRAW_section(zone) {
 
 function show_TEXT() {
         //   alert("show_TEXT");
-    $("#PMH_1").show();
-    $("#NEURO_1").show();
-    $("#IMPPLAN_1").show();
-    $(".TEXT_class").show();
+    $("#PMH_1").removeClass('nodisplay');
+    $("#NEURO_1").removeClass('nodisplay');
+    $("#IMPPLAN_1").removeClass('nodisplay');
+    $(".TEXT_class").removeClass('nodisplay');
     show_left();
     hide_right(); //this hides the right half
     hide_QP();
@@ -307,14 +307,14 @@ function show_TEXT() {
     
 }
 function show_PRIORS() {
-    $("#NEURO_sections").show();
+    $("#NEURO_sections").removeClass('nodisplay');
     hide_QP();
     hide_DRAW();
     $("#EXT_right").addClass("PRIORS_color");
     show_TEXT();
     show_right();
-    $("#QP_HPI").show();//no PRIORS yet here, show QP
-    $("#QP_PMH").show();//no PRIORS yet here, show QP
+    $("#QP_HPI").removeClass('nodisplay');//no PRIORS yet here, show QP
+    $("#QP_PMH").removeClass('nodisplay');//no PRIORS yet here, show QP
     $("#HPI_right").addClass('canvas');
     $("#PMH_right").addClass('canvas');
     $("#IMPPLAN_right").addClass('canvas');
@@ -322,7 +322,7 @@ function show_PRIORS() {
     $("#ANTSEG_right").addClass('canvas');
     $("#RETINA_right").addClass('canvas');
     $("#NEURO_right").addClass('canvas');
-    $(".PRIORS_class").show();
+    $(".PRIORS_class").removeClass('nodisplay');
     $(document).scrollTop( $("#clinical_anchor").offset().top );
     if ($("#PREFS_CLINICAL").val() !='1') {
             // we want to show text_only which are found on left half
@@ -333,25 +333,25 @@ function show_PRIORS() {
 
 function hide_left() {
     $("[name$='_1']").removeClass("size100").addClass("size50");
-    $("#HPI_left").hide();
-    $("#PMH_left").hide();
-    $("#EXT_left").hide();
-    $("#ANTSEG_left").hide();
-    $("#RETINA_left").hide();
-    $("#NEURO_left").hide();
-    $("#IMPPLAN_left").hide();
-    $("[name $='_left']").hide();
+    $("#HPI_left").addClass('nodisplay');
+    $("#PMH_left").addClass('nodisplay');
+    $("#EXT_left").addClass('nodisplay');
+    $("#ANTSEG_left").addClass('nodisplay');
+    $("#RETINA_left").addClass('nodisplay');
+    $("#NEURO_left").addClass('nodisplay');
+    $("#IMPPLAN_left").addClass('nodisplay');
+    $("[name $='_left']").addClass('nodisplay');
 }
 function show_left() {
     $("[name$='_1']").removeClass("size100").addClass("size50");
-    $("#HPI_left").show();
-    $("#PMH_left").show();
-    $("#EXT_left").show();
-    $("#ANTSEG_left").show();
-    $("#RETINA_left").show();
-    $("#NEURO_left").show();
-    $("#IMPPLAN_left").show();
-    $("[name$='_left']").show();
+    $("#HPI_left").removeClass('nodisplay');
+    $("#PMH_left").removeClass('nodisplay');
+    $("#EXT_left").removeClass('nodisplay');
+    $("#ANTSEG_left").removeClass('nodisplay');
+    $("#RETINA_left").removeClass('nodisplay');
+    $("#NEURO_left").removeClass('nodisplay');
+    $("#IMPPLAN_left").removeClass('nodisplay');
+    $("[name$='_left']").removeClass('nodisplay');
 }
 
 function show_QP() {
@@ -367,31 +367,31 @@ function show_QP() {
     $("#RETINA_right").addClass('canvas');
     $("#NEURO_right").addClass('canvas');
     $("#IMPPLAN_right").addClass('canvas');
-    $(".QP_class").show();
+    $(".QP_class").removeClass('nodisplay');
         //  menu_select("View","DRAW");
 }
 
 function show_QP_section(zone) {
         //show_left();
-    $("#"+zone+"_right").addClass('canvas').show();
+    $("#"+zone+"_right").addClass('canvas').removeClass('nodisplay');
     
-    $("#QP_"+zone).show();
+    $("#QP_"+zone).removeClass('nodisplay');
     
-    $("#DRAW_"+zone).hide();
-    $("#"+zone+"_1").show();
-    $("#"+zone+"_left").show();
+    $("#DRAW_"+zone).addClass('nodisplay');
+    $("#"+zone+"_1").removeClass('nodisplay');
+    $("#"+zone+"_left").removeClass('nodisplay');
     /*
-     $("#"+zone+"_1").show();
-     $("#"+zone+"_right").addClass('canvas').show();
-     $("#QP_"+zone).hide();
-     $("#PRIORS_"+zone+"_left_text").hide();
-     $("#DRAW_"+zone).show();
+     $("#"+zone+"_1").removeClass('nodisplay');
+     $("#"+zone+"_right").addClass('canvas').removeClass('nodisplay');
+     $("#QP_"+zone).addClass('nodisplay');
+     $("#PRIORS_"+zone+"_left_text").addClass('nodisplay');
+     $("#DRAW_"+zone).removeClass('nodisplay');
      */
     $("#PREFS_"+zone+"_RIGHT").val('QP');
     
     
     
-        // $(".QP_class").show();
+        // $(".QP_class").removeClass('nodisplay');
     if (zone == "PMH") {
         alter_issue('','');
     }
@@ -424,35 +424,35 @@ function menu_select(zone,che) {
     }
 }
 function hide_DRAW() {
-    $(".Draw_class").hide();
+    $(".Draw_class").addClass('nodisplay');
     hide_right();
-    $("#LayerTechnical_sections").show();
-    $("#REFRACTION_sections").show();
-        // $("#HPI_sections").show();
-    $("#PMH_sections").show();
-        //$("#PMH_right").show();
-    $("#HPI_right").hide();
+    $("#LayerTechnical_sections").removeClass('nodisplay');
+    $("#REFRACTION_sections").removeClass('nodisplay');
+        // $("#HPI_sections").removeClass('nodisplay');
+    $("#PMH_sections").removeClass('nodisplay');
+        //$("#PMH_right").removeClass('nodisplay');
+    $("#HPI_right").addClass('nodisplay');
     $("#HPI_right").removeClass('canvas');
     $("#EXT_right").removeClass('canvas');
     $("#RETINA_right").removeClass('canvas');
     $("#ANTSEG_right").removeClass('canvas');
 }
 function hide_QP() {
-    $(".QP_class").hide(); //addClass('nodisplay');
+    $(".QP_class").addClass('nodisplay'); //addClass('nodisplay');
     $("[name$='_right']").removeClass('canvas');
 }
 function hide_TEXT() {
-    $(".TEXT_class").hide();
+    $(".TEXT_class").addClass('nodisplay');
 }
 function hide_PRIORS() {
-        // $(".PRIORS_class").hide();
+        // $(".PRIORS_class").addClass('nodisplay');
         //  $(".PRIORS_class").css("display","none");
     $("#EXT_right").removeClass("PRIORS_color");
-    $("#PRIORS_EXT_left_text").hide();
-    $("#PRIORS_ANTSEG_left_text").hide();
-    $("#PRIORS_RETINA_left_text").hide();
-    $("#PRIORS_NEURO_left_text").hide();
-    $(".PRIORS_class").hide();
+    $("#PRIORS_EXT_left_text").addClass('nodisplay');
+    $("#PRIORS_ANTSEG_left_text").addClass('nodisplay');
+    $("#PRIORS_RETINA_left_text").addClass('nodisplay');
+    $("#PRIORS_NEURO_left_text").addClass('nodisplay');
+    $(".PRIORS_class").addClass('nodisplay');
 }
 
 function printElem(options){
@@ -582,7 +582,7 @@ function openImage() {
 function show_Section(section) {
         //hide everything, show the section.  For fullscreen perhaps Tablet view per section
     show_right();
-        //$('#accordion').hide();
+        //$('#accordion').addClass('nodisplay');
     $("div[name='_sections']").style.display= "none"; //
     $('#'+section+'_sections').style.display= "block"; //.show().appendTo('form_container');
 }
@@ -691,6 +691,8 @@ $(document).ready(function() {
                                             if (field == 'RH') field2 = "ODHERTEL";
                                             if (field == 'LH') field2 = "OLHERTEL";
                                             if (field == 'LHERT') field2 = "HERTELBASE";
+                                            if ((field == 'COM')||(field =='COMMENTS')) field2 = 'EXT_COMMENTS';
+                                            
                                             if (field == 'HERT') {
                                             $('#ODHERTEL').val(text.match(/(\d{2})-(\d{1,3})-(\d{2})/)[1]).css("background-color","#F0F8FF");
                                             $('#OSHERTEL').val(text.match(/(\d{2})-(\d{1,3})-(\d{2})/)[3]).css("background-color","#F0F8FF");
@@ -859,6 +861,7 @@ $(document).ready(function() {
                                             if (field == 'LSCH2')   field2 = "OSSCHIRMER2";
                                             if (field == 'RTBUT')   field2 = "ODTBUT";
                                             if (field == 'LTBUT')   field2 = "OSTBUT";
+                                            if ((field == 'COM')||(field =='COMMENTS')) field2 = 'ANTSEG_COMMENTS';
                                             if ((field == 'BC')||(field=='C')) {
                                             field = "ODCONJ";
                                             (appendix == ".a") ? ($('#'+field).val($('#'+field).val() +', '+text)) : $('#'+field).val(text);
@@ -986,6 +989,8 @@ $(document).ready(function() {
                                             if (field == 'LCMT')    field2 = "OSCMT";
                                             if (field == 'ODCMT')   field2 = "ODCMT";
                                             if (field == 'OSCMT')   field2 = "OSCMT";
+                                            if ((field == 'COM')||(field =='COMMENTS')) field2 = 'RETINA_COMMENTS';
+                                            
                                             if (field == 'BD') {
                                             field = "ODDISC";
                                             (appendix == ".a") ? ($('#'+field).val($('#'+field).val() +', '+text)) : $('#'+field).val(text);
@@ -1037,6 +1042,7 @@ $(document).ready(function() {
                                             $('#RETINA_keyboard').val('');
                                             break;
                                             
+                                            
                                             case 'NEURO':
                                             var zone = $("#NEURO_ACT_zone").val();
                                             var data1 = $("#NEURO_keyboard").val();
@@ -1044,7 +1050,8 @@ $(document).ready(function() {
                                             for (index=0; index < data_seg.length; ++index) {
                                                 //for each segment separated by a semicolon
                                                 if (data_seg[index] =='') continue;
-                                                if (data_seg[index].match(/(DIST|NEAR)/i)) {
+                                                data_seg[index] = data_seg[index].replace(/^[\s]*/,'');
+                                                if (data_seg[index].match(/^(.CDIST|.CNEAR)/i)) {
                                                     data_seg[index] = data_seg[index].toUpperCase();
                                                     if (data_seg[index] == 'SCDIST') $('#NEURO_ACT_zone').val('SCDIST').trigger('change');
                                                     if (data_seg[index] == 'CCDIST') $('#NEURO_ACT_zone').val('CCDIST').trigger('change');
@@ -1053,20 +1060,54 @@ $(document).ready(function() {
                                                     zone = $("#NEURO_ACT_zone").val();
                                                     continue;
                                                 }
-                                                var data = data_seg[index].match(/(\d{1,2})\.(\d{0,2}||ortho)(.*)/);
-                                                var field = data[1];
-                                                var PD = data[2];
-                                                if (PD >'') PD = PD + ' ';
-                                                var strab = data[3].toUpperCase().replace (/I(.)/g,"$1(T)").replace(/\s*(\d)/,'\n$1');
-                                                $('#ACT'+field+zone).val(PD+strab);
-                                                $('#ACT'+field+zone).css("background-color","#F0F8FF");
+                                                //if not strabismus, then color or comments etc
+                                                if ((index =='0') && (data_seg[index].match(/^D/i))) {
+                                                    //there are currently no NEURO defaults though...
+                                                    $("#NEURO_defaults").trigger("click");
+                                                    continue;
+                                                }
+                                                if (data_seg[index].match(/^([a-z]*)\.(.*)/i)) {
+                                                    var data = data_seg[index].match(/^(\w*)\.(.*)/);
+                                                    var appendix =".a";
+                                                    (data[2].match(/\.a$/))?(data[2] = data[2].replace(/\.a$/,'')):(appendix = "nope");
+                                                    var field = data[1].toUpperCase();
+                                                    var field2 ='';
+                                                    var text = data[2];
+                                                    if ((field == 'RCOL')||(field =='RCOL')) field2 = 'ODCOLOR';
+                                                    if ((field == 'LCOL')||(field =='LCOL')) field2 = 'OSCOLOR';
+                                                    if ((field == 'RCOIN')||(field =='RCOINS')) field2 = 'ODCOINS';
+                                                    if ((field == 'LCOIN')||(field =='LCOINS')) field2 = 'OSCOINS';
+                                                    if (field == 'RRED') field2 = 'ODREDDESAT';
+                                                    if (field == 'LRED') field2 = 'OSREDDESAT';
+                                                    if (field == 'RNPC') field2 = 'ODNPC';
+                                                    if (field == 'LNPC') field2 = 'OSNPC';
+                                                    if (field == 'RNPA') field2 = 'ODNPA';
+                                                    if (field == 'LNPA') field2 = 'OSNPA';
+                                                    if (field == 'STEREO') field2 = 'STERIOPSIS';
+                                                    if (field == 'VERTFUS') field2 = 'VERTFUSAMPS';
+                                                    if (field == 'CAD') field2 = 'CACCDIST';
+                                                    if (field == 'CAN') field2 = 'CACCNEAR';
+                                                    if (field == 'DAD') field2 = 'DACCDIST';
+                                                    if (field == 'DAN') field2 = 'DACCNEAR';
+                                                    
+                                                    if ((field == 'COM')||(field =='COMMENTS')) field2 = 'EXT_COMMENTS';
+                                                
+                                                } else if (data_seg[index].match(/^(\d{1,2})\.(\d{0,2}||ortho)(.*)/)) {
+                                                    var data = data_seg[index].match(/(\d{1,2})\.(\d{0,2}||ortho)(.*)/);
+                                                    var field = data[1];
+                                                    var PD = data[2];
+                                                    if (PD >'') PD = PD + ' ';
+                                                    var strab = data[3].toUpperCase().replace (/I(.)/g,"$1(T)").replace(/\s*(\d)/,'\n$1');
+                                                    $('#ACT'+field+zone).val(PD+strab);
+                                                    $('#ACT'+field+zone).css("background-color","#F0F8FF");
+                                                }
                                             }
                                             submit_form();
                                             $('#NEURO_keyboard').val('');
                                             break;
-                                            } //end switch
-                                            } //end if enter/return pressed
-                                            });
+                                        } //end switch
+                                    } //end if enter/return pressed
+                                });
                   $("[id^='sketch_tools_']").click(function() {
                                                    var zone = this.id.match(/sketch_tools_(.*)/)[1];
                                                    $("[id^='sketch_tools_"+zone+"']").css("height","30px");
@@ -1093,7 +1134,7 @@ $(document).ready(function() {
                                       $(this).addClass("active");
                                       
                                       //  Hide all tab content
-                                      $(".tab_content").hide();
+                                      $(".tab_content").addClass('nodisplay');
                                       
                                       //  Here we get the href value of the selected tab
                                       var selected_tab = $(this).find("a").attr("href");
@@ -1112,8 +1153,8 @@ $(document).ready(function() {
                   $("input,textarea,text").css("background-color","#FFF8DC");
                   $("#IOPTIME").css("background-color","#FFFFFF");
                   $("#refraction_width").css("width","8.5in");
-                  $(".Draw_class").hide();
-                  $(".PRIORS_class").hide();
+                  $(".Draw_class").addClass('nodisplay');
+                  $(".PRIORS_class").addClass('nodisplay');
                   hide_DRAW();
                   hide_right();
                   $(window).resize(function() {
@@ -1427,9 +1468,9 @@ $(document).ready(function() {
                   $("body").on("change", "select", function(e){
                                var new_section = this.name.match(/PRIOR_(.*)/);
                                var newValue = this.value;
-                               $("#PRIORS_"+ new_section[1] +"_left_text").show();
-                               $("#DRAWS_" + new_section[1] + "_right").hide();
-                               $("#QP_" + new_section[1]).hide();
+                               $("#PRIORS_"+ new_section[1] +"_left_text").removeClass('nodisplay');
+                               $("#DRAWS_" + new_section[1] + "_right").addClass('nodisplay');
+                               $("#QP_" + new_section[1]).addClass('nodisplay');
                                
                                //now go get the prior page via ajax
                                var url = "../../forms/eye_mag/save.php?mode=retrieve";
@@ -1464,8 +1505,8 @@ $(document).ready(function() {
                                });
                   $("body").on("click","[id^='Close_PRIORS_']", function() {
                                var new_section = this.id.match(/Close_PRIORS_(.*)$/)[1];
-                               $("#PRIORS_"+ new_section +"_left_text").hide();
-                               $("#QP_" + new_section).show();
+                               $("#PRIORS_"+ new_section +"_left_text").addClass('nodisplay');
+                               $("#QP_" + new_section).removeClass('nodisplay');
                                });
                   
                   $("#pupils").mouseover(function() {
@@ -1489,74 +1530,74 @@ $(document).ready(function() {
                                          ($("#PREFS_VA").val() =='1') ? ($("#PREFS_VA").val('0')) : $("#PREFS_VA").val('1');
                                          });
                   //set wearing to single vision or bifocal? Bifocal
-                  $(".WNEAR").show();
-                  $("#WNEARODAXIS").hide();
-                  $("#WNEARODCYL").hide();
-                  $("#WNEARODPRISM").hide();
-                  $("#WNEAROSAXIS").hide();
-                  $("#WNEAROSCYL").hide();
-                  $("#WNEAROSPRISM").hide();
+                  $(".WNEAR").removeClass('nodisplay');
+                  $("#WNEARODAXIS").addClass('nodisplay');
+                  $("#WNEARODCYL").addClass('nodisplay');
+                  $("#WNEARODPRISM").addClass('nodisplay');
+                  $("#WNEAROSAXIS").addClass('nodisplay');
+                  $("#WNEAROSCYL").addClass('nodisplay');
+                  $("#WNEAROSPRISM").addClass('nodisplay');
                   
                   $("#Single").click(function(){
-                                     $("#WNEARODAXIS").hide();
-                                     $("#WNEARODCYL").hide();
-                                     $("#WNEARODPRISM").hide();
-                                     $("#WODADD2").hide();
-                                     $("#WOSADD2").hide();
-                                     $("#WNEAROSAXIS").hide();
-                                     $("#WNEAROSCYL").hide();
-                                     $("#WNEAROSPRISM").hide();
+                                     $("#WNEARODAXIS").addClass('nodisplay');
+                                     $("#WNEARODCYL").addClass('nodisplay');
+                                     $("#WNEARODPRISM").addClass('nodisplay');
+                                     $("#WODADD2").addClass('nodisplay');
+                                     $("#WOSADD2").addClass('nodisplay');
+                                     $("#WNEAROSAXIS").addClass('nodisplay');
+                                     $("#WNEAROSCYL").addClass('nodisplay');
+                                     $("#WNEAROSPRISM").addClass('nodisplay');
                                      
-                                     // $(".WNEAR").hide();
-                                     $(".WSPACER").show();
+                                     // $(".WNEAR").addClass('nodisplay');
+                                     $(".WSPACER").removeClass('nodisplay');
                                      //$("[id=Single]").prop('checked','checked');
                                      });
                   $("#Bifocal").click(function(){
-                                      $(".WSPACER").hide();
-                                      $(".WNEAR").show();
+                                      $(".WSPACER").addClass('nodisplay');
+                                      $(".WNEAR").removeClass('nodisplay');
                                       $(".WMid").addClass('nodisplay');
                                       $(".WHIDECYL").removeClass('nodisplay');
                                       $("[name=RX]").val(["1"]);
-                                      $("#WNEARODAXIS").hide();
-                                      $("#WNEARODCYL").hide();
-                                      $("#WNEARODPRISM").hide();
-                                      $("#WNEAROSAXIS").hide();
-                                      $("#WNEAROSCYL").hide();
-                                      $("#WNEAROSPRISM").hide();
-                                      $("#WODADD2").show();
-                                      $("#WOSADD2").show();
+                                      $("#WNEARODAXIS").addClass('nodisplay');
+                                      $("#WNEARODCYL").addClass('nodisplay');
+                                      $("#WNEARODPRISM").addClass('nodisplay');
+                                      $("#WNEAROSAXIS").addClass('nodisplay');
+                                      $("#WNEAROSCYL").addClass('nodisplay');
+                                      $("#WNEAROSPRISM").addClass('nodisplay');
+                                      $("#WODADD2").removeClass('nodisplay');
+                                      $("#WOSADD2").removeClass('nodisplay');
                                       
                                       });
                   $("#Trifocal").click(function(){
-                                       $(".WSPACER").hide();
-                                       $(".WNEAR").show();
+                                       $(".WSPACER").addClass('nodisplay');
+                                       $(".WNEAR").removeClass('nodisplay');
                                        $(".WMid").removeClass('nodisplay');
                                        $(".WHIDECYL").addClass('nodisplay');
                                        $("[name=RX]").val(["2"]);
-                                       $("#WNEARODAXIS").hide();
-                                       $("#WNEARODCYL").hide();
-                                       $("#WNEARODPRISM").hide();
-                                       $("#WNEAROSAXIS").hide();
-                                       $("#WNEAROSCYL").hide();
-                                       $("#WNEAROSPRISM").hide();
-                                       $("#WODADD2").show();
-                                       $("#WOSADD2").show();
+                                       $("#WNEARODAXIS").addClass('nodisplay');
+                                       $("#WNEARODCYL").addClass('nodisplay');
+                                       $("#WNEARODPRISM").addClass('nodisplay');
+                                       $("#WNEAROSAXIS").addClass('nodisplay');
+                                       $("#WNEAROSCYL").addClass('nodisplay');
+                                       $("#WNEAROSPRISM").addClass('nodisplay');
+                                       $("#WODADD2").removeClass('nodisplay');
+                                       $("#WOSADD2").removeClass('nodisplay');
                                        
                                        });
                   $("#Progressive").click(function(){
-                                          $(".WSPACER").hide();
-                                          $(".WNEAR").show();
+                                          $(".WSPACER").addClass('nodisplay');
+                                          $(".WNEAR").removeClass('nodisplay');
                                           $(".WMid").addClass('nodisplay');
                                           $(".WHIDECYL").removeClass('nodisplay');
                                           $("[name=RX]").val(["3"]);
-                                          $("#WNEARODAXIS").hide();
-                                          $("#WNEARODCYL").hide();
-                                          $("#WNEARODPRISM").hide();
-                                          $("#WNEAROSAXIS").hide();
-                                          $("#WNEAROSCYL").hide();
-                                          $("#WNEAROSPRISM").hide();
-                                          $("#WODADD2").show();
-                                          $("#WOSADD2").show();
+                                          $("#WNEARODAXIS").addClass('nodisplay');
+                                          $("#WNEARODCYL").addClass('nodisplay');
+                                          $("#WNEARODPRISM").addClass('nodisplay');
+                                          $("#WNEAROSAXIS").addClass('nodisplay');
+                                          $("#WNEAROSCYL").addClass('nodisplay');
+                                          $("#WNEAROSPRISM").addClass('nodisplay');
+                                          $("#WODADD2").removeClass('nodisplay');
+                                          $("#WOSADD2").removeClass('nodisplay');
                                           
                                           });
                   $("#Amsler-Normal").change(function() {
@@ -1754,7 +1795,7 @@ $(document).ready(function() {
                                                                                                                                                                                                                                             var elem = document.getElementById("PREFS_"+section2);
                                                                                                                                                                                                                                             if ($("#PREFS_VA").val() !='1') {
                                                                                                                                                                                                                                             $("#PREFS_VA").val('1');
-                                                                                                                                                                                                                                            $("#LayerVision2").show();
+                                                                                                                                                                                                                                            $("#LayerVision2").removeClass('nodisplay');
                                                                                                                                                                                                                                             elem.value="1";
                                                                                                                                                                                                                                             $(section).removeClass('nodisplay');
                                                                                                                                                                                                                                             if (section2 =="ADDITIONAL") {
@@ -1792,7 +1833,7 @@ $(document).ready(function() {
                                                                                                                                                                                                                                             }
                                                                                                                                                                                                                                             }
                                                                                                                                                                                                                                             update_PREFS();
-                                                                                                                                                                                                                                            $("#tab1").show();
+                                                                                                                                                                                                                                            $("#tab1").removeClass('nodisplay');
                                                                                                                                                                                                                                             });
                   
                   
@@ -2149,7 +2190,7 @@ $(document).ready(function() {
                   $("#ACT_tab_"+show).trigger('click');
                   }
                   $("#ACTTRIGGER").click(function() {
-                                         $("#ACTMAIN").toggleClass('nodisplay'); //.toggleClass('fullscreen');
+                                         $("#ACTMAIN").toggleClass('nodisplay').toggleClass('ACT_TEXT'); //.toggleClass('fullscreen');
                                          $("#NPCNPA").toggleClass('nodisplay');
                                          $("#ACTNORMAL_CHECK").toggleClass('nodisplay');
                                          $("#ACTTRIGGER").toggleClass('underline');
@@ -2215,6 +2256,34 @@ $(document).ready(function() {
                                             var zone = this.id.match(/Clear_Canvas_(.*)/)[1];
                                             submit_canvas(zone);
                                             });
+                  $("[id^='Base_']").click(function() {
+                                           var zone = this.id.match(/Base_Canvas_(.*)/)[1];
+                                           //To change the base img
+                                           //delete current image from server
+                                           //re-ajax the canvas div
+                                           var id_here = document.getElementById('myCanvas_'+zone);
+                                           var dataURL = id_here.toDataURL();
+                                           $.ajax({
+                                                  type: "POST",
+                                                  url: "../../forms/eye_mag/save.php?canvas="+zone+"&id="+$("#form_id").val(),
+                                                  data: {
+                                                  imgBase64     : dataURL,  //this contains the new strokes, the sketch.js foreground
+                                                  'zone'        : zone,
+                                                  'visit_date'  : $("#visit_date").val(),
+                                                  'encounter'   : $("#encounter").val(),
+                                                  'pid'         : $("#pid").val()
+                                                  }
+                                                  
+                                                  }).done(function(o) {
+                                                          //            console.log(o);
+                                                          $("#tellme").html(o);
+                                                          });
+
+                                           $("#url_"+zone).val("/interface/forms/eye_mag/images/OU_"+zone+"_BASE.png");
+                                           canvas.renderAll();
+                                           //submit_canvas(zone);
+                                           });
+
                   
                   
                   
@@ -2272,11 +2341,11 @@ $(document).ready(function() {
                                                   if (zone =="ALL") {
                                                   //show_DRAW();
                                                   } else {
-                                                  $("#"+zone+"_1").show();
-                                                  $("#"+zone+"_right").addClass('canvas').show();
-                                                  $("#QP_"+zone).hide();
-                                                  $("#PRIORS_"+zone+"_left_text").hide();
-                                                  $("#Draw_"+zone).show();
+                                                  $("#"+zone+"_1").removeClass('nodisplay');
+                                                  $("#"+zone+"_right").addClass('canvas').removeClass('nodisplay');
+                                                  $("#QP_"+zone).addClass('nodisplay');
+                                                  $("#PRIORS_"+zone+"_left_text").addClass('nodisplay');
+                                                  $("#Draw_"+zone).removeClass('nodisplay');
                                                   $("#PREFS_"+zone+"_RIGHT").val('DRAW');
                                                   $(document).scrollTop( $("#"+zone+"_anchor").offset().top );
                                                   
@@ -2286,8 +2355,8 @@ $(document).ready(function() {
                   $("[id^='BUTTON_QP_']").click(function() {
                                                 var zone = this.id.match(/BUTTON_QP_(.*)$/)[1].replace(/_\d*/,'');
                                                 //hide_DRAW();
-                                                $("#PRIORS_"+zone+"_left_text").hide();
-                                                $("#Draw_"+zone).hide();
+                                                $("#PRIORS_"+zone+"_left_text").addClass('nodisplay');
+                                                $("#Draw_"+zone).addClass('nodisplay');
                                                 show_QP_section(zone);
                                                 $("#PREFS_"+zone+"_RIGHT").val('QP');
                                                 $(document).scrollTop( $("#"+zone+"_anchor").offset().top );
@@ -2300,8 +2369,10 @@ $(document).ready(function() {
                   window.addEventListener("beforeunload", function () {
                                           $("#final").val('1');
                                           });
-                  $("[name$='_loading']").hide();
-                  $("[name$='_sections']").show();
+                  // set default to scDist.  Change as desired.
+                  $('#NEURO_ACT_zone').val('SCDIST').trigger('change');
+                  $("[name$='_loading']").addClass('nodisplay');
+                  $("[name$='_sections']").removeClass('nodisplay');
                   
                   /* $('#sidebar').affix({
                    offset: {

@@ -231,7 +231,7 @@ input[type=text] {
     margin-right: 4px; 
     width:4.0in;
     font-size: 1.1em;
-    font-family: FontAwesome;
+    font-family: FontAwesome, Arial,sans-serif;
 }
 .refraction td {
     text-align:center;
@@ -402,7 +402,7 @@ background: #C0C0C0;
 }
 
 .customers {
-    font-family: FontAwesome;
+    font-family: FontAwesome, Arial,sans-serif;
     border-collapse: collapse;
     padding: 8px;
 }
@@ -459,7 +459,7 @@ body
 /* Refraction Panel Defaults */
 
 .nodisplay {
-    display:none;
+    display:none !important;
     /* gets visible when Trifocal selected*/    
 }
 
@@ -761,6 +761,12 @@ h1 {
     border-top: 1px solid black;
 }
 */
+.bold { 
+    font-weight: bold;
+}
+.underline {
+    text-decoration: underline;
+}
 #tabs {
     float:middle;
     width:95%;
