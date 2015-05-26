@@ -246,7 +246,7 @@ require_once("$incdir/patient_file/encounter/new_form.php");
                         </ul>
                       </div>
                       <div id="tabs_content_container" style="z-index:1;" class="borderShadow">
-                        <div id="tab1" class="tab_content" style="display: block;">
+                        <div id="tab1_CC_text" class="tab_content">
                           <table border="0" width="100%" cellspacing="0" cellpadding="0" 
                                 style="font-size:1.1em;min-height: 2.0in;text-align:left;">
                             <tr>
@@ -268,7 +268,7 @@ require_once("$incdir/patient_file/encounter/new_form.php");
                             </tr> 
                           </table> 
                         </div>
-                        <div id="tab2" class="tab_content">
+                        <div id="tab2_CC_text" class="tab_content">
                             <table border="0" width="100%" cellspacing="0" cellpadding="0" 
                                 style="font-size:1.1em;min-height: 2.0in;text-align:left;">
                               <tr>
@@ -290,7 +290,7 @@ require_once("$incdir/patient_file/encounter/new_form.php");
                               </tr> 
                               </table>
                         </div>
-                        <div id="tab3" class="tab_content">
+                        <div id="tab3_CC_text" class="tab_content">
                             <table border="0" width="100%" cellspacing="0" cellpadding="0" 
                                 style="font-size:1.1em;min-height: 2.0in;text-align:left;">
                               <tr>
@@ -336,7 +336,7 @@ require_once("$incdir/patient_file/encounter/new_form.php");
                         </ul>
                       </div>
                       <div id="tabs_content_container" style="z-index:1;" class="borderShadow">
-                        <div id="tab1_HPI_text" class="tab_content" style="display: block;min-height: 2.0in;text-align:left;">                 
+                        <div id="tab1_HPI_text" class="tab_content" style="min-height: 2.0in;text-align:left;">                 
                           <table style="font-size:1.1em;">
                             <tr>
                               <td class="right"><b><?php echo xlt('Timing'); ?>:</b></td>

@@ -1126,25 +1126,30 @@ $(document).ready(function() {
                   
                   $("#tab1_CC1").trigger("click");
                   alter_issue('',''); // on ready displays the PMH engine.
+                  //  Here we get CC1 to show
+                  $(".tab_content").addClass('nodisplay');
+                  $("#tab1_CC_text").removeClass('nodisplay');
+                  $("#tab1_HPI_text").removeClass('nodisplay');
                   $("#tabs li").click(function() {
                                       //  First remove class "active" from currently active tab
                                       $("#tabs li").removeClass('active');
-                                      
-                                      //  Now add class "active" to the selected/clicked tab
-                                      $(this).addClass("active");
                                       
                                       //  Hide all tab content
                                       $(".tab_content").addClass('nodisplay');
                                       
                                       //  Here we get the href value of the selected tab
                                       var selected_tab = $(this).find("a").attr("href");
-                                      //alert(selected_tab);
-                                      //  Show the selected tab content
+                                     
+                                      //  Now add class "active" to the selected/clicked tab
+                                      $(selected_tab).addClass("active");
                                       
-                                      $(selected_tab).show().addClass('active');
+                                       // alert(selected_tab);
+                                      // Show the selected tab content
+                                      
                                       $(selected_tab+"_CC").addClass('active');
+                                      $(selected_tab+"_CC_text").removeClass('nodisplay');
                                       $(selected_tab+"_HPI").addClass('active');
-                                      $(selected_tab+"_HPI_text").show().addClass('active');
+                                      $(selected_tab+"_HPI_text").removeClass('nodisplay');
                                       
                                       //  At the end, we add return false so that the click on the link is not executed
                                       return false;
@@ -1833,7 +1838,7 @@ $(document).ready(function() {
                                                                                                                                                                                                                                             }
                                                                                                                                                                                                                                             }
                                                                                                                                                                                                                                             update_PREFS();
-                                                                                                                                                                                                                                            $("#tab1").removeClass('nodisplay');
+                                                                                                                                                                                                                                            //$("#tab1").removeClass('nodisplay');
                                                                                                                                                                                                                                             });
                   
                   
