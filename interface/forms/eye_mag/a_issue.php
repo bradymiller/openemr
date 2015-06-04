@@ -145,13 +145,13 @@ function issueTypeIndex($tstr) {
 if ($_REQUEST['form_save']) {
   $i = 0;
   $text_type = "unknown";
-  if ($_REQUEST['form_type'] =='4') {
+  if ($_REQUEST['form_type'] =='5') {
     $_REQUEST['form_type'] ='0';
     $subtype="eye";
   } else {
     $subtype ='';
   }
-  if ($_REQUEST['form_type'] >'4') {
+  if ($_REQUEST['form_type'] >'5') {
     //we are doing a save for SocHx or FH or someting else to be defined so for now do nothing
     return;
   }
@@ -358,16 +358,16 @@ select pid from form_encounter where provider_id ='4' and date BETWEEN NOW() - I
       
       $qry = sqlStatement("SELECT * FROM list_options WHERE list_id = ? and subtype not like 'eye'",array($key."_issue_list"));
       }
-    } else if ($i == "4") { // POH medical group - leave surgical for now. surgical will require a new issue type above too
+    } else if ($i == "5") { // POH medical group - leave surgical for now. surgical will require a new issue type above too
        $qry = sqlStatement("SELECT title, title as option_id, count(title) AS freq  FROM `lists` WHERE `type` LIKE 'medical_problem' and subtype = 'eye' and pid in (
 select pid from form_encounter where provider_id ='4' and date BETWEEN NOW() - INTERVAL 30 DAY AND NOW()) GROUP BY title order by freq desc limit 10"); 
       if (sqlNumRows($qry) < ' 2') { //if they are just starting out, use the list_options for all
      // $qry = sqlStatement("SELECT * FROM list_options WHERE list_id = 'medical_problem_issue_list' and subtype = 'eye'");
     }
-    } else if ($i == "5") { // FH group
+    } else if ($i == "6") { // FH group
       //need a way to pull FH out of patient_dataand will display frame very differently
       $qry = "";
-    } else if ($i == "6") { // SocHx group - leave blank for now?
+    } else if ($i == "7") { // SocHx group - leave blank for now?
       $qry = ""; 
     } 
     while($res = sqlFetchArray($qry)){
@@ -464,7 +464,7 @@ function submit_this_form() {
     var formData = $("form#theform").serialize();
     var f = document.forms[0];
     $.ajax({
-           type   : 'POST',   // define the type of HTTP verb we want to use (POST for our form)
+           type   : 'GET',   // define the type of HTTP verb we want to use (POST for our form)
            url    : url,      // the url where we want to POST
            data   : formData // our data object
   
@@ -599,7 +599,7 @@ function divclick(cb, divid) {
 <body  style="padding-right:0.5em;font-family: FontAwesome,serif,Arial;">
 
 <div id="page" name="page">
-    <form method='post' name='theform' id='theform'
+    <form method='GET' name='theform' id='theform'
      action='a_issue.php?issue=<?php echo attr($issue); ?>&thispid=<?php echo attr($thispid); ?>&thisenc=<?php echo attr($thisenc); ?>'
      onsubmit='return validate();'>
      <input type="hidden" name="form_id" id="form_id" value = "<?php echo $form_id; ?>">

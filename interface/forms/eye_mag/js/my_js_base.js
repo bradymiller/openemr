@@ -3,7 +3,7 @@
  *
  * JS Functions for eye_mag form(s)
  *
- * Copyright (C) 2010-14 Raymond Magauran <magauran@MedFetch.com>
+ * Copyright (C) 2015 Raymond Magauran <magauran@MedFetch.com>
  *
  * LICENSE: This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -2434,8 +2434,8 @@ $(document).ready(function() {
                                           //ok to exit page
                                           //}
                                           });
-                  // set default to scDist.  Change as desired.
-                  $('#NEURO_ACT_zone').val('SCDIST').trigger('change');
+                  // set default to ccDist.  Change as desired.
+                  $('#NEURO_ACT_zone').val('CCDIST').trigger('change');
                   $("[name$='_loading']").addClass('nodisplay');
                   $("[name$='_sections']").removeClass('nodisplay');
                   

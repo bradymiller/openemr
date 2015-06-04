@@ -2992,8 +2992,8 @@ require_once("$incdir/patient_file/encounter/new_form.php");
                 <div id="PRIORS_IMPPLAN_left_text" style="height: 2.5in;text-align:left;font-size: 0.9em;" name="PRIORS_IMPPLAN_left_text" class="PRIORS_class PRIORS"><i class="fa fa-spinner fa-spin"></i>
                 </div>
                 <div id="QP_IMPPLAN" name="QP_IMPPLAN" class="QP_class" style="text-align:left;height: 2.5in;">
-                  <h3>Billing Assistant:</h3>
-                  TBD...
+                  
+                  
                   <a href="/openemr/interface/patient_file/report/custom_report.php?printable=1&pdf=0&<?php echo $form_folder."_".$form_id."=".$encounter; ?>&">Printable Report</a>
 
                 </div>
