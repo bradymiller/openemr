@@ -30,18 +30,21 @@ require_once('../../globals.php');
 require_once($GLOBALS['srcdir'].'/lists.inc');
 require_once($GLOBALS['srcdir'].'/patient.inc');
 require_once($GLOBALS['srcdir'].'/acl.inc');
+require_once($GLOBALS['srcdir'].'/sql.inc');
 require_once($GLOBALS['srcdir'].'/options.inc.php');
 require_once($GLOBALS['fileroot'].'/custom/code_types.inc.php');
 require_once($GLOBALS['srcdir'].'/csv_like_join.php');
 require_once($GLOBALS['srcdir'].'/htmlspecialchars.inc.php');
 require_once($GLOBALS['srcdir'].'/formdata.inc.php');
 require_once($GLOBALS['srcdir'].'/log.inc');
+//require_once('php/eye_mag_functions.php'); //specifically to extend ISSUE_TYPES?
 //require_once($GLOBALS['srcdir'].'/restoreSession.php");
 
 $thispid = 0 + (empty($_REQUEST['thispid']) ? $pid : $_REQUEST['thispid']);
 $info_msg = "";
 
 // A nonempty thisenc means we are to link the issue to the encounter.
+// ie. we are going to use this as a billing issue?
 $thisenc = 0 + (empty($_REQUEST['thisenc']) ? 0 : $_REQUEST['thisenc']);
 
 // A nonempty thistype is an issue type to be forced for a new issue.
@@ -51,15 +54,25 @@ $thispid = $_REQUEST['thispid'];
 $delete = $_REQUEST['delete'];
 $form_save = $_REQUEST['form_save'];
 $pid = $_SESSION['pid'];
+$encounter = $_SESSION['encounter'];
+$form_id = $_REQUEST['form_id'];
+
 if ($thispid=='') $thispid = $pid;
 
 if ($issue && !acl_check('patients','med','','write') ) die(xlt("Edit is not authorized!"));
 if ( !acl_check('patients','med','',array('write','addonly') )) die(xlt("Add is not authorized!"));
 
-$tmp = getPatientData($thispid, "squad");
-if ($tmp['squad'] && ! acl_check('squads', $tmp['squad']))
-  die(xlt("Not authorized for this squad!"));
+// OK we can get this sure but why do we need it?  We are not a squad.
+// Comment it out for now
+//$tmp = getPatientData($thispid, "*");
+//if ($tmp['squad'] && ! acl_check('squads', $tmp['squad']))
+//  die(xlt("Not authorized for this squad!"));
 
+//add in our specific ISSUE_TYPES.  Will need to extract list_options and store these separately too
+$ISSUE_TYPES['POH'] = array("Past Ocular History","POH","O","1");
+$ISSUE_TYPES['FH'] = array("Family History","FH","O","1");
+$ISSUE_TYPES['SOCH'] = array("Social History","SocH","O","1");
+ 
 function QuotedOrNull($fld) {
   if ($fld) return "'".add_escape_custom($fld)."'";
   return "NULL";
@@ -86,6 +99,8 @@ function row_delete($table, $where) {
 if ($delete ==1) {
   row_delete("issue_encounter", "list_id = '$issue'");
   row_delete("lists", "id = '$issue'");
+  //need to return something to tell them we did it?
+  //need to clear the fields too.  Do it w/ javascript.
   exit;
  }
 
@@ -130,6 +145,16 @@ function issueTypeIndex($tstr) {
 if ($_REQUEST['form_save']) {
   $i = 0;
   $text_type = "unknown";
+  if ($_REQUEST['form_type'] =='4') {
+    $_REQUEST['form_type'] ='0';
+    $subtype="eye";
+  } else {
+    $subtype ='';
+  }
+  if ($_REQUEST['form_type'] >'4') {
+    //we are doing a save for SocHx or FH or someting else to be defined so for now do nothing
+    return;
+  }
   foreach ($ISSUE_TYPES as $key => $value) {
    if ($i++ == $_REQUEST['form_type']) $text_type = $key;
   }
@@ -139,14 +164,16 @@ if ($_REQUEST['form_save']) {
 
   // if there is an issue with this title already for this patient, 
   // we want to update it, not add a new one.
-  $query = "SELECT id,pid from lists where title = ? and type = ? and pid = ?";
-  $issue2 = sqlQuery($query,array($_REQUEST['form_title'],$_REQUEST['form_type'],$pid));
-  //var_dump($issue2);
-  $issue = $issue2['id'];
-  //echo $pid;
-  //$pid = $issue2['pid'];
- // echo $pid;
-  if ($issue) { //orif there is an issue with this title already...
+  if ($subtype < '') {
+    $query = "SELECT id,pid from lists where title = ? and type = ? and pid = ?";
+    $issue2 = sqlQuery($query,array($_REQUEST['form_title'],$_REQUEST['form_type'],$pid));
+    $issue = $issue2['id'];
+  } else {
+    $query = "SELECT id,pid from lists where title = ? and type = ? and pid = ? and subtype = ?";
+    $issue2 = sqlQuery($query,array($_REQUEST['form_title'],$_REQUEST['form_type'],$pid,$subtype));
+    $issue = $issue2['id'];
+  }
+  if ($issue) { //if an issue with this title/subtype already exists we are updating it...
 
    $query = "UPDATE lists SET " .
     "type = '"        . add_escape_custom($text_type)                  . "', " .
@@ -167,7 +194,8 @@ if ($_REQUEST['form_save']) {
     "destination = '" . add_escape_custom($_REQUEST['form_destination'])   . "', " .
     "reaction ='"     . add_escape_custom($_REQUEST['form_reaction'])     . "', " .
     "erx_uploaded = '0', " .
-    "modifydate = NOW() " .
+    "modifydate = NOW(), " .
+    "subtype = '"     . $subtype. "' " .
     "WHERE id = '" . add_escape_custom($issue) . "'";
     sqlStatement($query);
     if ($text_type == "medication" && enddate != '') {
@@ -178,11 +206,12 @@ if ($_REQUEST['form_save']) {
     }
 
   } else {
+
    $query =  "INSERT INTO lists ( " .
     "date, pid, type, title, activity, comments, begdate, enddate, returndate, " .
     "diagnosis, occurrence, classification, referredby, user, groupname, " .
     "outcome, destination, reinjury_id, injury_grade, injury_part, injury_type, " .
-    "reaction " .
+    "reaction,subtype " .
     ") VALUES ( " .
     "NOW(), " .
     "'" . add_escape_custom($thispid) . "', " .
@@ -205,7 +234,8 @@ if ($_REQUEST['form_save']) {
     "'" . add_escape_custom($_REQUEST['form_injury_grade']) . "', " .
     "'" . add_escape_custom($form_injury_part)          . "', " .
     "'" . add_escape_custom($form_injury_type)          . "', " .
-    "'" . add_escape_custom($_REQUEST['form_reaction'])         . "' " .
+    "'" . add_escape_custom($_REQUEST['form_reaction'])         . "', " .
+    "'" . $subtype         . "' " .
    ")";
     $issue = sqlInsert($query);
   }
@@ -224,6 +254,7 @@ if ($_REQUEST['form_save']) {
 
   $tmp_title = addslashes($ISSUE_TYPES[$text_type][2] . ": $form_begin " .
     substr($_REQUEST['form_title'], 0, 40));
+$irow = '';
 }
 
 $irow = array();
@@ -231,6 +262,7 @@ if ($issue) {
   $irow = sqlQuery("SELECT * FROM lists WHERE id = ?",array($issue));
 } else if ($thistype) {
   $irow['type'] = $thistype;
+  $irow['subtype'] = $subtype;
 }
 $type_index = 0;
 
@@ -258,7 +290,7 @@ if (!empty($irow['type'])) {
         <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
     <![endif]-->
 <script type="text/javascript" src="../../forms/<?php echo $form_folder; ?>/js/shortcut.js"></script>
-<script type="text/javascript" src="../../forms/<?php echo $form_folder; ?>/js/my_js_base.js"></script>
+<Xscript type="text/javascript" src="../../forms/<?php echo $form_folder; ?>/js/my_js_base.js"></Xscript>
 <link rel="stylesheet" href="<?php echo $GLOBALS['webroot']; ?>/library/css/font-awesome-4.2.0/css/font-awesome.min.css">
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <style>
@@ -301,16 +333,48 @@ div.section {
 <?php
  $i = 0;  
 
-foreach ($ISSUE_TYPES as $key => $value) {
-  echo " aitypes[$i] = " . attr($value[3]) . ";\n";
-  echo " aopts[$i] = new Array();\n";
-  $qry = sqlStatement("SELECT * FROM list_options WHERE list_id = ?",array($key."_issue_list"));
-  while($res = sqlFetchArray($qry)){
-    echo " aopts[$i][aopts[$i].length] = new Option('".attr(trim($res['option_id']))."', '".attr(xl_list_label(trim($res['title'])))."', false, false);\n";
-  }
-  ++$i;
+//This builds the litle quick pick list in this section.
+ // Would be better as an autocomplete so lots of stuff can be seen.
+ //or it is an ajax autocomplete live to the DB where a 
+  // a cronjob or a mysql based view and trigger to update
+ // the list_options for each $key based on the current provider
+ // eg. one provider might have a lot of cataract surgery patients and list it as Phaco/PCIOL and another
+ // might use a femto laser assisted Restore IOL procedure and he uses FT/Restore IOL
+ // No matter the specialty, how the doctor documents can be analyzed and list_options created in the VIEW TABLE in the order
+ // of their frequency.  Start at 10 should they want to always have something at the top.
+ //I like the option of when updating the lists table, a trigger updates a VIEW and this autocomplete 
+ //draws from the VIEW table.  Nice.  Real time update...  Need to consider top picks and that can be the role
+ // of the current list_options table...  Cool.  1-10 from list_options, after that from VIEW via trigger that
+ // ranks them by frequency over a limited time to keep DB humming...
+       $i='0';
+  foreach ($ISSUE_TYPES as $key => $value) {
+    echo " aitypes[$i] = " . attr($value[3]) . ";\n";
+    echo " aopts[$i] = new Array();\n";
 
-}
+    if ($i < "4") { // "0" = medical_problem_issue_list
+      $qry = sqlStatement("SELECT title, title as option_id, count(title) AS freq  FROM `lists` WHERE `type` LIKE ? and subtype = '' and pid in (
+select pid from form_encounter where provider_id ='4' and date BETWEEN NOW() - INTERVAL 30 DAY AND NOW()) GROUP BY title order by freq desc limit 10", array($key)); 
+      if (sqlNumRows($qry) < ' 2') { //if they are just starting out, use the list_options for all
+      
+      $qry = sqlStatement("SELECT * FROM list_options WHERE list_id = ? and subtype not like 'eye'",array($key."_issue_list"));
+      }
+    } else if ($i == "4") { // POH medical group - leave surgical for now. surgical will require a new issue type above too
+       $qry = sqlStatement("SELECT title, title as option_id, count(title) AS freq  FROM `lists` WHERE `type` LIKE 'medical_problem' and subtype = 'eye' and pid in (
+select pid from form_encounter where provider_id ='4' and date BETWEEN NOW() - INTERVAL 30 DAY AND NOW()) GROUP BY title order by freq desc limit 10"); 
+      if (sqlNumRows($qry) < ' 2') { //if they are just starting out, use the list_options for all
+     // $qry = sqlStatement("SELECT * FROM list_options WHERE list_id = 'medical_problem_issue_list' and subtype = 'eye'");
+    }
+    } else if ($i == "5") { // FH group
+      //need a way to pull FH out of patient_dataand will display frame very differently
+      $qry = "";
+    } else if ($i == "6") { // SocHx group - leave blank for now?
+      $qry = ""; 
+    } 
+    while($res = sqlFetchArray($qry)){
+      echo " aopts[$i][aopts[$i].length] = new Option('".attr(trim($res['option_id']))."', '".attr(xl_list_label(trim($res['title'])))."', false, false);\n";
+    }
+  ++$i;
+  }
 
 ?>
 
@@ -319,6 +383,7 @@ foreach ($ISSUE_TYPES as $key => $value) {
  // React to selection of an issue type.  This loads the associated
  // shortcuts into the selection list of titles, and determines which
  // rows are displayed or hidden.
+ // Need to work on this to display "non-openEMR" issue types like POH/FH/ROS
  function newtype(index) {
   var f = document.forms[0];
   var theopts = f.form_titles.options;
@@ -367,7 +432,7 @@ foreach ($ISSUE_TYPES as $key => $value) {
    '<?php echo xla('Text Diagnosis') ?>')) +
    ':</b>';
 <?php } else { ?>
-//  document.getElementById('row_referredby'    ).style.display = (f.form_referredby.value) ? 'comdisp' : comdisp;
+ document.getElementById('row_referredby'    ).style.display = (f.form_referredby.value) ? 'comdisp' : comdisp;
 <?php } ?>
 <?php
   if ($ISSUE_TYPES['football_injury']) {
@@ -388,28 +453,34 @@ foreach ($ISSUE_TYPES as $key => $value) {
   f.form_title.value = f.form_titles.options[f.form_titles.selectedIndex].text;
   f.form_titles.selectedIndex = -1;
  }
-function refreshIssue(issue, title) {
- parent.refreshIssues;
- top.refreshIssues;
+function refreshIssue() {
+ parent.refreshIssues();
+ top.refreshIssues();
+ parent.refresh_panel();
+ //refreshIssues();
 }
 function submit_this_form() {
     var url = "../../forms/eye_mag/a_issue.php?form_save=1";
     var formData = $("form#theform").serialize();
+    var f = document.forms[0];
     $.ajax({
            type   : 'POST',   // define the type of HTTP verb we want to use (POST for our form)
            url    : url,      // the url where we want to POST
-           data   : formData, // our data object
-           success  : function(result)  {
-            $("#page").html(result);
-          }
-        }).done(function (){
-          parent.refreshIssues();
+           data   : formData // our data object
+  
+        }).done(function(result){
+          f.form_title.value = '';
+          f.form_diagnosis.value = '';
+           //$("#page").html(result);
+          refreshIssue();
         });
 }
  // Process click on Delete link.
 function deleteme() {
     var url = "../../forms/eye_mag/a_issue.php?issue=<?php echo attr($issue); ?>&delete=1";
     var formData = $("form#theform").serialize();
+    var f = document.forms[0];
+    //alert(formData);
    $.ajax({
            type    : 'POST',   // define the type of HTTP verb we want to use (POST for our form)
            data    : { 
@@ -417,12 +488,14 @@ function deleteme() {
                         delete : '1'
                       },
             url    : url,      // the url where we want to POST
-           success  : function(result)  {
-           // alert("YUP!");
-          }
-           }).done(function (){
-            parent.refreshIssues();
-          
+           
+           }).done(function (o){
+            //CLEAR THE FORM TOO...
+            console.log(o);
+            //refreshIssues();
+            f.form_title.value = '';
+          f.form_diagnosis.value = '';
+          refreshIssue();
            });
 }
  // Called by the deleteme.php window on a successful delete.
@@ -528,26 +601,43 @@ function divclick(cb, divid) {
 <div id="page" name="page">
     <form method='post' name='theform' id='theform'
      action='a_issue.php?issue=<?php echo attr($issue); ?>&thispid=<?php echo attr($thispid); ?>&thisenc=<?php echo attr($thisenc); ?>'
-     onsubmit='return validate()'>
-     <b style="padding-bottom:5px;">
+     onsubmit='return validate();'>
+     <input type="hidden" name="form_id" id="form_id" value = "<?php echo $form_id; ?>">
         <?php
          $index = 0;
+         $output ='';
         global $counter_header;
-         $count_header='0';
-         foreach ($ISSUE_TYPES as $value => $focustitles) {
-          if ($issue || $thistype) {
+        $count_header='0';
+        $output= array();
+        foreach ($ISSUE_TYPES as $value => $focustitles) {
+          
+            /* if ($issue || $thistype) {
             if ($index == $type_index) {
               $disptype = xlt($focustitles[0]);
-              echo $disptype.":</b>";
+              echo '<b style="padding-bottom:5px;">'.$disptype.':</b>';
               echo "<input type='hidden' name='form_type' value='".xla($index)."'>\n";
+              $checked = "checked='checked'";
             }
-          } else {
-            echo "   <input type='radio' name='form_type' id='".xla($index)."' value='".xla($index)."' onclick='top.restoreSession();newtype($index);'";
-            if ($index == $type_index) echo " checked";
-            echo " /><label for='".xla($index)."' class='input-helper input-helper--checkbox'>" . xlt($focustitles[1]) . "</label>&nbsp;\n";
-          }
-          ++$index;
-         }
+            } else { */
+            //$output .= " <span style='padding-bottom:5px;font-size:0.8em;'><input type='radio' name='form_type' id='".xla($index)."' value='".xla($index)."' onclick='top.restoreSession();newtype($index);'";
+            $checked = '';
+            if ($issue || $thistype) {
+              if ($index == $type_index) { $checked .= " checked='checked' ";}
+            } else if ($focustitles[1] == "Problem") {
+              $checked .= " checked='checked' "; 
+            }
+
+            if ($focustitles[1] == "Medication") $focustitles[1] = "Meds";
+            if ($focustitles[1] == "Problem") $focustitles[1] = "PMH";
+            if ($focustitles[1] == "Surgery") $focustitles[1] = "PSurgH";
+//echo $focustitles[1]. " - ";
+            $HELLO[$focustitles[1]] = "<input type='radio' name='form_type' id='".xla($index)."' value='".xla($index)."' ".$checked. " onclick='top.restoreSession();newtype($index);' /><span style='Xpadding-bottom:2px;font-size:0.8em;font-weight:bold;'><label for='".xla($index)."' class='input-helper input-helper--checkbox'>" . xlt($focustitles[1]) . "</label></span>&nbsp;\n";
+              //}
+            ++$index;
+        }
+  
+        echo $HELLO['POH'].$HELLO['PMH'].$HELLO['PSurgH'].$HELLO['Meds'].$HELLO['Allergy'].$HELLO['FH'].$HELLO['SocH'];
+
         ?>
        
     <div class="borderShadow" style="text-align:center;margin-top:7px;">
@@ -555,25 +645,25 @@ function divclick(cb, divid) {
           <tr id='row_titles'>
             <td valign='top' nowrap>&nbsp;</td>
             <td valign='top'>
-             <select name='form_titles' size='<?php echo $GLOBALS['athletic_team'] ? 10 : 4; ?>' onchange='set_text()'>
-             </select> <?php echo xlt('(Select one of these, or type in your own)'); ?>
+              <select name='form_titles' size='<?php echo $GLOBALS['athletic_team'] ? 10 : 4; ?>' onchange='set_text()'>
+              </select> <?php echo xlt('(Select one of these, or type in your own)'); ?>
             </td>
           </tr>
 
         <tr>
           <td valign='top' id='title_diagnosis' nowrap><b><?php echo $GLOBALS['athletic_team'] ? xlt('Text Diagnosis') : xlt('Title').$focustitle[1]; ?>:</b></td>
           <td>
-           <input type='text' size='40' name='form_title' value='<?php echo xla($irow['title']) ?>' style='width:100%;text-align:left;' />
+            <input type='text' size='40' name='form_title' value='<?php echo xla($irow['title']) ?>' style='width:100%;text-align:left;' />
           </td>
         </tr>
 
         <tr id='row_diagnosis'>
           <td valign='top' nowrap><b><?php echo xlt('Diagnosis Code'); ?>:</b></td>
           <td>
-           <input type='text' size='50' name='form_diagnosis'
-            value='<?php echo attr($irow['diagnosis']) ?>' onclick='top.restoreSession();sel_diagnosis();'
-            title='<?php echo xla('Click to select or change diagnoses'); ?>'
-            style='width:100%' readonly />
+            <input type='text' size='50' name='form_diagnosis'
+              value='<?php echo attr($irow['diagnosis']) ?>' onclick='top.restoreSession();sel_diagnosis();'
+              title='<?php echo xla('Click to select or change diagnoses'); ?>'
+              style='width:100%' />
           </td>
         </tr>
 
@@ -697,7 +787,7 @@ function divclick(cb, divid) {
            */
 
            ?>
-                   <tr
+              -->      <tr
 
                    <?php 
                    if (!$GLOBALS['athletic_team']) echo " style='display:none;'"; 
@@ -710,7 +800,7 @@ function divclick(cb, divid) {
                       style='width:100%' title='<?php echo xla('Referring physician and practice'); ?>' />
                     </td>
                    </tr>
-          -->
+         
         <tr id='row_comments'>
           <td valign='top' nowrap><b><?php echo xlt('Comments'); ?>:</b></td>
           <td>
@@ -744,17 +834,6 @@ function divclick(cb, divid) {
 
       </table>
     </div>
-    <?php
-      if ($ISSUE_TYPES['football_injury']) {
-        issue_football_injury_form($issue);
-      }
-      if ($ISSUE_TYPES['ippf_gcac']) {
-        if (empty($issue) || $irow['type'] == 'ippf_gcac')
-          issue_ippf_gcac_form($issue, $thispid);
-        if (empty($issue) || $irow['type'] == 'contraceptive')
-          issue_ippf_con_form($issue, $thispid);
-      }
-    ?>
 
     <center>
     <p style="margin-top:7px;">

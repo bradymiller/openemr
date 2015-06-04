@@ -29,12 +29,16 @@ $sanitize_all_escapes=true;
 include_once("../../globals.php");
 include_once($GLOBALS["srcdir"]."/api.inc");
 
+
 if ($_REQUEST['target']) {
     $target = $_REQUEST['target'];
+    $id = $_REQUEST['id'];
     $table_name = "form_eye_mag";
-    if (!$_REQUEST['encounter']) $encounter = $_SESSION['encounter'];
-    $query = "SELECT * FROM form_eye_mag JOIN forms on forms.form_id = form_eye_mag.id where forms.encounter=? and forms.deleted !='1'";
-    $data =  sqlQuery($query, array($encounter) );
+    if (!$_REQUEST['encounter']) { 
+    $encounter = $_SESSION['encounter']; } else { $encounter = $_REQUEST['encounter']; }
+    $query = "SELECT * FROM form_eye_mag JOIN forms on forms.form_id = form_eye_mag.id where form_eye_mag.pid =? and forms.encounter=? and forms.deleted !='1'";
+ 
+ $data =  sqlQuery($query, array($id,$encounter) );
    
     if ($target =="W") {
         $ODSPH = $data['WODSPH'];
@@ -43,8 +47,8 @@ if ($_REQUEST['target']) {
         $ODPRISM = $data['WODPRISM'];
         $OSSPH = $data['WOSSPH'];
         $OSCYL = $data['WOSCYL'];
-        $OSAXIS = $data['WODSPH'];
-        $OSPRISM = $data['WODSPH'];
+        $OSAXIS = $data['WOSAXIS'];
+        $OSPRISM = $data['WOSPRISM'];
         $COMMENTS = $data['WCOMMENTS']; 
         $ODADD1 = $data['WODADD1'];
         $ODADD2 = $data['WODADD2'];
@@ -264,7 +268,7 @@ $practice_data = sqlQuery($query);
             </tr>
             <tr>
                 <td colspan="6" style="border-top:2pt solid black;margin:25px auto;padding:20px;text-align:center;">
-                    <?php echo xlt('Provider'); ?>: <?php echo text($prov_data['fname']); ?> <?php echo text($prov_data['lname']); ?>, <?php echo text($prov_data['title']); ?></br>
+                    <?php echo xlt('Provider'); ?>: <?php echo text($prov_data['fname']); ?> <?php echo text($prov_data['lname']); ?> <?php echo text($prov_data['title']); ?></br>
                     <small><?php echo xlt('e-signed'); ?> <input type="checkbox" checked="checked">
                 </td>
             </tr>

@@ -912,8 +912,7 @@ height: 18px;
         width:100%;
         border:0pt solid  red;
         border-spacing:0px;
-        cursor:sw-resize
-        ;
+        cursor:sw-resize;
         padding:10 0 0 5;
         
         /*cellspacing:poor IE support for  this*/
@@ -1274,7 +1273,7 @@ vertical-align:bottom;
     width:1.915in; 
     padding:0.1in;
     text-align:left;
-    font-size: 0.8em;
+    font-size: 0.7em;
     margin:4 8;
 }
 
@@ -1285,7 +1284,7 @@ vertical-align:bottom;
     width:1.915in;
     padding:0.1in;
     text-align:left;
-    font-size: 0.8em;
+    font-size: 0.7em;
     margin:4 auto;
 }
 .QP {
@@ -1443,4 +1442,70 @@ a:hover, a:focus {
 }
 #sddm div{
     z-index:100;
+}
+.panel_side {
+    display: none;
+    width: 160px;
+    padding: 20px;
+    background-color: beige;
+    color: black;
+    box-shadow: inset 0 0 5px 5px white;
+    overflow:auto;
+    font-size:1.2em;
+    overflow:auto;
+}
+.left_PMSFH_tab {
+    position:absolute;
+    left:0px;
+    top:20px;
+    transform: rotate(90deg);
+    transform-origin: left top 0;
+    background:navy;
+    box-shadow: inset 0 1 0px 0px white;
+}
+.left_PMSFH_tab    a {
+    color:white !important;
+    font-size:1.0em;
+    left:-100px;
+}
+.left_menu_tab {
+    position:absolute;
+    display:block;
+    float:left;
+    -webkit-transform: rotate(90deg); 
+    -moz-transform: rotate(90deg); 
+    filter: progid:DXImageTransform.Microsoft.BasicImage(rotation=3);
+    background:navy;
+    box-shadow: inset 0 1 0px 0px white;
+    z-index: 100000;
+font-size:1.2em;
+
+padding:3px;
+border: 1px solid #CCC;
+    box-shadow: 0px 1px 3px #DDD inset;
+    border-radius: 4px;
+    
+    
+}
+.left_menu_tab    a {
+    color:white !important;
+    font-size:1.0em;
+}
+    
+.QP_shorten 
+{
+position: absolute;bottom:0.05in;clear:both;font-size:0.7em;text-align:left;padding-left:25px;
+}
+.QP_shorten textarea{
+    width:2.0in;
+    height:3.0em;
+}
+
+.QP_lengthen textarea{
+    width:4.0in;
+    height:3.0em;
+}
+.top-right {
+    position:absolute;
+    right:4px;
 }

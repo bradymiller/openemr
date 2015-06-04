@@ -58,8 +58,9 @@ UPDATE categories SET rght = rght + 2 WHERE name = 'Categories';
 UPDATE categories SET rght = rght + 2 WHERE name = 'Medical Record';
 UPDATE categories SET rght = rght + 2 WHERE name = 'Imaging';
 UPDATE categories_seq SET id = (select MAX(id) from categories);
-INSERT INTO `issue_types` (`active`, `category`, `type`, `plural`, `singular`, `abbreviation`, `style`, `force_show`, `ordering`) VALUES ('1','default','eye','Past Ocular History','POH','O','0','0','4');
-UPDATE `issue_types` set ABBREVIATION='D',category='Dental' where singular = 'Dental';
+
+ALTER TABLE `list_options`  ADD `subtype` VARCHAR(255) NOT NULL;
+ALTER TABLE `lists`  ADD `subtype` VARCHAR(255) DEFAULT NULL;
 
 CREATE TABLE IF NOT EXISTS `form_eye_mag_dispense` (
 `id` bigint(20) NOT NULL AUTO_INCREMENT,
@@ -382,8 +383,8 @@ CREATE TABLE IF NOT EXISTS `form_eye_mag` (
 `VERTFUSAMPS` varchar(50) DEFAULT NULL,
 `DIVERGENCEAMPS` varchar(50) DEFAULT NULL,
 `NPC` varchar(10) DEFAULT NULL,
-`CASCDIST` varchar(10) DEFAULT NULL,
-`CASCNEAR` varchar(10) DEFAULT NULL,
+`DACCDIST` varchar(10) DEFAULT NULL,
+`DACCNEAR` varchar(10) DEFAULT NULL,
 `CACCDIST` varchar(10) DEFAULT NULL,
 `CACCNEAR` varchar(10) DEFAULT NULL,
 `ODCOLOR` char(5) DEFAULT NULL,
@@ -643,9 +644,3 @@ INSERT INTO `form_eye_mag_prefs` (`PEZONE`, `LOCATION`, `LOCATION_text`, `id`, `
 ('PREFS', 'ACT_VIEW', 'ACT View', 1, 'ACT_VIEW', 64, '', 14,'ADD');
 
 INSERT INTO `openemr`.`list_options` (`list_id`, `option_id`, `title`, `seq`, `is_default`, `option_value`, `mapping`, `notes`, `codes`) VALUES ('lists', 'eye_issues_list', 'Past Ocular Issues list', '0', '0', '0', '', '', '');
-INSERT INTO `openemr`.`list_options` (`list_id`, `option_id`, `title`, `seq`, `is_default`, `option_value`, `mapping`, `notes`, `codes`) VALUES
-    ('eye_issue_list', 'stye', 'stye', '30', '0', '0', '', '', ''),
-    ('eye_issue_list', 'BCC', 'BCC', '40', '0', '0', '', '', ''),
-    ('eye_issue_list', 'SCC', 'SCC', '50', '0', '0', '', '', ''),
-    ('eye_issue_list', 'keratoconus', 'keratoconus', '30', '0', '0', '', '', ''),
-    ('eye_issue_list', 'dry eye', 'dry eye', '70', '0', '0', '', '', '');

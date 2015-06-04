@@ -1311,231 +1311,318 @@ function display_PRIOR_section ($zone,$orig_id,$id_to_show,$pid,$report = '0') {
         require_once($GLOBALS['fileroot'].'/custom/code_types.inc.php');
         require_once($GLOBALS['srcdir'].'/options.inc.php');
          // Check authorization.
+        
         if (acl_check('patients','med')) {
             $tmp = getPatientData($pid);
         }
-         // Collect parameter(s)
+        // Collect parameter(s)
         $category = empty($_REQUEST['category']) ? '' : $_REQUEST['category'];
-        ?>
-        <div id="PMSFH_block_1" name="PMSFH_block_1" class="QP_block borderShadow text_clinical" style="height:2.9in;overflow:auto;">
+        $div = '</div><div id="PMH_QP_block2" name="PMH_QP_block2" class="QP_block_outer  borderShadow text_clinical" style="height:3.2in;overflow:auto;"">';
+                                              
+        ?><span class="closeButton fa fa-close pull-right" id="BUTTON_TEXTD_PMH" name="BUTTON_TEXTD_PMH" value="1"></span>
+            
+        <div id="PMSFH_block_1" name="PMSFH_block_1" class="QP_block borderShadow text_clinical" style="height:3.2in;overflow:auto;">
             <?php
-            $encount = 0;
+            $encount = 0; //should this be $encounter?
             $lasttype = "";
             $first = 1; // flag for first section
-            $counter="0";
-            foreach ($ISSUE_TYPES as $focustype => $focustitles) {
-                
-                if ($category) {
-                    //    Only show this category
-                 //  if ($focustype != $category) continue;
-                }
-                $column_length = '15';
-                $disptype = $focustitles[0];
-                $dispzone_name= $ISSUE_TYPES[$counter];
-                //str_replace(' ', '_', strtolower($focustitles[0]));
-                $dispzone_numb=$focustitles[2];
-                
-                $counter++; //at 19 lines we make a new row
-                $pres = sqlStatement("SELECT * FROM lists WHERE pid = ? AND type = ? " .
-                    "ORDER BY begdate DESC", array($pid,$focustype) );
-                $counter_previous = $counter;
-                $counter = $counter + sqlNumRows($pres);
-               
-               if ($counter > $column_length and !$second_row) {
-                    // start a new column
-                    $second_row='1';
-                    for ($j=$counter; $j > $counter_previous; $j--) {
-                        echo "<br />";
+            $counter="1";
+            $column = '16';
+            $PMSFH = build_PMSFH($pid);
+            //each column can handle 25? rows, so a toal of 50, 
+            // including 8 for headings (as of today) and at least 12 for
+            // separating lines, leaving room for 20 items.
+            // None counts as 2 lines right now...
+            // So if count($PMSFH[0]) > 20, maybe less for "None"s, there will be overflow
+            // causing the display to be funky looking...
+
+            //var_dump($PMSFH[0]['medical_problem']);
+            ?>
+            <table style="width:1.6in;">
+                <tr>
+                    <td width="90%">
+                        <span class="left" style="font-weight:800;font-size:0.7em;">POH</span>
+                    </td>
+                    <td >
+                        <span class="top_right btn-sm" href="#PMH_anchor" onclick="alter_issue('0','medical_problem','eye');" style="text-align:right;font-size:8px;">New</span>
+                    </td>
+                </tr>
+            </table>                
+            <table style='margin-bottom:20px;border:1pt solid black;max-height:1.5in;max-width:1.5in;background-color: rgb(255, 248, 220); font-size:0.9em;overflow:auto;'>
+                <tr>
+                    <td style='min-height:1.2in;min-width:1.5in;padding-left:5px;'>
+                    <?php
+                    foreach ($PMSFH[0]['POH'] as $item) {
+                        echo "<span name='QP_PMH_".$item['rowid']."' href='#PMH_anchor' id='QP_PMH_".$item['rowid']."' 
+                        onclick=\"alter_issue('".$item['rowid']."','".$item['row_type']."','');\">".$item['title']."</span><br />";
+                        $counter++;
+                    }
+                    if (count($PMSFH[0]['POH']) < 1) {
+                        echo  "".xla("None") ."<br /><br /><br />";
+                        $counter = $counter+4; 
                     }
                     ?>
-                    </div>
-                    <div style="margin-left:10px;height:2.9in;position:relative;overflow:auto;" id="PMSFH_block_2" name="PMSFH_block_2" class="QP_block borderShadow text_clinical">
+                    </td>
+                </tr>
+            </table>
+
+            <table style="width:1.6in;">
+                <tr>
+                    <td width="90%">
+                        <span class="left" style="font-weight:800;font-size:0.7em;">PMH</span>
+                    </td>
+                    <td >
+                        <span class="top_right btn-sm" href="#PMH_anchor" onclick="alter_issue('0','medical_problem','');" style="text-align:right;font-size:8px;">New</span>
+                    </td>
+                </tr>
+            </table>
+            <table style='margin-bottom:20px;border:1pt solid black;max-height:1.5in;max-width:1.5in;background-color: rgb(255, 248, 220); font-size:0.9em;overflow:auto;'>
+                <tr>
+                    <td style='min-height:1.2in;min-width:1.5in;padding-left:5px;'>
                     <?php
-                }
-                   ?>
-                   <table style="width:1.6in;">
-                        <tr>
-                            <td width="90%">
-                  <?php          
-                echo '<span class="left" style="font-weight:800;font-size:0.7em;">'.$disptype."</span>";
-                ?>
-                            </td>
-                            <td >
-                                <span class="top-right btn-sm" href="#PMH_anchor" onclick="alter_issue('0','<?php echo xla($focustype); ?>');" style="text-align:right;font-size:8px;">New</span>
-                            </td>
-                        </tr>
-                        </table>
-                    <?                  
-               
-                //echo "<br />";
-                echo "
-                <table style='margin-bottom:20px;border:1pt solid black;max-height:1.5in;max-width:1.5in;
-                background-color: rgb(255, 248, 220); font-size:0.9em;overflow:auto;'>
-                    <tr>
-                        <td style='min-height:1.2in;min-width:1.5in;padding-left:5px;'>
-                        ";
-
-                // if no issues (will place a 'None' text vs. toggle algorithm here)
-                if (sqlNumRows($pres) < 1) {
-                    echo  "".xla("None") ."<br /><br /><br />";
-                    echo "</td></tr></table>";
-                    $counter = $counter+4; 
-                    continue;
-                }
-
-                $section_count='4';
-
-                while ($row = sqlFetchArray($pres)) {
-                    $section_count--;
-                    //var_dump($row);
-                    $rowid = $row['id'];
-                    $disptitle = trim($row['title']) ? $row['title'] : "[Missing Title]";
-
-                    $ierow = sqlQuery("SELECT count(*) AS count FROM issue_encounter WHERE " .
-                      "list_id = ?", array($rowid) );
-
-                    // encount is used to toggle the color of the table-row output below
-                    ++$encount;
-                    $bgclass = (($encount & 1) ? "bg1" : "bg2");
-
-                    // look up the diag codes
-                    $codetext = "";
-                    if ($row['diagnosis'] != "") {
-                        $diags = explode(";", $row['diagnosis']);
-                        foreach ($diags as $diag) {
-                            $codedesc = lookup_code_descriptions($diag);
-                            $codetext .= xlt($diag) . " (" . xlt($codedesc) . ")<br />";
-                        }
+                    $counter++;
+                    foreach ($PMSFH[0]['medical_problem'] as $item) {
+                        echo "<span name='QP_PMH_".$item['rowid']."' href='#PMH_anchor' id='QP_PMH_".$item['rowid']."' 
+                        onclick=\"alter_issue('".$item['rowid']."','".$item['row_type']."','');\">".$item['title']."</span><br />";
+                        $counter++;
                     }
+                    if (count($PMSFH[0]['medical_problem']) < 1) {
+                        echo  "".xla("None") ."<br /><br />";
+                        $counter = $counter+4; 
+                    }
+                    ?>
+                    </td>
+                </tr>
+            </table>
 
-                    // calculate the status
-                    if ($row['outcome'] == "1" && $row['enddate'] != NULL) {
-                      // Resolved
-                     $statusCompute = generate_display_field(array('data_type'=>'1','list_id'=>'outcome'), $row['outcome']);
-                    }
-                    else if($row['enddate'] == NULL) {
-                     $statusCompute = htmlspecialchars( xl("Active") ,ENT_NOQUOTES);
-                    }
-                    else {
-                      $statusCompute = htmlspecialchars( xl("Inactive") ,ENT_NOQUOTES);
-                    }
-                    $click_class='statrow';
-                    if($row['erx_source']==1 && $focustype=='allergy')
-                    $click_class='statrow'; //changed from '' on 2/23/15
-                    elseif($row['erx_uploaded']==1 && $focustype=='medication')
-                    $click_class='';
-                    // output the TD row of info
-                // this will link to prior encounters?  It should pull up the list of encounters.
-                // this will be a link from the base openEMR code pulling up the encputer list page (in the no frame fullscreen?)
-                    if ($ierow['count'] > '1') {
-                        echo "  <span id='e_$rowid' class='noclick center' title='" . htmlspecialchars( xl('View related encounters'), ENT_QUOTES) . "'>";
-                        echo "  <input type='button' value='" . htmlspecialchars($ierow['count'],ENT_QUOTES) . "' class='editenc' id='" . htmlspecialchars($rowid,ENT_QUOTES) . "' />";
-                        echo "  </span>";
-                    }
-                   if ($focustype == "surgery")    echo "  <span style='text-align:right'>" . htmlspecialchars($row['begdate'],ENT_NOQUOTES) . "&nbsp;</span>\n";
-                    
-                    echo "<span name='QP_PMH_".$rowid."' href='#PMH_anchor' id='QP_PMH_".$rowid."' onclick=\"alter_issue('".$rowid."','".$row[type]."');\">".xlt($disptitle)."</span>";
-                      //  echo "  <td>" . htmlspecialchars($row['enddate'],ENT_NOQUOTES) . "&nbsp;</td>\n";
-                        // both codetext and statusCompute have already been escaped above with htmlspecialchars)
-                     //   echo "  <td>" . $codetext . "</td>\n";
-                     //   echo "  <td>" . $statusCompute . "&nbsp;</td>\n";
-                     //   echo "  <td class='nowrap'>";
-                     //   echo generate_display_field(array('data_type'=>'1','list_id'=>'occurrence'), $row['occurrence']);
-                     ////   echo "</td>\n";
-                    if ($focustype == "allergy" && $row['reaction'] > '') {
-                        echo " (" . htmlspecialchars($row['reaction'],ENT_NOQUOTES).") " ;
-                    }
-                       echo "\n<br />";
-                    if ($GLOBALS['athletic_team']) {
-                   //     echo "  <td class='center'>" . $row['extrainfo'] . "</td>\n"; // games missed
-                    }
-                    else {
-                     //   echo "  <td>" . htmlspecialchars($row['referredby'],ENT_NOQUOTES) . "</td>\n";
-                    }
-                    //echo "  <td>comments " . htmlspecialchars($row['comments'],ENT_NOQUOTES) . "</td>\n";
-                    
-                    
-                }
-
-                echo " </td></tr></table>\n";
-                $counter++; 
-
-            }
-            echo '<span class="left" style="font-weight:800;">ROS</span><br />';
-            echo "
-                <table style='margin-bottom:20px;border:1pt solid black;max-height:1.5in;max-width:1.1in;
-                background-color: rgb(255, 248, 220);
-                font-size:0.9em;'>
-                    <tr>
-                        <td style='min-height:1.2in;min-width:1.3in;padding-left:5px;'>";
-
-                // if no issues (will place a 'None' text vs. toggle algorithm here)
-                if ($count_ROS < 1) {
-                    echo  xla("Completed ROS form") ."<br /><br /><br />";
-                    echo " ";
-                    $counter= $counter-3;
-                } //else { print out a ROS.  Give ?expand option to see full list in a pop-up?}
+            <?php $counter++; if (($counter + count($PMSFH[0]['medication'])) > $column) {echo $div; $counter="1";} ?>
             
-
-            for ($j=$counter; $j > $counter_previous; $j--) {
-                       // echo "<br />";
+            <table style="width:1.6in;">
+                <tr>
+                    <td width="90%">
+                        <span class="left" style="font-weight:800;font-size:0.7em;">Meds</span>
+                    </td>
+                    <td >
+                        <span class="top_right btn-sm" href="#PMH_anchor" onclick="alter_issue('0','medication','');" style="text-align:right;font-size:8px;">New</span>
+                    </td>
+                </tr>
+            </table>
+            <table style='margin-bottom:20px;border:1pt solid black;max-height:1.5in;max-width:1.5in;background-color: rgb(255, 248, 220); font-size:0.9em;overflow:auto;'>
+                <tr>
+                    <td style='min-height:1.2in;min-width:1.5in;padding-left:5px;'>
+                    <?php
+                    foreach ($PMSFH[0]['medication'] as $item) {
+                        echo "<span name='QP_PMH_".$item['rowid']."' href='#PMH_anchor' id='QP_PMH_".$item['rowid']."' 
+                        onclick=\"alter_issue('".$item['rowid']."','".$item['row_type']."','');\">".$item['title']."</span><br />";
+                        $counter++;
                     }
+                    if (count($PMSFH[0]['medication']) < 1) {
+                        echo  "".xla("None") ."<br /><br />";
+                        $counter = $counter+4; 
+                    }
+                    ?>
+                    </td>
+                </tr>
+            </table>
+            
+            <?php $counter++;if (($counter + count($PMSFH[0]['surgery'])) > $column) {echo $div; $counter="1";} ?>
+            <table style="width:1.6in;">
+                <tr>
+                    <td width="90%">
+                        <span class="left" style="font-weight:800;font-size:0.7em;">Surgery</span>
+                    </td>
+                    <td >
+                        <span class="top_right btn-sm" href="#PMH_anchor" onclick="alter_issue('0','surgery','');" style="text-align:right;font-size:8px;">New</span>
+                    </td>
+                </tr>
+            </table>      
+            <table style='margin-bottom:20px;border:1pt solid black;max-height:1.5in;max-width:1.5in;background-color: rgb(255, 248, 220); font-size:0.9em;overflow:auto;'>
+                <tr>
+                    <td style='min-height:1.2in;min-width:1.5in;padding-left:5px;'>
+                    <?php
+                    foreach ($PMSFH[0]['surgery'] as $item) {
+                        echo "<span name='QP_PMH_".$item['rowid']."' href='#PMH_anchor' id='QP_PMH_".$item['rowid']."' 
+                        onclick=\"alter_issue('".$item['rowid']."','".$item['row_type']."','');\">".$item['title']."</span><br />";
+                        $counter++;
+                    }
+                    if (count($PMSFH[0]['surgery']) < 1) {
+                        echo  "".xla("None") ."<br /><br />";
+                        $counter = $counter+4; 
+                    }
+                    ?>
+                    </td>
+                </tr>
+            </table>
 
-            ?>
-                </td>
-            </tr>
-        </table>
-        </div> <!-- end patient_stats -->
-        <?php 
-        return;
-    } elseif ($zone =="left-nav") {
+            <?php $counter++;if (($counter + count($PMSFH[0]['allergy'])) > $column) {echo $div; $counter="1";} ?>
+            <table style="width:1.6in;">
+                <tr>
+                    <td width="90%">
+                        <span class="left" style="font-weight:800;font-size:0.7em;">Allergy</span>
+                    </td>
+                    <td >
+                        <span class="top_right btn-sm" href="#PMH_anchor" onclick="alter_issue('0','POH','');" style="text-align:right;font-size:8px;">New</span>
+                    </td>
+                </tr>
+            </table>
+            <table style='margin-bottom:20px;border:1pt solid black;max-height:1.5in;max-width:1.5in;background-color: rgb(255, 248, 220); font-size:0.9em;overflow:auto;'>
+                <tr>
+                    <td style='min-height:1.2in;min-width:1.5in;padding-left:5px;'>
+                    <?php
+                        $counter++;
+                    foreach ($PMSFH[0]['allergy'] as $item) {
+                        echo "<span name='QP_PMH_".$item['rowid']."' href='#PMH_anchor' id='QP_PMH_".$item['rowid']."' 
+                        onclick=\"alter_issue('".$item['rowid']."','".$item['row_type']."','');\">".$item['title']."</span><br />";
+                        $counter++;
+                    }
+                    if (count($PMSFH[0]['allergy']) < 1) {
+                        echo  "".xla("None") ."<br /><br />";
+                        $counter = $counter+4; 
+                    }
+                    ?>
+                    </td>
+                </tr>
+            </table>
+            <?php if ($counter > 15) echo $div; $counter="1"; ?>
+            
+            <?php $counter++;if (($counter + count($PMSFH[0]['FH'])) > $column) {echo $div; $counter="1";} ?>
+            <table style="width:1.6in;">
+                <tr>
+                    <td width="90%">
+                        <span class="left" style="font-weight:800;font-size:0.7em;">FH</span>
+                    </td>
+                    <td >
+                        <span class="top_right btn-sm" href="#PMH_anchor" onclick="alter_issue('0','FH','');" style="text-align:right;font-size:8px;">New</span>
+                    </td>
+                </tr>
+            </table>
+                
+            <table style='margin-bottom:20px;border:1pt solid black;max-height:1.5in;max-width:1.5in;background-color: rgb(255, 248, 220); font-size:0.9em;overflow:auto;'>
+                <tr>
+                    <td style='min-height:1.2in;min-width:1.5in;padding-left:5px;'>
+                    <?php
+                    foreach ($PMSFH[0]['FH'] as $item) {
+                        echo "<span name='QP_PMH_".$item['rowid']."' href='#PMH_anchor' id='QP_PMH_".$item['rowid']."' 
+                        onclick=\"alter_issue('".$item['rowid']."','".$item['row_type']."','');\">".$item['title']."</span><br />";
+                        $counter++;
+                    }
+                    if (count($PMSFH[0]['FH']) < 1) {
+                        echo  "".xla("None") ."<br /><br /><br />";
+                        $counter = $counter+4; 
+                    }
+                    ?>
+                    </td>
+                </tr>
+            </table>
+            <?php $counter++;if ($counter > $column) echo $div; $counter="1"; ?>
+            <table style="width:1.6in;">
+                <tr>
+                    <td width="90%">
+                        <span class="left" style="font-weight:800;font-size:0.7em;">Social</span>
+                    </td>
+                    <td >
+                        <span class="top_right btn-sm" href="#PMH_anchor" onclick="alter_issue('0','SOCH','');" style="text-align:right;font-size:8px;">New</span>
+                    </td>
+                </tr>
+            </table>
+                
+            <table style='margin-bottom:20px;border:1pt solid black;max-height:1.5in;max-width:1.5in;background-color: rgb(255, 248, 220); font-size:0.9em;overflow:auto;'>
+                <tr>
+                    <td style='min-height:1.2in;min-width:1.5in;padding-left:5px;'>
+                    <?php
+                    foreach ($PMSFH[0]['SOCH'] as $item) {
+                        echo "<span name='QP_PMH_".$item['rowid']."' href='#PMH_anchor' id='QP_PMH_".$item['rowid']."' 
+                        onclick=\"alter_issue('".$item['rowid']."','".$item['row_type']."','');\">".$item['title']."</span><br />";
+                        $counter++;
+                    }
+                    if (count($PMSFH[0]['SOCH']) < 1) {
+                        echo  "".xla("None") ."<br /><br /><br />";
+                        $counter = $counter+4; 
+                    }
+                    ?>
+                    </td>
+                </tr>
+            </table>
+
+            <table style="width:1.6in;">
+                <tr>
+                    <td width="90%">
+                        <span class="left" style="font-weight:800;font-size:0.7em;">ROS</span>
+                    </td>
+                    <td >
+                        <span class="top_right btn-sm" href="#PMH_anchor" onclick="alter_issue('0','ROS');" style="text-align:right;font-size:8px;">New</span>
+                    </td>
+                </tr>
+            </table>               
+            <table style='margin-bottom:20px;border:1pt solid black;max-height:1.5in;max-width:1.5in;background-color: rgb(255, 248, 220); font-size:0.9em;overflow:auto;'>
+                <tr>
+                    <td style='min-height:1.2in;min-width:1.5in;padding-left:5px;'>
+                    <?php
+                    foreach ($PMSFH[0]['ROS'] as $item) {
+                        echo "<span name='QP_PMH_".$item['rowid']."' href='#PMH_anchor' id='QP_PMH_".$item['rowid']."' 
+                        onclick=\"alter_issue('".$item['rowid']."','".$item['row_type']."','');\">".$item['title']."</span><br />";
+                        $counter++;
+                    }
+                    if (count($PMSFH[0]['ROS']) < 1) {
+                        echo  "".xla("None") ."<br /><br /><br />";
+                        $counter = $counter+4; 
+                    }
+                    ?>
+                    </td>
+                </tr>
+            </table>
+
+        </div>
+            <?php
+            return;
+    }
+}
+
+function build_PMSFH($pid) {
+    global $form_folder;
+    global $id;
+    global $ISSUE_TYPES;
+    global $ISSUE_TYPE_STYLES;
+
         require_once($GLOBALS['fileroot'].'/custom/code_types.inc.php');
         require_once($GLOBALS['srcdir'].'/options.inc.php');
-         // Check authorization.
-        if (acl_check('patients','med')) {
-            $tmp = getPatientData($pid);
-        }
-         // Collect parameter(s)
-        $category = empty($_REQUEST['category']) ? '' : $_REQUEST['category'];
+        // build a variable with all the PMH/PSurgHx/FH/SocHx/All
+        // then we can display it however we like 
+        $PMSFH = array();
+         //       $ISSUE_TYPES[] = "POH";
+           //     $ISSUE_TYPES[] = "FH";
+             //   $ISSUE_TYPES[] = "SOCH";
+        $ISSUE_TYPES['POH'] = array("Past Ocular History","POH","O","1");
+        $ISSUE_TYPES['FH'] = array("Family History","FH","O","1");
+        $ISSUE_TYPES['SOCH'] = array("Social History","SocH","O","1");
 
-        ?>
-        <div id="left-nav" name="left-nav" class="" >
-            <script type="text/javascript" language="JavaScript">
-            $("#stats_div").load("../../../interface/patient_file/summary/stats.php");
-            </script>
-                
-            <script type="text/javascript" src="<?php echo $GLOBALS['webroot']; ?>/library/dialog.js"></script>
-            <?php
-                    
-            foreach ($ISSUE_TYPES as $focustype => $focustitles) {
-                $counter++; 
+        foreach ($ISSUE_TYPES as $focustype => $focustitles) {
                 if ($category) {
                     //    Only show this category
                    if ($focustype != $category) continue;
                 }
-
-                $disptype = $focustitles[1];
-                echo '<div class="" style="position:relative;width:1.0in;">
-                        <span class="left" style="font-weight:800;">'.$disptype."</span><br />";
-                $pres = sqlStatement("SELECT * FROM lists WHERE pid = ? AND type = ? " .
-                    "ORDER BY begdate", array($pid,$focustype) );
-                echo "<div style='position:relative;margin-bottom:5px;border:1pt solid black;max-height:1.5in;width:0.8in;background-color:lightgrey;font-size:0.8em;min-height:3em;padding-left:5px;'>";
-
-                // if no issues (will place a 'None' text vs. toggle algorithm here)
-                if (sqlNumRows($pres) < 1) {
-                    echo  xla("None");
-                    echo " </div>
-                    </div>";
-                    $counter = $counter+4; 
+               // $PMSFH[$focustitles[1]]="category";
+              //  $focustype= $focustitles[3];
+                $subtype = " and (subtype is NULL or subtype ='' )";
+                if ($focustype =='POH') {
+                    $focustype = "medical_problem";
+                    $subtype=" and subtype ='eye'";
+                }
+                if ($focustype == "FH" || $focustype == "SOCH") {
+                    //we are doing a save for SocHx or FH so for now do nothing
                     continue;
-                } else {
-                    $section_count='4';
-                    while ($row = sqlFetchArray($pres)) {
+                }
+                $pres = sqlStatement("SELECT * FROM lists WHERE pid = ? AND type = ? " .
+                    $subtype." ORDER BY begdate", array($pid,$focustype) );
+                $row_counter='0';
+                while ($row = sqlFetchArray($pres)) {
+                        $panel_type = $row['type'];
+                        if ($row['subtype'] == "eye") {
+                            $panel_type = "POH";
+                        }
                         $rowid = $row['id'];
                         $disptitle = trim($row['title']) ? $row['title'] : "[Missing Title]";
-
-                        $ierow = sqlQuery("SELECT count(*) AS count FROM issue_encounter WHERE list_id = ?", array($rowid) );
-
+                        
                         // look up the diag codes
                         $codetext = "";
                         if ($row['diagnosis'] != "") {
@@ -1543,6 +1630,8 @@ function display_PRIOR_section ($zone,$orig_id,$id_to_show,$pid,$report = '0') {
                             foreach ($diags as $diag) {
                                 $codedesc = lookup_code_descriptions($diag);
                                 $codetext .= xlt($diag) . " (" . xlt($codedesc) . ")<br />";
+                         //       $PMSFH['category'][]['title'][]['codedesc'][] = $codedesc;
+                          //      $PMSFH['category'][]['title'][]['codetext'][] = $codetext;
                             }
                         }
 
@@ -1550,69 +1639,147 @@ function display_PRIOR_section ($zone,$orig_id,$id_to_show,$pid,$report = '0') {
                         if ($row['outcome'] == "1" && $row['enddate'] != NULL) {
                           // Resolved
                           $statusCompute = generate_display_field(array('data_type'=>'1','list_id'=>'outcome'), $row['outcome']);
-                        } elseif($row['enddate'] == NULL) {
-                            //   $statusCompute = htmlspecialchars( xl("Active") ,ENT_NOQUOTES);
+                        } else if($row['enddate'] == NULL) {
+                               $statusCompute = htmlspecialchars( xl("Active") ,ENT_NOQUOTES);
                         } else {
-                            //   $statusCompute = htmlspecialchars( xl("Inactive") ,ENT_NOQUOTES);
+                               $statusCompute = htmlspecialchars( xl("Inactive") ,ENT_NOQUOTES);
                         }
-                        $click_class='statrow';
-                        if($row['erx_source']==1 && $focustype=='allergy')
-                        $click_class='';
-                        elseif($row['erx_uploaded']==1 && $focustype=='medication')
-                        $click_class='';
-                        // output the TD row of info
-                        if ($row['enddate'] == NULL) {
-                        //    echo " <tr class='$bgclass detail $click_class' style='color:red;font-weight:bold' id='$rowid'>\n";
-                        }
-                        else {
-                       //   echo " <tr class='$bgclass detail $click_class' id='$rowid'>\n";
-                        }
-                        echo "<a href='#' onclick='alter_issue(".",issue_type);'>".xlt($disptitle) . "</li>";  
-                        // this prints the actual entry into the box
-                          //  echo "  <td>" . htmlspecialchars($row['begdate'],ENT_NOQUOTES) . "&nbsp;</td>\n";
-                          //  echo "  <td>" . htmlspecialchars($row['enddate'],ENT_NOQUOTES) . "&nbsp;</td>\n";
-                            // both codetext and statusCompute have already been escaped above with htmlspecialchars)
-                         //   echo "  <td>" . $codetext . "</td>\n";
-                         //   echo "  <td>" . $statusCompute . "&nbsp;</td>\n";
-                         //   echo "  <td class='nowrap'>";
-                         //   echo generate_display_field(array('data_type'=>'1','list_id'=>'occurrence'), $row['occurrence']);
-                         //   echo "</td>\n";
-                        if ($focustype == "allergy") {
-                          echo "  <td>" . htmlspecialchars($row['reaction'],ENT_NOQUOTES) . "&nbsp;</td>\n";
-                        }
-                        if ($GLOBALS['athletic_team']) {
-                       //     echo "  <td class='center'>" . $row['extrainfo'] . "</td>\n"; // games missed
-                        }
-                        else {
-                         //   echo "  <td>" . htmlspecialchars($row['referredby'],ENT_NOQUOTES) . "</td>\n";
-                        }
-                        //echo "  <td>" . htmlspecialchars($row['comments'],ENT_NOQUOTES) . "</td>\n";
-                        //echo "  <td id='e_$rowid' class='noclick center' title='" . htmlspecialchars( xl('View related encounters'), ENT_QUOTES) . "'>";
-                        //echo "  <input type='button' value='" . htmlspecialchars($ierow['count'],ENT_QUOTES) . "' class='editenc' id='" . htmlspecialchars($rowid,ENT_QUOTES) . "' />";
-                        //echo "  </td>";                       
+                    $newdata =  array (
+                        'title' => $disptitle,
+                        'status' => $statusCompute,
+                        'enddate' => $row['enddate'],
+                        'reaction' => $row['reaction'],
+                        'referredby' => $row['referredby'],
+                        'extrainfo' => $row['extrainfo'],
+                        'codedesc' => $codedesc,
+                        'codetype' => $codetype,
+                        'comments' => $row['comments'],
+                        'rowid' => $row['id'],
+                        'row_type' => $row['type']
+                    );
+                    $PMSFH[$panel_type][] = $newdata;
+                    //array_push($PMSFH[$focustype], $newdata);
+
                     }
-                echo " </div></div>";
-                $counter++; 
-            }
 
-            }
-            echo '<span class="left" style="font-weight:800;">ROS</span><br />';
-            echo "
-                <table style='margin-bottom:20px;border:1pt solid black;max-height:1.5in;max-width:0.7in;background-color:lightgrey;font-size:0.9em;'>
-                    <tr>
-                        <td style='min-height:1.2in;min-width:0.7in;padding-left:5px;'>";
+        }
+          return array($PMSFH);
+      }
 
-            // if no issues (will place a 'None' text vs. toggle algorithm here)
-            if (sqlNumRows($pres) < 1) {
-                echo  xla("None") ."";
-                echo " </td></tr></table></div>";
-            }
-            ?>
-        </div> <!-- end patient_stats -->
+function show_PMSFH_panel($PMSFH) {
+    
+    echo '<div style="font-size:1.0em;padding:10 2 2 5;">';
+      //nice idea to put a TEXT-DRAW-DB selector up here.. ;)
+      ?><span class="closeButton2 fa fa-paint-brush" id="BUTTON_DRAW_ALL" name="BUTTON_DRAW_ALL"></span>
+      <button id="close-panel-bt" style="margin-left:50;">Close</button><BR />
+
+                  <div>
+      <?php
+      //<!-- POH -->
+      echo "<br /><b><u>POH</u>:</b>";
+      //nice idea to put a TEXT-DRAW-DB selector up here.. ;)
+      ?>
+      <span class="top-right btn-sm" href="#PMH_anchor" 
+      onclick="alter_issue('0','medical_problem','eye');" style="text-align:right;font-size:8px;">Add</span>
+      <br />
+      <?php
+      foreach ($PMSFH[0]['POH'] as $item) {
+        echo "<span name='QP_PMH_".$item['rowid']."' href='#PMH_anchor' id='QP_PMH_".$item['rowid']."' 
+        onclick=\"alter_issue('".$item['rowid']."','".$item['row_type']."','eye');\">".$item['title']."</span><br />";
+      }
+      
+       //<!-- PMH -->
+      echo "<br /><b><u>PMH:</u></b>";
+      ?><span class="top-right btn-sm" href="#PMH_anchor" 
+      onclick="alter_issue('0','medical_problem','');" style="text-align:right;font-size:8px;">Add</span>
+      <br />
+      <?php
+      foreach ($PMSFH[0]['medical_problem'] as $item) {
+        echo "<span name='QP_PMH_".$item['rowid']."' href='#PMH_anchor' id='QP_PMH_".$item['rowid']."' 
+        onclick=\"alter_issue('".$item['rowid']."','".$item['row_type']."','');\">".$item['title']."</span><br />";
+      }
+      
+       //<!-- Meds -->
+      echo "<br /><b><u>Medication:</u></b>";
+      ?><span class="top-right btn-sm" href="#PMH_anchor" 
+      onclick="alter_issue('0','medication','');" style="text-align:right;font-size:8px;">Add</span>
+      <br />
+      <?php
+      foreach ($PMSFH[0]['medication'] as $item) {
+        echo "<span name='QP_PMH_".$item['rowid']."' href='#PMH_anchor' id='QP_PMH_".$item['rowid']."' 
+        onclick=\"alter_issue('".$item['rowid']."','".$item['row_type']."','');\">".$item['title']."</span><br />";
+      }
+      
+      //<!-- Surgeries -->
+      echo "<br /><b><u>Surgey:</u></b>";
+      ?><span class="top-right btn-sm" href="#PMH_anchor" 
+      onclick="alter_issue('0','surgery','');" style="text-align:right;font-size:8px;">Add</span>
+      <br />
+      <?php
+      if (count($PMSFH[0]['surgery']) > '0') {
+        foreach ($PMSFH[0]['surgery'] as $item) {
+          echo "<span name='QP_PMH_".$item['rowid']."' href='#PMH_anchor' id='QP_PMH_".$item['rowid']."' 
+          onclick=\"alter_issue('".$item['rowid']."','".$item['row_type']."','');\">".$item['title']."</span><br />";
+        }
+      } else { ?>
+        <span href="#PMH_anchor" 
+        onclick="alter_issue('0','surgery','');" style="text-align:right;">None</span><br />
         <?
-    }
-}
 
+      }
+      
+      //<!-- Allergies -->
+      echo "<br /><b><u>Allergy:</u></b>";
+      ?><span class="top-right btn-sm" href="#PMH_anchor" 
+      onclick="alter_issue('0','allergy','');" style="text-align:right;font-size:8px;">Add</span>
+      <br />
+      <?php
+      if (count($PMSFH[0]['allergy']) > '0') {
+        foreach ($PMSFH[0]['allergy'] as $item) {
+          echo "<span name='QP_PMH_".$item['rowid']."' href='#PMH_anchor' id='QP_PMH_".$item['rowid']."' 
+          onclick=\"alter_issue('".$item['rowid']."','".$item['row_type']."','');\">".$item['title']."</span><br />";
+        } 
+      } else { ?>
+        <span href="#PMH_anchor" 
+        onclick="alter_issue('0','allergy','');" style="text-align:right;">NKDA</span><br />
+        <?
+      }
+      
+       //<!-- SocHx -->
+      echo "<br /><b><u>Soc Hx:</u></b>";
+      ?><span class="top-right btn-sm" href="#PMH_anchor" 
+      onclick="alter_issue('0','SOCHX','');" style="text-align:right;font-size:8px;">Add</span>
+      <br />
+      <?php
+      if (count($PMSFH[0]['SOCH']) > '0') {
+        foreach ($PMSFH[0]['SOCH'] as $item) {
+          echo "<span name='QP_PMH_".$item['rowid']."' href='#PMH_anchor' id='QP_PMH_".$item['rowid']."' 
+          onclick=\"alter_issue('".$item['rowid']."','".$item['row_type']."','');\">".$item['title']."</span><br />";
+        }
+      } else {
+        ?>
+        <span href="#PMH_anchor" 
+        onclick="alter_issue('0','SOCH','');" style="text-align:right;">In development</span><br />
+        <?
+      }
+
+      echo "<br /><b><u>ROS:</u></b>";
+      ?><span class="top-right btn-sm" href="#PMH_anchor" 
+      onclick="alter_issue('0','ROS','');" style="text-align:right;font-size:8px;">Add</span>
+      <br />
+      <?php
+      if (count($PMSFH[0]['ROS']) > '0') {
+        foreach ($PMSFH[0]['ROS'] as $item) {
+          echo "<span name='QP_PMH_".$item['rowid']."' href='#PMH_anchor' id='QP_PMH_".$item['rowid']."' 
+          onclick=\"alter_issue('".$item['rowid']."','".$item['row_type']."');\">".$item['title']."</span><br />";
+        }
+      } else {
+        ?>
+        <span href="#PMH_anchor" 
+        onclick="alter_issue('0','ROS','');" style="text-align:right;">In development</span><br />
+        <?
+      }
+}
 /**
  *  This function returns display the draw/sketch diagram for a zone (4 input values)
  * 
@@ -2254,7 +2421,7 @@ function menu_overhaul_top($pid,$encounter,$title="Eye Exam") {
         <!-- Navigation -->
                 <!-- Navigation -->
                 <br /><br />
-    <nav class="navbar-fixed-top navbar-custom navbar-bright navbar-fixed-top" role="banner" role="navigation" style="margin-bottom: 0">
+    <nav class="navbar-fixed-top navbar-custom navbar-bright navbar-fixed-top" role="banner" role="navigation" style="margin-bottom: 0;z-index:10000000;">
         <!-- Brand and toggle get grouped for better mobile display -->
         <div class="navbar-header">
             <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#oer-navbar-collapse-1">
@@ -2617,5 +2784,602 @@ function Menu_myGetRegistered($state="1", $limit="unlimited", $offset="0") {
     }
     return $all;
 }
+
+function display_PMH_selector() { 
+    global $issue;
+  $irow = array();
+if ($issue) {
+  $irow = sqlQuery("SELECT * FROM lists WHERE id = ?",array($issue));
+} else if ($thistype) {
+  $irow['type'] = $thistype;
+  $irow['subtype'] = $subtype;
+}
+$type_index = 0;
+
+if (!empty($irow['type'])) {
+  foreach ($ISSUE_TYPES as $key => $value) {
+    if ($key == $irow['type']) break;
+    ++$type_index;
+  }
+}
+
+  ?>
+  <html>
+  <head>
+  <title><?php echo $issue ? xlt('Edit') : xlt('Add New'); ?><?php echo " ".xlt('Issue'); ?></title>
+  <link rel="stylesheet" href='<?php echo $css_header ?>' type='text/css'>
+  <link rel="stylesheet" href="<?php echo $GLOBALS['webroot']; ?>/interface/forms/<?php echo $form_folder; ?>/style.css" type="text/css"> 
+  <!-- jQuery library -->
+  <script src="<?php echo $GLOBALS['webroot'] ?>/library/js/jquery.min.js"></script>
+
+  <!-- Latest compiled JavaScript -->
+  <script src="<?php echo $GLOBALS['webroot'] ?>/library/js/bootstrap.min.js"></script>  
+  <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+      <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+      <!--[if lt IE 9]>
+          <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+          <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+      <![endif]-->
+  <script type="text/javascript" src="../../forms/<?php echo $form_folder; ?>/js/shortcut.js"></script>
+  <script type="text/javascript" src="../../forms/<?php echo $form_folder; ?>/js/my_js_base.js"></script>
+  <link rel="stylesheet" href="<?php echo $GLOBALS['webroot']; ?>/library/css/font-awesome-4.2.0/css/font-awesome.min.css">
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+
+  td, select, textarea {
+   font-family: Fontawesome, Arial, Helvetica, sans-serif;
+   font-size: 8pt;
+   } 
+   
+   input[type="text"]{
+   text-align:left;
+   background-color: #FFF8DC;
+   text-align: left;
+
+  }
+
+  div.section {
+   border: solid;
+   border-width: 1px;
+   border-color: #0000ff;
+   margin: 0 0 0 10pt;
+   padding: 5pt;
+  }
+
+  </style>
+
+  <style type="text/css">@import url(<?php echo $GLOBALS['webroot']; ?>/library/dynarch_calendar.css);</style>
+  <script type="text/javascript" src="<?php echo $GLOBALS['webroot']; ?>/library/dynarch_calendar.js"></script>
+  <?php require_once($GLOBALS['srcdir'].'/dynarch_calendar_en.inc.php'); ?>
+  <script type="text/javascript" src="<?php echo $GLOBALS['webroot']; ?>/library/dynarch_calendar_setup.js"></script>
+  <script type="text/javascript" src="<?php echo $GLOBALS['webroot']; ?>/library/textformat.js"></script>
+  <script type="text/javascript" src="<?php echo $GLOBALS['webroot']; ?>/library/dialog.js"></script>
+
+
+
+  <script language="JavaScript">
+   var mypcc = '<?php echo $GLOBALS['phone_country_code'] ?>';
+   var aitypes = new Array(); // issue type attributes
+   var aopts   = new Array(); // Option objects
+  <?php
+   $i = 0;  
+
+  //This builds the litle quick pick list in this section.
+   // Would be better as an autocomplete so lots of stuff can be seen.
+   //or it is an ajax autocomplete live to the DB where a 
+    // a cronjob or a mysql based view and trigger to update
+   // the list_options for each $key based on the current provider
+   // eg. one provider might have a lot of cataract surgery patients and list it as Phaco/PCIOL and another
+   // might use a femto laser assisted Restore IOL procedure and he uses FT/Restore IOL
+   // No matter the specialty, how the doctor documents can be analyzed and list_options created in the VIEW TABLE in the order
+   // of their frequency.  Start at 10 should they want to always have something at the top.
+   //I like the option of when updating the lists table, a trigger updates a VIEW and this autocomplete 
+   //draws from the VIEW table.  Nice.  Real time update...  Need to consider top picks and that can be the role
+   // of the current list_options table...  Cool.  1-10 from list_options, after that from VIEW via trigger that
+   // ranks them by frequency over a limited time to keep DB humming...
+         $i='0';
+    foreach ($ISSUE_TYPES as $key => $value) {
+      echo " aitypes[$i] = " . attr($value[3]) . ";\n";
+      echo " aopts[$i] = new Array();\n";
+      if ($i < "4") { // "0" = medical_problem_issue_list
+        $qry = sqlStatement("SELECT * FROM list_options WHERE list_id = ? and subtype not like 'eye'",array($key."_issue_list"));
+      } else if ($i == "4") { // POH medical group - leave surgical for now. surgical will require a new issue type above too
+        $qry = sqlStatement("SELECT * FROM list_options WHERE list_id = 'medical_problem_issue_list' and subtype = 'eye'");
+      } else if ($i == "5") { // FH group
+        //need a way to pull FH out of patient_dataand will display frame very differently
+        $qry = "";
+      } else if ($i == "6") { // SocHx group - leave blank for now?
+        $qry = ""; 
+      } 
+      while($res = sqlFetchArray($qry)){
+        echo " aopts[$i][aopts[$i].length] = new Option('".attr(trim($res['option_id']))."', '".attr(xl_list_label(trim($res['title'])))."', false, false);\n";
+      }
+    ++$i;
+    }
+
+  ?>
+
+  <?php require($GLOBALS['srcdir'] . "/restoreSession.php"); ?>
+
+   // React to selection of an issue type.  This loads the associated
+   // shortcuts into the selection list of titles, and determines which
+   // rows are displayed or hidden.
+   // Need to work on this to display "non-openEMR" issue types like POH/FH/ROS
+   function newtype(index) {
+    var f = document.forms[0];
+    var theopts = f.form_titles.options;
+    theopts.length = 0;
+    var i = 0;
+    for (i = 0; i < aopts[index].length; ++i) {
+     theopts[i] = aopts[index][i];
+    }
+    document.getElementById('row_titles').style.display = i ? '' : 'none';
+    // Show or hide various rows depending on issue type, except do not
+    // hide the comments or referred-by fields if they have data.
+    var comdisp = (aitypes[index] == 1) ? 'none' : '';
+    var revdisp = (aitypes[index] == 1) ? '' : 'none';
+    var injdisp = (aitypes[index] == 2) ? '' : 'none';
+    var nordisp = (aitypes[index] == 0) ? '' : 'none';
+    var surgdisp = (aitypes[index] != 4) ? 'none' : 'none';
+    // reaction row should be displayed only for medication allergy.
+    var alldisp =  (index == <?php echo issueTypeIndex('allergy'); ?>) ? '' : 'none';
+   
+    document.getElementById('row_enddate'       ).style.display = comdisp;
+    // Note that by default all the issues will not show the active row
+    //  (which is desired functionality, since then use the end date
+    //   to inactivate the item.)
+    document.getElementById('row_active'        ).style.display = revdisp;
+    document.getElementById('row_diagnosis'     ).style.display = comdisp;
+    document.getElementById('row_occurrence'    ).style.display = comdisp;
+    document.getElementById('row_classification').style.display = injdisp;
+    document.getElementById('row_reinjury_id'   ).style.display = injdisp;
+    document.getElementById('row_reaction'      ).style.display = alldisp;
+    // document.getElementById('row_referredby'   ).style.display = comdisp;
+    //always hide referred by? was: = (f.form_referredby.value) ? '' : comdisp;
+    document.getElementById('row_comments'      ).style.display = (f.form_comments.value  ) ? '' : revdisp;
+    <?php if ($GLOBALS['athletic_team']) { ?>
+    document.getElementById('row_returndate' ).style.display = comdisp;
+    document.getElementById('row_injury_grade'  ).style.display = injdisp;
+    document.getElementById('row_injury_part'   ).style.display = injdisp;
+    document.getElementById('row_injury_type'   ).style.display = injdisp;
+    document.getElementById('row_medical_system').style.display = nordisp;
+    document.getElementById('row_medical_type'  ).style.display = nordisp;
+    // Change label text of 'title' row depending on issue type:
+    document.getElementById('title_diagnosis').innerHTML = '<b>' +
+     (index == <?php echo issueTypeIndex('allergy'); ?> ?
+     '<?php echo xla('Allergy') ?>' :
+     (index == <?php echo issueTypeIndex('general'); ?> ?
+     '<?php echo xla('Title') ?>' :
+     '<?php echo xla('Text Diagnosis') ?>')) +
+     ':</b>';
+  <?php } else { ?>
+   document.getElementById('row_referredby'    ).style.display = (f.form_referredby.value) ? 'comdisp' : comdisp;
+  <?php } ?>
+  <?php
+    if ($ISSUE_TYPES['football_injury']) {
+      // Generate more of these for football injury fields.
+      issue_football_injury_newtype();
+    }
+    if ($ISSUE_TYPES['ippf_gcac'] && !$_REQUEST['form_save']) {
+      // Generate more of these for gcac and contraceptive fields.
+      if (empty($issue) || $irow['type'] == 'ippf_gcac'    ) issue_ippf_gcac_newtype();
+      if (empty($issue) || $irow['type'] == 'contraceptive') issue_ippf_con_newtype();
+    }
+  ?>
+   }
+
+   // If a clickoption title is selected, copy it to the title field.
+   function set_text() {
+    var f = document.forms[0];
+    f.form_title.value = f.form_titles.options[f.form_titles.selectedIndex].text;
+    f.form_titles.selectedIndex = -1;
+   }
+  function refreshIssue(issue, title) {
+   parent.refreshIssues;
+   top.refreshIssues;
+  }
+  function submit_this_form() {
+      var url = "../../forms/eye_mag/a_issue.php?form_save=1";
+      var formData = $("form#theform").serialize();
+      $.ajax({
+             type   : 'POST',   // define the type of HTTP verb we want to use (POST for our form)
+             url    : url,      // the url where we want to POST
+             data   : formData, // our data object
+             success  : function(result)  {
+              $("#page").html(result);
+            }
+          }).done(function (){
+            refreshIssues();
+          });
+  }
+   // Process click on Delete link.
+  function deleteme() {
+      var url = "../../forms/eye_mag/a_issue.php?issue=<?php echo attr($issue); ?>&delete=1";
+      var formData = $("form#theform").serialize();
+     $.ajax({
+             type    : 'POST',   // define the type of HTTP verb we want to use (POST for our form)
+             data    : { 
+                          issue  : '<?php echo attr($issue) ?>',
+                          delete : '1'
+                        },
+              url    : url,      // the url where we want to POST
+             success  : function(result)  {
+             // alert("YUP!");
+            }
+             }).done(function (){
+              //CLEAR THE FORM TOO...
+              refreshIssues();
+              document.forms['theform'].reset();
+            
+             });
+  }
+   // Called by the deleteme.php window on a successful delete.
+   function imdeleted() {
+    closeme();
+   }
+
+   function closeme() {
+      if (parent.$) parent.$.fancybox.close();
+      window.close();
+   }
+
+   // Called when the Active checkbox is clicked.  For consistency we
+   // use the existence of an end date to indicate inactivity, even
+   // though the simple verion of the form does not show an end date.
+   function activeClicked(cb) {
+    var f = document.forms[0];
+    if (cb.checked) {
+     f.form_end.value = '';
+    } else {
+     var today = new Date();
+     f.form_end.value = '' + (today.getYear() + 1900) + '-' +
+      (today.getMonth() + 1) + '-' + today.getDate();
+    }
+   }
+
+   // Called when resolved outcome is chosen and the end date is entered.
+   function outcomeClicked(cb) {
+    var f = document.forms[0];
+    if (cb.value == '1'){
+     var today = new Date();
+     f.form_end.value = '' + (today.getYear() + 1900) + '-' +
+      ("0" + (today.getMonth() + 1)).slice(-2) + '-' + ("0" + today.getDate()).slice(-2);
+     f.form_end.focus();
+    }
+   }
+
+  // This is for callback by the find-code popup.
+  // Appends to or erases the current list of diagnoses.
+  function set_related(codetype, code, selector, codedesc) {
+   var f = document.forms[0];
+   var s = f.form_diagnosis.value;
+   var title = f.form_title.value;
+   if (code) {
+    if (s.length > 0) s += ';';
+    s += codetype + ':' + code;
+   } else {
+    s = '';
+   }
+   f.form_diagnosis.value = s;
+   if(title == '') f.form_title.value = codedesc;
+  }
+
+  // This invokes the find-code popup.
+  function sel_diagnosis() {
+    <?php
+    if($irow['type'] == 'medical_problem')
+    {
+    ?>
+   dlgopen('../../patient_file/encounter/find_code_popup.php?codetype=<?php echo attr(collect_codetypes("medical_problem","csv")) ?>', '_blank', 500, 400);
+    <?php
+    }
+    else{
+    ?>
+    dlgopen('../../patient_file/encounter/find_code_popup.php?codetype=<?php echo attr(collect_codetypes("diagnosis","csv")) ?>', '_blank', 500, 400);
+    <?php
+    }
+    ?>
+  }
+
+  // Check for errors when the form is submitted.
+  function validate() {
+   var f = document.forms[0];
+   if(f.form_begin.value > f.form_end.value && (f.form_end.value)) {
+    alert("<?php echo addslashes(xl('Please Enter End Date greater than Begin Date!')); ?>");
+    return false;
+   }
+   if (! f.form_title.value) {
+    alert("<?php echo addslashes(xl('Please enter a title!')); ?>");
+    return false;
+   }
+   top.restoreSession();
+   return true;
+  }
+
+  // Supports customizable forms (currently just for IPPF).
+  function divclick(cb, divid) {
+   var divstyle = document.getElementById(divid).style;
+   if (cb.checked) {
+    divstyle.display = 'block';
+   } else {
+    divstyle.display = 'none';
+   }
+   return true;
+  }
+
+  </script>
+
+  </head>
+
+  <body  style="padding-right:0.5em;font-family: FontAwesome,serif,Arial;">
+  <input type="hidden" name="form_id" id="form_id" value = "$form_id">
+  <div id="page" name="page">
+      <form method='post' name='theform' id='theform'
+       action='a_issue.php?issue=<?php echo attr($issue); ?>&thispid=<?php echo attr($thispid); ?>&thisenc=<?php echo attr($thisenc); ?>'
+       onsubmit='return validate();'>
+       
+          <?php
+           $index = 0;
+           $output ='';
+          global $counter_header;
+          $count_header='0';
+          $output= array();
+          foreach ($ISSUE_TYPES as $value => $focustitles) {
+            
+              /* if ($issue || $thistype) {
+              if ($index == $type_index) {
+                $disptype = xlt($focustitles[0]);
+                echo '<b style="padding-bottom:5px;">'.$disptype.':</b>';
+                echo "<input type='hidden' name='form_type' value='".xla($index)."'>\n";
+                $checked = "checked='checked'";
+              }
+              } else { */
+              //$output .= " <span style='padding-bottom:5px;font-size:0.8em;'><input type='radio' name='form_type' id='".xla($index)."' value='".xla($index)."' onclick='top.restoreSession();newtype($index);'";
+              $checked = '';
+              if ($issue || $thistype) {
+                if ($index == $type_index) { $checked .= " checked='checked' ";}
+              } else if ($focustitles[1] == "Problem") {
+                $checked .= " checked='checked' "; 
+              }
+
+              if ($focustitles[1] == "Medication") $focustitles[1] = "Meds";
+              if ($focustitles[1] == "Problem") $focustitles[1] = "PMH";
+              if ($focustitles[1] == "Surgery") $focustitles[1] = "PSurgH";
+  //echo $focustitles[1]. " - ";
+              $HELLO[$focustitles[1]] = "<input type='radio' name='form_type' id='".xla($index)."' value='".xla($index)."' ".$checked. " onclick='top.restoreSession();newtype($index);' /><span style='Xpadding-bottom:2px;font-size:0.8em;font-weight:bold;'><label for='".xla($index)."' class='input-helper input-helper--checkbox'>" . xlt($focustitles[1]) . "</label></span>&nbsp;\n";
+                //}
+              ++$index;
+          }
+    
+          echo $HELLO['POH'].$HELLO['PMH'].$HELLO['PSurgH'].$HELLO['Meds'].$HELLO['Allergy'].$HELLO['FH'].$HELLO['SocH'];
+
+          ?>
+         
+      <div class="borderShadow" style="text-align:center;margin-top:7px;">
+          <table  border='0' width='98%'>
+            <tr id='row_titles'>
+              <td valign='top' nowrap>&nbsp;</td>
+              <td valign='top'>
+                <select name='form_titles' size='<?php echo $GLOBALS['athletic_team'] ? 10 : 4; ?>' onchange='set_text()'>
+                </select> <?php echo xlt('(Select one of these, or type in your own)'); ?>
+              </td>
+            </tr>
+
+          <tr>
+            <td valign='top' id='title_diagnosis' nowrap><b><?php echo $GLOBALS['athletic_team'] ? xlt('Text Diagnosis') : xlt('Title').$focustitle[1]; ?>:</b></td>
+            <td>
+              <input type='text' size='40' name='form_title' value='<?php echo xla($irow['title']) ?>' style='width:100%;text-align:left;' />
+            </td>
+          </tr>
+
+          <tr id='row_diagnosis'>
+            <td valign='top' nowrap><b><?php echo xlt('Diagnosis Code'); ?>:</b></td>
+            <td>
+              <input type='text' size='50' name='form_diagnosis'
+                value='<?php echo attr($irow['diagnosis']) ?>' onclick='top.restoreSession();sel_diagnosis();'
+                title='<?php echo xla('Click to select or change diagnoses'); ?>'
+                style='width:100%' />
+            </td>
+          </tr>
+
+
+          <tr>
+            <td valign='top' nowrap><b><?php echo xlt('Begin Date'); ?>:</b></td>
+            <td>
+
+             <input type='text' size='10' name='form_begin' id='form_begin'
+              value='<?php echo attr($irow['begdate']) ?>'¸ 
+              style="width: 75px;"
+              onkeyup='datekeyup(this,mypcc)' onblur='dateblur(this,mypcc)'
+              title='<?php echo xla('yyyy-mm-dd date of onset, surgery or start of medication'); ?>' />
+             <img src='../../pic/show_calendar.gif' align='absbottom' width='24' height='22'
+              id='img_begin' border='0' alt='[?]' style='cursor:pointer'
+              title='<?php echo xla('Click here to choose a date'); ?>' />
+            </td>
+          </tr>
+
+          <tr id='row_enddate'>
+            <td valign='top' nowrap><b><?php echo xlt('End Date'); ?>:</b></td>
+            <td>
+             <input type='text' size='10' name='form_end' id='form_end'
+              style="width: 75px;"
+              value='<?php echo attr($irow['enddate']) ?>'
+              onkeyup='datekeyup(this,mypcc)' onblur='dateblur(this,mypcc)'
+              title='<?php echo xla('yyyy-mm-dd date of recovery or end of medication'); ?>' />
+             <img src='../../pic/show_calendar.gif' align='absbottom' width='24' height='22'
+              id='img_end' border='0' alt='[?]' style='cursor:pointer'
+              title='<?php echo xla('Click here to choose a date'); ?>' />
+              &nbsp;(<?php echo xlt('leave blank if still active'); ?>)
+            </td>
+           </tr>
+
+           <tr id='row_active'>
+            <td valign='top' nowrap><b><?php echo xlt('Active'); ?>:</b></td>
+            <td>
+             <input type='checkbox' name='form_active' value='1' <?php echo attr($irow['enddate']) ? "" : "checked"; ?>
+              onclick='top.restoreSession();activeClicked(this);'
+              title='<?php echo xla('Indicates if this issue is currently active'); ?>' />
+            </td>
+           </tr>
+
+           <tr<?php if (! $GLOBALS['athletic_team']) echo " style='display:none;'"; ?> id='row_returndate'>
+            <td valign='top' nowrap><b><?php echo xlt('Returned to Play'); ?>:</b></td>
+            <td>
+             <input type='text' size='10' name='form_return' id='form_return'
+              value='<?php echo attr($irow['returndate']) ?>'
+              onkeyup='datekeyup(this,mypcc)' onblur='dateblur(this,mypcc)'
+              title='<?php echo xla('yyyy-mm-dd date returned to play'); ?>' />
+             <img src='../../pic/show_calendar.gif' align='absbottom' width='24' height='22'
+              id='img_return' border='0' alt='[?]' style='cursor:pointer'
+              title='<?php echo xla('Click here to choose a date'); ?>' />
+              &nbsp;(<?php echo xlt('leave blank if still active'); ?>)
+            </td>
+           </tr>
+
+           <tr id='row_occurrence'>
+            <td valign='top' nowrap><b><?php echo xlt('Occurrence'); ?>:</b></td>
+            <td>
+             <?php
+              // Modified 6/2009 by BM to incorporate the occurrence items into the list_options listings
+              generate_form_field(array('data_type'=>1,'field_id'=>'occur','list_id'=>'occurrence','empty_title'=>'SKIP'), $irow['occurrence']);
+             ?>
+            </td>
+           </tr>
+
+           <tr id='row_classification'>
+            <td valign='top' nowrap><b><?php echo xlt('Classification'); ?>:</b></td>
+            <td>
+             <select name='form_classification'>
+            <?php
+           foreach ($ISSUE_CLASSIFICATIONS as $key => $value) {
+            echo "   <option value='".attr($key)."'";
+            if ($key == $irow['classification']) echo " selected";
+            echo ">".text($value)."\n";
+           }
+            ?>
+             </select>
+            </td>
+          </tr>
+
+           <tr<?php if (! $GLOBALS['athletic_team']) echo " style='display:none;'"; ?> id='row_reinjury_id'>
+              <td valign='top' nowrap><b><?php echo xlt('Re-Injury?'); ?>:</b></td>
+              <td>
+               <select name='form_reinjury_id'>
+                <option value='0'><?php echo xlt('No'); ?></option>
+              <?php
+              $pres = sqlStatement(
+               "SELECT id, begdate, title " .
+               "FROM lists WHERE " .
+               "pid = ? AND " .
+               "type = 'football_injury' AND " .
+               "activity = 1 " .
+               "ORDER BY begdate DESC", array($thispid)
+              );
+              while ($prow = sqlFetchArray($pres)) {
+                echo "   <option value='" . attr($prow['id']) . "'";
+                if ($prow['id'] == $irow['reinjury_id']) echo " selected";
+                echo ">" . text($prow['begdate']) . " " . text($prow['title']) . "\n";
+              }
+              ?>
+             </select>
+            </td>
+          </tr>
+           <!-- Reaction For Medication Allergy -->
+          <tr id='row_reaction'>
+             <td valign='top' nowrap><b><?php echo xlt('Reaction'); ?>:</b></td>
+             <td>
+              <input type='text' size='40' name='form_reaction' value='<?php echo attr($irow['reaction']) ?>'
+               style='width:100%' title='<?php echo xla('Allergy Reaction'); ?>' />
+             </td>
+          </tr>
+          <!-- End of reaction -->
+            <!--  
+
+            <?php 
+            /*
+             *  The referred by inputs need ony be shown for certain fields.  They do not show up (or fit) in Allergies.
+             *
+             */
+
+             ?>
+                -->      <tr
+
+                     <?php 
+                     if (!$GLOBALS['athletic_team']) echo " style='display:none;'"; 
+
+
+                     ?> id='row_referredby'>
+                      <td valign='top' nowrap><b><?php echo xlt('Referred by'); ?>:</b></td>
+                      <td>
+                       <input type='text' size='40' name='form_referredby' value='<?php echo attr($irow['referredby']) ?>'
+                        style='width:100%' title='<?php echo xla('Referring physician and practice'); ?>' />
+                      </td>
+                     </tr>
+           
+          <tr id='row_comments'>
+            <td valign='top' nowrap><b><?php echo xlt('Comments'); ?>:</b></td>
+            <td>
+             <textarea name='form_comments' rows='1' cols='40' wrap='virtual' style='width:100%'><?php echo text($irow['comments']) ?></textarea>
+            </td>
+          </tr>
+
+          <tr<?php if ($GLOBALS['athletic_team'] || $GLOBALS['ippf_specific']) echo " style='display:none;'"; ?>>
+            <td valign='top' nowrap><b><?php echo xlt('Outcome'); ?>:</b></td>
+            <td>
+             <?php
+              echo generate_select_list('form_outcome', 'outcome', $irow['outcome'], '', '', '', 'outcomeClicked(this);');
+             ?>
+            </td>
+          </tr>
+
+          <tr<?php if (!$GLOBALS['athletic_team'] || $GLOBALS['ippf_specific']) echo " style='display:none;'"; ?>>
+            <td valign='top' nowrap><b><?php echo xlt('Destination'); ?>:</b></td>
+            <td>
+            <?php if (true) { ?>
+             <input type='text' size='40' name='form_destination' value='<?php echo attr($irow['destination']) ?>'
+              style='width:100%' title='GP, Secondary care specialist, etc.' />
+            <?php } else { // leave this here for now, please -- Rod ?>
+             <?php echo rbinput('form_destination', '1', 'GP'                 , 'destination') ?>&nbsp;
+             <?php echo rbinput('form_destination', '2', 'Secondary care spec', 'destination') ?>&nbsp;
+             <?php echo rbinput('form_destination', '3', 'GP via physio'      , 'destination') ?>&nbsp;
+             <?php echo rbinput('form_destination', '4', 'GP via podiatry'    , 'destination') ?>
+            <?php } ?>
+            </td>
+          </tr>
+
+        </table>
+      </div>
+
+      <center>
+      <p style="margin-top:7px;">
+
+      <input type='button' id='form_save' name='form_save' onclick='top.restoreSession();submit_this_form();' value='<?php echo xla('Save'); ?>' />
+
+      <?php if ($issue && acl_check('admin', 'super')) { ?>
+      &nbsp;
+      <input type='button' name='delete' onclick='top.restoreSession();deleteme();' value='<?php echo xla('Delete'); ?>' />
+      <?php } ?>
+  <!--
+      &nbsp;
+      <input type='button' value='<?php echo xla('Cancel'); ?>' onclick='closeme();' />
+  -->
+      </p>
+      </center>
+
+      </form>
+  <script language='JavaScript'>
+   newtype(<?php echo $type_index ?>);
+   Calendar.setup({inputField:"form_begin", ifFormat:"%Y-%m-%d", button:"img_begin"});
+   Calendar.setup({inputField:"form_end", ifFormat:"%Y-%m-%d", button:"img_end"});
+   Calendar.setup({inputField:"form_return", ifFormat:"%Y-%m-%d", button:"img_return"});
+  </script>
+  </div>
+  </body>
+  </html>
+<?php 
+return;
+} 
+
+
 return ;
 ?>

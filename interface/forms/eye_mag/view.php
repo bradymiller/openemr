@@ -40,13 +40,19 @@ $form_folder = "eye_mag";
 include_once("../../forms/".$form_folder."/php/".$form_folder."_functions.php");
 //@extract($_REQUEST); 
 //@extract($_SESSION);
-$form_id    = $_REQUEST['id'];
+$form_id    = $_REQUEST['id']; //what form are we working on?  Each encounter can have multiple forms, like the eye_mag, ROS, Vitals, whatever
 $action     = $_REQUEST['action'];
 $final      = $_REQUEST['final'];
-//$encounter  = $_SESSION['encounter'];
-//$id         = $_REQUEST['id'];
+
+//$encounter  = $_REQUEST['encounter'];
+//if ($encounter =='') $encounter = $_SESSION['id'];
+
+$id         = $_REQUEST['id'];
 $display    = $_REQUEST['display'];
-//$pid        = $_SESSION['pid'];
+
+$pid        = $_REQUEST['pid'];
+if ($pid =='') $pid = $_SESSION['pid'];
+
 $refresh    = $_REQUEST['refresh'];
 if ($_REQUEST['url']) {
   redirector($_REQUEST['url']);
@@ -54,7 +60,7 @@ if ($_REQUEST['url']) {
 }
 // Get user preferences, for this user
 $query  = "SELECT * FROM form_eye_mag_prefs where PEZONE='PREFS' AND (id=?) ORDER BY id,ZONE_ORDER,ordering";
-$result = sqlStatement($query,array($_SESSION['userauthorized']));
+$result = sqlStatement($query,array($_SESSION['authId']));
 while ($prefs= sqlFetchArray($result))   {    
     @extract($prefs);    
     $$LOCATION = $VALUE; 
@@ -84,8 +90,21 @@ $encounter_data =sqlQuery($query,array($encounter,$pid));
   This is where the report.php becomes important.
   If the chart is "completed", ie. done, locked, only "amendable", there must be a link to the report only.
   If the user gets here and requests to see it,
-  they are sent to report.php where they are presented with options to view and export.  
+  they are sent to report.php where they are presented with options to view and export.  Maybe.
   if ($LOCKED) { report.php }
+  But really, if it is locked, they should not be able to get here...
+  What if another user is editing it?  Consider flag the form_eye_mag table "locked" field with username/id and unflag when form is closed.
+  Any attempt to save the form will meet with resistance, maybe a pop-up to say it is opened elsewhere, and an override option?
+  and failure to alter DB on attempted submit_form if locked...  Once active user closes the form, 
+  ie finalized for the active session, flag is removed.
+  Need to think about this some.  Two windows anywhere with the same chart is not compatible with the autosave feature.
+  Data integrity problems will arise.  Maybe the session variable is a good way incase the same user has it opened on a new computer?
+  I assume a new window on a second computer will have a new session.  What is the idiot has two windows opened on the same machine?
+  Maybe we need a random number generated each time the form is opened, which is removed from the "locked" field on closure.
+  Any new windows meets with a pop-up and failure to save unless overridden.  If overridden, closing the other window will also
+  meet with a popup and hopefully the numbnut won't say save this version.  I can imagine a doctor has the window opened and would like to see changes
+  as they are entered by the tech?  Maybe there is a visible mode that does this without submitting, and auto refreshes every minute or so?
+  Need to think this through.  Suggestions welcome...
 */
 $dated = new DateTime($encounter_data['encounter_date']);
 if ($GLOBALS['date_display_format'] == 1)      
@@ -94,62 +113,73 @@ if ($GLOBALS['date_display_format'] == 1)
   } else {
     $visit_date = $dated->format('d/m/Y');  // dd/mm/yyyy
   }
-if (!$form_id or !$encounter) { echo $encounter."-".$form_id." No encounter..."; exit;} 
+if (!$form_id && !$encounter) { echo $encounter."-".$form_id." No encounter..."; exit;} 
 //ideally this would point to an error databased by problem #, cause it'd be a problem.
 
 if ($refresh and $refresh != 'fullscreen') {
-  display_PRIOR_section($refresh,$id,$id,$pid);
+  if ($refresh == "PMSFH")  { display_PRIOR_section($refresh,$id,$id,$pid); }
+  if ($refresh == "PMSFH_panel") {
+    $PMSFH = build_PMSFH($pid); 
+    show_PMSFH_panel($PMSFH);
+  }
   exit;
 }
 
 //formHeader("Chart: ".$pat_data['fname']." ".$pat_data['lname']." ".$visit_date);
 require_once("$incdir/patient_file/encounter/new_form.php");
-?><html>
+?>
+<html>
   <head>
     <title> Chart: <?php echo $pat_data['fname']." ".$pat_data['lname']." ".$visit_date; ?></title>
-<!-- jQuery library -->
-<script src="<?php echo $GLOBALS['webroot'] ?>/library/js/jquery.min.js"></script>
+    <!-- jQuery library -->
+    <script src="<?php echo $GLOBALS['webroot'] ?>/library/js/jquery.min.js"></script>
 
-<!-- Latest compiled JavaScript -->
-<script src="<?php echo $GLOBALS['webroot'] ?>/library/js/bootstrap.min.js"></script>  
-    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
-    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
-    <!--[if lt IE 9]>
-        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
-        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
-    <![endif]-->
-  <script language="JavaScript">    
-  <?php  require_once("$srcdir/restoreSession.php"); 
-  ?>
-  function dopclick(id) {
-    <?php if ($thisauth != 'write'): ?>
-    dlgopen('../../patient_file/summary/a_issue.php?issue=0&thistype=' + id, '_blank', 550, 400);
-    <?php else: ?>
-    alert("<?php xl('You are not authorized to add/edit issues','e'); ?>");
-    <?php endif; ?>
-  }
-   
-  </script>
-    
-    <!-- Add Font stuff for the look and feel.  -->
-    <link rel="stylesheet" href="<?php echo $css_header;?>" type="text/css">
-    <link rel="stylesheet" href="<?php echo $GLOBALS['webroot'] ?>/library/css/pure-min.css">
-    <link rel="stylesheet" href="<?php echo $GLOBALS['webroot'] ?>/library/css/bootstrap-3-2-0.min.css">
-    <link rel="stylesheet" href="../../forms/<?php echo $form_folder; ?>/css/bootstrap-responsive.min.css">
-    <link rel="stylesheet" href="../../forms/<?php echo $form_folder; ?>/style.css" type="text/css">    
-    <link rel=stylesheet href="<?php echo $GLOBALS['css_header']; ?>" type="text/css">
-    <link rel="stylesheet" href="<?php echo $GLOBALS['webroot'] ?>/library/css/font-awesome-4.2.0/css/font-awesome.css">
-    
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description" content="openEMR: Eye Exam">
-    <meta name="author" content="openEMR: ophthalmology">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- Latest compiled JavaScript -->
+    <script src="<?php echo $GLOBALS['webroot'] ?>/library/js/bootstrap.min.js"></script>  
+      <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+      <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+      <!--[if lt IE 9]>
+          <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+          <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+      <![endif]-->
+    <script language="JavaScript">    
+    <?php  require_once("$srcdir/restoreSession.php"); 
+    ?>
+    function dopclick(id) {
+      <?php if ($thisauth != 'write'): ?>
+      dlgopen('../../patient_file/summary/a_issue.php?issue=0&thistype=' + id, '_blank', 550, 400);
+      <?php else: ?>
+      alert("<?php xl('You are not authorized to add/edit issues','e'); ?>");
+      <?php endif; ?>
+    }
+     function doscript(type,id,encounter) {
+
+          dlgopen('../../forms/eye_mag/SpectacleRx.php?target=' + type + '&id='+id+'&encounter='+ encounter, '_blank', 550, 400);
+        }
+     
+     
+    </script>
+      
+      <!-- Add Font stuff for the look and feel.  -->
+      <link rel="stylesheet" href="<?php echo $css_header;?>" type="text/css">
+      <link rel="stylesheet" href="<?php echo $GLOBALS['webroot'] ?>/library/css/pure-min.css">
+      <link rel="stylesheet" href="<?php echo $GLOBALS['webroot'] ?>/library/css/bootstrap-3-2-0.min.css">
+      <script src="<?php echo $GLOBALS['webroot'] ?>/library/js/bootstrap.min.js"></script>
+      <link rel="stylesheet" href="../../forms/<?php echo $form_folder; ?>/css/bootstrap-responsive.min.css">
+      <link rel="stylesheet" href="../../forms/<?php echo $form_folder; ?>/style.css" type="text/css">    
+      <link rel="stylesheet" href="<?php echo $GLOBALS['css_header']; ?>" type="text/css">
+      <link rel="stylesheet" href="<?php echo $GLOBALS['webroot'] ?>/library/css/font-awesome-4.2.0/css/font-awesome.css">
+      
+      <meta charset="utf-8">
+      <meta http-equiv="X-UA-Compatible" content="IE=edge">
+      <meta name="viewport" content="width=device-width, initial-scale=1">
+      <meta name="description" content="openEMR: Eye Exam">
+      <meta name="author" content="openEMR: ophthalmology">
+      <meta name="viewport" content="width=device-width, initial-scale=1">
   </head>
-  <body class="bgcolor2" background="<?php echo $GLOBALS['backpic']?>" topmargin=0 rightmargin=0 leftmargin=2 bottommargin=0 marginwidth=2 marginheight=0>
-        
-    <?php
+  <body class="bgcolor2" background="<?php echo $GLOBALS['backpic']?>" topmargin=0 rightmargin=0 leftmargin=0 bottommargin=0 marginwidth=0 marginheight=0>
+
+  <?
     if ($display=="fullscreen") { 
       // trial fullscreen with mobile menu will lead to tablet versions and bootstrap menu 
       // this function is in php/eye_mag_functions.php
@@ -158,7 +188,7 @@ require_once("$incdir/patient_file/encounter/new_form.php");
       $input_echo = menu_overhaul_top($pid,$encounter);
       echo $input_echo;
       ?>
-      <div id="page-wrapper" style="margin: 30px 0px 0px 0px;">
+      <div id="page-wrapper" style="margin: 0px 0px 0px 0px;">
         <!--
             <div class="alert alert-warning">
                 <button type="button" class="close" data-dismiss="alert">&times;</button>
@@ -172,8 +202,12 @@ require_once("$incdir/patient_file/encounter/new_form.php");
             <!-- Page Heading -->
             <?php menu_overhaul_left($pid,$encounter);   
              echo    '<div class="col-sm-12"></div>';
-    } 
+    } else {
+      ?>
+       <?php
+    }
     ?>
+
     <div id="Layer1" name="Layer1" class="display">
     <form method="post" action="<?php echo $rootdir;?>/forms/<?php echo $form_folder; ?>/save.php?mode=update" id="eye_mag" class="eye_mag pure-form" name="eye_mag">
       <!-- start container for the main body of the form -->
@@ -330,9 +364,9 @@ require_once("$incdir/patient_file/encounter/new_form.php");
                     <div id="tabs_wrapper" >
                       <div id="tabs_container" style="margin-top:10px;">
                         <ul id="tabs">
-                          <li id="tab1_HPI" class="active" ><a type="button" <?php if ($CC1 >'') echo 'class="fa fa-check" '; ?> href="#tab1"> <?php echo xlt('HPI'); ?> 1</a></li>
-                          <li id="tab2_HPI" ><a <?php if ($CC2 >'') echo 'class="fa fa-check"'; ?> href="#tab2"><?php echo xlt('HPI'); ?> 2</a></li>
-                          <li id="tab3_HPI" ><a <?php if ($CC3 >'') echo 'class="fa fa-check"'; ?> href="#tab3"><?php echo xlt('HPI'); ?> 3</a></li>
+                          <li id="tab1_HPI_tab" class="active" ><a type="button" <?php if ($CC1 >'') echo 'class="fa fa-check" '; ?> href="#tab1"> <?php echo xlt('HPI'); ?> 1</a></li>
+                          <li id="tab2_HPI_tab" ><a <?php if ($CC2 >'') echo 'class="fa fa-check"'; ?> href="#tab2"><?php echo xlt('HPI'); ?> 2</a></li>
+                          <li id="tab3_HPI_tab" ><a <?php if ($CC3 >'') echo 'class="fa fa-check"'; ?> href="#tab3"><?php echo xlt('HPI'); ?> 3</a></li>
                         </ul>
                       </div>
                       <div id="tabs_content_container" style="z-index:1;" class="borderShadow">
@@ -577,47 +611,66 @@ require_once("$incdir/patient_file/encounter/new_form.php");
               <span class="anchor" id="PMH_anchor"></span>
               <!-- start  HPI Left -->
               <div id="PMH_left" name="PMH_left" class="exam_section_left borderShadow">
+
                 <div id="PMH_left_text" style="height: 2.5in;text-align:left;" class="TEXT_class">
                   <span class="closeButton fa fa-paint-brush" id="BUTTON_DRAW_PMH" name="BUTTON_DRAW_PMH"></span>
                   <i class="closeButton_2 fa fa-database" id="BUTTON_QP_PMH" name="BUTTON_QP_PMH"></i>
-                  <b><?php echo xlt('PMH'); ?>:</b><br />
-                  
                   <?php ($PMH_VIEW !=2) ? ($display_PMH_view = "wide_textarea") : ($display_PMH_view= "narrow_textarea");?>                                 
                   <?php ($display_PMH_view == "wide_textarea") ? ($marker ="fa-minus-square-o") : ($marker ="fa-plus-square-o");?>
                   <div id="PMSFH_sections" name="PMSFH_sections">
-                    <?php display_PRIOR_section("PMSFH",$id,$id,$pid); ?>
-                 </div>
+                    <div id="Enter_PMH" name="Enter_PMH" class="PMH_class" style="text-align:left;vertical align:middle; min-height: 4.5in;overflow:auto;font-size:0.7em;">
+                      ../../forms/'.$form_folder.'/a_issue.php
+
+                        <?php 
+                        display_PMH_selector;
+
+                         ?>
+                      
+
+
+                    </div><?php //display_PRIOR_section("PMSFH",$id,$id,$pid); ?>
+                  </div>
+                  <div id="page" class="left_PMSFH_tab">
+                    <a  id="right-panel-link" href="#left-panel" style="padding:10;">PMSFHx</a>
+
+                    <!--
+                      <h1>Panel slider example</h1>
+                    <a id="left-panel-link" href="#left-panel">Open left panel</a> |
+                    <a id="right-panel-link" href="#right-panel">Open right panel</a>
+                    <hr />
+                    <p>Usage instructions and source code <a href="https://github.com/eduardomb/jquery-panelslider">here</a></p>
+                    -->
+                  </div> 
                 </div>
+
               </div>
               <!-- end    PMH Left -->
               <!-- start  PMH Right -->
               <div id="PMH_right" name="PMH_right" class="exam_section_right borderShadow">
                 <?php display_draw_section("PMH",$encounter,$pid); ?>
-                <div id="QP_PMH" name="QP_PMH" class="QP_class" style="text-align:left;vertical align:middle; max-height: 4.5in;overflow:auto;font-size:0.7em;">
-                  <div id="PMH_text_list" name="PMH_text_list" class="borderShadow  <?php echo attr($display_PMH_view); ?> ">
-                    <h1></h1> &nbsp;<br />
-                    <span style="font-size:1.1em;text-align:left;">
-                      <ul>Deliverables:
-                        <li>Add, delete or alter an issue </li>
-                        <li>Inserting the popu-ups via ajax</li>
-                        <li>Incorporating the OpenEMR functionality to add QP Problems and issues</li>
-                        <li>Complete ROS section. </li>
-                      </ul>
-                    </span>
-                    <br />&nbsp;
-                  </div>
-                </div>    
+                <div id="QP_PMH" name="QP_PMH" class="QP_class" style="text-align:left;">
+                  <?php display_PRIOR_section("PMSFH",$id,$id,$pid); ?>
+                </div>
+                <!--<div class="QP_block borderShadow " style="text-align:center;min-height: 300px;padding:4 10 4 10;font-weight:600;">
+                          <span onclick="$('.kb').toggleClass('nodisplay');" title="<?php echo xla('Click to display shorthand field names.'); ?>" class="ke underline">Keyboard Entry</span>&nbsp;<a onclick="goto_url('<?php echo $GLOBALS['webroot']; ?>/interface/forms/eye_mag/help.php?zone=ext');">
+                          <i title="<?php echo xla('Click for External shorthand Help.'); ?>" class="fa fa-info-circle fa-1"></i></a><br />
+                          <textarea id="PMSFH_keyboard" name="PMSFH_keyboard" style="color:#0C0C0C;size:0.8em;height: 2.0in;width:1.5in;" tabindex='1000'>Not functioning yet</textarea>
+                          <span style="font-size:0.9em;font-weight:400;color:#0C0C0C;">Type: location.text; ENTER<br />
+                          eg. right lower lid stye laterally:<br /> <b>RLL.stye lat;</b>
+                          </span>
+                  </div> -->
               </div>
               <!-- end PMH Right -->
-            </div>
+            </div>  
+           
           </div>
             <!-- end      HPI -->
 
             <!-- if this is in a frame, allow us to go fullscreen.  Need to hide this if fullscreen though -->  
           <?php 
           if ($display != "fullscreen") {   ?>      
-
-                  <i onclick="dopopup('<?php echo $_SERVER['REQUEST_URI']. '&display=fullscreen&encounter='.$encounter; ?>')" class="fa fa-plus-square-o top_right"></i>
+          
+                  <i onclick="top.restoreSession();dopopup('<?php echo $_SERVER['REQUEST_URI']. '&display=fullscreen&encounter='.$encounter; ?>');openNewForm('<?php echo $GLOBALS['webroot']; ?>/interface/patient_file/encounter/load_form.php?formname=fee_sheet');" class="fa fa-plus-square-o top_right"></i>
                      <?php 
           }  else { ?>
            <!--<i class="fa fa-close top_right" OnClick="window.close()"></i>-->
@@ -1002,7 +1055,8 @@ require_once("$incdir/patient_file/encounter/new_form.php");
                             <?php ($W ==1) ? ($display_W = "display") : ($display_W = "nodisplay"); ?>
                             <div id="LayerVision_W" class="refraction borderShadow <?php echo $display_W; ?>">
                               <span class="closeButton fa fa-close" id="Close_W" name="Close_W"></span>
-                              <a class="closeButton2 fa fa-print" onclick="top.restoreSession();  return false;" href="../../forms/<?php echo $form_folder; ?>/SpectacleRx.php?target=W&id=<?php echo attr($pid); ?>" target="_blank"></a>
+                              <i onclick="top.restoreSession();  doscript('W','<?php echo attr($pid); ?>','<?php echo attr($encounter); ?>'); return false;" 
+                               class="closeButton2 fa fa-print"></i>
                             
                                 <table id="wearing" >
                                     <tr>
@@ -1089,7 +1143,7 @@ require_once("$incdir/patient_file/encounter/new_form.php");
                             <?php ($MR==1) ? ($display_AR = "display") : ($display_AR = "nodisplay");?>
                             <div id="LayerVision_MR" class="refraction borderShadow <?php echo $display_AR; ?>">
                                 <span class="closeButton fa  fa-close" id="Close_MR" name="Close_MR"></span>
-                                <a class="closeButton2 fa fa-print" href="../../forms/<?php echo $form_folder; ?>/SpectacleRx.php?target=AR&id=<?php echo attr($pid); ?>"></a>
+                                <a href="../../forms/<?php echo $form_folder; ?>/SpectacleRx.php?target=AR&id=<?php echo attr($pid); ?>"><i class="closeButton2 fa fa-print"></i></a>
                                 <table id="autorefraction">
                                     <th colspan=9>Autorefraction Refraction</th>
                                     <tr>
@@ -1633,10 +1687,16 @@ require_once("$incdir/patient_file/encounter/new_form.php");
                             </tr>
                         </table>
                     </div>  <br />
-                    <div style="position: absolute;bottom:0.05in;clear:both;font-size:0.7em;text-align:left;padding-left:25px;"> 
+                    <div class="QP_shorten" id="EXT_COMMENTS_DIV">
                       <b><?php echo xlt('Comments'); ?>:</b><div class="kb kb_left">ECOM</div><br />
-                      <textarea id="EXT_COMMENTS" name="EXT_COMMENTS" style="width:4.0in;height:3em;"><?php echo text($EXT_COMMENTS); ?></textarea>
-                    </div>       
+                      <textarea id="EXT_COMMENTS" name="EXT_COMMENTS"><?php echo text($EXT_COMMENTS); ?></textarea>
+                    </div> 
+                    <div class="QP_not" id="EXT_keyboard_left" style="position: absolute;bottom:0.05in;right:0.1in;font-size:0.7em;text-align:left;padding-left:25px;">
+                      <span onclick="$('.kb').toggleClass('nodisplay');" title="<?php echo xla('Click to display shorthand field names.'); ?>"><b>Keyboard Entry</b></span>
+                      &nbsp;<a onclick="goto_url('<?php echo $GLOBALS['webroot']; ?>/interface/forms/eye_mag/help.php?zone=ext');">
+                        <i title="<?php echo xla('Click for External shorthand Help.'); ?>" class="fa fa-info-circle fa-1"></i></a><br />
+                        <textarea id="EXT_keyboard_left" name="EXT_keyboard_left" style="color:#0C0C0C;size:0.8em;height: 3em;" tabindex='1000'></textarea>
+                    </div>
                   </div>  
                 </div>
                 
@@ -1680,13 +1740,17 @@ require_once("$incdir/patient_file/encounter/new_form.php");
                                      
                                 <div id="EXT_QP_block1" name="EXT_QP_block1" class="QP_block borderShadow text_clinical" >
                                     <?
-                                    $query = "SELECT * FROM form_eye_mag_prefs where PEZONE = 'EXT' and (id=? or id = '2048') ORDER BY ZONE_ORDER,ordering";
+                                    $query = "SELECT * FROM form_eye_mag_prefs where PEZONE = 'EXT' and (id=?) ORDER BY id,ZONE_ORDER,ordering ASC";
                                     $result = sqlStatement($query,array($_SESSION['authUserID']));
                                     $number_rows=0;
+                                    if (sqlNumRows($result) < '10') {
+                                      $query = "SELECT * FROM form_eye_mag_prefs where PEZONE = 'EXT' and (id='2048') ORDER BY id,ZONE_ORDER,ordering ASC";
+                                      $result = sqlStatement($query);
+                                    }
                                     while ($Select_data= sqlFetchArray($result))   {
                                         $number_rows++;             
                                         $string = $Select_data['selection'] ;
-                                        $string = (strlen($string) > 14) ? substr($string,0,12).'...' : $string;         
+                                        $string = (strlen($string) > 14) ? substr($string,0,11).'...' : $string;         
 
                                         ?>
                                         <a class="underline QP" onclick="fill_QP_field('EXT','R','<?php echo attr($Select_data['LOCATION_text']); ?>','<?php echo attr($Select_data['selection']); ?>','<?php echo attr($Select_data['FILL_ACTION']); ?>');"><?php echo xlt('R'); ?></a> | 
@@ -1695,22 +1759,22 @@ require_once("$incdir/patient_file/encounter/new_form.php");
                                         &nbsp;    <?php echo text($Select_data['LOCATION']); ?>: <?php echo text($string); ?>
                                         <br />
                                         <?
-                                        if ($number_rows==15) {
+                                        if ($number_rows==17) {
                                             ?>
                                              </div>
                                              <div id="EXT_QP_block2" name="EXT_QP_block2" class="QP_block_outer  borderShadow text_clinical" >
                                                 <?
                                         }
-                                        if ($number_rows==23) break;
+                                        if ($number_rows==26) break;
                                     }
                                         ?>   
                                 </div>      
-                                <div class="QP_block_outer borderShadow " style="z-index:1;text-align:center;border:1pt solid black;padding:4 10 4 10;font-weight:600;">
+                                <div class="QP_block_outer borderShadow " style="z-index:1;text-align:center;border:1pt solid black;padding:7 10 7 10;font-weight:600;">
                           <span onclick="$('.kb').toggleClass('nodisplay');" title="<?php echo xla('Click to display shorthand field names.'); ?>" class="ke underline">Keyboard Entry</span>&nbsp;<a onclick="goto_url('<?php echo $GLOBALS['webroot']; ?>/interface/forms/eye_mag/help.php?zone=ext');">
                           <i title="<?php echo xla('Click for External shorthand Help.'); ?>" class="fa fa-info-circle fa-1"></i></a><br />
                           <textarea id="EXT_keyboard" name="EXT_keyboard" style="color:#0C0C0C;size:0.8em;height: 0.48in;" tabindex='1000'></textarea>
                           <span style="font-size:0.9em;font-weight:400;color:#0C0C0C;">Type: location.text; ENTER<br />
-                          eg. right lower lid stye laterally:<br /> <b>RLL.stye lat;</b>
+                          eg. right lower lid stye laterally:<br /> <b>RLL.stye lat;</b></span>
                           </span>
                         </div>            
                     </div>
@@ -1734,7 +1798,7 @@ require_once("$incdir/patient_file/encounter/new_form.php");
                               echo $episode;
                           ?>
                         </table>
-                          <table style="text-align:center;font-size:0.8em;font-weight:600;width:160px;"> 
+                          <table style="text-align:center;font-size:0.7em;font-weight:600;width:160px;"> 
                               <tr >
                                   <td></td><td><?php echo xlt('R'); ?></td><td><?php echo xlt('L'); ?></td>
                               </tr>
@@ -1833,10 +1897,16 @@ require_once("$incdir/patient_file/encounter/new_form.php");
                                   </tr>
                               </table>
                       </div>  <br />
-                      <div style="position: absolute;bottom:0.05in;clear:both;font-size:0.7em;text-align:left;padding-left:25px;"> 
+                      <div class="QP_shorten" id="ANTSEG_COMMENTS_DIV"> 
                         <b><?php echo xlt('Comments'); ?>:</b><div class="kb kb_left">ACOM</div><br />
-                          <textarea id="ANTSEG_COMMENTS" name="ANTSEG_COMMENTS" style="width:4.0in;height:3.0em;"><?php echo text($ANTSEG_COMMENTS); ?> </textarea>
+                          <textarea id="ANTSEG_COMMENTS" name="ANTSEG_COMMENTS"><?php echo text($ANTSEG_COMMENTS); ?> </textarea>
                       </div>   
+                      <div class="QP_not" id="ANTSEG_keyboard_left" style="position: absolute;bottom:0.05in;right:0.1in;font-size:0.7em;text-align:left;padding-left:25px;">
+                      <span onclick="$('.kb').toggleClass('nodisplay');" title="<?php echo xla('Click to display shorthand field names.'); ?>"><b>Keyboard Entry</b></span>
+                      &nbsp;<a onclick="goto_url('<?php echo $GLOBALS['webroot']; ?>/interface/forms/eye_mag/help.php?zone=antseg');">
+                        <i title="<?php echo xla('Click for Anterior Segment shorthand Help.'); ?>" class="fa fa-info-circle fa-1"></i></a><br />
+                        <textarea id="ANTSEG_keyboard_left" name="EXT_keyboard_left" style="color:#0C0C0C;size:0.8em;height: 3em;" tabindex='1000'></textarea>
+                    </div>
                   </div>  
               </div>
               
@@ -1875,8 +1945,12 @@ require_once("$incdir/patient_file/encounter/new_form.php");
                       </div>         
                       <div class="QP_block borderShadow text_clinical " >
                          <?
-                                  $query = "SELECT * FROM form_eye_mag_prefs where PEZONE = 'ANTSEG' and (id=? or id = '2048' ) ORDER BY ZONE_ORDER,ordering";
+                                  $query = "SELECT * FROM form_eye_mag_prefs where PEZONE = 'ANTSEG' and (id=?) ORDER BY ZONE_ORDER,ordering";
                                   $result = sqlStatement($query,array($_SESSION['authUserID']));
+                                  if (sqlNumRows($result) < '10') {
+                                      $query = "SELECT * FROM form_eye_mag_prefs where PEZONE = 'ANTSEG' and (id='2048') ORDER BY id,ZONE_ORDER,ordering ASC";
+                                      $result = sqlStatement($query);
+                                    }
                                   $number_rows=0;
                                   while ($Select_data= sqlFetchArray($result))   {
                               $number_rows++;
@@ -1889,14 +1963,14 @@ require_once("$incdir/patient_file/encounter/new_form.php");
                               &nbsp;    <?php echo text($Select_data['LOCATION']); ?>: <?php echo text($string); ?>
 
                               <br />
-                              <?php if ($number_rows==15) {  ?>
+                              <?php if ($number_rows==17) {  ?>
                                   </div>
                                   <div class="QP_block_outer  borderShadow text_clinical" ><?php  
-                                  }  if ($number_rows == 23) break;
+                                  }  if ($number_rows == 26) break;
                               } 
                                   ?>      
                       </div>  
-                      <div class="QP_block_outer borderShadow " style="z-index:1;text-align:center;border:1pt solid black;padding:4 10 4 10;font-weight:600;">
+                      <div class="QP_block_outer borderShadow " style="z-index:1;text-align:center;border:1pt solid black;padding:7 10 7 10;font-weight:600;">
                         <span onclick="$('.kb').toggleClass('nodisplay');" title="<?php echo xla('Click to display shorthand field names.'); ?>" class="ke underline">Keyboard Entry</span>
                         &nbsp;
                         <a onclick="goto_url('<?php echo $GLOBALS['webroot']; ?>/interface/forms/eye_mag/help.php?zone=antseg');" title="<?php echo xla('Click for Ant. Seg. shorthand help.'); ?>">
@@ -2018,10 +2092,16 @@ require_once("$incdir/patient_file/encounter/new_form.php");
                                 </table>
                             </div>
                         </div>
-                        <div style="position: absolute;bottom:0.05in;clear:both;font-size:0.7em;text-align:left;padding-left:25px;"> 
+                        <div class="QP_shorten" id="RETINA_COMMENTS_DIV">
                             <b><?php echo xlt('Comments'); ?>:</b><div class="kb kb_left">RCOM</div><br />
-                            <textarea id="RETINA_COMMENTS" name="RETINA_COMMENTS" style="width:4.0in;height:3.0em;"><?php echo text($RETINA_COMMENTS); ?></textarea>
+                            <textarea id="RETINA_COMMENTS" name="RETINA_COMMENTS"><?php echo text($RETINA_COMMENTS); ?></textarea>
                         </div>  
+                        <div class="QP_not" id="RETINA_keyboard_left" style="position: absolute;bottom:0.05in;right:0.1in;font-size:0.7em;text-align:left;padding-left:25px;">
+                          <span onclick="$('.kb').toggleClass('nodisplay');" title="<?php echo xla('Click to display shorthand field names.'); ?>"><b>Keyboard Entry</b></span>
+                          &nbsp;<a onclick="goto_url('<?php echo $GLOBALS['webroot']; ?>/interface/forms/eye_mag/help.php?zone=retina');">
+                          <i title="<?php echo xla('Click for Retina shorthand Help.'); ?>" class="fa fa-info-circle fa-1"></i></a><br />
+                          <textarea id="RETINA_keyboard_left" name="RETINA_keyboard_left" style="color:#0C0C0C;size:0.8em;height: 3em;" tabindex='1000'></textarea>
+                      </div>
                     </div>
                 </div>
                 
@@ -2062,9 +2142,13 @@ require_once("$incdir/patient_file/encounter/new_form.php");
                     </div>         
                     <div class="QP_block borderShadow text_clinical" >
                         <?php
-                                $query = "SELECT * FROM form_eye_mag_prefs where PEZONE = 'RETINA' and (id=? or id='2048' ) ORDER BY ZONE_ORDER,ordering";
+                                $query = "SELECT * FROM form_eye_mag_prefs where PEZONE = 'RETINA' and (id=?) ORDER BY ZONE_ORDER,ordering";
                                 $result = sqlStatement($query,array($_SESSION['authUserID']));
-                                $number_rows=0;
+                                if (sqlNumRows($result) < '10') {
+                                      $query = "SELECT * FROM form_eye_mag_prefs where PEZONE = 'RETINA' and (id='2048') ORDER BY id,ZONE_ORDER,ordering ASC";
+                                      $result = sqlStatement($query);
+                                    }
+                                    $number_rows=0;
                                 while ($Select_data= sqlFetchArray($result))     {
 
                             $number_rows++; 
@@ -2078,17 +2162,17 @@ require_once("$incdir/patient_file/encounter/new_form.php");
 
                             <br />
                             <?
-                            if ($number_rows=='15') {
+                            if ($number_rows=='17') {
                                 ?>
                             </div>
                             <div class="QP_block_outer  borderShadow text_clinical" ><?php 
                         }
-                        if ($number_rows == 23) break;
+                        if ($number_rows == 26) break;
 
                         } ?>     
-                             <br />
+                          </span>
                     </div>
-                    <div class="QP_block_outer borderShadow " style="z-index:1;text-align:center;border:1pt solid black;padding:4 10 4 10;font-weight:600;">
+                    <div class="QP_block_outer borderShadow " style="z-index:1;text-align:center;border:1pt solid black;padding:7 10 7 10;font-weight:600;">
                       <span onclick="$('.kb').toggleClass('nodisplay');" title="<?php echo xla('Click to display shorthand field names.'); ?>" class="ke underline">Keyboard Entry</span>&nbsp;
                       <a onclick="goto_url('<?php echo $GLOBALS['webroot']; ?>/interface/forms/eye_mag/help.php?zone=retina');">
                       <i title="<?php echo xla('Click for Ant. Seg. shorthand Help.'); ?>" class="fa fa-info-circle fa-1"></i></a><br />
@@ -2163,7 +2247,7 @@ require_once("$incdir/patient_file/encounter/new_form.php");
                                     </tr>
                                 </table>
                             </div>
-                            <div class="borderShadow" style="position:relative;float:right;text-align:center;width:235px;height:240px;z-index:10;">                               
+                            <div class="borderShadow" style="position:relative;float:right;text-align:center;width:238px;height:239px;z-index:1;margin:2 2;">                               
                                 <i class="fa fa-th fa-fw closeButton " id="Close_ACTMAIN" style="right:0.15in;" name="Close_ACTMAIN"></i>
                                 <table style="position:relative;float:left;font-size:1.2em;width:210px;font-weight:600;"> 
                                     <tr style="text-align:left;height:26px;vertical-align:middle;width:180px;">
@@ -2395,7 +2479,7 @@ require_once("$incdir/patient_file/encounter/new_form.php");
                                 </div>
                             </div>
                             <div id="NEURO_MOTILITY" class="text_clinical borderShadow" 
-                                style="float:left;font-size:0.9em;margin:2 2;padding:10px;font-weight:bold;height:135px;width:175px;">
+                                style="float:left;font-size:0.9em;margin:2 2;padding:0 10;font-weight:bold;height:120px;width:175px;">
                                 <div>
                                     <table style="width:100%;margin:0 0 1 0;">
                                         <tr>
@@ -2766,10 +2850,16 @@ require_once("$incdir/patient_file/encounter/new_form.php");
                             </div>
                         </div>
                         <br />
-                        <div style="position: absolute;bottom:0.05in;clear:both;font-size:0.7em;text-align:left;padding-left:25px;"> 
+                        <div class="QP_shorten" id="NEURO_COMMENTS_DIV"> 
                             <b><?php echo xlt('Comments'); ?>:</b><div class="kb kb_left">NCOM</div><br />
-                            <textarea id="NEURO_COMMENTS" name="NEURO_COMMENTS" style="width:4.0in;height:3.0em;"><?php echo text($NEURO_COMMENTS); ?></textarea>
+                            <textarea id="NEURO_COMMENTS" name="NEURO_COMMENTS"><?php echo text($NEURO_COMMENTS); ?></textarea>
                         </div>
+                        <div class="QP_not" id="NEURO_keyboard_left" style="position: absolute;bottom:0.05in;right:0.1in;font-size:0.7em;text-align:left;padding-left:25px;">
+                      <span onclick="$('.kb').toggleClass('nodisplay');" title="<?php echo xla('Click to display shorthand field names.'); ?>"><b>Keyboard Entry</b></span>
+                      &nbsp;<a onclick="goto_url('<?php echo $GLOBALS['webroot']; ?>/interface/forms/eye_mag/help.php?zone=neuro');">
+                        <i title="<?php echo xla('Click for Neuro/Physiology shorthand Help.'); ?>" class="fa fa-info-circle fa-1"></i></a><br />
+                        <textarea id="NEURO_keyboard_left" name="NEURO_keyboard_left" style="color:#0C0C0C;size:0.8em;height: 3em;" tabindex='1000'></textarea>
+                    </div>
                     </div>     
                 </div>
                 <div id="NEURO_right" class="exam_section_right borderShadow text_clinical">
@@ -2810,7 +2900,7 @@ require_once("$incdir/patient_file/encounter/new_form.php");
                         <br />
                       </div>  
                      
-                      <div class="QP_block_outer borderShadow " style="z-index:1;text-align:center;border:1pt solid black;padding:4 10 4 10;font-weight:600;">
+                      <div class="QP_block_outer borderShadow " style="z-index:1;text-align:center;border:1pt solid black;padding:7 10 7 10;font-weight:600;">
                           <span onclick="$('.kb').toggleClass('nodisplay');" title="<?php echo xla('Click to display shorthand field names.'); ?>" class="ke underline">Keyboard Entry</span>&nbsp;<a onclick="goto_url('<?php echo $GLOBALS['webroot']; ?>/interface/forms/eye_mag/help.php?zone=neuro');">
                           <i title="<?php echo xla('Click for Neuro/Strabismus shorthand Help.'); ?>" class="fa fa-info-circle fa-1"></i></a><br />
                           <textarea id="NEURO_keyboard" name="NEURO_keyboard" style="color:#0C0C0C;size:0.8em;height: 0.48in;" tabindex='1002'></textarea>
@@ -2889,10 +2979,11 @@ require_once("$incdir/patient_file/encounter/new_form.php");
                         
                 <div id="IMPPLAN_left_text" name="IMPPLAN_left_text" style="margin:auto 5;min-height: 2.5in;text-align:left;">
                   <!-- this needs work to integrate it to auto populate with CPT/ICD codes based on form inputs above -->
-                   <b><?php echo xlt('Impression'); ?>:</b>
-                   <textarea rows=5 id="IMP" name="IMP" style="height:1.3in;width:90%;"><?php echo text($IMP); ?></textarea>
-                   <b><?php echo xlt('Plan'); ?>/<?php echo xlt('Recommendation'); ?>:</b>
+                   <b><?php echo xlt('Impression/Plan'); ?>:</b>
+                   <textarea rows=5 id="IMP" name="IMP" style="height:2.4in;width:90%;"><?php echo text($IMP); ?></textarea>
+                   <!-- <b><?php echo xlt('Plan'); ?>/<?php echo xlt('Recommendation'); ?>:</b>
                    <textarea rows=5 id="PLAN" name="PLAN" style="height:1.3in;width:90%;"><?php echo text($PLAN); ?></textarea>
+                 -->
                 </div>
               </div>
               <div id="IMPPLAN_right" class="exam_section_right borderShadow text_clinical">
@@ -2901,6 +2992,10 @@ require_once("$incdir/patient_file/encounter/new_form.php");
                 <div id="PRIORS_IMPPLAN_left_text" style="height: 2.5in;text-align:left;font-size: 0.9em;" name="PRIORS_IMPPLAN_left_text" class="PRIORS_class PRIORS"><i class="fa fa-spinner fa-spin"></i>
                 </div>
                 <div id="QP_IMPPLAN" name="QP_IMPPLAN" class="QP_class" style="text-align:left;height: 2.5in;">
+                  <h3>Billing Assistant:</h3>
+                  TBD...
+                  <a href="/openemr/interface/patient_file/report/custom_report.php?printable=1&pdf=0&<?php echo $form_folder."_".$form_id."=".$encounter; ?>&">Printable Report</a>
+
                 </div>
               </div>   
             </div>
@@ -2916,12 +3011,14 @@ require_once("$incdir/patient_file/encounter/new_form.php");
               <a style="bottom:10px;" onclick="top.restoreSession(); window.print(); return false;">Print PDF</a>
             -->       
         </div>
+        
         <!-- end        accordion div -->
       </div>
       <!-- end container for the main body of the form -->
     </form>
+    
   </div>
-  
+  </div>
 <?php
     if ($display=="fullscreen") { 
       // trial fullscreen will lead to tablet versions and bootstrap menu overhaul
@@ -2937,14 +3034,50 @@ require_once("$incdir/patient_file/encounter/new_form.php");
     -->
 
    
-        <!-- Add eye_mag js library -->
+    <script src="<?php echo $GLOBALS['webroot'] ?>/library/js/panelslider/jquery.panelslider.js"></script>
+    <!-- Add eye_mag js library -->
     <script type="text/javascript" src="../../forms/<?php echo $form_folder; ?>/js/shortcut.js"></script>
+    
+   
     <script type="text/javascript" src="../../forms/<?php echo $form_folder; ?>/js/my_js_base.js"></script>
     <script type="text/javascript" src="../../forms/<?php echo $form_folder; ?>/js/canvasdraw.js"></script>
 
     <script type="text/javascript" src="<?php echo $GLOBALS['webroot']; ?>/library/restoreSession.php"></script>
     <script type="text/javascript" src="<?php echo $GLOBALS['webroot']; ?>/library/dialog.js"></script>
-   
+
+
+ 
+  <div id="left-panel" name="left-panel" class="panel_side">
+    
+      <?php 
+
+      //$PMSFH = display_PRIOR_section("left-nav",$id,$id,$pid);
+      $PMSFH = build_PMSFH($pid); 
+       // We are building the panel bar with the patient medical info
+      // Since the "lists" table has a "subtype" field now
+      // each section can be customized, like SOCHx, subtype "smoking"
+      // Theoretcially we could pull this information out of the current "History table"
+      // and to do this we would pull it in the eye_mag_functions.php file sub routine display_PRIOR_section('left-nav')
+      // When done, FH and Soc HX will just be another part of the PMSFH associative array.
+      // Probably a smart way to go with ROS too.
+      // When done remove this text... Get to work and stop dillydallying writing text notes to yourself!
+$output_PMSFH_panel = show_PMSFH_panel($PMSFH);
+      //var_dump($PMSFH);
+     echo $output_PMSFH_panel;
+     ?>
+  </div>
+</div>
+    
+ <!-- Load jQuery from Google CDN -->
+    <script>
+$('#left-panel-link').panelslider({side: 'right', clickClose: false, duration: 600, easingOpen: 'easeInBack', easingClose: 'easeOutBack'});
+$('#right-panel-link').panelslider({side: 'right', clickClose: false, duration: 600, easingOpen: 'easeInBack', easingClose: 'easeOutBack'});
+$('#close-panel-bt').click(function() {
+$.panelslider.close();
+});
+                  
+
+</script>
 
   </body>   
 </html>
