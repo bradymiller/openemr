@@ -4,7 +4,7 @@
  *  taken from /interface/patient_file/summary and adapted... 
  *
  * Copyright (C) 2005-2011 Rod Roark <rod@sunsetsystems.com>
- * Copyright (C) 2014-2015 Ray Magauran <magauran@MedFetch.com> 
+ * Copyright (C) 2015 Ray Magauran <magauran@MedFetch.com> 
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
