@@ -248,8 +248,6 @@ if ($_GET["mode"] == "new")             {
   $fields = array();
   
   if (sqlNumRows($result) > 0) {
-    $_POST['UNDO_ID']++;
-
     while ($row = sqlFetchArray($result)) {
       //exclude critical columns/fields from update
       if ($row['Field'] == 'id' or 

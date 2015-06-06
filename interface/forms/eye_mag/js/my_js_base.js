@@ -28,6 +28,7 @@
  *  Since Default values give the field a bgcolor of rgb(245, 245, 220), we can use that.  OK for now.
  *  In the future, we can make an array of default values an see if this matches the fields current value.
  */
+var formFields = [];
 function fill_QP_field(PEZONE, ODOSOU, LOCATION_text, selection,fill_action) {
     if (ODOSOU > '') {
         var FIELDID =  ODOSOU  + LOCATION_text;
@@ -73,7 +74,10 @@ function goto_url(url) {
 
 function submit_form() {
     var url = "../../forms/eye_mag/save.php?mode=update&id=" + $("#form_id").val();
-    var formData = $("form#eye_mag").serialize();
+    $("#UNDO_ID").val(parseInt($("#UNDO_ID").val()) + 1);
+        //client side variable with all fields incremented with these new save values
+    formData = $("form#eye_mag").serialize();
+    formFields.push = formData;
     $("#menustate").val('0');
     $.ajax({
            type 	: 'POST',   // define the type of HTTP verb we want to use (POST for our form)
@@ -81,8 +85,8 @@ function submit_form() {
            data 	: formData // our data object
            }).done(function(o) {
                    //  console.log(o);
-                   $("#UNDO_ID").
-                   $("#tellme").html(o);
+                   
+                   alert(formFields[formFields.length -1].val());
                    })
 };
 
@@ -528,6 +532,13 @@ shortcut.add("Meta+S",function() {
 shortcut.add("Meta+Z", function() {
              alert("This will move you back a step...");
              //undo;
+             //reload the form from UNDO_ID -1
+             //the form will submit to add current changes upping UNDO by one
+             //we are retrieving one less.
+             //gotoURL http://www.oculoplasticsllc.com/openemr/interface/patient_file/encounter/view_form.php?formname=eye_mag&id=215&pid=1&display=fullscreen&encounter=171&UNDO=
+             // alert(document.URL);
+             window.location ='http://www.oculoplasticsllc.com/openemr/interface/patient_file/encounter/view_form.php?formname=eye_mag&id=215&pid=1&display=fullscreen&encounter=171&&UNDO_go='+$("#UNDO_ID").val();
+                     
              });
 shortcut.add("Meta+Shift+Z", function() {
              ("This will move you forward a step...");
@@ -538,6 +549,7 @@ shortcut.add("Control+S",function() {
              });
 shortcut.add("Control+Z", function() {
              alert("This will move you back a step...");
+             window.location ='http://www.oculoplasticsllc.com/openemr/interface/patient_file/encounter/view_form.php?formname=eye_mag&id=215&pid=1&display=fullscreen&encounter=171&&UNDO='+$("#UNDO_ID").val();
              //undo;
              });
 shortcut.add("Control+Shift+Z", function() {

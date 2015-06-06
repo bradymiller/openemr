@@ -64,6 +64,7 @@ $result = sqlStatement($query,array($_SESSION['authId']));
 while ($prefs= sqlFetchArray($result))   {    
     @extract($prefs);    
     $$LOCATION = $VALUE; 
+
 }
 // exit;
 // get pat_data and user_data
@@ -84,6 +85,7 @@ $query="select form_encounter.date as encounter_date,form_encounter.*, form_eye_
  
 $encounter_data =sqlQuery($query,array($encounter,$pid));
 @extract($encounter_data); //gotta have it. encodes whole form and every value is used, mostly ;) so far...
+
 /*
   Re: incorporating e-signing and document finalization
   If a chart is "completed", the user should not be able to open this form for editing, just viewing.
@@ -1532,7 +1534,7 @@ require_once("$incdir/patient_file/encounter/new_form.php");
             <!-- end of the refraction box -->
 
             <!-- my reporting div for development only remove the "X" to see output from save.php-->
-          <div id="tellmeX" name="tellmeX"></div>
+          <div id="tellme" name="tellme"></div>
             <!-- end reporting div -->
 
           <!-- Start of the exam selection/middle menu row -->
@@ -2998,10 +3000,10 @@ require_once("$incdir/patient_file/encounter/new_form.php");
                   <?  //forach $PMSFH[0]['POH'] print + Code enter
                   $PMSFH = build_PMSFH($pid); 
                   foreach ($PMSFH[0]['POH'] as $k => $v) {
-                    echo $k ." = ".$v['title'].": ".$k['formdiagnosis']."<br />";
+                  //  echo $k ." = ".$v['title'].": ".$k['formdiagnosis']."<br />";
                   }
-                  echo "<pre>";
-var_dump($PMSFH);
+                  //echo "<pre>";
+//var_dump($PMSFH);
 
 ?>
                 </div>
