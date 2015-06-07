@@ -230,12 +230,12 @@ if ($_GET["mode"] == "new")             {
   // id  date  pid   user  groupname   authorized  activity.  Any other just add them below.
   // Doing it this way means you can add new fields on a web page and in the DB without touching this function.
   // The update feature still works because it only updates columns that are in the table you are working on.  
-  // Building an undo feature:  Ctl-Z or Command-C
-  // A shadow table exists and each update request is added there.
+  // Building an undo feature:  Ctl-Z is curently client side per field.  Global action ctrl-z not implemented.
+  // A shadow table could exist and each update request is added there also server side.
   // An UNDO request goes down one.
   // We will need to send a variable to the form with the UNDO table entry info.
-  // This table will have an incremental field, pid and new field.  Just save it form now.
-  // When done with the chart, or maybe on a repetitive frequency, this UNDO table will be purge
+  // This table will have an incremental field, pid and new field.  Just save it for now.
+  // When done with the chart, or maybe on a repetitive frequency, this UNDO table will be purged
   // Maybe an esign button in the document to do all that openEMR does + this stuff?  We'll see.
 
   $query = "SHOW COLUMNS from form_eye_mag";
@@ -275,8 +275,8 @@ if ($_GET["mode"] == "new")             {
     if (!$_POST['BALANCED']) $fields['BALANCED'] = '0';
     if (!$_POST['RX1']) $fields['RX1'] = '0';
     $success = formUpdate($table_name, $fields, $form_id, $_SESSION['userauthorized']);
-    $table_name = "form_".$form_folder."_undo";
-    $update_undo = formSubmit($table_name, $fields, $form_id, $_SESSION['userauthorized']);
+  //  $table_name = "form_".$form_folder."_undo";
+ //   $update_undo = formSubmit($table_name, $fields, $form_id, $_SESSION['userauthorized']);
     return $success;
   }
 } elseif ($_GET["mode"] == "retrieve")  { 
@@ -410,19 +410,19 @@ function merge($filename_x, $filename_y, $filename_result) {
    *    TEMP, intermediate png merge file of new drawings with BASE or previous VIEW
    *          These are saved to be used in an undo feature...
    */
-/*  
-This section
-if (file_exists($storage."/OU_".$zone."_VIEW.png")) { //add new drawings to previous for this encounter
-    $file_base = $storage."/OU_".$zone."_VIEW.png";
-  } else  { //start from the base image
-    $file_base = $GLOBALS['webserver_root']."/interface/forms/".$form_folder."/images/OU_".$zone."_BASE.png";
-  }
-  //merge needs to store to a separate file first, then rename to new VIEW
-  $file_temp = $storage."/OU_".$zone."_TEMP.png"; 
-  $file_here = $storage."/OU_".$zone."_VIEW.png";
-  merge( $file_draw, $file_base, $file_temp);
-  rename( $file_temp , $file_here );
- */
+  /*  
+  This section
+  if (file_exists($storage."/OU_".$zone."_VIEW.png")) { //add new drawings to previous for this encounter
+      $file_base = $storage."/OU_".$zone."_VIEW.png";
+    } else  { //start from the base image
+      $file_base = $GLOBALS['webserver_root']."/interface/forms/".$form_folder."/images/OU_".$zone."_BASE.png";
+    }
+    //merge needs to store to a separate file first, then rename to new VIEW
+    $file_temp = $storage."/OU_".$zone."_TEMP.png"; 
+    $file_here = $storage."/OU_".$zone."_VIEW.png";
+    merge( $file_draw, $file_base, $file_temp);
+    rename( $file_temp , $file_here );
+   */
   // Get dimensions for specified images
   list($width_x, $height_x) = getimagesize($filename_x);
   list($width_y, $height_y) = getimagesize($filename_y);
@@ -445,6 +445,6 @@ if (file_exists($storage."/OU_".$zone."_VIEW.png")) { //add new drawings to prev
   imagedestroy($image_x);
   imagedestroy($image_y);
 }
-finalize($pid,$encounter); //since we are storing images client side, we may not need this...
+//finalize($pid,$encounter); //since we are storing images client side, we may not need this...
 exit;
 ?>

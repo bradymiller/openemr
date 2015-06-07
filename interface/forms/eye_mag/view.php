@@ -135,7 +135,6 @@ require_once("$incdir/patient_file/encounter/new_form.php");
     <title> Chart: <?php echo $pat_data['fname']." ".$pat_data['lname']." ".$visit_date; ?></title>
     <!-- jQuery library -->
     <script src="<?php echo $GLOBALS['webroot'] ?>/library/js/jquery.min.js"></script>
-
     <!-- Latest compiled JavaScript -->
     <script src="<?php echo $GLOBALS['webroot'] ?>/library/js/bootstrap.min.js"></script>  
       <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
@@ -298,9 +297,15 @@ require_once("$incdir/patient_file/encounter/new_form.php");
                                 <span title="<?php echo xla('History of Present Illness:  A detailed HPI may be completed by using either four or more HPI elements OR the status of three chronic or inactive problems.'); ?>" style="height:1in;font-weight:600;vertical-align:text-top;"><?php echo xlt('HPI'); ?>:
                                 </span>
                                 <br />
-                                <textarea name="HPI1" id="HPI1" class="HPI_text" tabindex="21" style="min-height:1.5in;max-height:2.0in;width:4.2in;"><?php echo text($HPI1); ?></textarea>
+                                <textarea name="HPI1" id="HPI1" class="HPI_text" tabindex="21" style="min-height:1.5in;max-height:2.0in;width:2.1in;"><?php echo text($HPI1); ?></textarea>
                                 <br />
                               </td>
+                              <td style="vertical-align:top;padding:10px;"><span title="<?php echo xla('Chronic/Inactive Problems: document 3 and their status to reach the detailed HPI level'); ?>" style="height:1in;font-weight:600;vertical-align:text-top;"><?php echo xlt('Chronic Problems') ?>:</span>
+                                <br />
+                                <textarea name="CHRONIC1" id="CHRONIC1" class="HPI_text chronic_HPI" tabindex="22" style="min-height:0.4in;max-height:2.0in;width:1.8in;margin-bottom:9px;"><?php echo text($CHRONIC1); ?></textarea>
+                                <br /><textarea name="CHRONIC2" id="CHRONIC2" class="HPI_text chronic_HPI" tabindex="23" style="min-height:0.4in;max-height:2.0in;width:1.8in;margin-bottom:9px;"><?php echo text($CHRONIC2); ?></textarea>
+                                <br /><textarea name="CHRONIC3" id="CHRONIC3" class="HPI_text chronic_HPI" tabindex="24" style="min-height:0.4in;max-height:2.0in;width:1.8in;"><?php echo text($CHRONIC3); ?></textarea>
+                                
                             </tr> 
                           </table> 
                         </div>
@@ -360,9 +365,12 @@ require_once("$incdir/patient_file/encounter/new_form.php");
               <div id="HPI_right" name="HPI_right" class="exam_section_right borderShadow">
                 <?php display_draw_section ("HPI",$encounter,$pid); ?>
                 <!-- start    QP_HPI_Build -->
-                <div id="QP_HPI" name="QP_HPI" class="QP_class" style="text-align:left;">
+                <div id="QP_HPI" name="QP_HPI" class="QP_class" style="text-align:left;font-size:0.9em;">
                   <div id="HPI_text_list" name="HPI_text_list">
-                    <b>HPI Detail:</b><br />
+                    <span class="closeButton fa fa-close pull-right" id="BUTTON_TEXTD_HPI" name="BUTTON_TEXTD_HPI" value="1"></span>
+                
+                
+                    <b>HPI Detail:</b> <br />
                     <div id="tabs_wrapper" >
                       <div id="tabs_container" style="margin-top:10px;">
                         <ul id="tabs">
@@ -377,14 +385,14 @@ require_once("$incdir/patient_file/encounter/new_form.php");
                             <tr>
                               <td class="right"><b><?php echo xlt('Timing'); ?>:</b></td>
                               <td>
-                                <textarea name="TIMING1" id="TIMING1" tabindex="30" style="width:250px;"><?php echo text($TIMING1); ?></textarea>
+                                <textarea name="TIMING1" id="TIMING1" class="count_HPI" tabindex="30" style="width:250px;"><?php echo text($TIMING1); ?></textarea>
                               </td>
                             </td><td><i><?php echo xlt('When and how often?'); ?></i><br /></td>
                             </tr>
                             <tr>
                               <td class="right"><b><?php echo xlt('Context'); ?>:</b></td>
                               <td>
-                                <textarea name="CONTEXT1" id="CONTEXT1" tabindex="31"  style="width:250px;"><?php echo text($CONTEXT1); ?></textarea>
+                                <textarea name="CONTEXT1" id="CONTEXT1" class="count_HPI" tabindex="31"  style="width:250px;"><?php echo text($CONTEXT1); ?></textarea>
                                   <br />
                               </td>
                               <td>
@@ -394,7 +402,7 @@ require_once("$incdir/patient_file/encounter/new_form.php");
                             <tr>
                               <td class="right"><b><?php echo xlt('Severity'); ?>:</b></td>
                               <td>
-                                <textarea name="SEVERITY1" id="SEVERITY1" tabindex="32" style="width:250px;"><?php echo text($SEVERITY1); ?></textarea>
+                                <textarea name="SEVERITY1" id="SEVERITY1" class="count_HPI" tabindex="32" style="width:250px;"><?php echo text($SEVERITY1); ?></textarea>
                                 </td>
                                 <td><i><?php echo xlt('How bad is it? 0-10, mild, moderate, severe?'); ?></i>
                                 </td>
@@ -402,7 +410,7 @@ require_once("$incdir/patient_file/encounter/new_form.php");
                             <tr>
                               <td  class="right"><b><?php echo xlt('Modifying'); ?>:</b></td>
                               <td>
-                                <textarea name="MODIFY1" id="MODIFY1" tabindex="33"  style="width:250px;"><?php echo text($MODIFY1); ?></textarea>
+                                <textarea name="MODIFY1" id="MODIFY1" class="count_HPI" tabindex="33"  style="width:250px;"><?php echo text($MODIFY1); ?></textarea>
                                   </td>
                                   <td><i ><?php echo xlt('Does anything makes it better? Worse?'); ?></i>
                                   </td>
@@ -410,7 +418,7 @@ require_once("$incdir/patient_file/encounter/new_form.php");
                             <tr>
                               <td class="right"><b><?php echo xlt('Associated'); ?>:</b></td>
                               <td>
-                                <textarea name="ASSOCIATED1" id="ASSOCIATED1" tabindex="34" style="width:250px;"><?php echo text($ASSOCIATED1); ?></textarea>
+                                <textarea name="ASSOCIATED1" id="ASSOCIATED1" class="count_HPI" tabindex="34" style="width:250px;"><?php echo text($ASSOCIATED1); ?></textarea>
                                 </td>
                                 <td><i><?php echo xlt('Anything else happen at the same time?'); ?></i>
                                 </td>
@@ -418,7 +426,7 @@ require_once("$incdir/patient_file/encounter/new_form.php");
                             <tr>
                               <td class="right"><b><?php echo xlt('Location'); ?>:</b></td>
                               <td>
-                                <textarea name="LOCATION1" id="LOCATION1" tabindex="35" style="width:250px;"><?php echo text($LOCATION1); ?></textarea>                        
+                                <textarea name="LOCATION1" id="LOCATION1" class="count_HPI" tabindex="35" style="width:250px;"><?php echo text($LOCATION1); ?></textarea>                        
                               </td>
                               <td><i><?php echo xlt('Where on your body does it occur?'); ?></i>
                               </td>
@@ -426,7 +434,7 @@ require_once("$incdir/patient_file/encounter/new_form.php");
                             <tr>
                               <td class="right"><b><?php echo xlt('Quality'); ?>:</b></td>
                               <td>
-                                <textarea name="QUALITY1" id="QUALITY1" tabindex="36" style="width:250px;"><?php echo text($QUALITY1); ?></textarea>
+                                <textarea name="QUALITY1" id="QUALITY1" class="count_HPI" tabindex="36" style="width:250px;"><?php echo text($QUALITY1); ?></textarea>
                                     
                             </td><td>
                             <i><?php echo xlt('eg. aching, burning, radiating pain'); ?></i>
@@ -434,7 +442,7 @@ require_once("$incdir/patient_file/encounter/new_form.php");
                             </tr> 
                             <tr>
                               <td class="right"><b><?php echo xlt('Duration'); ?>:</b></td>
-                              <td><textarea name="DURATION1" id="DURATION1" tabindex="37" style="width:250px;"><?php echo text($DURATION1); ?></textarea>
+                              <td><textarea name="DURATION1" id="DURATION1" class="count_HPI" tabindex="37" style="width:250px;"><?php echo text($DURATION1); ?></textarea>
                               </td>
                               <td>
                                 <i><?php echo xlt('How long does it last?'); ?></i>
@@ -442,8 +450,12 @@ require_once("$incdir/patient_file/encounter/new_form.php");
                             </tr>
                           </table>
                           <center>
-                            <span style="font-size:1.0em;text-align:center;width:85%;font-weight:800;color:#C0C0C0;"><?php echo xlt('Detailed HPI:
-                              four or more HPI elements OR the status of three chronic/inactive problems'); ?></span>
+                            <i id="CODE_HIGH" name="CODE_HIGH" class="CODE_HIGH" value="1" class="fa fa-check nodisplay"></i>
+                            <span style="margin-top:4px;font-size:1.0em;text-align:center;width:85%;font-weight:800;color:#C0C0C0;">
+                              <span class="detailed_HPI"><?php echo xlt('Detailed HPI') ?>:</span>
+                              <span class="detail_4_elements"><?php echo xlt('four or more HPI elements'); ?></span> OR 
+                              <span class="chronic_3_elements"><?php echo xlt('the status of three chronic/inactive problems'); ?></span>
+                            </span>
                           </center>
                         </div>
                         <div id="tab2_HPI_text" class="tab_content" style="min-height: 2.0in;text-align:left;">                 
@@ -1230,19 +1242,19 @@ require_once("$incdir/patient_file/encounter/new_form.php");
                                             <label for="Flash" class="input-helper input-helper--checkbox"><?php echo xlt('Flash'); ?></label>
                                         </td>
                                         <td colspan="2" rowspan="4" style="text-align:left;width:75px;font-size:0.5em;"><b style="text-align:center;width:70px;text-decoration:underline;"><?php echo xlt('Dilated with'); ?>:</b><br />
-                                            <input type="checkbox" id="CycloMydril" name="CYCLOMYDRIL" value="Cyclomydril" <?php if ($CYCLOMYDRIL == 'Cyclomydril') echo "checked='checked'"; ?> />
+                                            <input type="checkbox" class="dil_drug" id="CycloMydril" name="CYCLOMYDRIL" value="Cyclomydril" <?php if ($CYCLOMYDRIL == 'Cyclomydril') echo "checked='checked'"; ?> />
                                             <label for="CycloMydril" class="input-helper input-helper--checkbox"><?php echo xlt('CycloMydril'); ?></label>
                                             <br />
-                                            <input type="checkbox" id="Tropicamide" name="TROPICAMIDE" value="Tropicamide 2.5%" <?php if ($TROPICAMIDE == 'Tropicamide 2.5%') echo "checked='checked'"; ?> />
+                                            <input type="checkbox" class="dil_drug" id="Tropicamide" name="TROPICAMIDE" value="Tropicamide 2.5%" <?php if ($TROPICAMIDE == 'Tropicamide 2.5%') echo "checked='checked'"; ?> />
                                             <label for="Tropicamide" class="input-helper input-helper--checkbox"><?php echo xlt('Tropic 2.5%'); ?></label>
                                             <br />
-                                            <input type="checkbox" id="Neo25" name="NEO25" value="Neosynephrine 2.5%"  <?php if ($NEO25 =='Neosynephrine 2.5%') echo "checked='checked'"; ?> />
+                                            <input type="checkbox" class="dil_drug" id="Neo25" name="NEO25" value="Neosynephrine 2.5%"  <?php if ($NEO25 =='Neosynephrine 2.5%') echo "checked='checked'"; ?> />
                                             <label for="Neo25" class="input-helper input-helper--checkbox"><?php echo xlt('Neo 2.5%'); ?></label>
                                             <br />
-                                            <input type="checkbox" id="Cyclogyl" name="CYCLOGYL" value="Cyclopentolate 1%"  <?php if ($CYCLOGYL == 'Cyclopentolate 1%') echo "checked='checked'"; ?> />
+                                            <input type="checkbox" class="dil_drug" id="Cyclogyl" name="CYCLOGYL" value="Cyclopentolate 1%"  <?php if ($CYCLOGYL == 'Cyclopentolate 1%') echo "checked='checked'"; ?> />
                                             <label for="Cyclogyl" class="input-helper input-helper--checkbox"><?php echo xlt('Cyclo 1%'); ?></label>
                                             <br />
-                                            <input type="checkbox" id="Atropine" name="ATROPINE" value="Atropine 1%"  <?php if ($ATROPINE == 'Atropine 1%') echo "checked='checked'"; ?> />
+                                            <input type="checkbox" class="dil_drug" id="Atropine" name="ATROPINE" value="Atropine 1%"  <?php if ($ATROPINE == 'Atropine 1%') echo "checked='checked'"; ?> />
                                             <label for="Atropine" class="input-helper input-helper--checkbox"><?php echo xlt('Atropine 1%'); ?></label>
                                             <br />
                                         </td>
@@ -1271,8 +1283,7 @@ require_once("$incdir/patient_file/encounter/new_form.php");
                                     </tr>
                                     <tr>
                                         <td colspan="5" style="vertical-align:text-top;">
-                                            <input type="checkbox" id="DIL_RISKS" name="DIL_RISKS" value="on" <?php if ($DIL_RISKS =='on') echo "checked='checked'"; ?>>
-                                            <label for="DIL_RISKS" class="input-helper input-helper--checkbox"><?php echo xlt('Dilation risks reviewed'); ?></label>
+                                            <span class="DIL_RISKS nodisplay"><i class="fa fa-check"></i>Dilation order given<br /><i class="fa fa-check"></i>Dilated/risks reviewed</span>
                                         </td>
                                         <td colspan="1" style="text-align:left;">
                                             <input type="checkbox" name="BALANCED" id="Balanced" value="on" <?php if ($BALANCED =='on') echo "checked='checked'"; ?>>
@@ -1761,13 +1772,13 @@ require_once("$incdir/patient_file/encounter/new_form.php");
                                         &nbsp;    <?php echo text($Select_data['LOCATION']); ?>: <?php echo text($string); ?>
                                         <br />
                                         <?
-                                        if ($number_rows==17) {
+                                        if ($number_rows==16) {
                                             ?>
                                              </div>
                                              <div id="EXT_QP_block2" name="EXT_QP_block2" class="QP_block_outer  borderShadow text_clinical" >
                                                 <?
                                         }
-                                        if ($number_rows==26) break;
+                                        if ($number_rows==24) break;
                                     }
                                         ?>   
                                 </div>      
@@ -1965,10 +1976,10 @@ require_once("$incdir/patient_file/encounter/new_form.php");
                               &nbsp;    <?php echo text($Select_data['LOCATION']); ?>: <?php echo text($string); ?>
 
                               <br />
-                              <?php if ($number_rows==17) {  ?>
+                              <?php if ($number_rows==16) {  ?>
                                   </div>
                                   <div class="QP_block_outer  borderShadow text_clinical" ><?php  
-                                  }  if ($number_rows == 26) break;
+                                  }  if ($number_rows == 24) break;
                               } 
                                   ?>      
                       </div>  
@@ -2001,7 +2012,7 @@ require_once("$incdir/patient_file/encounter/new_form.php");
                       <span class="closeButton fa fa-paint-brush" id="BUTTON_DRAW_RETINA" name="BUTTON_DRAW_RETINA"></span>
                       <i class="closeButton_2 fa fa-database" id="BUTTON_QP_RETINA" name="BUTTON_QP_RETINA"></i>
                 
-                        <b><?php echo xlt('Retina'); ?>:</b><br />
+                        <b><?php echo xlt('Retina'); ?>:</b>
                               <?
                                 /*
                                       OCT, FA/ICG,Photos - External,Photos - AntSeg,Optic Disc,Photos - Retina,Radiology, VF
@@ -2015,7 +2026,14 @@ require_once("$incdir/patient_file/encounter/new_form.php");
                                       }
                                       $href="/eye_mag/imaging.php?display=".$get;
                                 */
-                                      ?>
+                                      
+                                        ?>
+                                        <input style="margin-left:100px;" type="checkbox" id="DIL_RISKS" name="DIL_RISKS" value="on" <?php if ($DIL_RISKS =='on') echo "checked='checked'"; ?>>
+                                            <label for="DIL_RISKS" class="input-helper input-helper--checkbox"><?php echo xlt('Dilation risks reviewed'); ?></label>
+                                        <?
+                                      
+                                      ?><br />
+
                         <div style="position:relative;float:right;top:0.2in;border:0pt solid black;">
                             <table style="float:right;text-align:right;font-size:0.8em;font-weight:bold;">
                               <?php 
@@ -2164,12 +2182,12 @@ require_once("$incdir/patient_file/encounter/new_form.php");
 
                             <br />
                             <?
-                            if ($number_rows=='17') {
+                            if ($number_rows=='16') {
                                 ?>
                             </div>
                             <div class="QP_block_outer  borderShadow text_clinical" ><?php 
                         }
-                        if ($number_rows == 26) break;
+                        if ($number_rows == 25) break;
 
                         } ?>     
                           </span>
@@ -2291,7 +2309,7 @@ require_once("$incdir/patient_file/encounter/new_form.php");
                                                                         <td style="border:1pt solid black;border-left:0pt;text-align:right;">
                                                                         <textarea id="ACT4SCDIST" name="ACT4SCDIST" class="ACT"><?php echo text($ACT4SCDIST); ?></textarea></td>
                                                                         <td style="border:1pt solid black;text-align:center;">
-                                                                        <textarea id="ACT5SCDIST" name="ACT5SCDIST" class="ACT"><?php echo text($ACT5SCDIST); ?></textarea></td>
+                                                                        <textarea id="ACT5SCDIST"  class="neurosens2 ACT" name="ACT5SCDIST"><?php echo text($ACT5SCDIST); ?></textarea></td>
                                                                         <td style="border:1pt solid black;border-right:0pt;text-align:left;">
                                                                         <textarea id="ACT6SCDIST" name="ACT6SCDIST" class="ACT"><?php echo text($ACT6SCDIST); ?></textarea></td>
                                                                         <td><i class="fa fa-share rotate-right"></i></td> 
@@ -2330,7 +2348,7 @@ require_once("$incdir/patient_file/encounter/new_form.php");
                                                                         <td style="border:1pt solid black;border-left:0pt;text-align:right;">
                                                                         <textarea id="ACT4CCDIST" name="ACT4CCDIST" class="ACT"><?php echo text($ACT4CCDIST); ?></textarea></td>
                                                                         <td style="border:1pt solid black;text-align:center;">
-                                                                        <textarea id="ACT5CCDIST" name="ACT5CCDIST" class="ACT"><?php echo text($ACT5CCDIST); ?></textarea></td>
+                                                                        <textarea id="ACT5CCDIST" name="ACT5CCDIST" class="neurosens2 ACT"><?php echo text($ACT5CCDIST); ?></textarea></td>
                                                                         <td style="border:1pt solid black;border-right:0pt;text-align:left;">
                                                                         <textarea id="ACT6CCDIST" name="ACT6CCDIST" class="ACT"><?php echo text($ACT6CCDIST); ?></textarea></td>
                                                                         <td><i class="fa fa-share rotate-right"></i></td> 
@@ -2369,7 +2387,7 @@ require_once("$incdir/patient_file/encounter/new_form.php");
                                                                         <td style="border:1pt solid black;border-left:0pt;text-align:right;">
                                                                         <textarea id="ACT4SCNEAR" name="ACT4SCNEAR" class="ACT"><?php echo text($ACT4SCNEAR); ?></textarea></td>
                                                                         <td style="border:1pt solid black;text-align:center;">
-                                                                        <textarea id="ACT5SCNEAR" name="ACT5SCNEAR" class="ACT"><?php echo text($ACT5SCNEAR); ?></textarea></td>
+                                                                        <textarea id="ACT5SCNEAR" name="ACT5SCNEAR" class="neurosens2 ACT"><?php echo text($ACT5SCNEAR); ?></textarea></td>
                                                                         <td style="border:1pt solid black;border-right:0pt;text-align:left;">
                                                                         <textarea id="ACT6SCNEAR" name="ACT6SCNEAR" class="ACT"><?php echo text($ACT6SCNEAR); ?></textarea></td>
                                                                         <td><i class="fa fa-share rotate-right"></i></td> 
@@ -2408,7 +2426,7 @@ require_once("$incdir/patient_file/encounter/new_form.php");
                                                                         <td style="border:1pt solid black;border-left:0pt;text-align:right;">
                                                                         <textarea id="ACT4CCNEAR" name="ACT4CCNEAR" class="ACT"><?php echo text($ACT4CCNEAR); ?></textarea></td>
                                                                         <td style="border:1pt solid black;text-align:center;">
-                                                                        <textarea id="ACT5CCNEAR" name="ACT5CCNEAR" class="ACT"><?php echo text($ACT5CCNEAR); ?></textarea></td>
+                                                                        <textarea id="ACT5CCNEAR" name="ACT5CCNEAR" class="neurosens2 ACT"><?php echo text($ACT5CCNEAR); ?></textarea></td>
                                                                         <td style="border:1pt solid black;border-right:0pt;text-align:left;">
                                                                         <textarea id="ACT6CCNEAR" name="ACT6CCNEAR" class="ACT"><?php echo text($ACT6CCNEAR); ?></textarea></td><td><i class="fa fa-share rotate-right"></i></td> 
                                                                     </tr> 
@@ -2440,12 +2458,12 @@ require_once("$incdir/patient_file/encounter/new_form.php");
                                         <tr style=""><td style="width:50%;"></td><td><?php echo xlt('OD'); ?></td><td><?php echo xlt('OS'); ?></td></tr>
                                         <tr>
                                             <td class="right"><span title="Near Point of Accomodation"><?php echo xlt('NPA'); ?>:</span></td>
-                                            <td><input type="text" id="ODNPA" style="width:70%;" name="ODNPA" value="<?php echo attr($ODNPA); ?>"></td>
-                                            <td><input type="text" id="OSNPA" style="width:70%;" name="OSNPA" value="<?php echo attr($OSNPA); ?>"></td>
+                                            <td><input type="text" id="ODNPA" style="width:70%;" class="neurosens2" name="ODNPA" value="<?php echo attr($ODNPA); ?>"></td>
+                                            <td><input type="text" id="OSNPA" style="width:70%;" class="neurosens2" name="OSNPA" value="<?php echo attr($OSNPA); ?>"></td>
                                         </tr>
                                         <tr>
                                             <td class="right"><span title="Near Point of Convergence"><?php echo xlt('NPC'); ?>:</span></td>
-                                            <td colspan="2" ><input type="text" style="width:85%;" id="NPC" name="NPC" value="<?php echo attr($NPC); ?>">
+                                            <td colspan="2" ><input type="text" style="width:85%;" class="neurosens2" id="NPC" name="NPC" value="<?php echo attr($NPC); ?>">
                                             </td>
                                         </tr>
                                          <tr>
@@ -2453,7 +2471,7 @@ require_once("$incdir/patient_file/encounter/new_form.php");
                                                 <?php echo xlt('Stereopsis'); ?>:
                                             </td>
                                             <td colspan="2">
-                                                <input type="text" style="width:85%;" name="STEREOPSIS" id="STEREOPSIS" value="<?php echo attr($STEREOPSIS); ?>">
+                                                <input type="text" style="width:85%;" class="neurosens" name="STEREOPSIS" id="STEREOPSIS" value="<?php echo attr($STEREOPSIS); ?>">
                                             </td>
                                         </tr>
                                         <tr><td colspan="3"><br /><br /><u><?php echo xlt('Amplitudes'); ?></u><br />
@@ -2461,19 +2479,19 @@ require_once("$incdir/patient_file/encounter/new_form.php");
                                         <tr><td ></td><td ><?php echo xlt('Distance'); ?></td><td><?php echo xlt('Near'); ?></td></tr>
                                         <tr>
                                             <td style="text-align:right;"><?php echo xlt('Divergence'); ?></td>
-                                            <td><input type="text" id="DACCDIST" name="DACCDIST" value="<?php echo attr($DACCDIST); ?>"></td>
-                                            <td><input type="text" id="DACCNEAR" name="DACCNEAR" value="<?php echo attr($DACCNEAR); ?>"></td></tr>
+                                            <td><input type="text" id="DACCDIST" class="neurosens2" name="DACCDIST" value="<?php echo attr($DACCDIST); ?>"></td>
+                                            <td><input type="text" id="DACCNEAR" class="neurosens2" name="DACCNEAR" value="<?php echo attr($DACCNEAR); ?>"></td></tr>
                                         <tr>
                                             <td style="text-align:right;"><?php echo xlt('Convergence'); ?></td>
-                                            <td><input type="text" id="CACCDIST" name="CACCDIST" value="<?php echo attr($CACCDIST); ?>"></td>
-                                            <td><input type="text" id="CACCNEAR" name="CACCNEAR" value="<?php echo attr($CACCNEAR); ?>"></td></tr>
+                                            <td><input type="text" id="CACCDIST" class="neurosens2" name="CACCDIST" value="<?php echo attr($CACCDIST); ?>"></td>
+                                            <td><input type="text" id="CACCNEAR" class="neurosens2" name="CACCNEAR" value="<?php echo attr($CACCNEAR); ?>"></td></tr>
                                         </tr>
                                          <tr>
                                             <td class="right">
                                                 <?php echo xlt('Vertical Fusional'); ?>:
                                             </td>
                                             <td colspan="2">
-                                                <input type="text" style="width:85%;" name="VERTFUSAMPS" id="VERTFUSAMPS" value="<?php echo attr($VERTFUSAMPS); ?>">
+                                                <input type="text" style="width:85%;" class="neurosens2" name="VERTFUSAMPS" id="VERTFUSAMPS" value="<?php echo attr($VERTFUSAMPS); ?>">
                                                 <br />
                                             </td>
                                         </tr>
@@ -2857,11 +2875,11 @@ require_once("$incdir/patient_file/encounter/new_form.php");
                             <textarea id="NEURO_COMMENTS" name="NEURO_COMMENTS"><?php echo text($NEURO_COMMENTS); ?></textarea>
                         </div>
                         <div class="QP_not" id="NEURO_keyboard_left" style="position: absolute;bottom:0.05in;right:0.1in;font-size:0.7em;text-align:left;padding-left:25px;">
-                      <span onclick="$('.kb').toggleClass('nodisplay');" title="<?php echo xla('Click to display shorthand field names.'); ?>"><b>Keyboard Entry</b></span>
-                      &nbsp;<a onclick="goto_url('<?php echo $GLOBALS['webroot']; ?>/interface/forms/eye_mag/help.php?zone=neuro');">
-                        <i title="<?php echo xla('Click for Neuro/Physiology shorthand Help.'); ?>" class="fa fa-info-circle fa-1"></i></a><br />
-                        <textarea id="NEURO_keyboard_left" name="NEURO_keyboard_left" style="color:#0C0C0C;size:0.8em;height: 3em;" tabindex='1000'></textarea>
-                    </div>
+                          <span onclick="$('.kb').toggleClass('nodisplay');" title="<?php echo xla('Click to display shorthand field names.'); ?>"><b>Keyboard Entry</b></span>
+                          &nbsp;<a onclick="goto_url('<?php echo $GLOBALS['webroot']; ?>/interface/forms/eye_mag/help.php?zone=neuro');">
+                          <i title="<?php echo xla('Click for Neuro/Physiology shorthand Help.'); ?>" class="fa fa-info-circle fa-1"></i></a><br />
+                          <textarea id="NEURO_keyboard_left" name="NEURO_keyboard_left" style="color:#0C0C0C;size:0.8em;height: 3em;" tabindex='1000'></textarea>
+                        </div>
                     </div>     
                 </div>
                 <div id="NEURO_right" class="exam_section_right borderShadow text_clinical">
@@ -2989,14 +3007,29 @@ require_once("$incdir/patient_file/encounter/new_form.php");
                 </div>
               </div>
               <div id="IMPPLAN_right" class="exam_section_right borderShadow text_clinical">
-                <?php display_draw_section ("IMPPLAN",$encounter,$pid); ?>
+                 <?php display_draw_section ("IMPPLAN",$encounter,$pid); ?>
                     
                 <div id="PRIORS_IMPPLAN_left_text" style="height: 2.5in;text-align:left;font-size: 0.9em;" name="PRIORS_IMPPLAN_left_text" class="PRIORS_class PRIORS"><i class="fa fa-spinner fa-spin"></i>
                 </div>
                 <div id="QP_IMPPLAN" name="QP_IMPPLAN" class="QP_class" style="text-align:left;height: 2.5in;">
+                  <span class="closeButton fa fa-close pull-right" id="BUTTON_TEXTD_IMPPLAN" name="BUTTON_TEXTD_IMPPLAN" value="1"></span>
+                   
                   
+                  <a href="/openemr/interface/patient_file/report/custom_report.php?printable=1&pdf=0&<?php echo $form_folder."_".$form_id."=".$encounter; ?>&">Printable Report</a><br />
+                  <br />Coding IN DEVELOPMENT ONLY - NOT FUNCTIONAL:<br />
+                  <span class="CODE_HIGH nodisplay"><i class="fa fa-check"></i> Detailed HPI documentation.</span><br />
+                  <span class="DIL_RISKS nodisplay"><i class="fa fa-check"></i> Detailed Exam documentation.</span><br />
+                  <span id="neurosens_code" name="neurosens_code" class="nodisplay"><i class="fa fa-check"></i> NeuroSensory Exam (92060) Criteria met.</span><br />
+                  <small>Only add to todays' charges if performed today:</small><br />
+                  <span><input type="checkbox" id="visual Field" name="visual Field">Visual Field (CPT 92083)</span><br />
+                  <span><input type="checkbox" id="Retina_photo" name="Retina_photo">Retina Photo/OCT (CPT 92250) </span><br />
+                  <span><input type="checkbox" id="Retina_photo" name="Retina_photo">Disc Photo/OCT</span><br />
+                  <span><input type="checkbox" id="k_topo" name="k_topo">Corneal Topography</span><br />
+                  <span><input type="checkbox" id="Refraction" name="Refraction">Refraction (Medicare)</span><br />
+
+
+
                   
-                  <a href="/openemr/interface/patient_file/report/custom_report.php?printable=1&pdf=0&<?php echo $form_folder."_".$form_id."=".$encounter; ?>&">Printable Report</a>
                   <?  //forach $PMSFH[0]['POH'] print + Code enter
                   $PMSFH = build_PMSFH($pid); 
                   foreach ($PMSFH[0]['POH'] as $k => $v) {
@@ -3048,7 +3081,53 @@ require_once("$incdir/patient_file/encounter/new_form.php");
     <!-- Add eye_mag js library -->
     <script type="text/javascript" src="../../forms/<?php echo $form_folder; ?>/js/shortcut.js"></script>
     
-   
+    <!-- Undo code -->
+    <script src="../../forms/<?php echo $form_folder; ?>/js/undone.js"></script>
+    <script src='../../forms/<?php echo $form_folder; ?>/js/jquery.undone.js'></script>
+    <script>
+
+        $.undone();
+
+        $("#undo, #redo, #clear").click(function(){
+            // undone[this.className]();
+            $.undone(this.id);
+        });
+
+        $(document).on("mouseenter", ".toggle", function () {
+            var self = $(this);
+            $.undone("register",
+                function () { self.addClass("hidden"); },
+                function () { self.removeClass("hidden"); }
+            );
+        });
+
+
+        $(document).keydown(function (e) {
+            var key = e.which;
+            if (e.ctrlKey) { // ctrl
+                if (key === 90) $.undone("undo"); // z
+                if (key === 89) $.undone("redo"); // y
+            }
+        });
+
+        $(window).on("undone:change", function(e, name, undoLen, redoLen){
+            $("#undo").prop("disabled", !undoLen);
+            $("#redo").prop("disabled", !redoLen);
+            $("input").val(undoLen)
+        });
+
+
+        // create the items
+        var items = 800;
+        while(items--) {
+            var a = document.createElement("a");
+            a.href = "#";
+            a.className = "toggle";
+            document.getElementsByTagName("div")[0].appendChild(a);
+        }
+    </script>
+    <!-- Undo code done -->
+
     <script type="text/javascript" src="../../forms/<?php echo $form_folder; ?>/js/my_js_base.js"></script>
     <script type="text/javascript" src="../../forms/<?php echo $form_folder; ?>/js/canvasdraw.js"></script>
 
@@ -3088,6 +3167,7 @@ $.panelslider.close();
                   
 
 </script>
+
 
   </body>   
 </html>

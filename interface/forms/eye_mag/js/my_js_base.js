@@ -21,6 +21,12 @@
  * @link http://www.open-emr.org
  */
 
+/** Undo feature
+ *  RIGHT NOW THIS WORKS PER FIELD ONLY.  You select a field and CTRL-Z reverses/Shift-Ctrl-Z forwards value
+ *  To get true Undo Redo, we will need to create two arrays, one with the command/field, prior value, next value to undo
+ *  and when undone, add this to the REDO array.  When a Undo command is followed by anything other than Redo, it erases REDO array.
+ **/
+
 
 /**
  *  Function to add a Quick Pick selection/value to the corresponding text field.
@@ -28,7 +34,6 @@
  *  Since Default values give the field a bgcolor of rgb(245, 245, 220), we can use that.  OK for now.
  *  In the future, we can make an array of default values an see if this matches the fields current value.
  */
-var formFields = [];
 function fill_QP_field(PEZONE, ODOSOU, LOCATION_text, selection,fill_action) {
     if (ODOSOU > '') {
         var FIELDID =  ODOSOU  + LOCATION_text;
@@ -74,10 +79,10 @@ function goto_url(url) {
 
 function submit_form() {
     var url = "../../forms/eye_mag/save.php?mode=update&id=" + $("#form_id").val();
-    $("#UNDO_ID").val(parseInt($("#UNDO_ID").val()) + 1);
+        //$("#UNDO_ID").val(parseInt($("#UNDO_ID").val()) + 1);
         //client side variable with all fields incremented with these new save values
     formData = $("form#eye_mag").serialize();
-    formFields.push = formData;
+        // formFields.push = serializeArray;
     $("#menustate").val('0');
     $.ajax({
            type 	: 'POST',   // define the type of HTTP verb we want to use (POST for our form)
@@ -86,7 +91,7 @@ function submit_form() {
            }).done(function(o) {
                    //  console.log(o);
                    
-                   alert(formFields[formFields.length -1].val());
+                   //       $("#IMP").html(formData);
                    })
 };
 
@@ -150,7 +155,7 @@ function update_PREFS() {
            url          : url,
            data 		: formData
            }).done(function(o) {
-                     console.log(o);
+                   //     console.log(o);
                    $("#tellme").html(o);
                    });
 }
@@ -529,7 +534,7 @@ shortcut.add("Control+D",function() {
 shortcut.add("Meta+S",function() {
              submit_form('eye_mag');
              });
-shortcut.add("Meta+Z", function() {
+shortcut.add("Meta+ZZ", function() {
              alert("This will move you back a step...");
              //undo;
              //reload the form from UNDO_ID -1
@@ -540,14 +545,14 @@ shortcut.add("Meta+Z", function() {
              window.location ='http://www.oculoplasticsllc.com/openemr/interface/patient_file/encounter/view_form.php?formname=eye_mag&id=215&pid=1&display=fullscreen&encounter=171&&UNDO_go='+$("#UNDO_ID").val();
                      
              });
-shortcut.add("Meta+Shift+Z", function() {
+shortcut.add("Meta+Shift+ZZ", function() {
              ("This will move you forward a step...");
              //redo;
              });
 shortcut.add("Control+S",function() {
              submit_form('eye_mag');
              });
-shortcut.add("Control+Z", function() {
+shortcut.add("Control+ZZ", function() {
              alert("This will move you back a step...");
              window.location ='http://www.oculoplasticsllc.com/openemr/interface/patient_file/encounter/view_form.php?formname=eye_mag&id=215&pid=1&display=fullscreen&encounter=171&&UNDO='+$("#UNDO_ID").val();
              //undo;
@@ -636,8 +641,55 @@ function show_CC(CC_X) {
     $("#CC_"+CC_X).index;
 }
 
+function check_CPT_92060() {
+    var neuro1='';
+    var neuro2 ='';
+    if ($("#STEREOPSIS").val() > '') (neuro1="1");
+    $(".neurosens2").each(function(index) {
+                          if ($( this ).val() > '') {
+                          neuro2="1";
+                          }
+                          });
+    
+    if (neuro1 && neuro2){
+        $("#neurosens_code").removeClass('nodisplay');
+    } else {
+        $("#neurosens_code").addClass('nodisplay');
+    }
 
-
+}
+function check_exam_detail() {
+    var detail_reached_HPI ='0';
+    var chronic_reached_HPI= '0';
+    $(".count_HPI").each(function(index) {
+                         // console.log( index + ": " + $( this ).val() );
+                         if ($( this ).val() > '') detail_reached_HPI++;
+                         
+                         });
+    if (detail_reached_HPI > '3') {
+        $(".detail_4_elements").css("color","red");
+    } else {
+        $(".detail_4_elements").css("color","#C0C0C0");
+    }
+    $(".chronic_HPI").each(function(index) {
+                           if ($( this ).val() > '') chronic_reached_HPI++;
+                           });
+    if (chronic_reached_HPI == '3') {
+        $(".detailed_HPI").css("color","red");
+        $(".chronic_3_elements").css("color","red");
+    } else {
+        
+        $(".detailed_HPI").css("color","#C0C0C0");
+        $(".chronic_3_elements").css("color","#C0C0C0");
+    }
+    if ((chronic_reached_HPI == '3')||(detail_reached_HPI > '3')) {
+        $(".CODE_HIGH").removeClass("nodisplay");
+        $(".detailed_HPI").css("color","red");
+    } else {
+        $(".CODE_HIGH").addClass("nodisplay");
+        $(".detailed_HPI").css("color","#C0C0C0");
+    }
+}
 $(document).ready(function() {
                   $(".kb").addClass('nodisplay');
                   $('.ke').mouseover(function() {
@@ -1280,8 +1332,80 @@ $(document).ready(function() {
                   }
                   }
                   
+                  // AUTO- CODING FEATURES
+                  // onload determine if detailed HPI hit
+                  check_CPT_92060();
+                  check_exam_detail();
+                  $(".chronic_HPI").blur(function() {
+                                                 chronic_reached_HPI ='0';
+                                                 $(".chronic_HPI").each(function(index) {
+                                                 if ($( this ).val() > '')  chronic_reached_HPI++;
+                                                                        });
+                  if (chronic_reached_HPI == '3') {
+                  $(".CODE_HIGH").removeClass("nodisplay");
+                  $(".detailed_HPI").css("color","red");
+                  $(".chronic_3_elements").css("color","red");
+                  } else {
+                  $(".CODE_HIGH").addClass("nodisplay");
+                  $(".detailed_HPI").css("color","#C0C0C0");
+                  $(".chronic_3_elements").css("color","#C0C0C0");
+                  }
+                                         });
+                  
+                  // Dilation status
+                  //onload and onchange
+                  if ($("#DIL_RISKS").is(':checked')) { ($(".DIL_RISKS").removeClass("nodisplay"));}
+                  $("#DIL_RISKS").change(function(o) {
+                                         ($(this).is(':checked')) ? ($(".DIL_RISKS").removeClass("nodisplay")) : ($(".DIL_RISKS").addClass("nodisplay"));
+                                         });
+                  $(".dil_drug").change(function(o) {
+                                        if ($(this).is(':checked')) {
+                                        ($(".DIL_RISKS").removeClass("nodisplay"));
+                                        $("#DIL_RISKS").prop("checked","checked");
+                                        
+                                        }});
+
+                  //actions to see if Detailed HPI reached
+                  $(".count_HPI").blur(function() {
+                                       detail_reached_HPI ='0';
+                                       $(".count_HPI").each(function(index) {
+                                                            // console.log( index + ": " + $( this ).val() );
+                                                            if ($( this ).val() > '') detail_reached_HPI++;
+                                                            
+                                                            });
+                                       
+                                       if (detail_reached_HPI > '3') {
+                                        $("#CODE_HIGH").removeClass("nodisplay");
+                                        $(".detailed_HPI").css("color","red");
+                                        $(".detail_4_elements").css("color","red");
+                                       } else {
+                                       $("#CODE_HIGH").addClass("nodisplay");
+                                       $(".detailed_HPI").css("color","#C0C0C0");
+                                       $(".detail_4_elements").css("color","#C0C0C0");
+                                       }
+                                       });
+                  //neurosens exam = stereopsis + strab||NPC||NPA||etc
+                  $(".neurosens,.neurosens2").blur(function() {
+                                       var neuro1='';
+                                       var neuro2 ='';
+                                       if ($("#STEREOPSIS").val() > '') (neuro1="1");
+                                       $(".neurosens2").each(function(index) {
+                                                             if ($( this ).val() > '') {
+                                                                neuro2="1";
+                                                             }
+                                                             });
+                                       
+                                       if (neuro1 && neuro2){
+                                       $("#neurosens_code").removeClass('nodisplay');
+                                       } else {
+                                        $("#neurosens_code").addClass('nodisplay');
+                                       }
+                                       });
+                  
+                  // END AUTO-CODING FEATURES
                   
                   //  functions to improve flow of refraction input
+                  
                   $("input[name$='PRISM']").blur(function() {
                                                  //make it all caps
                                                  var str = $(this).val();

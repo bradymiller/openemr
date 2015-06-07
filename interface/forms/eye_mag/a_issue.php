@@ -290,7 +290,7 @@ if (!empty($irow['type'])) {
         <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
     <![endif]-->
 <script type="text/javascript" src="../../forms/<?php echo $form_folder; ?>/js/shortcut.js"></script>
-<Xscript type="text/javascript" src="../../forms/<?php echo $form_folder; ?>/js/my_js_base.js"></Xscript>
+<script type="text/javascript" src="../../forms/<?php echo $form_folder; ?>/js/my_js_base.js"></script>
 <link rel="stylesheet" href="<?php echo $GLOBALS['webroot']; ?>/library/css/font-awesome-4.2.0/css/font-awesome.min.css">
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <style>
