@@ -8,7 +8,7 @@
      * Edit are performed in view.php.  Nothing is editable here, but it is scrollable 
      * across time...
      * 
-     * Copyright (C) 2014 Raymond Magauran <magauran@MedFetch.com> 
+     * Copyright (C) 2015 Raymond Magauran <magauran@MedFetch.com> 
      * 
      * LICENSE: This program is free software; you can redistribute it and/or 
      * modify it under the terms of the GNU General Public License 
@@ -154,29 +154,29 @@ function eye_mag_report($pid, $encounter, $cols, $id, $formname) {
                 }
             } else if ($choice == "drawing") {
                 ?>
-                <Xdiv class="XXXXXborderShadow">
+                <div class="XXXXXborderShadow">
                     <?php display_draw_section ("VISION",$encounter,$pid); ?>
-                </Xdiv>
-                <Xdiv class="XXborderShadow">
+                </div>
+                <div class="XXborderShadow">
                     <br />
                     <?php display_draw_section ("NEURO",$encounter,$pid); ?>
-                </Xdiv>
-                <Xdiv class="XXborderShadow">
+                </div>
+                <div class="XXborderShadow">
                     <br />
                     <?php display_draw_section ("EXT",$encounter,$pid); ?>
-                </Xdiv>
-                <Xdiv class="XXborderShadow">
+                </div>
+                <div class="XXborderShadow">
                     <br />
                     <?php display_draw_section ("ANTSEG",$encounter,$pid); ?>
-                </Xdiv>
-                <Xdiv class="XXborderShadow">
+                </div>
+                <div class="XXborderShadow">
                     <br />
                     <?php display_draw_section ("RETINA",$encounter,$pid); ?>
-                </Xdiv>
-                <Xdiv class="XXborderShadow">
+                </div>
+                <div class="XXborderShadow">
                     <br />
                     <?php display_draw_section ("IMPPLAN",$encounter,$pid); ?>
-                </Xdiv>
+                </div>
                 <? 
             } else if ($choice !="narrative") {
               narrative($pid, $encounter, $cols, $id);
@@ -215,13 +215,13 @@ function narrative($pid, $encounter, $cols, $form_id) {
     $encounter_data =sqlQuery($query,array($encounter,$pid));
     @extract($encounter_data);
     ?>
+    <link rel="stylesheet" href="<?php echo $GLOBALS['webroot'] ?>/library/css/font-awesome-4.2.0/css/font-awesome.css">
     <link rel="stylesheet" href="../../forms/<?php echo $form_folder; ?>/style.css" type="text/css">  
     <link rel="stylesheet" href="<?php echo $GLOBALS['css_header']; ?>" type="text/css">
     <link rel="stylesheet" href="<?php echo $css_header;?>" type="text/css">
     <link rel="stylesheet" href="<?php echo $GLOBALS['webroot'] ?>/library/css/pure-min.css">
     <link rel="stylesheet" href="<?php echo $GLOBALS['webroot'] ?>/library/css/bootstrap-3-2-0.min.css">
     <link rel="stylesheet" href="../../forms/<?php echo $form_folder; ?>/css/bootstrap-responsive.min.css">
-    <link rel="stylesheet" href="<?php echo $GLOBALS['webroot'] ?>/library/css/font-awesome-4.2.0/css/font-awesome.css">
       
     
     <style>

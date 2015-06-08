@@ -208,7 +208,18 @@ require_once("$incdir/patient_file/encounter/new_form.php");
        <?php
     }
     ?>
+<div id="page" class="left_PMSFH_tab" style="padding-top:5px;">
+                    <a  id="right-panel-link" href="#left-panel">
+  <img src="/openemr/interface/forms/eye_mag/images/PMSFHx.png"></a>
 
+                    <!--
+                      <h1>Panel slider example</h1>
+                    <a id="left-panel-link" href="#left-panel">Open left panel</a> |
+                    <a id="right-panel-link" href="#right-panel">Open right panel</a>
+                    <hr />
+                    <p>Usage instructions and source code <a href="https://github.com/eduardomb/jquery-panelslider">here</a></p>
+                    -->
+                  </div> 
     <div id="Layer1" name="Layer1" class="display">
     <form method="post" action="<?php echo $rootdir;?>/forms/<?php echo $form_folder; ?>/save.php?mode=update" id="eye_mag" class="eye_mag pure-form" name="eye_mag">
       <!-- start container for the main body of the form -->
@@ -297,7 +308,7 @@ require_once("$incdir/patient_file/encounter/new_form.php");
                                 <span title="<?php echo xla('History of Present Illness:  A detailed HPI may be completed by using either four or more HPI elements OR the status of three chronic or inactive problems.'); ?>" style="height:1in;font-weight:600;vertical-align:text-top;"><?php echo xlt('HPI'); ?>:
                                 </span>
                                 <br />
-                                <textarea name="HPI1" id="HPI1" class="HPI_text" tabindex="21" style="min-height:1.5in;max-height:2.0in;width:2.1in;"><?php echo text($HPI1); ?></textarea>
+                                <textarea name="HPI1" id="HPI1" class="HPI_text" tabindex="21" style="min-height:1.4in;max-height:2.0in;width:2.1in;"><?php echo text($HPI1); ?></textarea>
                                 <br />
                               </td>
                               <td style="vertical-align:top;padding:10px;"><span title="<?php echo xla('Chronic/Inactive Problems: document 3 and their status to reach the detailed HPI level'); ?>" style="height:1in;font-weight:600;vertical-align:text-top;"><?php echo xlt('Chronic Problems') ?>:</span>
@@ -308,6 +319,14 @@ require_once("$incdir/patient_file/encounter/new_form.php");
                                 
                             </tr> 
                           </table> 
+                           <center>
+                            <i id="CODE_HIGH" name="CODE_HIGH" class="CODE_HIGH fa fa-check nodisplay" value="1"></i>
+                            <span style="margin-top:4px;font-size:1.0em;text-align:center;width:85%;font-weight:800;color:#C0C0C0;">
+                              <span class="detailed_HPI"><?php echo xlt('Detailed HPI') ?>:</span>
+                              <span class="detail_4_elements"><?php echo xlt('> 3 HPI elements'); ?></span> OR 
+                              <span class="chronic_3_elements"><?php echo xlt('the status of three chronic/inactive problems'); ?></span>
+                            </span>
+                          </center>
                         </div>
                         <div id="tab2_CC_text" class="tab_content">
                             <table border="0" width="100%" cellspacing="0" cellpadding="0" 
@@ -449,14 +468,7 @@ require_once("$incdir/patient_file/encounter/new_form.php");
                               </td>
                             </tr>
                           </table>
-                          <center>
-                            <i id="CODE_HIGH" name="CODE_HIGH" class="CODE_HIGH" value="1" class="fa fa-check nodisplay"></i>
-                            <span style="margin-top:4px;font-size:1.0em;text-align:center;width:85%;font-weight:800;color:#C0C0C0;">
-                              <span class="detailed_HPI"><?php echo xlt('Detailed HPI') ?>:</span>
-                              <span class="detail_4_elements"><?php echo xlt('four or more HPI elements'); ?></span> OR 
-                              <span class="chronic_3_elements"><?php echo xlt('the status of three chronic/inactive problems'); ?></span>
-                            </span>
-                          </center>
+                         
                         </div>
                         <div id="tab2_HPI_text" class="tab_content" style="min-height: 2.0in;text-align:left;">                 
                           <table style="font-size:1.1em;">
@@ -626,7 +638,7 @@ require_once("$incdir/patient_file/encounter/new_form.php");
               <!-- start  HPI Left -->
               <div id="PMH_left" name="PMH_left" class="exam_section_left borderShadow">
 
-                <div id="PMH_left_text" style="height: 2.5in;text-align:left;" class="TEXT_class">
+                <div id="PMH_left_text" style="height: 2.5in;text-align:left;padding-top: 15px;" class="TEXT_class">
                   <span class="closeButton fa fa-paint-brush" id="BUTTON_DRAW_PMH" name="BUTTON_DRAW_PMH"></span>
                   <i class="closeButton_2 fa fa-database" id="BUTTON_QP_PMH" name="BUTTON_QP_PMH"></i>
                   <?php ($PMH_VIEW !=2) ? ($display_PMH_view = "wide_textarea") : ($display_PMH_view= "narrow_textarea");?>                                 
@@ -644,17 +656,7 @@ require_once("$incdir/patient_file/encounter/new_form.php");
 
                     </div><?php //display_PRIOR_section("PMSFH",$id,$id,$pid); ?>
                   </div>
-                  <div id="page" class="left_PMSFH_tab">
-                    <a  id="right-panel-link" href="#left-panel" style="padding:10;">PMSFHx</a>
-
-                    <!--
-                      <h1>Panel slider example</h1>
-                    <a id="left-panel-link" href="#left-panel">Open left panel</a> |
-                    <a id="right-panel-link" href="#right-panel">Open right panel</a>
-                    <hr />
-                    <p>Usage instructions and source code <a href="https://github.com/eduardomb/jquery-panelslider">here</a></p>
-                    -->
-                  </div> 
+                  
                 </div>
 
               </div>
@@ -2267,7 +2269,7 @@ require_once("$incdir/patient_file/encounter/new_form.php");
                                     </tr>
                                 </table>
                             </div>
-                            <div class="borderShadow" style="position:relative;float:right;text-align:center;width:238px;height:239px;z-index:1;margin:2 2;">                               
+                            <div class="borderShadow" style="position:relative;float:right;text-align:center;width:238px;height:239px;z-index:1;margin:2 0 2 2;">                               
                                 <i class="fa fa-th fa-fw closeButton " id="Close_ACTMAIN" style="right:0.15in;" name="Close_ACTMAIN"></i>
                                 <table style="position:relative;float:left;font-size:1.2em;width:210px;font-weight:600;"> 
                                     <tr style="text-align:left;height:26px;vertical-align:middle;width:180px;">
@@ -2897,7 +2899,7 @@ require_once("$incdir/patient_file/encounter/new_form.php");
                     <div style="position:absolute;top:0.05in;right:0.241in;">
                             <?php echo priors_select("NEURO",$id,$id,$pid); ?>
                     </div>
-                    <div style="float:right;top:1.0in;right:0.0in;margin: 20 25;">
+                    <div style="float:right;top:1.0in;right:0.0in;margin: 0 25;">
                       <div class="borderShadow" style="width:190px;text-align:center;border:1pt solid black;padding:4 10 4 10;margin:4;font-weight:600;"><span class="underline">Laterality</span><br />
                         <span class="eye_button" id="NEURO_side_R" name="NEURO_side" style="padding-left:0.06in;padding-right:0.06in;"  onclick="$('#NEURO_side').val('R').trigger('change');"><?php echo xlt('Right'); ?></span>  
                         <span class="eye_button" id="NEURO_side_L" name="NEURO_side" style="padding-left:0.06in;padding-right:0.06in;"  onclick="$('#NEURO_side').val('L').trigger('change');"><?php echo xlt('Left'); ?></span> <br />
@@ -2932,10 +2934,10 @@ require_once("$incdir/patient_file/encounter/new_form.php");
                     </div>
                     <div style="position:left;top:0.0in;left:0.10in;margin: auto;">
                       <div class="borderShadow" style="width:195px;text-align:center;border:1pt solid black;padding:4 5 4 5;margin:4;font-weight:600;"><span class="underline"><?php echo xlt('Rx/Distance'); ?></span><br />
-                        <span class="eye_button <?php if ($ACT_SHOW =='SCDIST') echo "eye_button_selected"; ?>" id="NEURO_ACT_zone_SCDIST" name="NEURO_ACT_zone" style="padding-left:0.06in;padding-right:0.06in;" onclick="$('#NEURO_ACT_zone').val('SCDIST').trigger('change');"> <?php echo xlt('scDist'); ?> </span> 
-                        <span class="eye_button <?php if ($ACT_SHOW =='CCDIST') echo "eye_button_selected"; ?>" id="NEURO_ACT_zone_CCDIST" name="NEURO_ACT_zone" style="padding-left:0.06in;padding-right:0.06in;" onclick="$('#NEURO_ACT_zone').val('CCDIST').trigger('change');"> <?php echo xlt('ccDist'); ?> </span> 
-                        <span class="eye_button <?php if ($ACT_SHOW =='SCNEAR') echo "eye_button_selected"; ?>" id="NEURO_ACT_zone_SCNEAR" name="NEURO_ACT_zone" style="padding-left:0.06in;padding-right:0.06in;" onclick="$('#NEURO_ACT_zone').val('SCNEAR').trigger('change');"> <?php echo xlt('scNear'); ?> </span> 
-                        <span class="eye_button <?php if ($ACT_SHOW =='CCNEAR') echo "eye_button_selected"; ?>" id="NEURO_ACT_zone_CCNEAR" name="NEURO_ACT_zone" style="padding-left:0.06in;padding-right:0.06in;" onclick="$('#NEURO_ACT_zone').val('CCNEAR').trigger('change');"> <?php echo xlt('ccNear'); ?> </span> 
+                        <span class="eye_button <?php if ($ACT_SHOW =='SCDIST') echo "eye_button_selected"; ?>" id="NEURO_ACT_zone_SCDIST" name="NEURO_ACT_zone" style="padding-right:0.06in;" onclick="$('#NEURO_ACT_zone').val('SCDIST').trigger('change');"> <?php echo xlt('scDist'); ?> </span> 
+                        <span class="eye_button <?php if ($ACT_SHOW =='CCDIST') echo "eye_button_selected"; ?>" id="NEURO_ACT_zone_CCDIST" name="NEURO_ACT_zone" style="padding-right:0.06in;" onclick="$('#NEURO_ACT_zone').val('CCDIST').trigger('change');"> <?php echo xlt('ccDist'); ?> </span> 
+                        <span class="eye_button <?php if ($ACT_SHOW =='SCNEAR') echo "eye_button_selected"; ?>" id="NEURO_ACT_zone_SCNEAR" name="NEURO_ACT_zone" style="padding-right:0.06in;" onclick="$('#NEURO_ACT_zone').val('SCNEAR').trigger('change');"> <?php echo xlt('scNear'); ?> </span> 
+                        <span class="eye_button <?php if ($ACT_SHOW =='CCNEAR') echo "eye_button_selected"; ?>" id="NEURO_ACT_zone_CCNEAR" name="NEURO_ACT_zone" onclick="$('#NEURO_ACT_zone').val('CCNEAR').trigger('change');"> <?php echo xlt('ccNear'); ?> </span> 
                       </div>
                       <div class="borderShadow" style="width:195px;text-align:center;border:1pt solid black;padding:4 10 4 10;margin:4;font-weight:600;"><span class="underline"><?php echo xlt('Position of Gaze'); ?></span><br />
                         <span class="eye_button_blank"> <?php echo xlt('R'); ?> </span> 
@@ -3021,12 +3023,14 @@ require_once("$incdir/patient_file/encounter/new_form.php");
                   <span class="DIL_RISKS nodisplay"><i class="fa fa-check"></i> Detailed Exam documentation.</span><br />
                   <span id="neurosens_code" name="neurosens_code" class="nodisplay"><i class="fa fa-check"></i> NeuroSensory Exam (92060) Criteria met.</span><br />
                   <small>Only add to todays' charges if performed today:</small><br />
-                  <span><input type="checkbox" id="visual Field" name="visual Field">Visual Field (CPT 92083)</span><br />
-                  <span><input type="checkbox" id="Retina_photo" name="Retina_photo">Retina Photo/OCT (CPT 92250) </span><br />
-                  <span><input type="checkbox" id="Retina_photo" name="Retina_photo">Disc Photo/OCT</span><br />
-                  <span><input type="checkbox" id="k_topo" name="k_topo">Corneal Topography</span><br />
+                  <span><input type="checkbox" id="visual Field" name="visual Field">Visual Field (92083)</span><br />
+                  <span><input type="checkbox" id="Retina_photo" name="Retina_photo">Retina Photo(CPT 92250) or 
+                    <input type="checkbox" id="Retina_OCT" name="Retina_OCT">Retina OCT(CPT 92134-50)</span><br />
+                  <span><input type="checkbox" id="Retina_photo" name="Retina_photo">Optic Disc OCT (92133)</span><br />
+                  <span><input type="checkbox" id="k_topo" name="k_topo">Corneal Topography (92025)</span><br />
                   <span><input type="checkbox" id="Refraction" name="Refraction">Refraction (Medicare)</span><br />
-
+                  <span><input type="checkbox" id="pachy" name="pachy">Pachymetry (76514)</span><br />
+                  76514 
 
 
                   

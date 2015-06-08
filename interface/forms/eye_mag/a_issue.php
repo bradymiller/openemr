@@ -254,7 +254,9 @@ if ($_REQUEST['form_save']) {
 
   $tmp_title = addslashes($ISSUE_TYPES[$text_type][2] . ": $form_begin " .
     substr($_REQUEST['form_title'], 0, 40));
-$irow = '';
+  $irow = '';
+  //if it is a medication do we need to do something with dosage fields? 
+  //leave all in title field form now.
 }
 
 $irow = array();
@@ -264,6 +266,11 @@ if ($issue) {
   $irow['type'] = $thistype;
   $irow['subtype'] = $subtype;
 }
+if ($thistype == "medical_problem" && $_REQUEST['subtype'] =="eye") {
+  $irow['type'] = "POH";
+  $thistype = "POH";
+}
+
 $type_index = 0;
 
 if (!empty($irow['type'])) {
@@ -272,8 +279,8 @@ if (!empty($irow['type'])) {
     ++$type_index;
   }
 }
-?>
-<html>
+
+?><html>
 <head>
 <title><?php echo $issue ? xlt('Edit') : xlt('Add New'); ?><?php echo " ".xlt('Issue'); ?></title>
 <link rel="stylesheet" href='<?php echo $css_header ?>' type='text/css'>
@@ -392,61 +399,71 @@ select pid from form_encounter where provider_id ='4' and date BETWEEN NOW() - I
   for (i = 0; i < aopts[index].length; ++i) {
    theopts[i] = aopts[index][i];
   }
-  document.getElementById('row_titles').style.display = i ? '' : 'none';
-  // Show or hide various rows depending on issue type, except do not
-  // hide the comments or referred-by fields if they have data.
-  var comdisp = (aitypes[index] == 1) ? 'none' : '';
-  var revdisp = (aitypes[index] == 1) ? '' : 'none';
-  var injdisp = (aitypes[index] == 2) ? '' : 'none';
-  var nordisp = (aitypes[index] == 0) ? '' : 'none';
-  var surgdisp = (aitypes[index] != 4) ? 'none' : 'none';
-  // reaction row should be displayed only for medication allergy.
-  var alldisp =  (index == <?php echo issueTypeIndex('allergy'); ?>) ? '' : 'none';
- 
-  document.getElementById('row_enddate'       ).style.display = comdisp;
-  // Note that by default all the issues will not show the active row
-  //  (which is desired functionality, since then use the end date
-  //   to inactivate the item.)
-  document.getElementById('row_active'        ).style.display = revdisp;
-  document.getElementById('row_diagnosis'     ).style.display = comdisp;
-  document.getElementById('row_occurrence'    ).style.display = comdisp;
-  document.getElementById('row_classification').style.display = injdisp;
-  document.getElementById('row_reinjury_id'   ).style.display = injdisp;
-  document.getElementById('row_reaction'      ).style.display = alldisp;
-  // document.getElementById('row_referredby'   ).style.display = comdisp;
-  //always hide referred by? was: = (f.form_referredby.value) ? '' : comdisp;
-  document.getElementById('row_comments'      ).style.display = (f.form_comments.value  ) ? '' : revdisp;
-  <?php if ($GLOBALS['athletic_team']) { ?>
-  document.getElementById('row_returndate' ).style.display = comdisp;
-  document.getElementById('row_injury_grade'  ).style.display = injdisp;
-  document.getElementById('row_injury_part'   ).style.display = injdisp;
-  document.getElementById('row_injury_type'   ).style.display = injdisp;
-  document.getElementById('row_medical_system').style.display = nordisp;
-  document.getElementById('row_medical_type'  ).style.display = nordisp;
-  // Change label text of 'title' row depending on issue type:
-  document.getElementById('title_diagnosis').innerHTML = '<b>' +
-   (index == <?php echo issueTypeIndex('allergy'); ?> ?
-   '<?php echo xla('Allergy') ?>' :
-   (index == <?php echo issueTypeIndex('general'); ?> ?
-   '<?php echo xla('Title') ?>' :
-   '<?php echo xla('Text Diagnosis') ?>')) +
-   ':</b>';
-<?php } else { ?>
- document.getElementById('row_referredby'    ).style.display = (f.form_referredby.value) ? 'comdisp' : comdisp;
-<?php } ?>
-<?php
-  if ($ISSUE_TYPES['football_injury']) {
-    // Generate more of these for football injury fields.
-    issue_football_injury_newtype();
-  }
-  if ($ISSUE_TYPES['ippf_gcac'] && !$_REQUEST['form_save']) {
-    // Generate more of these for gcac and contraceptive fields.
-    if (empty($issue) || $irow['type'] == 'ippf_gcac'    ) issue_ippf_gcac_newtype();
-    if (empty($issue) || $irow['type'] == 'contraceptive') issue_ippf_con_newtype();
-  }
-?>
- }
+  
+  document.getElementById('row_quick_picks'     ).style.display = i ? '' : 'none'; //select list of things
+  document.getElementById('row_title'           ).style.display = '';
+  document.getElementById('row_diagnosis'       ).style.display = 'none';
+  document.getElementById('row_begindate'       ).style.display = 'none';
+  document.getElementById('row_enddate'         ).style.display = 'none';
+  document.getElementById('row_reaction'        ).style.display = 'none';
+  document.getElementById('row_referredby'      ).style.display = 'none';
+  document.getElementById('row_classification'  ).style.display = 'none';
+  document.getElementById('row_occurrence'      ).style.display = 'none';
+  document.getElementById('row_comments'        ).style.display = 'none';
+  document.getElementById('row_outcome'         ).style.display = 'none';
+  document.getElementById('row_destination'     ).style.display = 'none';
+  document.getElementById('row_social'          ).style.display = 'none';
 
+
+  if (index == 0) { //PMH
+    document.getElementById('row_diagnosis'     ).style.display = '';
+    document.getElementById('row_begindate'     ).style.display = '';
+    document.getElementById('row_enddate'       ).style.display = '';
+    document.getElementById('row_occurrence'    ).style.display = '';
+    document.getElementById('row_comments'      ).style.display = '';
+
+  
+  } else if (index == 1) { // Allergy
+    document.getElementById('row_reaction'      ).style.display = '';
+    document.getElementById('row_begindate'     ).style.display = '';
+    document.getElementById('row_comments'      ).style.display = '';
+    
+  } else if (index == 2) { //meds
+    document.getElementById('row_begindate'     ).style.display = '';
+    document.getElementById('row_enddate'       ).style.display = '';
+    document.getElementById('row_comments'      ).style.display = '';
+    //change Onset to started
+    //change resolved to COmpleted
+    document.getElementById('onset'             ).textContent = "Start:";
+    document.getElementById('resolved'          ).textContent ="Finish:";
+    
+  } else if (index == 3) { //surgery
+    document.getElementById('row_begindate'     ).style.display = '';
+    document.getElementById('row_referredby'      ).style.display = '';
+    document.getElementById('by_whom'          ).textContent ="Surgeon:";
+    document.getElementById('onset'             ).textContent = "Date:";
+    
+    document.getElementById('row_comments'      ).style.display = '';
+
+   } else if (index == 4) { //Dental so skip it
+  } else if (index == 5) { //POH
+    document.getElementById('row_begindate'     ).style.display = '';
+    document.getElementById('row_referredby'      ).style.display = '';
+    document.getElementById('by_whom'          ).textContent ="Collaborator:";
+    document.getElementById('onset'             ).textContent = "Date:";   
+    document.getElementById('row_comments'      ).style.display = '';
+
+  } else if (index == 6) { //FH
+  } else if (index == 7) { //SocH
+    document.getElementById('row_title'           ).style.display = 'none';
+  
+    document.getElementById('row_social'      ).style.display = '';
+
+  } else if (index == 8) { //ROS
+  } else { //show nothing
+
+  }
+ }
  // If a clickoption title is selected, copy it to the title field.
  function set_text() {
   var f = document.forms[0];
@@ -510,9 +527,9 @@ function deleteme() {
  // Called when the Active checkbox is clicked.  For consistency we
  // use the existence of an end date to indicate inactivity, even
  // though the simple verion of the form does not show an end date.
- function activeClicked(cb) {
+ function resolvedClicked(cb) {
   var f = document.forms[0];
-  if (cb.checked) {
+  if (!cb.checked) {
    f.form_end.value = '';
   } else {
    var today = new Date();
@@ -628,101 +645,71 @@ function divclick(cb, divid) {
 
             if ($focustitles[1] == "Medication") $focustitles[1] = "Meds";
             if ($focustitles[1] == "Problem") $focustitles[1] = "PMH";
-            if ($focustitles[1] == "Surgery") $focustitles[1] = "PSurgH";
+            if ($focustitles[1] == "Surgery") $focustitles[1] = "Surg";
 //echo $focustitles[1]. " - ";
-            $HELLO[$focustitles[1]] = "<input type='radio' name='form_type' id='".xla($index)."' value='".xla($index)."' ".$checked. " onclick='top.restoreSession();newtype($index);' /><span style='Xpadding-bottom:2px;font-size:0.8em;font-weight:bold;'><label for='".xla($index)."' class='input-helper input-helper--checkbox'>" . xlt($focustitles[1]) . "</label></span>&nbsp;\n";
+            $HELLO[$focustitles[1]] = "<input type='radio' name='form_type' id='".xla($index)."' value='".xla($index)."' ".$checked. " onclick='top.restoreSession();newtype($index);' />
+            <span style='margin-top:2px;font-size:0.8em;font-weight:bold;'><label class='input-helper input-helper--checkbox' for='".xla($index)."'>" . xlt($focustitles[1]) . "</label></span>&nbsp;\n";
               //}
             ++$index;
         }
   
-        echo $HELLO['POH'].$HELLO['PMH'].$HELLO['PSurgH'].$HELLO['Meds'].$HELLO['Allergy'].$HELLO['FH'].$HELLO['SocH'];
+        echo $HELLO['POH'].$HELLO['PMH'].$HELLO['Meds'].$HELLO['Surg'].$HELLO['Allergy'].$HELLO['FH'].$HELLO['SocH'];
 
         ?>
-       
     <div class="borderShadow" style="text-align:center;margin-top:7px;">
-        <table  border='0' width='98%'>
-          <tr id='row_titles'>
+      <table  border='0' width='98%'>
+        <tr id='row_quick_picks'>
             <td valign='top' nowrap>&nbsp;</td>
-            <td valign='top'>
+            <td valign='top'  colspan="3">
               <select name='form_titles' size='<?php echo $GLOBALS['athletic_team'] ? 10 : 4; ?>' onchange='set_text()'>
-              </select> <?php echo xlt('(Select one of these, or type in your own)'); ?>
+              </select> 
             </td>
-          </tr>
-
-        <tr>
-          <td valign='top' id='title_diagnosis' nowrap><b><?php echo $GLOBALS['athletic_team'] ? xlt('Text Diagnosis') : xlt('Title').$focustitle[1]; ?>:</b></td>
-          <td>
+        </tr>
+        <tr id="row_title">
+          <td valign='top' class="right" id='title_diagnosis' nowrap><b><?php echo xlt('Title').$focustitle[1]; ?>:</b></td>
+          <td  colspan="3">
             <input type='text' size='40' name='form_title' value='<?php echo xla($irow['title']) ?>' style='width:100%;text-align:left;' />
           </td>
         </tr>
-
-        <tr id='row_diagnosis'>
-          <td valign='top' nowrap><b><?php echo xlt('Diagnosis Code'); ?>:</b></td>
-          <td>
+        <tr id="row_diagnosis">
+          <td valign='top'  class="right" nowrap><b><?php echo xlt('Code'); ?>:</b></td>
+          <td colspan="3">
             <input type='text' size='50' name='form_diagnosis'
               value='<?php echo attr($irow['diagnosis']) ?>' onclick='top.restoreSession();sel_diagnosis();'
               title='<?php echo xla('Click to select or change diagnoses'); ?>'
               style='width:100%' />
           </td>
         </tr>
-
-
-        <tr>
-          <td valign='top' nowrap><b><?php echo xlt('Begin Date'); ?>:</b></td>
+        <tr id='row_begindate'>
+          <td nowrap class="right"><b id="onset"><?php echo xlt('Onset'); ?>:</b></td>
           <td>
 
            <input type='text' size='10' name='form_begin' id='form_begin'
             value='<?php echo attr($irow['begdate']) ?>'¸ 
-            style="width: 75px;"
+            style="width: 75px;font-size:0.8em;"
             onkeyup='datekeyup(this,mypcc)' onblur='dateblur(this,mypcc)'
             title='<?php echo xla('yyyy-mm-dd date of onset, surgery or start of medication'); ?>' />
-           <img src='../../pic/show_calendar.gif' align='absbottom' width='24' height='22'
+           <img src='../../pic/show_calendar.gif' align='absbottom' width='15' height='15'
             id='img_begin' border='0' alt='[?]' style='cursor:pointer'
             title='<?php echo xla('Click here to choose a date'); ?>' />
           </td>
-        </tr>
-
-        <tr id='row_enddate'>
-          <td valign='top' nowrap><b><?php echo xlt('End Date'); ?>:</b></td>
-          <td>
-           <input type='text' size='10' name='form_end' id='form_end'
-            style="width: 75px;"
+          <td id='row_enddate' nowrap><input type='checkbox' name='form_active' value='1' <?php echo attr($irow['enddate']) ? "checked" : ""; ?>
+            onclick='top.restoreSession();resolvedClicked(this);'
+            title='<?php echo xla('Indicates if this issue is currently active'); ?>' />
+            <b id="resolved"><?php echo xlt('Resolved'); ?>:</b>&nbsp;<input type='text' size='10' name='form_end' id='form_end'
+            style="width: 75px;font-size:0.8em;"
             value='<?php echo attr($irow['enddate']) ?>'
             onkeyup='datekeyup(this,mypcc)' onblur='dateblur(this,mypcc)'
             title='<?php echo xla('yyyy-mm-dd date of recovery or end of medication'); ?>' />
-           <img src='../../pic/show_calendar.gif' align='absbottom' width='24' height='22'
+           <img src='../../pic/show_calendar.gif' align='absbottom' width='15' height='15'
             id='img_end' border='0' alt='[?]' style='cursor:pointer'
-            title='<?php echo xla('Click here to choose a date'); ?>' />
-            &nbsp;(<?php echo xlt('leave blank if still active'); ?>)
-          </td>
-         </tr>
-
-         <tr id='row_active'>
-          <td valign='top' nowrap><b><?php echo xlt('Active'); ?>:</b></td>
-          <td>
-           <input type='checkbox' name='form_active' value='1' <?php echo attr($irow['enddate']) ? "" : "checked"; ?>
-            onclick='top.restoreSession();activeClicked(this);'
-            title='<?php echo xla('Indicates if this issue is currently active'); ?>' />
-          </td>
-         </tr>
-
-         <tr<?php if (! $GLOBALS['athletic_team']) echo " style='display:none;'"; ?> id='row_returndate'>
-          <td valign='top' nowrap><b><?php echo xlt('Returned to Play'); ?>:</b></td>
-          <td>
-           <input type='text' size='10' name='form_return' id='form_return'
-            value='<?php echo attr($irow['returndate']) ?>'
-            onkeyup='datekeyup(this,mypcc)' onblur='dateblur(this,mypcc)'
-            title='<?php echo xla('yyyy-mm-dd date returned to play'); ?>' />
-           <img src='../../pic/show_calendar.gif' align='absbottom' width='24' height='22'
-            id='img_return' border='0' alt='[?]' style='cursor:pointer'
-            title='<?php echo xla('Click here to choose a date'); ?>' />
-            &nbsp;(<?php echo xlt('leave blank if still active'); ?>)
+            title='<?php echo xla('Click here to choose a date'); ?>' />            
           </td>
          </tr>
 
          <tr id='row_occurrence'>
-          <td valign='top' nowrap><b><?php echo xlt('Occurrence'); ?>:</b></td>
-          <td>
+          <td valign='top' nowrap><b><?php echo xlt('Course'); ?>:</b></td>
+          <td colspan="3">
            <?php
             // Modified 6/2009 by BM to incorporate the occurrence items into the list_options listings
             generate_form_field(array('data_type'=>1,'field_id'=>'occur','list_id'=>'occurrence','empty_title'=>'SKIP'), $irow['occurrence']);
@@ -732,7 +719,7 @@ function divclick(cb, divid) {
 
          <tr id='row_classification'>
           <td valign='top' nowrap><b><?php echo xlt('Classification'); ?>:</b></td>
-          <td>
+          <td colspan="3">
            <select name='form_classification'>
           <?php
          foreach ($ISSUE_CLASSIFICATIONS as $key => $value) {
@@ -744,70 +731,27 @@ function divclick(cb, divid) {
            </select>
           </td>
         </tr>
-
-         <tr<?php if (! $GLOBALS['athletic_team']) echo " style='display:none;'"; ?> id='row_reinjury_id'>
-            <td valign='top' nowrap><b><?php echo xlt('Re-Injury?'); ?>:</b></td>
-            <td>
-             <select name='form_reinjury_id'>
-              <option value='0'><?php echo xlt('No'); ?></option>
-            <?php
-            $pres = sqlStatement(
-             "SELECT id, begdate, title " .
-             "FROM lists WHERE " .
-             "pid = ? AND " .
-             "type = 'football_injury' AND " .
-             "activity = 1 " .
-             "ORDER BY begdate DESC", array($thispid)
-            );
-            while ($prow = sqlFetchArray($pres)) {
-              echo "   <option value='" . attr($prow['id']) . "'";
-              if ($prow['id'] == $irow['reinjury_id']) echo " selected";
-              echo ">" . text($prow['begdate']) . " " . text($prow['title']) . "\n";
-            }
-            ?>
-           </select>
-          </td>
-        </tr>
-         <!-- Reaction For Medication Allergy -->
         <tr id='row_reaction'>
            <td valign='top' nowrap><b><?php echo xlt('Reaction'); ?>:</b></td>
-           <td>
+           <td  colspan="3">
             <input type='text' size='40' name='form_reaction' value='<?php echo attr($irow['reaction']) ?>'
              style='width:100%' title='<?php echo xla('Allergy Reaction'); ?>' />
            </td>
         </tr>
-        <!-- End of reaction -->
-          <!--  
-
-          <?php 
-          /*
-           *  The referred by inputs need ony be shown for certain fields.  They do not show up (or fit) in Allergies.
-           *
-           */
-
-           ?>
-              -->      <tr
-
-                   <?php 
-                   if (!$GLOBALS['athletic_team']) echo " style='display:none;'"; 
-
-
-                   ?> id='row_referredby'>
-                    <td valign='top' nowrap><b><?php echo xlt('Referred by'); ?>:</b></td>
-                    <td>
+        <tr id='row_referredby'>
+                    <td class="right" nowrap><b id="by_whom"><?php echo xlt('Referred by'); ?>:</b></td>
+                    <td  colspan="3">
                      <input type='text' size='40' name='form_referredby' value='<?php echo attr($irow['referredby']) ?>'
                       style='width:100%' title='<?php echo xla('Referring physician and practice'); ?>' />
                     </td>
-                   </tr>
-         
+        </tr>
         <tr id='row_comments'>
-          <td valign='top' nowrap><b><?php echo xlt('Comments'); ?>:</b></td>
-          <td>
+          <td valign='top' class="right" nowrap><b><?php echo xlt('Comments'); ?>:</b></td>
+          <td colspan="3">
            <textarea name='form_comments' rows='1' cols='40' wrap='virtual' style='width:100%'><?php echo text($irow['comments']) ?></textarea>
           </td>
         </tr>
-
-        <tr<?php if ($GLOBALS['athletic_team'] || $GLOBALS['ippf_specific']) echo " style='display:none;'"; ?>>
+        <tr id="row_outcome">
           <td valign='top' nowrap><b><?php echo xlt('Outcome'); ?>:</b></td>
           <td>
            <?php
@@ -815,10 +759,9 @@ function divclick(cb, divid) {
            ?>
           </td>
         </tr>
-
-        <tr<?php if (!$GLOBALS['athletic_team'] || $GLOBALS['ippf_specific']) echo " style='display:none;'"; ?>>
+        <tr id="row_destination">
           <td valign='top' nowrap><b><?php echo xlt('Destination'); ?>:</b></td>
-          <td>
+          <td colspan="3">
           <?php if (true) { ?>
            <input type='text' size='40' name='form_destination' value='<?php echo attr($irow['destination']) ?>'
             style='width:100%' title='GP, Secondary care specialist, etc.' />
@@ -830,6 +773,56 @@ function divclick(cb, divid) {
           <?php } ?>
           </td>
         </tr>
+        <tr id="row_social">
+          <td colspan="3"><div class="" id="tab_Lifestyle">
+      <table border="0" cellpadding="0">
+
+      
+<tbody><tr><td></td><td colspan="3"><select name="form_tobacco" id="form_tobacco" onchange="radioChange(this.options[this.selectedIndex].value)" title="Tobacco use">
+      <option value="">Unassigned</option><option value="1">Current every day smoker</option>
+<option value="2">Current some day smoker</option>
+<option value="3">Former smoker</option>
+<option value="4">Never smoker</option>
+<option value="5">Smoker, current status unknown</option>
+<option value="9">Unknown if ever smoked</option>
+<option value="15">Heavy tobacco smoker</option>
+<option value="16">Light tobacco smoker</option>
+</select></td></tr>
+  <tr><td class="label" colspan="1">Tobacco:</td>
+<td class="text data" colspan="3">
+  <table cellpadding="0" cellspacing="0"><tbody><tr></tr>
+    <style>
+    .data td{
+      font-size:0.6em;
+
+    }
+    </style>
+    <tr><td><input type="text" name="form_text_tobacco" id="form_text_tobacco" size="20" value="">&nbsp;</td><td class="bold">&nbsp;&nbsp;</td><td class="text"><input type="radio" name="radio_tobacco" id="radio_tobacco[current]" value="currenttobacco" onclick="smoking_statusClicked(this)">Current&nbsp;</td><td class="text"><input type="radio" name="radio_tobacco" id="radio_tobacco[quit]" value="quittobacco" onclick="smoking_statusClicked(this)">Quit&nbsp;</td><td class="text"><input type="text" size="6" name="date_tobacco" id="date_tobacco" value="" title="Tobacco use" onkeyup="datekeyup(this,mypcc)" onblur="dateblur(this,mypcc)"><img src="/openemr/interface/pic/show_calendar.gif" align="absbottom" width="15" height="15" id="img_tobacco" border="0" alt="[?]" style="cursor:pointer" title="Click here to choose a date">&nbsp;</td><td class="text"><input type="radio" name="radio_tobacco" id="radio_tobacco[never]" value="nevertobacco" onclick="smoking_statusClicked(this)">Never&nbsp;</td></tr></tbody></table></td></tr>
+<tr><td class="label" colspan="1">Coffee:</td><td class="text data" colspan="3"><table cellpadding="0" cellspacing="0"><tbody><tr><td><input type="text" name="form_coffee" id="form_coffee" size="20" value="">&nbsp;</td><td class="bold">&nbsp;&nbsp;</td><td class="text"><input type="radio" name="radio_coffee" id="radio_coffee[current]" value="currentcoffee">Current&nbsp;</td><td class="text"><input type="radio" name="radio_coffee" id="radio_coffee[quit]" value="quitcoffee">Quit&nbsp;</td><td class="text"><input type="text" size="6" name="date_coffee" id="date_coffee" value="" title="Caffeine consumption" onkeyup="datekeyup(this,mypcc)" onblur="dateblur(this,mypcc)"><img src="/openemr/interface/pic/show_calendar.gif" align="absbottom" width="15" height="15" id="img_coffee" border="0" alt="[?]" style="cursor:pointer" title="Click here to choose a date">&nbsp;</td><td class="text"><input type="radio" name="radio_coffee" id="radio_coffee[never]" value="nevercoffee">Never&nbsp;</td>
+</tr></tbody></table></td></tr>
+
+<tr><td class="label" colspan="1">Alcohol:</td><td class="text data" colspan="3"><table cellpadding="0" cellspacing="0"><tbody><tr><td><input type="text" name="form_alcohol" id="form_alcohol" size="20" value="">&nbsp;</td><td class="bold">&nbsp;&nbsp;</td><td class="text"><input type="radio" name="radio_alcohol" id="radio_alcohol[current]" value="currentalcohol">Current&nbsp;</td><td class="text"><input type="radio" name="radio_alcohol" id="radio_alcohol[quit]" value="quitalcohol">Quit&nbsp;</td><td class="text"><input type="text" size="6" name="date_alcohol" id="date_alcohol" value="" title="Alcohol consumption" onkeyup="datekeyup(this,mypcc)" onblur="dateblur(this,mypcc)"><img src="/openemr/interface/pic/show_calendar.gif" align="absbottom" width="15" height="15" id="img_alcohol" border="0" alt="[?]" style="cursor:pointer" title="Click here to choose a date">&nbsp;</td><td class="text"><input type="radio" name="radio_alcohol" id="radio_alcohol[never]" value="neveralcohol">Never&nbsp;</td>
+</tr></tbody></table></td></tr>
+
+<tr><td class="label" colspan="1">Recreational Drugs:</td><td class="text data" colspan="3"><table cellpadding="0" cellspacing="0"><tbody><tr><td><input type="text" name="form_recreational_drugs" id="form_recreational_drugs" size="20" value="">&nbsp;</td><td class="bold">&nbsp;&nbsp;</td><td class="text"><input type="radio" name="radio_recreational_drugs" id="radio_recreational_drugs[current]" value="currentrecreational_drugs">Current&nbsp;</td><td class="text"><input type="radio" name="radio_recreational_drugs" id="radio_recreational_drugs[quit]" value="quitrecreational_drugs">Quit&nbsp;</td><td class="text"><input type="text" size="6" name="date_recreational_drugs" id="date_recreational_drugs" value="" title="Recreational drug use" onkeyup="datekeyup(this,mypcc)" onblur="dateblur(this,mypcc)"><img src="/openemr/interface/pic/show_calendar.gif" align="absbottom" width="15" height="15" id="img_recreational_drugs" border="0" alt="[?]" style="cursor:pointer" title="Click here to choose a date">&nbsp;</td> 
+  <td class="text"><input type="radio" name="radio_recreational_drugs" id="radio_recreational_drugs[never]" value="neverrecreational_drugs">Never&nbsp;</td>
+</tr></tbody></table></td></tr>
+
+<tr><td class="label" colspan="1">Counseling:</td><td class="text data" colspan="3"><table cellpadding="0" cellspacing="0"><tbody><tr><td><input type="text" name="form_counseling" id="form_counseling" size="20" value="">&nbsp;</td><td class="bold">&nbsp;&nbsp;</td><td class="text"><input type="radio" name="radio_counseling" id="radio_counseling[current]" value="currentcounseling">Current&nbsp;</td><td class="text"><input type="radio" name="radio_counseling" id="radio_counseling[quit]" value="quitcounseling">Quit&nbsp;</td><td class="text"><input type="text" size="6" name="date_counseling" id="date_counseling" value="" title="Counseling activities" onkeyup="datekeyup(this,mypcc)" onblur="dateblur(this,mypcc)"><img src="/openemr/interface/pic/show_calendar.gif" align="absbottom" width="15" height="15" id="img_counseling" border="0" alt="[?]" style="cursor:pointer" title="Click here to choose a date">&nbsp;</td><td class="text"><input type="radio" name="radio_counseling" id="radio_counseling[never]" value="nevercounseling">Never&nbsp;</td>
+</tr></tbody></table></td></tr>
+
+<tr><td class="label" colspan="1">Exercise Patterns:</td><td class="text data" colspan="3"><table cellpadding="0" cellspacing="0"><tbody><tr><td><input type="text" name="form_exercise_patterns" id="form_exercise_patterns" size="20" value="">&nbsp;</td><td class="bold">&nbsp;&nbsp;</td><td class="text"><input type="radio" name="radio_exercise_patterns" id="radio_exercise_patterns[current]" value="currentexercise_patterns">Current&nbsp;</td><td class="text"><input type="radio" name="radio_exercise_patterns" id="radio_exercise_patterns[quit]" value="quitexercise_patterns">Quit&nbsp;</td><td class="text"><input type="text" size="6" name="date_exercise_patterns" id="date_exercise_patterns" value="" title="Exercise patterns" onkeyup="datekeyup(this,mypcc)" onblur="dateblur(this,mypcc)"><img src="/openemr/interface/pic/show_calendar.gif" align="absbottom" width="15" height="15" id="img_exercise_patterns" border="0" alt="[?]" style="cursor:pointer" title="Click here to choose a date">&nbsp;</td><td class="text"><input type="radio" name="radio_exercise_patterns" id="radio_exercise_patterns[never]" value="neverexercise_patterns">Never&nbsp;</td>
+</tr></tbody></table></td></tr>
+
+<tr><td class="label" colspan="1">Hazardous Activities:</td><td class="text data" colspan="3"><table cellpadding="0" cellspacing="0"><tbody><tr><td><input type="text" name="form_hazardous_activities" id="form_hazardous_activities" size="20" value="">&nbsp;</td><td class="bold">&nbsp;&nbsp;</td><td class="text"><input type="radio" name="radio_hazardous_activities" id="radio_hazardous_activities[current]" value="currenthazardous_activities">Current&nbsp;</td><td class="text"><input type="radio" name="radio_hazardous_activities" id="radio_hazardous_activities[quit]" value="quithazardous_activities">Quit&nbsp;</td><td class="text"><input type="text" size="6" name="date_hazardous_activities" id="date_hazardous_activities" value="" title="Hazardous activities" onkeyup="datekeyup(this,mypcc)" onblur="dateblur(this,mypcc)"><img src="/openemr/interface/pic/show_calendar.gif" align="absbottom" width="15" height="15" id="img_hazardous_activities" border="0" alt="[?]" style="cursor:pointer" title="Click here to choose a date">&nbsp;</td><td class="text"><input type="radio" name="radio_hazardous_activities" id="radio_hazardous_activities[never]" value="neverhazardous_activities">Never&nbsp;</td>
+</tr></tbody></table></td></tr>
+
+<tr><td class="label" colspan="1">Sleep Patterns:</td><td class="text data" colspan="3"><input type="text" name="form_sleep_patterns" id="form_sleep_patterns" size="20" title="Sleep patterns" value=""></td></tr>
+<tr><td class="label" colspan="1">Seatbelt Use:</td><td class="text data" colspan="3"><input type="text" name="form_seatbelt_use" id="form_seatbelt_use" size="20" title="Seatbelt use" value="">
+      </td></tr></tbody></table>
+    </div>
+</td>
+</tr>
 
       </table>
     </div>
@@ -855,7 +848,7 @@ function divclick(cb, divid) {
  newtype(<?php echo $type_index ?>);
  Calendar.setup({inputField:"form_begin", ifFormat:"%Y-%m-%d", button:"img_begin"});
  Calendar.setup({inputField:"form_end", ifFormat:"%Y-%m-%d", button:"img_end"});
- Calendar.setup({inputField:"form_return", ifFormat:"%Y-%m-%d", button:"img_return"});
+ /*Calendar.setup({inputField:"form_return", ifFormat:"%Y-%m-%d", button:"img_return"});*/
 </script>
 </div>
 </body>

@@ -648,4 +648,3 @@ INSERT INTO `form_eye_mag_prefs` (`PEZONE`, `LOCATION`, `LOCATION_text`, `id`, `
 ('PREFS', 'ACT_VIEW', 'ACT View', 1, 'ACT_VIEW', 64, '', 14,'ADD');
 
 INSERT INTO `openemr`.`list_options` (`list_id`, `option_id`, `title`, `seq`, `is_default`, `option_value`, `mapping`, `notes`, `codes`) VALUES ('lists', 'eye_issues_list', 'Past Ocular Issues list', '0', '0', '0', '', '', '');
-
