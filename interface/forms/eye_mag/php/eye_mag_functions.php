@@ -34,10 +34,13 @@
  */ 
 
 $form_folder = "eye_mag";
+
 function priors_select($zone,$orig_id,$id_to_show,$pid,$type='text') {
     global $form_folder;
+    global $form_name;
     global $visit_date;
-
+    $form_name = "Eye Exam"; //this must be added on adding the form - BAD
+    // need to change this query.
     $output_return ="<span style='right:0.241in;
                                 font-size:0.72em;
                                 padding:1 0 0 10;
@@ -58,7 +61,8 @@ function priors_select($zone,$orig_id,$id_to_show,$pid,$type='text') {
                     forms.form_name =? and 
                     forms.deleted != '1' and 
                     forms.pid =form_eye_mag.pid and form_eye_mag.pid=? ORDER BY encounter_date DESC";
-        $result = sqlStatement($query,array($form_folder,$pid));
+
+        $result = sqlStatement($query,array('Eye Exam',$pid));
         $counter = sqlNumRows($result);
         global $priors;
         global $current;
@@ -70,6 +74,7 @@ function priors_select($zone,$orig_id,$id_to_show,$pid,$type='text') {
             $exam_date = date_format($visit_date_local, 'm/d/Y'); 
             //  there may be an openEMR global user preference for date formatting
             //  there is - use when ready...
+        //    echo $visit_date_local." -- ".$exam_date;
             $priors[$i] = $prior;
             $selected ='';
             $priors[$i]['exam_date'] = $exam_date;
@@ -108,8 +113,8 @@ function priors_select($zone,$orig_id,$id_to_show,$pid,$type='text') {
     }
     if ($id_to_show != $orig_id) {
         $output_return .= '
-                <span title="   '.xla("Copy $zone values from ".$priors[$current]['exam_date']." to current visit.").'
-    '.xla("Updated fields are purple.").'"
+                <span title="'.xla("Copy $zone values from ".$priors[$current]['exam_date']." to current visit.").'
+                '.xla("Updated fields will be purple."). '"
 
                     id="COPY_'.attr($zone).'"
                     name="COPY_'.attr($zone).'"
@@ -152,7 +157,7 @@ function priors_select($zone,$orig_id,$id_to_show,$pid,$type='text') {
                 title="'.attr($zone).': '.attr($priors[0]['encounter_date']).'"> &nbsp;
         </span>
     </span>';
-                 
+            
      return $output_return;   
 }
 
@@ -1344,11 +1349,11 @@ function display_PRIOR_section ($zone,$orig_id,$id_to_show,$pid,$report = '0') {
                         <span class="left" style="font-weight:800;font-size:0.7em;">POH</span>
                     </td>
                     <td >
-                        <span class="top_right btn-sm" href="#PMH_anchor" onclick="alter_issue('0','medical_problem','eye');" style="text-align:right;font-size:8px;">New</span>
+                        <span class="right btn-sm" href="#PMH_anchor" onclick="alter_issue('0','medical_problem','eye');" style="text-align:right;font-size:8px;">New</span>
                     </td>
                 </tr>
             </table>                
-            <table style='margin-bottom:20px;border:1pt solid black;max-height:1.5in;max-width:1.5in;background-color: rgb(255, 248, 220); font-size:0.9em;overflow:auto;'>
+            <table style='margin-bottom:10px;border:1pt solid black;max-height:1.5in;max-width:1.5in;background-color: rgb(255, 248, 220); font-size:0.9em;overflow:auto;'>
                 <tr>
                     <td style='min-height:1.2in;min-width:1.5in;padding-left:5px;'>
                     <?php
@@ -1372,11 +1377,11 @@ function display_PRIOR_section ($zone,$orig_id,$id_to_show,$pid,$report = '0') {
                         <span class="left" style="font-weight:800;font-size:0.7em;">PMH</span>
                     </td>
                     <td >
-                        <span class="top_right btn-sm" href="#PMH_anchor" onclick="alter_issue('0','medical_problem','');" style="text-align:right;font-size:8px;">New</span>
+                        <span class="right btn-sm" href="#PMH_anchor" onclick="alter_issue('0','medical_problem','');" style="text-align:right;font-size:8px;">New</span>
                     </td>
                 </tr>
             </table>
-            <table style='margin-bottom:20px;border:1pt solid black;max-height:1.5in;max-width:1.5in;background-color: rgb(255, 248, 220); font-size:0.9em;overflow:auto;'>
+            <table style='margin-bottom:10px;border:1pt solid black;max-height:1.5in;max-width:1.5in;background-color: rgb(255, 248, 220); font-size:0.9em;overflow:auto;'>
                 <tr>
                     <td style='min-height:1.2in;min-width:1.5in;padding-left:5px;'>
                     <?php
@@ -1403,11 +1408,11 @@ function display_PRIOR_section ($zone,$orig_id,$id_to_show,$pid,$report = '0') {
                         <span class="left" style="font-weight:800;font-size:0.7em;">Meds</span>
                     </td>
                     <td >
-                        <span class="top_right btn-sm" href="#PMH_anchor" onclick="alter_issue('0','medication','');" style="text-align:right;font-size:8px;">New</span>
+                        <span class="right btn-sm" href="#PMH_anchor" onclick="alter_issue('0','medication','');" style="text-align:right;font-size:8px;">New</span>
                     </td>
                 </tr>
             </table>
-            <table style='margin-bottom:20px;border:1pt solid black;max-height:1.5in;max-width:1.5in;background-color: rgb(255, 248, 220); font-size:0.9em;overflow:auto;'>
+            <table style='margin-bottom:10px;border:1pt solid black;max-height:1.5in;max-width:1.5in;background-color: rgb(255, 248, 220); font-size:0.9em;overflow:auto;'>
                 <tr>
                     <td style='min-height:1.2in;min-width:1.5in;padding-left:5px;'>
                     <?php
@@ -1432,11 +1437,11 @@ function display_PRIOR_section ($zone,$orig_id,$id_to_show,$pid,$report = '0') {
                         <span class="left" style="font-weight:800;font-size:0.7em;">Surgery</span>
                     </td>
                     <td >
-                        <span class="top_right btn-sm" href="#PMH_anchor" onclick="alter_issue('0','surgery','');" style="text-align:right;font-size:8px;">New</span>
+                        <span class="right btn-sm" href="#PMH_anchor" onclick="alter_issue('0','surgery','');" style="text-align:right;font-size:8px;">New</span>
                     </td>
                 </tr>
             </table>      
-            <table style='margin-bottom:20px;border:1pt solid black;max-height:1.5in;max-width:1.5in;background-color: rgb(255, 248, 220); font-size:0.9em;overflow:auto;'>
+            <table style='margin-bottom:10px;border:1pt solid black;max-height:1.5in;max-width:1.5in;background-color: rgb(255, 248, 220); font-size:0.9em;overflow:auto;'>
                 <tr>
                     <td style='min-height:1.2in;min-width:1.5in;padding-left:5px;'>
                     <?php
@@ -1461,11 +1466,11 @@ function display_PRIOR_section ($zone,$orig_id,$id_to_show,$pid,$report = '0') {
                         <span class="left" style="font-weight:800;font-size:0.7em;">Allergy</span>
                     </td>
                     <td >
-                        <span class="top_right btn-sm" href="#PMH_anchor" onclick="alter_issue('0','POH','');" style="text-align:right;font-size:8px;">New</span>
+                        <span class="right btn-sm" href="#PMH_anchor" onclick="alter_issue('0','allergy','');" style="text-align:right;font-size:8px;">New</span>
                     </td>
                 </tr>
             </table>
-            <table style='margin-bottom:20px;border:1pt solid black;max-height:1.5in;max-width:1.5in;background-color: rgb(255, 248, 220); font-size:0.9em;overflow:auto;'>
+            <table style='margin-bottom:10px;border:1pt solid black;max-height:1.5in;max-width:1.5in;background-color: rgb(255, 248, 220); font-size:0.9em;overflow:auto;'>
                 <tr>
                     <td style='min-height:1.2in;min-width:1.5in;padding-left:5px;'>
                     <?php
@@ -1492,12 +1497,12 @@ function display_PRIOR_section ($zone,$orig_id,$id_to_show,$pid,$report = '0') {
                         <span class="left" style="font-weight:800;font-size:0.7em;">FH</span>
                     </td>
                     <td >
-                        <span class="top_right btn-sm" href="#PMH_anchor" onclick="alter_issue('0','FH','');" style="text-align:right;font-size:8px;">New</span>
+                        <span class="right btn-sm" href="#PMH_anchor" onclick="alter_issue('0','FH','');" style="text-align:right;font-size:8px;">New</span>
                     </td>
                 </tr>
             </table>
                 
-            <table style='margin-bottom:20px;border:1pt solid black;max-height:1.5in;max-width:1.5in;background-color: rgb(255, 248, 220); font-size:0.9em;overflow:auto;'>
+            <table style='margin-bottom:10px;border:1pt solid black;max-height:1.5in;max-width:1.5in;background-color: rgb(255, 248, 220); font-size:0.9em;overflow:auto;'>
                 <tr>
                     <td style='min-height:1.2in;min-width:1.5in;padding-left:5px;'>
                     <?php
@@ -1521,12 +1526,12 @@ function display_PRIOR_section ($zone,$orig_id,$id_to_show,$pid,$report = '0') {
                         <span class="left" style="font-weight:800;font-size:0.7em;">Social</span>
                     </td>
                     <td >
-                        <span class="top_right btn-sm" href="#PMH_anchor" onclick="alter_issue('0','SOCH','');" style="text-align:right;font-size:8px;">New</span>
+                        <span class="right btn-sm" href="#PMH_anchor" onclick="alter_issue('0','SOCH','');" style="text-align:right;font-size:8px;">New</span>
                     </td>
                 </tr>
             </table>
                 
-            <table style='margin-bottom:20px;border:1pt solid black;max-height:1.5in;max-width:1.5in;background-color: rgb(255, 248, 220); font-size:0.9em;overflow:auto;'>
+            <table style='margin-bottom:10px;border:1pt solid black;max-height:1.5in;max-width:1.5in;background-color: rgb(255, 248, 220); font-size:0.9em;overflow:auto;'>
                 <tr>
                     <td style='min-height:1.2in;min-width:1.5in;padding-left:5px;'>
                     <?php
@@ -1550,11 +1555,11 @@ function display_PRIOR_section ($zone,$orig_id,$id_to_show,$pid,$report = '0') {
                         <span class="left" style="font-weight:800;font-size:0.7em;">ROS</span>
                     </td>
                     <td >
-                        <span class="top_right btn-sm" href="#PMH_anchor" onclick="alter_issue('0','ROS');" style="text-align:right;font-size:8px;">New</span>
+                        <span class="right btn-sm" href="#PMH_anchor" onclick="alter_issue('0','ROS','');" style="text-align:right;font-size:8px;">New</span>
                     </td>
                 </tr>
             </table>               
-            <table style='margin-bottom:20px;border:1pt solid black;max-height:1.5in;max-width:1.5in;background-color: rgb(255, 248, 220); font-size:0.9em;overflow:auto;'>
+            <table style='margin-bottom:10px;border:1pt solid black;max-height:1.5in;max-width:1.5in;background-color: rgb(255, 248, 220); font-size:0.9em;overflow:auto;'>
                 <tr>
                     <td style='min-height:1.2in;min-width:1.5in;padding-left:5px;'>
                     <?php
@@ -1584,87 +1589,150 @@ function build_PMSFH($pid) {
     global $ISSUE_TYPES;
     global $ISSUE_TYPE_STYLES;
 
-        require_once($GLOBALS['fileroot'].'/custom/code_types.inc.php');
-        require_once($GLOBALS['srcdir'].'/options.inc.php');
-        // build a variable with all the PMH/PSurgHx/FH/SocHx/All
-        // then we can display it however we like 
-        $PMSFH = array();
-         //       $ISSUE_TYPES[] = "POH";
-           //     $ISSUE_TYPES[] = "FH";
-             //   $ISSUE_TYPES[] = "SOCH";
-        $ISSUE_TYPES['POH'] = array("Past Ocular History","POH","O","1");
-        $ISSUE_TYPES['FH'] = array("Family History","FH","O","1");
-        $ISSUE_TYPES['SOCH'] = array("Social History","SocH","O","1");
+    require_once($GLOBALS['fileroot'].'/custom/code_types.inc.php');
+    require_once($GLOBALS['srcdir'].'/options.inc.php');
+    // build a variable with all the PMH/PSurgHx/FH/SocHx/All
+    // then we can display it however we like 
+    $PMSFH = array();
+     //       $ISSUE_TYPES[] = "POH";
+       //     $ISSUE_TYPES[] = "FH";
+         //   $ISSUE_TYPES[] = "SOCH";
+    $ISSUE_TYPES['POH'] = array("Past Ocular History","POH","O","1");
+    $ISSUE_TYPES['FH'] = array("Family History","FH","O","1");
+    $ISSUE_TYPES['SOCH'] = array("Social History","SocH","O","1");
 
-        foreach ($ISSUE_TYPES as $focustype => $focustitles) {
-                if ($category) {
-                    //    Only show this category
-                   if ($focustype != $category) continue;
-                }
-               // $PMSFH[$focustitles[1]]="category";
-              //  $focustype= $focustitles[3];
-                $subtype = " and (subtype is NULL or subtype ='' )";
-                if ($focustype =='POH') {
-                    $focustype = "medical_problem";
-                    $subtype=" and subtype ='eye'";
-                }
-                if ($focustype == "FH" || $focustype == "SOCH") {
-                    //we are doing a save for SocHx or FH so for now do nothing
-                    continue;
-                }
-                $pres = sqlStatement("SELECT * FROM lists WHERE pid = ? AND type = ? " .
-                    $subtype." ORDER BY begdate", array($pid,$focustype) );
-                $row_counter='0';
-                while ($row = sqlFetchArray($pres)) {
-                        $panel_type = $row['type'];
-                        if ($row['subtype'] == "eye") {
-                            $panel_type = "POH";
+    foreach ($ISSUE_TYPES as $focustype => $focustitles) {
+            if ($category) {
+                //    Only show this category
+               if ($focustype != $category) continue;
+            }
+           // $PMSFH[$focustitles[1]]="category";
+          //  $focustype= $focustitles[3];
+            $subtype = " and (subtype is NULL or subtype ='' )";
+            if ($focustype =='POH') {
+                $focustype = "medical_problem";
+                $subtype=" and subtype ='eye'";
+            }
+            if ($focustype == "FH" || $focustype == "SOCH") {
+                //we are doing a save for SocHx or FH so for now do nothing
+                continue;
+            }
+            $pres = sqlStatement("SELECT * FROM lists WHERE pid = ? AND type = ? " .
+                $subtype." ORDER BY begdate", array($pid,$focustype) );
+            $row_counter='0';
+            while ($row = sqlFetchArray($pres)) {
+                    $panel_type = $row['type'];
+                    if ($row['subtype'] == "eye") {
+                        $panel_type = "POH";
+                    }
+                    $rowid = $row['id'];
+                    $disptitle = trim($row['title']) ? $row['title'] : "[Missing Title]";
+                    
+                    // look up the diag codes
+                    $codetext = "";
+                    if ($row['diagnosis'] != "") {
+                        $diags = explode(";", $row['diagnosis']);
+                        foreach ($diags as $diag) {
+                            $codedesc = lookup_code_descriptions($diag);
+                            $codetext .= xlt($diag) . " (" . xlt($codedesc) . ")<br />";
+                     //       $PMSFH['category'][]['title'][]['codedesc'][] = $codedesc;
+                      //      $PMSFH['category'][]['title'][]['codetext'][] = $codetext;
                         }
-                        $rowid = $row['id'];
-                        $disptitle = trim($row['title']) ? $row['title'] : "[Missing Title]";
-                        
-                        // look up the diag codes
-                        $codetext = "";
-                        if ($row['diagnosis'] != "") {
-                            $diags = explode(";", $row['diagnosis']);
-                            foreach ($diags as $diag) {
-                                $codedesc = lookup_code_descriptions($diag);
-                                $codetext .= xlt($diag) . " (" . xlt($codedesc) . ")<br />";
-                         //       $PMSFH['category'][]['title'][]['codedesc'][] = $codedesc;
-                          //      $PMSFH['category'][]['title'][]['codetext'][] = $codetext;
-                            }
-                        }
-
-                        // calculate the status
-                        if ($row['outcome'] == "1" && $row['enddate'] != NULL) {
-                          // Resolved
-                          $statusCompute = generate_display_field(array('data_type'=>'1','list_id'=>'outcome'), $row['outcome']);
-                        } else if($row['enddate'] == NULL) {
-                               $statusCompute = htmlspecialchars( xl("Active") ,ENT_NOQUOTES);
-                        } else {
-                               $statusCompute = htmlspecialchars( xl("Inactive") ,ENT_NOQUOTES);
-                        }
-                    $newdata =  array (
-                        'title' => $disptitle,
-                        'status' => $statusCompute,
-                        'enddate' => $row['enddate'],
-                        'reaction' => $row['reaction'],
-                        'referredby' => $row['referredby'],
-                        'extrainfo' => $row['extrainfo'],
-                        'codedesc' => $codedesc,
-                        'codetype' => $codetype,
-                        'comments' => $row['comments'],
-                        'rowid' => $row['id'],
-                        'row_type' => $row['type']
-                    );
-                    $PMSFH[$panel_type][] = $newdata;
-                    //array_push($PMSFH[$focustype], $newdata);
-
                     }
 
+                    // calculate the status
+                    if ($row['outcome'] == "1" && $row['enddate'] != NULL) {
+                      // Resolved
+                      $statusCompute = generate_display_field(array('data_type'=>'1','list_id'=>'outcome'), $row['outcome']);
+                    } else if($row['enddate'] == NULL) {
+                           $statusCompute = htmlspecialchars( xl("Active") ,ENT_NOQUOTES);
+                    } else {
+                           $statusCompute = htmlspecialchars( xl("Inactive") ,ENT_NOQUOTES);
+                    }
+                $newdata =  array (
+                    'title' => $disptitle,
+                    'status' => $statusCompute,
+                    'enddate' => $row['enddate'],
+                    'reaction' => $row['reaction'],
+                    'referredby' => $row['referredby'],
+                    'extrainfo' => $row['extrainfo'],
+                    'codedesc' => $codedesc,
+                    'codetype' => $codetype,
+                    'comments' => $row['comments'],
+                    'rowid' => $row['id'],
+                    'row_type' => $row['type']
+                );
+                $PMSFH[$panel_type][] = $newdata;
+                //array_push($PMSFH[$focustype], $newdata);
+
+                }
+    }
+    return array($PMSFH);
+    //now build $PMSFH['SOCH']
+    $given ="coffee,tobacco,alcohol,sleep_patterns,exercise_patterns,seatbelt_use,counseling,hazardous_activities,recreational_drugs";
+        /*$dateStart=$_POST['dateState'];
+        $dateEnd=$_POST['dateEnd'];
+        if ($dateStart && $dateEnd) {
+            $result1 = sqlQuery("select $given from history_data where pid = ? and date >= ? and date <= ? order by date DESC limit 0,1", array($pid,$dateStart,$dateEnd) );
         }
-          return array($PMSFH);
+        else if ($dateStart && !$dateEnd) {
+            $result1 = sqlQuery("select $given from history_data where pid = ? and date >= ? order by date DESC limit 0,1", array($pid,$dateStart) );
+        }
+        else if (!$dateStart && $dateEnd) {
+            $result1 = sqlQuery("select $given from history_data where pid = ? and date <= ? order by date DESC limit 0,1", array($pid,$dateEnd) );
+        }
+        else {
+        */
+    $result1 = sqlQuery("select $given from history_data where pid=? order by date DESC limit 0,1", array($pid) );
+        /* } */
+    $group_fields_query = sqlStatement("SELECT * FROM layout_options " .
+    "WHERE form_id = 'HIS' AND group_name = '4Lifestyle' AND uor > 0 " .
+    "ORDER BY seq");
+    while ($group_fields = sqlFetchArray($group_fields_query)) {
+        $titlecols  = $group_fields['titlecols'];
+        $datacols   = $group_fields['datacols'];
+        $data_type  = $group_fields['data_type'];
+        $field_id   = $group_fields['field_id'];
+        $list_id    = $group_fields['list_id'];
+        $currvalue  = '';
+        if (isset($result1[$field_id])) $currvalue = $result1[$field_id];
+        if ($data_type == 28 || $data_type == 32) {
+            $tmp = explode('|', $currvalue);
+            switch(count($tmp)) {
+                case "4": {
+                    $PMSFH['SOCH'][$field_id]['resnote'] = $tmp[0];
+                    $PMSFH['SOCH'][$field_id]['restype'] = $tmp[1];
+                    $PMSFH['SOCH'][$field_id]['resdate'] = $tmp[2];
+                    $PMSFH['SOCH'][$field_id]['reslist'] = $tmp[3];
+                } break;
+                case "3": {
+                    $PMSFH['SOCH'][$field_id]['resnote'] = $tmp[0];
+                    $PMSFH['SOCH'][$field_id]['restype'] = $tmp[1];
+                    $PMSFH['SOCH'][$field_id]['resdate'] = $tmp[2];
+                } break;
+                case "2": {
+                    $PMSFH['SOCH'][$field_id]['resnote'] = $tmp[0];
+                    $PMSFH['SOCH'][$field_id]['restype'] = $tmp[1];
+                    $PMSFH['SOCH'][$field_id]['resdate'] = "";
+                } break;
+                case "1": {
+                    $PMSFH['SOCH'][$field_id]['resnote'] = $tmp[0];
+                    $PMSFH['SOCH'][$field_id]['resdate'] = $PMSFH['SOCH'][$field_id]['restype'] = "";
+                } break;
+                default: {
+                    $PMSFH['SOCH'][$field_id]['restype'] = $PMSFH['SOCH'][$field_id]['resdate'] = $PMSFH['SOCH'][$field_id]['resnote'] = "";
+                } break;
+            }
+            $PMSFH['SOCH'][$field_id]['resnote'] = htmlspecialchars( $PMSFH['SOCH'][$field_id]['resnote'], ENT_QUOTES);
+            $PMSFH['SOCH'][$field_id]['resdate'] = htmlspecialchars( $PMSFH['SOCH'][$field_id]['resdate'], ENT_QUOTES);
+                  //  if ($group_fields['title']) echo htmlspecialchars(xl_layout_label($group_fields['title']).":",ENT_NOQUOTES)."</b>"; else echo "&nbsp;";
+              //      echo generate_display_field($group_fields, $currvalue);
+        } else if ($data_type == 2) {
+             $PMSFH['SOCH'][$field_id]['resnote'] = nl2br(htmlspecialchars($currvalue,ENT_NOQUOTES));
+        }
       }
+    return array($PMSFH);
+}
 
 function show_PMSFH_panel($PMSFH) {
     
@@ -1711,7 +1779,7 @@ function show_PMSFH_panel($PMSFH) {
       }
       
       //<!-- Surgeries -->
-      echo "<br /><b><u>Surgey:</u></b>";
+      echo "<br /><b><u>Surgery:</u></b>";
       ?><span class="top-right btn-sm" href="#PMH_anchor" 
       onclick="alter_issue('0','surgery','');" style="text-align:right;font-size:8px;">Add</span>
       <br />
@@ -1796,6 +1864,103 @@ function show_PMSFH_panel($PMSFH) {
         onclick="alter_issue('0','ROS','');" style="text-align:right;">In development</span><br />
         <?
       }
+}
+
+function show_Social() {
+    ?>
+    <div class="tabContainer">
+                   <?php 
+  $given ="coffee,tobacco,alcohol,sleep_patterns,exercise_patterns,seatbelt_use,counseling,hazardous_activities,recreational_drugs";
+  $dateStart=$_POST['dateState'];
+  $dateEnd=$_POST['dateEnd'];
+  if ($dateStart && $dateEnd) {
+        $result1 = sqlQuery("select $given from history_data where pid = ? and date >= ? and date <= ? order by date DESC limit 0,1", array($pid,$dateStart,$dateEnd) );
+    }
+    else if ($dateStart && !$dateEnd) {
+        $result1 = sqlQuery("select $given from history_data where pid = ? and date >= ? order by date DESC limit 0,1", array($pid,$dateStart) );
+    }
+    else if (!$dateStart && $dateEnd) {
+        $result1 = sqlQuery("select $given from history_data where pid = ? and date <= ? order by date DESC limit 0,1", array($pid,$dateEnd) );
+    }
+    else {
+        $result1 = sqlQuery("select $given from history_data where pid=? order by date DESC limit 0,1", array($pid) );
+    }
+
+/*    return $res;
+*/
+    $group_fields_query = sqlStatement("SELECT * FROM layout_options " .
+    "WHERE form_id = 'HIS' AND group_name = '4Lifestyle' AND uor > 0 " .
+    "ORDER BY seq");
+    
+   /* while ($frow = sqlFetchArray($fres)) {
+                $this_group = isset($frow['group_name']) ? $frow['group_name'] : "" ;
+                $titlecols  = isset($frow['titlecols']) ? $frow['titlecols'] : "";
+                $datacols   = isset($frow['datacols']) ? $frow['datacols'] : "";
+                $data_type  = isset($frow['data_type']) ? $frow['data_type'] : "";
+                $field_id   = isset($frow['field_id']) ? $frow['field_id'] : "";
+                $list_id    = isset($frow['list_id']) ? $frow['list_id'] : "";
+                $currvalue  = '';
+*/
+            ?>
+            
+          <table border='0' cellpadding='0'>
+            <?php
+            while ($group_fields = sqlFetchArray($group_fields_query)) {
+                $titlecols  = $group_fields['titlecols'];
+                $datacols   = $group_fields['datacols'];
+                $data_type  = $group_fields['data_type'];
+                $field_id   = $group_fields['field_id'];
+                $list_id    = $group_fields['list_id'];
+                $currvalue  = '';
+            if (isset($result1[$field_id])) $currvalue = $result1[$field_id];
+            
+            // Handle starting of a new row.
+                                        if (($titlecols > 0 && $cell_count >= $CPR) || $cell_count == 0) {
+                                          disp_end_row();
+                                          echo "<tr>";
+                                        }
+
+                                        if ($item_count == 0 && $titlecols == 0) {
+                                                $titlecols = 1;
+                                        }
+
+                                        // Handle starting of a new label cell.
+                                        if ($titlecols > 0) {
+                                          disp_end_cell();
+                                          $titlecols_esc = htmlspecialchars( $titlecols, ENT_QUOTES);
+                                          echo "<td class='right' colspan='$titlecols_esc' ";
+                                          echo "><b>";
+                                          $cell_count += $titlecols;
+                                        }
+                                        ++$item_count;
+                    // Added 5-09 by BM - Translate label if applicable
+                                        if ($group_fields['title']) echo htmlspecialchars(xl_layout_label($group_fields['title']).":",ENT_NOQUOTES)."</b>"; else echo "&nbsp;";
+
+
+                                        // Handle starting of a new data cell.
+                                        if ($datacols > 0) {
+                                          disp_end_cell();
+                                          $datacols_esc = htmlspecialchars( $datacols, ENT_QUOTES);
+                                          echo "<td class='text data' style='padding-left:10px;' colspan='$datacols_esc'";
+                                          echo ">";
+                                          $cell_count += $datacols;
+                                        }
+
+                                        ++$item_count;
+                                        echo generate_display_field($group_fields, $currvalue);
+                                  }
+
+                        disp_end_row();
+                        ?>
+
+                        </table>
+    
+
+                          
+        <?php
+                   ?>
+</div>
+<?
 }
 /**
  *  This function returns display the draw/sketch diagram for a zone (4 input values)
@@ -1886,7 +2051,8 @@ function display_draw_section ($zone,$encounter,$pid,$side ='OU',$counter='') {
             <button onclick="javascript:cUndo('<?php echo $zone; ?>');return false;" id="Undo_Canvas_<?php echo $zone; ?>">Undo</button>
             <button onclick="javascript:cRedo('<?php echo $zone; ?>');return false;" id="Redo_Canvas_<?php echo $zone; ?>">Redo</button>
             <button onclick="javascript:drawImage('<?php echo $zone; ?>');return false;" id="Clear_Canvas_<?php echo $zone; ?>">Clear</button>
-        <button onclick="return false;" id="Base_Canvas_<?php echo $zone; ?>">Change Base</button>
+        <!-- <button onclick="return false;" id="Base_Canvas_<?php echo $zone; ?>">Change Base</button>
+    -->
         
         </div>
         <br />

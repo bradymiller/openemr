@@ -267,8 +267,18 @@ $practice_data = sqlQuery($query);
                 </td>
             </tr>
             <tr>
-                <td colspan="6" style="border-top:2pt solid black;margin:25px auto;padding:20px;text-align:center;">
-                    <?php echo xlt('Provider'); ?>: <?php echo text($prov_data['fname']); ?> <?php echo text($prov_data['lname']); ?> <?php echo text($prov_data['title']); ?></br>
+                <td colspan="6" style="margin:25px auto;margin:50px;text-align:center;">
+               <?php
+                    $signature = $GLOBALS["webserver_root"]."/interface/forms/eye_mag/images/sign_".$_SESSION['authUserID'].".jpg";
+                    if (file_exists($signature)) {
+                        ?><center>
+                        <div style="position:relative;left:0.in;padding-left:40px;border-bottom:2pt solid black;width:50%;">
+                            <img src="/openemr/interface/forms/eye_mag/images/sign_<?php echo $_SESSION['authUserID']; ?>.jpg" style="width:240px;height:85px;bottom:1px;" /> 
+                        </div>
+                    </center>
+                        <?php } ?>
+
+      <?php echo xlt('Provider'); ?>: <?php echo text($prov_data['fname']); ?> <?php echo text($prov_data['lname']); ?> <?php echo text($prov_data['title']); ?></br>
                     <small><?php echo xlt('e-signed'); ?> <input type="checkbox" checked="checked">
                 </td>
             </tr>

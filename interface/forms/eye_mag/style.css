@@ -1459,7 +1459,7 @@ a:hover, a:focus {
 .left_PMSFH_tab {
     
     right:0px;
-    top:300px;
+    top:100px;
     position:absolute;
     border-radius: 0 0 0 8;
 
@@ -1467,8 +1467,8 @@ a:hover, a:focus {
 }
 .left_PMSFH_tab img{
     border-radius: 8px 0 0 8px;
-    height:120px;
-    width:40px;
+    height:60px;
+    width:20px;
 
 }
 .left_menu_tab {

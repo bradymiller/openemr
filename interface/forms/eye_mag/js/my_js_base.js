@@ -22,7 +22,8 @@
  */
 
 /** Undo feature
- *  RIGHT NOW THIS WORKS PER FIELD ONLY.  You select a field and CTRL-Z reverses/Shift-Ctrl-Z forwards value
+ *  RIGHT NOW THIS WORKS PER FIELD ONLY in FF. In Chrome it works great.  Not sure about IE at all.
+ *  In FF, you select a field and CTRL-Z reverses/Shift-Ctrl-Z forwards value
  *  To get true Undo Redo, we will need to create two arrays, one with the command/field, prior value, next value to undo
  *  and when undone, add this to the REDO array.  When a Undo command is followed by anything other than Redo, it erases REDO array.
  **/
@@ -89,6 +90,7 @@ function submit_form() {
            url 		: url,      // the url where we want to POST
            data 	: formData // our data object
            }).done(function(o) {
+                   //nice to flash a "saved" widget in menu bar if fullscreen or elsewhere if not
                    //  console.log(o);
                    
                    //       $("#IMP").html(formData);
@@ -332,7 +334,26 @@ function show_DRAW_section(zone) {
     
     
 }
-
+    //shows a PRIOR visit section
+function getSection(section,newValue) {
+    var url = "../../forms/eye_mag/save.php?mode=retrieve";
+    
+    var formData = {
+        'PRIORS_query'          : "1",
+        'zone'                  : section,
+        'id_to_show'            : newValue,
+        'pid'                   : $('#pid').val(),
+        'orig_id'               : $('#form_id').val()
+    }
+    $.ajax({
+           type 		: 'POST',
+           url       : url,
+           data 		: formData,
+           success   : function(result) {
+           $("#PRIORS_" + section + "_left_text").html(result);
+           }
+           });
+}
 function show_TEXT() {
         //   alert("show_TEXT");
     $("#PMH_1").removeClass('nodisplay');
@@ -545,12 +566,13 @@ shortcut.add("Meta+ZZ", function() {
              window.location ='http://www.oculoplasticsllc.com/openemr/interface/patient_file/encounter/view_form.php?formname=eye_mag&id=215&pid=1&display=fullscreen&encounter=171&&UNDO_go='+$("#UNDO_ID").val();
              
              });
+shortcut.add("Control+S",function() {
+             submit_form('eye_mag');
+             });
+
 shortcut.add("Meta+Shift+ZZ", function() {
              ("This will move you forward a step...");
              //redo;
-             });
-shortcut.add("Control+S",function() {
-             submit_form('eye_mag');
              });
 shortcut.add("Control+ZZ", function() {
              alert("This will move you back a step...");
@@ -693,6 +715,7 @@ function check_exam_detail() {
     }
 }
 $(document).ready(function() {
+                 
                   $(".kb").addClass('nodisplay');
                   $('.ke').mouseover(function() {
                                      
@@ -1383,11 +1406,13 @@ $(document).ready(function() {
                                                  str = str.toUpperCase();
                                                  $(this).val(str);
                                                  });
-                  $("input[name$='SPH']").blur(function() {
+                  $("input[name$='SPH'],#WOSADD2").blur(function() {
                                                var mid = $(this).val();
                                                if (!mid.match(/\./)) {
                                                var front = mid.match(/([\+\-]?\d{0,2})(\d{2})/)[1];
                                                var back  = mid.match(/(\d{0,2})(\d{2})/)[2];
+                                               if (front =='') front ='0';
+                                               if (front =='-') front ='-0';
                                                mid = front + "." + back;
                                                }
                                                if (!mid.match(/^(\+|\-){1}/)) {
@@ -1421,15 +1446,15 @@ $(document).ready(function() {
                                                 var front = this.id.match(/(.*)AXIS$/)[1];
                                                 var cyl = $("#"+front+"CYL").val();
                                                 if (cyl > '') {
-                                                if (!axis.match(/\d\d\d/)) {
-                                                if (!axis.match(/\d\d/)) {
-                                                if (!axis.match(/\d/)) {
-                                                axis = '0';
-                                                }
-                                                axis = '0' + axis;
-                                                }
-                                                axis = '0' + axis;
-                                                }
+                                                    if (!axis.match(/\d\d\d/)) {
+                                                        if (!axis.match(/\d\d/)) {
+                                                            if (!axis.match(/\d/)) {
+                                                                axis = '0';
+                                                            }
+                                                            axis = '0' + axis;
+                                                        }
+                                                        axis = '0' + axis;
+                                                    }
                                                 }
                                                 //we can utilize a phoropter dial feature, we can start them at their age appropriate with/against the rule value.
                                                 //requires touch screen. requires complete touch interface development. Exists in refraction lanes. Would
@@ -1443,9 +1468,10 @@ $(document).ready(function() {
                   $("input[name$='CYL']").blur(function() {
                                                var mid = $(this).val();
                                                if (!mid.match(/\./)) {
-                                               var front = mid.match(/([\+\-]?\d{0,2})(\d{2})/)[1];
-                                               var back  = mid.match(/(\d{0,2})(\d{2})/)[2];
-                                               mid = front + "." + back;
+                                                var front = mid.match(/([\+\-]?\d{0,2})(\d{2})/)[1];
+                                                var back  = mid.match(/(\d{0,2})(\d{2})/)[2];
+                                                if (front =='') front ='0';
+                                                mid = front + "." + back;
                                                }
                                                
                                                //if mid is -2.5 make it -2.50
@@ -1607,44 +1633,29 @@ $(document).ready(function() {
                   
                   $("body").on("change", "select", function(e){
                                var new_section = this.name.match(/PRIOR_(.*)/);
-                               if (new_section != /\w/){
-                               return;
+                               
+                               if (new_section[1] == /\_/){
+                                return;
                                }
+                               
+                               var newValue = this.value;
+                               //now go get the prior page via ajax
                                var newValue = this.value;
                                $("#PRIORS_"+ new_section[1] +"_left_text").removeClass('nodisplay');
                                $("#DRAWS_" + new_section[1] + "_right").addClass('nodisplay');
                                $("#QP_" + new_section[1]).addClass('nodisplay');
                                
-                               //now go get the prior page via ajax
-                               var url = "../../forms/eye_mag/save.php?mode=retrieve";
                                if (new_section[1] =="ALL") {
                                show_PRIORS();
-                               getSection("ALL");
-                               getSection("EXT");
-                               getSection("ANTSEG");
-                               getSection("RETINA");
-                               getSection("NEURO");
+                               getSection("ALL",newValue);
+                               getSection("EXT",newValue);
+                               getSection("ANTSEG",newValue);
+                               getSection("RETINA",newValue);
+                               getSection("NEURO",newValue);
                                } else {
-                               getSection(new_section[1]);
+                               getSection(new_section[1],newValue);
                                }
                                
-                               function getSection(section) {
-                               var formData = {
-                               'PRIORS_query'          : "1",
-                               'zone'                  : section,
-                               'id_to_show'            : newValue,
-                               'pid'                   : $('#pid').val(),
-                               'orig_id'               : $('#form_id').val()
-                               }
-                               $.ajax({
-                                      type 		: 'POST',
-                                      url       : url,
-                                      data 		: formData,
-                                      success   : function(result) {
-                                      $("#PRIORS_" + section + "_left_text").html(result);
-                                      }
-                                      });
-                               }
                                });
                   $("body").on("click","[id^='Close_PRIORS_']", function() {
                                var new_section = this.id.match(/Close_PRIORS_(.*)$/)[1];

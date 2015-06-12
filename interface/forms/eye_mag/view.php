@@ -155,7 +155,7 @@ require_once("$incdir/patient_file/encounter/new_form.php");
     }
      function doscript(type,id,encounter) {
 
-          dlgopen('../../forms/eye_mag/SpectacleRx.php?target=' + type + '&id='+id+'&encounter='+ encounter, '_blank', 550, 400);
+          dlgopen('../../forms/eye_mag/SpectacleRx.php?target=' + type + '&id='+id+'&encounter='+ encounter, '_blank', 560, 590);
         }
      
      
@@ -209,9 +209,6 @@ require_once("$incdir/patient_file/encounter/new_form.php");
     }
     ?>
 <div id="page" class="left_PMSFH_tab" style="padding-top:5px;">
-                    <a  id="right-panel-link" href="#left-panel">
-  <img src="/openemr/interface/forms/eye_mag/images/PMSFHx.png"></a>
-
                     <!--
                       <h1>Panel slider example</h1>
                     <a id="left-panel-link" href="#left-panel">Open left panel</a> |
@@ -269,6 +266,7 @@ require_once("$incdir/patient_file/encounter/new_form.php");
               name="HPI_sections_loading">
                <i class="fa fa-spinner fa-spin"></i>
           </div> 
+
             <!-- end      HPI spinner -->
             <?php ($CLINICAL =='1') ? ($display_Add = "size100") : ($display_Add = "size50"); ?>
             <?php ($CLINICAL =='0') ? ($display_Visibility = "display") : ($display_Visibility = "nodisplay"); ?>
@@ -328,6 +326,7 @@ require_once("$incdir/patient_file/encounter/new_form.php");
                             </span>
                           </center>
                         </div>
+                             
                         <div id="tab2_CC_text" class="tab_content">
                             <table border="0" width="100%" cellspacing="0" cellpadding="0" 
                                 style="font-size:1.1em;min-height: 2.0in;text-align:left;">
@@ -380,6 +379,7 @@ require_once("$incdir/patient_file/encounter/new_form.php");
                 </div>
               </div>
               <!-- end    HPI Left -->
+
               <!-- start  HPI Right -->
               <div id="HPI_right" name="HPI_right" class="exam_section_right borderShadow">
                 <?php display_draw_section ("HPI",$encounter,$pid); ?>
@@ -641,6 +641,7 @@ require_once("$incdir/patient_file/encounter/new_form.php");
                 <div id="PMH_left_text" style="height: 2.5in;text-align:left;padding-top: 15px;" class="TEXT_class">
                   <span class="closeButton fa fa-paint-brush" id="BUTTON_DRAW_PMH" name="BUTTON_DRAW_PMH"></span>
                   <i class="closeButton_2 fa fa-database" id="BUTTON_QP_PMH" name="BUTTON_QP_PMH"></i>
+
                   <?php ($PMH_VIEW !=2) ? ($display_PMH_view = "wide_textarea") : ($display_PMH_view= "narrow_textarea");?>                                 
                   <?php ($display_PMH_view == "wide_textarea") ? ($marker ="fa-minus-square-o") : ($marker ="fa-plus-square-o");?>
                   <div id="PMSFH_sections" name="PMSFH_sections">
@@ -648,7 +649,8 @@ require_once("$incdir/patient_file/encounter/new_form.php");
                       ../../forms/'.$form_folder.'/a_issue.php
 
                         <?php 
-                        display_PMH_selector;
+                       
+                       // display_PMH_selector();
 
                          ?>
                       
@@ -663,9 +665,13 @@ require_once("$incdir/patient_file/encounter/new_form.php");
               <!-- end    PMH Left -->
               <!-- start  PMH Right -->
               <div id="PMH_right" name="PMH_right" class="exam_section_right borderShadow">
-                <?php display_draw_section("PMH",$encounter,$pid); ?>
+                <a class="left_PMSFH_tab" id="right-panel-link" href="#left-panel">
+                  <img src="/openemr/interface/forms/eye_mag/images/PMSFHx.png">
+                </a>
+              <?php display_draw_section("PMH",$encounter,$pid); ?>
                 <div id="QP_PMH" name="QP_PMH" class="QP_class" style="text-align:left;">
                   <?php display_PRIOR_section("PMSFH",$id,$id,$pid); ?>
+
                 </div>
                 <!--<div class="QP_block borderShadow " style="text-align:center;min-height: 300px;padding:4 10 4 10;font-weight:600;">
                           <span onclick="$('.kb').toggleClass('nodisplay');" title="<?php echo xla('Click to display shorthand field names.'); ?>" class="ke underline">Keyboard Entry</span>&nbsp;<a onclick="goto_url('<?php echo $GLOBALS['webroot']; ?>/interface/forms/eye_mag/help.php?zone=ext');">
@@ -686,7 +692,8 @@ require_once("$incdir/patient_file/encounter/new_form.php");
           <?php 
           if ($display != "fullscreen") {   ?>      
           
-                  <i onclick="top.restoreSession();dopopup('<?php echo $_SERVER['REQUEST_URI']. '&display=fullscreen&encounter='.$encounter; ?>');openNewForm('<?php echo $GLOBALS['webroot']; ?>/interface/patient_file/encounter/load_form.php?formname=fee_sheet');" class="fa fa-plus-square-o top_right"></i>
+                  <i onclick="top.restoreSession();dopopup('<?php echo $_SERVER['REQUEST_URI']. '&display=fullscreen&encounter='.$encounter; ?>');openNewForm('<?php echo $GLOBALS['webroot']; ?>/interface/patient_file/encounter/load_form.php?formname=fee_sheet');" 
+                    class="fa fa-plus-square-o top_right" style="top: -0.2in;right: 0.2in;"></i>
                      <?php 
           }  else { ?>
            <!--<i class="fa fa-close top_right" OnClick="window.close()"></i>-->
@@ -795,14 +802,14 @@ require_once("$incdir/patient_file/encounter/new_form.php");
                       </div>
                       <div id="Lyr4.2" style="position: absolute; top: 0.35in; text-align:right;right:0.1in; height: 0.72in;  padding: 0in; border: 1pt black;">
                           <b><?php echo xlt('OD'); ?></b>
-                          <input type="text" style="left: 0.5in; width: 0.23in; height: 0.18in; " tabindex="52" Xsize="6" name="ODIOPAP" value="<?php echo attr($ODIOPAP); ?>">
-                          <input type="text" style="left: 0.5in; width: 0.23in; height: 0.18in; " tabindex="54" Xsize="6" name="ODIOPTPN" value="<?php echo attr($ODIOPTPN); ?>">
-                          <input type="text" style="left: 0.5in; width: 0.23in; height: 0.18in; " tabindex="56" Xsize="6" name="ODIOPFTN" value="<?php echo attr($ODIOPTPN); ?>">
+                          <input type="text" style="left: 0.5in; width: 0.23in; height: 0.18in; " tabindex="52" name="ODIOPAP" value="<?php echo attr($ODIOPAP); ?>">
+                          <input type="text" style="left: 0.5in; width: 0.23in; height: 0.18in; " tabindex="54" name="ODIOPTPN" value="<?php echo attr($ODIOPTPN); ?>">
+                          <input type="text" style="left: 0.5in; width: 0.23in; height: 0.18in; " name="ODIOPFTN" value="<?php echo attr($ODIOPTPN); ?>">
                           <br />
                           <b><?php echo xlt('OS'); ?> </b>
-                          <input type="text" style="left: 0.5in; width: 0.23in; height: 0.18in; " tabindex="53" Xsize="6" name="OSIOPAP" value="<?php echo attr($OSIOPAP); ?>">
-                          <input type="text" style="left: 0.5in; width: 0.23in; height: 0.18in; " tabindex="55" Xsize="6" name="OSIOPTPN" value="<?php echo attr($OSIOPTPN); ?>">
-                          <input type="text" style="left: 0.5in; width: 0.23in; height: 0.18in; " tabindex="57" Xsize="6" name="OSIOPFTN" value="<?php echo attr($OSIOPFTN); ?>">
+                          <input type="text" style="left: 0.5in; width: 0.23in; height: 0.18in; " tabindex="53" name="OSIOPAP" value="<?php echo attr($OSIOPAP); ?>">
+                          <input type="text" style="left: 0.5in; width: 0.23in; height: 0.18in; " tabindex="55" name="OSIOPTPN" value="<?php echo attr($OSIOPTPN); ?>">
+                          <input type="text" style="left: 0.5in; width: 0.23in; height: 0.18in; " name="OSIOPFTN" value="<?php echo attr($OSIOPFTN); ?>">
                           <br /><br />
                           <span style="position: absolute;top:0.44in;left:0.22in;font-size: 0.8em;"><b><?php echo xlt('AP'); ?></b></span>
                           <span style="position: absolute;top:0.44in;left:0.47in;font-size: 0.8em;"><b><?php echo xlt('TP'); ?></b></span>
@@ -833,7 +840,7 @@ require_once("$incdir/patient_file/encounter/new_form.php");
                       
                       <div style="position:absolute;text-align:right; top:0.03in;font-size:0.8em;right:0.1in;">
                           <label for="Amsler-Normal" class="input-helper input-helper--checkbox"><?php echo xlt('Normal'); ?></label>
-                          <input id="Amsler-Normal" type="checkbox" <?php echo attr($checked); ?>>
+                          <input id="Amsler-Normal" type="checkbox" <?php echo attr($checked); ?> tabindex="56">
                       </div>     
                       <div id="Lyr5.1" style="position: absolute; top: 0.2in; left: 0.12in; display:inline-block;border: none; padding: 0.0in;">
                           <table cellpadding=0 cellspacing=0 style="padding:0px;margin:auto;width:90%;align:auto;font-size:0.8em;text-align:center;">
@@ -993,7 +1000,7 @@ require_once("$incdir/patient_file/encounter/new_form.php");
                                   <td><b><?php echo xlt('OS'); ?></b>
                                   </td>
                                   <td style="border-right:1pt solid black;border-top:1pt solid black;">
-                                      <input type="text" size=1 name='OSPUPILSIZE1' id='OSPUPILSIZE1' style="width:0.25in;height:0.2in;" value="<?php echo attr($OSPUPILSIZE1); ?>">
+                                      <input type="text" size="1" name="OSPUPILSIZE1" id="OSPUPILSIZE1" style="width:0.25in;height:0.2in;" value="<?php echo attr($OSPUPILSIZE1); ?>">
                                       <font>&#8594;</font>
                                       <input type="text" size="1" name="OSPUPILSIZE2" id="OSPUPILSIZE2" style="width:0.25in;height:0.2in;" value="<?php echo attr($OSPUPILSIZE2); ?>">
                                   </td>
@@ -1103,38 +1110,38 @@ require_once("$incdir/patient_file/encounter/new_form.php");
                                     <tr>
                                         <td rowspan="2"><?php echo xlt('Dist'); ?></td>    
                                         <td><b><?php echo xlt('OD'); ?>:</b></td>
-                                        <td><input type=text id="WODSPH" name="WODSPH"  value="<?php echo attr($WODSPH); ?>"></td>
-                                        <td><input type=text id="WODCYL" name="WODCYL"  value="<?php echo attr($WODCYL); ?>"></td>
-                                        <td><input type=text id="WODAXIS" name="WODAXIS" value="<?php echo attr($WODAXIS); ?>"></td>
+                                        <td><input type=text id="WODSPH" name="WODSPH"  value="<?php echo attr($WODSPH); ?>" tabindex="100"></td>
+                                        <td><input type=text id="WODCYL" name="WODCYL"  value="<?php echo attr($WODCYL); ?>" tabindex="101"></td>
+                                        <td><input type=text id="WODAXIS" name="WODAXIS" value="<?php echo attr($WODAXIS); ?>" tabindex="102"></td>
                                         <td><input type=text id="WODPRISM" name="WODPRISM" value="<?php echo attr($WODPRISM); ?>"></td>
-                                        <td><input type=text id="WODVA" name="WODVA" value="<?php echo attr($WODVA); ?>"></td>
+                                        <td><input type=text id="WODVA" name="WODVA" value="<?php echo attr($WODVA); ?>" tabindex="108"></td>
                                     </tr>
                                     <tr>
                                         <td><b><?php echo xlt('OS'); ?>:</b></td>
-                                        <td><input type=text id="WOSSPH" name="WOSSPH" value="<?php echo attr($WOSSPH); ?>"></td>
-                                        <td><input type=text id="WOSCYL" name="WOSCYL" value="<?php echo attr($WOSCYL); ?>"></td>
-                                        <td><input type=text id="WOSAXIS" name="WOSAXIS" value="<?php echo attr($WOSAXIS); ?>"></td>
+                                        <td><input type=text id="WOSSPH" name="WOSSPH" value="<?php echo attr($WOSSPH); ?>" tabindex="103"></td>
+                                        <td><input type=text id="WOSCYL" name="WOSCYL" value="<?php echo attr($WOSCYL); ?>" tabindex="104"></td>
+                                        <td><input type=text id="WOSAXIS" name="WOSAXIS" value="<?php echo attr($WOSAXIS); ?>" tabindex="105"></td>
                                         <td><input type=text id="WOSPRISM" name="WOSPRISM" value="<?php echo attr($WOSPRISM); ?>"></td>
-                                        <td><input type=text id="WOSVA" name="WOSVA" value="<?php echo attr($WOSVA); ?>"></td>
+                                        <td><input type=text id="WOSVA" name="WOSVA" value="<?php echo attr($WOSVA); ?>" tabindex="109"></td>
                                     </tr>
                                     <tr class="WNEAR">
                                         <td rowspan=2><span style="text-decoration:none;"><?php echo xlt('Mid'); ?>/<br /><?php echo xlt('Near'); ?></span></td>    
                                         <td><b><?php echo xlt('OD'); ?>:</b></td>
                                         <td class="WMid nodisplay"><input type=text id="WODADD1" name="WODADD1" value="<?php echo attr($WODADD1); ?>"></td>
-                                        <td class="WAdd2"><input type=text id="WODADD2" name="WODADD2" value="<?php echo attr($WODADD2); ?>"></td>
+                                        <td class="WAdd2"><input type=text id="WODADD2" name="WODADD2" value="<?php echo attr($WODADD2); ?>" tabindex="106"></td>
                                         <td class="WHIDECYL"><input type=text id="WNEARODCYL" name="WNEARODCYL" value="<?php echo attr($WNEARODCYL); ?>"></td>
                                         <td><input type=text id="WNEARODAXIS" name="WNEARODAXIS" value="<?php echo attr($WNEARODAXIS); ?>"></td>
                                         <td><input type=text id="WNEARODPRISM" name="WODPRISMNEAR" value="<?php echo attr($WNEARODPRISM); ?>"></td>
-                                        <td><input type=text id="WNEARODVA" name="WNEARODVA" value="<?php echo attr($WNEARODVA); ?>"></td>
+                                        <td><input type=text id="WNEARODVA" name="WNEARODVA" value="<?php echo attr($WNEARODVA); ?>" tabindex="110"></td>
                                     </tr>
                                     <tr class="WNEAR">
                                         <td><b><?php echo xlt('OS'); ?>:</b></td>
                                         <td class="WMid nodisplay"><input type=text id="WOSADD1" name="WOSADD1" value="<?php echo attr($WOSADD1); ?>"></td>
-                                        <td class="WAdd2"><input type=text id="WOSADD2" name="WOSADD2" value="<?php echo attr($WOSADD2); ?>"></td>
+                                        <td class="WAdd2"><input type=text id="WOSADD2" name="WOSADD2" value="<?php echo attr($WOSADD2); ?>" tabindex="107"></td>
                                         <td class="WHIDECYL"><input type=text id="WNEAROSCYL" name="WNEAROSCYL" value="<?php echo attr($WNEAROSCYL); ?>"></td>
                                         <td><input type=text id="WNEAROSAXIS" name="WNEAROSAXIS" value="<?php echo attr($WNEAROSAXIS); ?>"></td>
                                         <td><input type=text id="WNEAROSPRISM" name="WNEAROSPRISM" value="<?php echo attr($WNEAROSPRISM); ?>"></td>
-                                        <td><input type=text id="WNEAROSVA" name="WNEAROSVA" value="<?php echo attr($WNEAROSVA); ?>"></td>
+                                        <td><input type=text id="WNEAROSVA" name="WNEAROSVA" value="<?php echo attr($WNEAROSVA); ?>" tabindex="110"></td>
                                     </tr>
                                     <tr style="top:3.5in;">
                                         <td colspan="2" style="text-align:right;vertical-align:top;top:0px;"><b><?php echo xlt('Comments'); ?>:</b>
@@ -1159,7 +1166,7 @@ require_once("$incdir/patient_file/encounter/new_form.php");
                             <?php ($MR==1) ? ($display_AR = "display") : ($display_AR = "nodisplay");?>
                             <div id="LayerVision_MR" class="refraction borderShadow <?php echo $display_AR; ?>">
                                 <span class="closeButton fa  fa-close" id="Close_MR" name="Close_MR"></span>
-                                <a href="../../forms/<?php echo $form_folder; ?>/SpectacleRx.php?target=AR&id=<?php echo attr($pid); ?>"><i class="closeButton2 fa fa-print"></i></a>
+                                <i class="closeButton2 fa fa-print" onclick="top.restoreSession();doscript('AR',<?php echo attr($pid); ?>,<?php echo attr($encounter); ?>);return false;"></i></a>
                                 <table id="autorefraction">
                                     <th colspan=9>Autorefraction Refraction</th>
                                     <tr>
@@ -1174,26 +1181,26 @@ require_once("$incdir/patient_file/encounter/new_form.php");
                                     </tr>
                                     <tr>
                                         <td><b><?php echo xlt('OD'); ?>:</b></td>
-                                        <td><input type=text id="ARODSPH" name="ARODSPH" value="<?php echo attr($ARODSPH); ?>"></td>
-                                        <td><input type=text id="ARODCYL" name="ARODCYL" value="<?php echo attr($ARODCYL); ?>"></td>
-                                        <td><input type=text id="ARODAXIS" name="ARODAXIS" value="<?php echo attr($ARODAXIS); ?>"></td>
-                                        <td><input type=text id="ARODVA" name="ARODVA" value="<?php echo attr($ARODVA); ?>"></td>
-                                        <td><input type=text id="ARODADD" name="ARODADD" value="<?php echo attr($ARODADD); ?>"></td>
+                                        <td><input type=text id="ARODSPH" name="ARODSPH" value="<?php echo attr($ARODSPH); ?>" tabindex="120"></td>
+                                        <td><input type=text id="ARODCYL" name="ARODCYL" value="<?php echo attr($ARODCYL); ?>" tabindex="121"></td>
+                                        <td><input type=text id="ARODAXIS" name="ARODAXIS" value="<?php echo attr($ARODAXIS); ?>" tabindex="122"></td>
+                                        <td><input type=text id="ARODVA" name="ARODVA" value="<?php echo attr($ARODVA); ?>" tabindex="128"></td>
+                                        <td><input type=text id="ARODADD" name="ARODADD" value="<?php echo attr($ARODADD); ?>" tabindex="126"></td>
                                         <td><input type=text id="ARNEARODVA" name="ARNEARODVA" value="<?php echo attr($ARNEARODVA); ?>"></td>
                                         <td><input type=text id="ARODPRISM" name="ARODPRISM" value="<?php echo attr($ARODPRISM); ?>"></td>
                                     </tr>
                                      <tr>
                                         <td><b><?php echo xlt('OS'); ?>:</b></td>
-                                        <td><input type=text id="AROSSPH" name="AROSSPH" value="<?php echo attr($AROSSPH); ?>"></td>
-                                        <td><input type=text id="AROSCYL" name="AROSCYL" value="<?php echo attr($AROSCYL); ?>"></td>
-                                        <td><input type=text id="AROSAXIS" name="AROSAXIS" value="<?php echo attr($AROSAXIS); ?>"></td>
-                                        <td><input type=text id="AROSVA" name="AROSVA" value="<?php echo attr($AROSVA); ?>"></td>
-                                        <td><input type=text id="AROSADD" name="AROSADD" value="<?php echo attr($AROSADD); ?>"></td>
+                                        <td><input type=text id="AROSSPH" name="AROSSPH" value="<?php echo attr($AROSSPH); ?>" tabindex="123"></td>
+                                        <td><input type=text id="AROSCYL" name="AROSCYL" value="<?php echo attr($AROSCYL); ?>" tabindex="124"></td>
+                                        <td><input type=text id="AROSAXIS" name="AROSAXIS" value="<?php echo attr($AROSAXIS); ?>" tabindex="125"></td>
+                                        <td><input type=text id="AROSVA" name="AROSVA" value="<?php echo attr($AROSVA); ?>" tabindex="129"></td>
+                                        <td><input type=text id="AROSADD" name="AROSADD" value="<?php echo attr($AROSADD); ?>" tabindex="127"></td>
                                         <td><input type=text id="ARNEAROSVA" name="ARNEAROSVA" value="<?php echo attr($ARNEAROSVA); ?>"></td>
                                         <td><input type=text id="AROSPRISM" name="AROSPRISM" value="<?php echo attr($AROSPRISM); ?>"></td>
                                     </tr>
                                     <th colspan="7">Manifest (Dry) Refraction</th>
-                                    <th colspan="2" style="text-align:right;"><a class="fa fa-print" style="margin:0 7;" Xonclick="top.restoreSession();  return false;" href="../../forms/<?php echo attr($form_folder); ?>/SpectacleRx.php?target=MR&id=<?php echo attr($pid); ?>"></a></th>
+                                    <th colspan="2" style="text-align:right;"><a class="fa fa-print" style="margin:0 7;" onclick="top.restoreSession();doscript('MR',<?php echo attr($pid); ?>,<?php echo attr($encounter); ?>);return false;"></a></th>
                                     <tr>
                                         <td></td>
                                         <td><?php echo xlt('Sph'); ?></td>
@@ -1206,21 +1213,21 @@ require_once("$incdir/patient_file/encounter/new_form.php");
                                     </tr>
                                     <tr>
                                         <td><b><?php echo xlt('OD'); ?>:</b></td>
-                                        <td><input type=text id="MRODSPH" name="MRODSPH" value="<?php echo attr($MRODSPH); ?>"></td>
-                                        <td><input type=text id="MRODCYL" name="MRODCYL" value="<?php echo attr($MRODCYL); ?>"></td>
-                                        <td><input type=text id="MRODAXIS"  name="MRODAXIS" value="<?php echo attr($MRODAXIS); ?>"></td>
-                                        <td><input type=text id="MRODVA"  name="MRODVA" value="<?php echo attr($MRODVA); ?>"></td>
-                                        <td><input type=text id="MRODADD"  name="MRODADD" value="<?php echo attr($MRODADD); ?>"></td>
+                                        <td><input type=text id="MRODSPH" name="MRODSPH" value="<?php echo attr($MRODSPH); ?>" tabindex="130"></td>
+                                        <td><input type=text id="MRODCYL" name="MRODCYL" value="<?php echo attr($MRODCYL); ?>" tabindex="131"></td>
+                                        <td><input type=text id="MRODAXIS"  name="MRODAXIS" value="<?php echo attr($MRODAXIS); ?>" tabindex="132"></td>
+                                        <td><input type=text id="MRODVA"  name="MRODVA" value="<?php echo attr($MRODVA); ?>" tabindex="138"></td>
+                                        <td><input type=text id="MRODADD"  name="MRODADD" value="<?php echo attr($MRODADD); ?>" tabindex="136"></td>
                                         <td><input type=text id="MRNEARODVA"  name="MRNEARODVA" value="<?php echo attr($MRNEARODVA); ?>"></td>
                                         <td><input type=text id="MRODPRISM"  name="MRODPRISM" value="<?php echo attr($MRODPRISM); ?>"></td>
                                     </tr>
                                     <tr>
                                         <td><b><?php echo xlt('OS'); ?>:</b></td>
-                                        <td><input type=text id="MROSSPH" name="MROSSPH" value="<?php echo attr($MROSSPH); ?>"></td>
-                                        <td><input type=text id="MROSCYL" name="MROSCYL" value="<?php echo attr($MROSCYL); ?>"></td>
-                                        <td><input type=text id="MROSAXIS"  name="MROSAXIS" value="<?php echo attr($MROSAXIS); ?>"></td>
-                                        <td><input type=text id="MROSVA"  name="MROSVA" value="<?php echo attr($MROSVA); ?>"></td>
-                                        <td><input type=text id="MROSADD"  name="MROSADD" value="<?php echo attr($MROSADD); ?>"></td>
+                                        <td><input type=text id="MROSSPH" name="MROSSPH" value="<?php echo attr($MROSSPH); ?>" tabindex="133"></td>
+                                        <td><input type=text id="MROSCYL" name="MROSCYL" value="<?php echo attr($MROSCYL); ?>" tabindex="134"></td>
+                                        <td><input type=text id="MROSAXIS"  name="MROSAXIS" value="<?php echo attr($MROSAXIS); ?>" tabindex="135"></td>
+                                        <td><input type=text id="MROSVA"  name="MROSVA" value="<?php echo attr($MROSVA); ?>" tabindex="139"></td>
+                                        <td><input type=text id="MROSADD"  name="MROSADD" value="<?php echo attr($MROSADD); ?>" tabindex="137"></td>
                                         <td><input type=text id="MRNEAROSVA"  name="MRNEAROSVA" value="<?php echo attr($MRNEAROSVA); ?>"></td>
                                         <td><input type=text id="MROSPRISM"  name="MROSPRISM" value="<?php echo attr($MROSPRISM); ?>"></td>
                                     </tr>
@@ -1230,7 +1237,7 @@ require_once("$incdir/patient_file/encounter/new_form.php");
                             <?php ($CR==1)  ? ($display_Cyclo = "display") : ($display_Cyclo = "nodisplay"); ?>
                             <div id="LayerVision_CR" class="refraction borderShadow <?php echo $display_Cyclo; ?>">
                                 <span class="closeButton fa  fa-close" id="Close_CR" name="Close_CR"></span>
-                                <a class="closeButton2 fa fa-print" onclick="top.restoreSession();  return false;" href="../../forms/<?php echo $form_folder; ?>/SpectacleRx.php?target=CR&id=<?php echo attr($pid); ?>"></a>
+                                <i class="closeButton2 fa fa-print" onclick="top.restoreSession();doscript('CR',<?php echo attr($pid); ?>,<?php echo attr($encounter); ?>);return false;"></i>
                                 <table id="cycloplegia">
                                     <th colspan=9><?php echo xlt('Cycloplegic (Wet) Refraction'); ?></th>
                                     <tr>
@@ -1307,7 +1314,7 @@ require_once("$incdir/patient_file/encounter/new_form.php");
                             <?php ($CTL==1) ? ($display_CTL = "display") : ($display_CTL = "nodisplay"); ?>
                             <div id="LayerVision_CTL" class="refraction borderShadow <?php echo $display_CTL; ?>">
                                 <span class="closeButton fa  fa-close" id="Close_CTL" name="Close_CTL"></span>
-                                <a class="closeButton2 fa fa-print" onclick="return dopopup('../../forms/<?php echo attr($form_folder); ?>/SpectacleRx.php?target=CTL&id=<?php echo attr($pid)?>')"></a>
+                                <i class="closeButton2 fa fa-print" onclick="top.restoreSession();doscript('CTL',<?php echo attr($pid); ?>,<?php echo attr($encounter); ?>);return false;"></i>
                                 <table id="CTL" style="width:100%;">
                                     <th colspan="9"><?php echo xlt('Contact Lens Refraction'); ?></th>
                                     <tr>
@@ -1724,7 +1731,7 @@ require_once("$incdir/patient_file/encounter/new_form.php");
                                 <input type="hidden" id="EXT_prefix" name="EXT_prefix" value="<?php echo attr($EXT_prefix); ?>">
                                
                                <span class="closeButton fa fa-close pull-right" id="BUTTON_TEXTD_EXT" name="BUTTON_TEXTD_EXT" value="1"></span>
-                                <div style="position:relative;top:0.0in;left:0.00in;width:95%;">
+                                <div style="position:relative;top:0.0in;left:0.00in;margin:auto;">
                                     <span class="eye_button eye_button_selected" id="EXT_prefix_off" name="EXT_prefix_off"  onclick="$('#EXT_prefix').val('').trigger('change');;"><?php echo xlt('Off'); ?></span>
                                     <span class="eye_button" id="EXT_defaults" name="EXT_defaults"><?php echo xlt('Defaults'); ?></span>  
                                     <span class="eye_button" id="EXT_prefix_no" name="EXT_prefix_no" onclick="$('#EXT_prefix').val('no').trigger('change');"> <?php echo xlt('no'); ?> </span>  

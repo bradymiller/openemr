@@ -60,8 +60,8 @@ if ($erow['form_id'] > '0') {
     $id = $erow2['count']++;
     $newid = formSubmit($table_name, $_POST, $id, $_SESSION['userauthorized']); 
     $sql = "insert into forms (date, encounter, form_name, form_id, pid, " .
-            "user, groupname, authorized, formdir) values (?,?,?,?,?,?,?,?,?)";
-    $answer = sqlInsert( $sql ,array($encounter_date,$encounter,$form_name,$newid,$pid,$user,$group,$_USESSION['authorized'],$form_folder));
+            "user, groupname, authorized, formdir) values (NOW(),?,?,?,?,?,?,?,?)";//activity=1, date = NOW()
+    $answer = sqlInsert( $sql ,array($encounter,$form_name,$newid,$pid,$user,$group,$_SESSION['authorized'],$form_folder));
  }
  
     formHeader("Redirecting....");
