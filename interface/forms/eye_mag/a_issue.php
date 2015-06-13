@@ -178,7 +178,7 @@ if ($_REQUEST['form_save']) {
 
   // if there is an issue with this title already for this patient, 
   // we want to update it, not add a new one.
-  if ($subtype < '') {
+  if ($subtype == '') {
     $query = "SELECT id,pid from lists where title = ? and type = ? and pid = ?";
     $issue2 = sqlQuery($query,array($_REQUEST['form_title'],$_REQUEST['form_type'],$pid));
     $issue = $issue2['id'];
@@ -461,6 +461,7 @@ select pid from form_encounter where provider_id ='4' and date BETWEEN NOW() - I
 
    } else if (index == 4) { //Dental so skip it
   } else if (index == 5) { //POH
+    document.getElementById('row_diagnosis'     ).style.display = '';
     document.getElementById('row_begindate'     ).style.display = '';
     document.getElementById('row_referredby'      ).style.display = '';
     document.getElementById('by_whom'          ).textContent ="Collaborator:";

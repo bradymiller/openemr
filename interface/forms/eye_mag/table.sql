@@ -645,6 +645,7 @@ INSERT INTO `form_eye_mag_prefs` (`PEZONE`, `LOCATION`, `LOCATION_text`, `id`, `
 ('PREFS', 'ANTSEG_VIEW', 'Anterior Segment View', 1, 'ANTSEG_VIEW', 61, '0', 11,'ADD'),
 ('PREFS', 'RETINA_VIEW', 'Retina View', 1, 'RETINA_VIEW', 62, '', 12,'ADD'),
 ('PREFS', 'NEURO_VIEW', 'Neuro View', 1, 'NEURO_VIEW', 63, '', 13,'ADD'),
+('PREFS', 'PANEL_RIGHT', 'PMSFH Panel', 1, 'PANEL_RIGHT', 64, '', 14,''),
 ('PREFS', 'ACT_VIEW', 'ACT View', 1, 'ACT_VIEW', 64, '', 14,'ADD');
 
 INSERT INTO `openemr`.`list_options` (`list_id`, `option_id`, `title`, `seq`, `is_default`, `option_value`, `mapping`, `notes`, `codes`) VALUES ('lists', 'eye_issues_list', 'Past Ocular Issues list', '0', '0', '0', '', '', '');

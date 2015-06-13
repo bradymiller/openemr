@@ -149,6 +149,7 @@ function update_PREFS() {
         'PREFS_ANTSEG_RIGHT'     : $('#PREFS_ANTSEG_RIGHT').val(),
         'PREFS_RETINA_RIGHT'     : $('#PREFS_RETINA_RIGHT').val(),
         'PREFS_NEURO_RIGHT'      : $('#PREFS_NEURO_RIGHT').val(),
+        'PREFS_PANEL_RIGHT'      : $('#PREFS_PANEL_RIGHT').val(),
         'PREFS_IMPPLAN_RIGHT'    : $('#PREFS_IMPPLAN_DRAW').val()
         
     };
@@ -210,7 +211,7 @@ function refreshIssues() {
            data 		: formData,
            success:(function(result) {
                     $("#QP_PMH").html(result);
-                    console.log(result);
+                    //console.log(result);
                     
                     })
            })
@@ -238,8 +239,7 @@ function refresh_panel() {
            data 		: formData,
            success:(function(result2) {
                     $("#left-panel").html(result2);
-                    console.log(result2);
-                    //
+                    // console.log(result2);
                     })
            })
     .fail(function() { //alert("error");
@@ -1592,7 +1592,14 @@ $(document).ready(function() {
                                                        $("#"+menuitem).css("text-decoration","none");
                                                        });
                   
-                  
+                  $("#right-panel-link, #close-panel-bt").click(function() {
+                                                                if ($("#PREFS_PANEL_RIGHT").val() =='1') {
+                                                                $("#PREFS_PANEL_RIGHT").val('0');
+                                                                } else {
+                                                                $("#PREFS_PANEL_RIGHT").val('1');
+                                                                }
+                                                                update_PREFS();
+                                                                });
                   $("[name^='menu_']").click(function() {
                                              $("[name^='menu_']").removeClass('active');
                                              var menuitem = this.id.match(/menu_(.*)/)[1];

@@ -208,15 +208,7 @@ require_once("$incdir/patient_file/encounter/new_form.php");
        <?php
     }
     ?>
-<div id="page" class="left_PMSFH_tab" style="padding-top:5px;">
-                    <!--
-                      <h1>Panel slider example</h1>
-                    <a id="left-panel-link" href="#left-panel">Open left panel</a> |
-                    <a id="right-panel-link" href="#right-panel">Open right panel</a>
-                    <hr />
-                    <p>Usage instructions and source code <a href="https://github.com/eduardomb/jquery-panelslider">here</a></p>
-                    -->
-                  </div> 
+
     <div id="Layer1" name="Layer1" class="display">
     <form method="post" action="<?php echo $rootdir;?>/forms/<?php echo $form_folder; ?>/save.php?mode=update" id="eye_mag" class="eye_mag pure-form" name="eye_mag">
       <!-- start container for the main body of the form -->
@@ -237,19 +229,20 @@ require_once("$incdir/patient_file/encounter/new_form.php");
         <input type="hidden" name="PREFS_IOP" id="PREFS_IOP" value="<?php echo attr($IOP); ?>">
         <input type="hidden" name="PREFS_EXAM" id="PREFS_EXAM" value="<?php echo attr($EXAM); ?>">
         <input type="hidden" name="PREFS_CYL" id="PREFS_CYL" value="<?php echo attr($CYLINDER); ?>">
-        <input type="hidden" name="PREFS_HPI_VIEW"  id="PREFS_HPI_VIEW" value="<?php echo attr($HPI_VIEW); ?>">
-        <input type="hidden" name="PREFS_EXT_VIEW"  id="PREFS_EXT_VIEW" value="<?php echo attr($EXT_VIEW); ?>">
-        <input type="hidden" name="PREFS_ANTSEG_VIEW"  id="PREFS_ANTSEG_VIEW" value="<?php echo attr($ANTSEG_VIEW); ?>">
-        <input type="hidden" name="PREFS_RETINA_VIEW"  id="PREFS_RETINA_VIEW" value="<?php echo attr($RETINA_VIEW); ?>">
-        <input type="hidden" name="PREFS_NEURO_VIEW"  id="PREFS_NEURO_VIEW" value="<?php echo attr($NEURO_VIEW); ?>">
-        <input type="hidden" name="PREFS_ACT_VIEW"  id="PREFS_ACT_VIEW" value="<?php echo attr($ACT_VIEW); ?>">
-        <input type="hidden" name="PREFS_PMH_RIGHT"  id="PREFS_PMH_RIGHT" value="<?php echo attr($PMH_RIGHT); ?>">
-        <input type="hidden" name="PREFS_HPI_RIGHT"  id="PREFS_HPI_RIGHT" value="<?php echo attr($HPI_RIGHT); ?>">
-        <input type="hidden" name="PREFS_EXT_RIGHT"  id="PREFS_EXT_RIGHT" value="<?php echo attr($EXT_RIGHT); ?>">
-        <input type="hidden" name="PREFS_ANTSEG_RIGHT"  id="PREFS_ANTSEG_RIGHT" value="<?php echo attr($ANTSEG_RIGHT); ?>">
-        <input type="hidden" name="PREFS_RETINA_RIGHT"  id="PREFS_RETINA_RIGHT" value="<?php echo attr($RETINA_RIGHT); ?>">
-        <input type="hidden" name="PREFS_NEURO_RIGHT"  id="PREFS_NEURO_RIGHT" value="<?php echo attr($NEURO_RIGHT); ?>">
-        <input type="hidden" name="PREFS_IMPPLAN_RIGHT"  id="PREFS_IMPPLAN_RIGHT" value="<?php echo attr($IMPPLAN_RIGHT); ?>">
+        <input type="hidden" name="PREFS_HPI_VIEW" id="PREFS_HPI_VIEW" value="<?php echo attr($HPI_VIEW); ?>">
+        <input type="hidden" name="PREFS_EXT_VIEW" id="PREFS_EXT_VIEW" value="<?php echo attr($EXT_VIEW); ?>">
+        <input type="hidden" name="PREFS_ANTSEG_VIEW" id="PREFS_ANTSEG_VIEW" value="<?php echo attr($ANTSEG_VIEW); ?>">
+        <input type="hidden" name="PREFS_RETINA_VIEW" id="PREFS_RETINA_VIEW" value="<?php echo attr($RETINA_VIEW); ?>">
+        <input type="hidden" name="PREFS_NEURO_VIEW" id="PREFS_NEURO_VIEW" value="<?php echo attr($NEURO_VIEW); ?>">
+        <input type="hidden" name="PREFS_ACT_VIEW" id="PREFS_ACT_VIEW" value="<?php echo attr($ACT_VIEW); ?>">
+        <input type="hidden" name="PREFS_PMH_RIGHT" id="PREFS_PMH_RIGHT" value="<?php echo attr($PMH_RIGHT); ?>">
+        <input type="hidden" name="PREFS_HPI_RIGHT" id="PREFS_HPI_RIGHT" value="<?php echo attr($HPI_RIGHT); ?>">
+        <input type="hidden" name="PREFS_EXT_RIGHT" id="PREFS_EXT_RIGHT" value="<?php echo attr($EXT_RIGHT); ?>">
+        <input type="hidden" name="PREFS_ANTSEG_RIGHT" id="PREFS_ANTSEG_RIGHT" value="<?php echo attr($ANTSEG_RIGHT); ?>">
+        <input type="hidden" name="PREFS_RETINA_RIGHT" id="PREFS_RETINA_RIGHT" value="<?php echo attr($RETINA_RIGHT); ?>">
+        <input type="hidden" name="PREFS_NEURO_RIGHT" id="PREFS_NEURO_RIGHT" value="<?php echo attr($NEURO_RIGHT); ?>">
+        <input type="hidden" name="PREFS_IMPPLAN_RIGHT" id="PREFS_IMPPLAN_RIGHT" value="<?php echo attr($IMPPLAN_RIGHT); ?>">
+        <input type="hidden" name="PREFS_PANEL_RIGHT" id="PREFS_PANEL_RIGHT" value="<?php echo attr($PANEL_RIGHT); ?>">
         
         <input type="hidden" name="PREFS_ACT_SHOW"  id="PREFS_ACT_SHOW" value="<?php echo attr($ACT_SHOW); ?>">
         <input type="hidden" name="COPY_SECTION"  id="COPY_SECTION" value="">
@@ -665,10 +658,10 @@ require_once("$incdir/patient_file/encounter/new_form.php");
               <!-- end    PMH Left -->
               <!-- start  PMH Right -->
               <div id="PMH_right" name="PMH_right" class="exam_section_right borderShadow">
-                <a class="left_PMSFH_tab" id="right-panel-link" href="#left-panel">
+                <a class="left_PMSFH_tab" id="right-panel-link" href="#right-panel">
                   <img src="/openemr/interface/forms/eye_mag/images/PMSFHx.png">
                 </a>
-              <?php display_draw_section("PMH",$encounter,$pid); ?>
+                <?php display_draw_section("PMH",$encounter,$pid); ?>
                 <div id="QP_PMH" name="QP_PMH" class="QP_class" style="text-align:left;">
                   <?php display_PRIOR_section("PMSFH",$id,$id,$pid); ?>
 
@@ -709,6 +702,10 @@ require_once("$incdir/patient_file/encounter/new_form.php");
                  <i class="fa fa-spinner fa-spin"></i>
           </div> 
           <div id="LayerTechnical_sections" name="LayerTechnical_sections" class="section nodisplay" style="vertical-align:text-top;text-align:center;">
+            <div id="LayerAlert" class="vitals" style="width: 1.0in; min-height: 1.05in;padding: 0.02in; border: 1.00pt solid #000000;text-align:left;padding-left:10px;">
+                  <input type="checkbox" <?php if ($alert) echo "checked='checked'"; ?> value="<?php echo $alert; ?>"> Alert<br />
+                  <input type="checkbox" <?php if ($oriented) echo "checked='checked'"; ?> value="<?php echo $oriented; ?>"> Oriented
+                </div>
 
                   <!-- start of the VISION BOX -->                  
                   <div id="LayerVision" class="vitals" style="width: 2.0in; min-height: 1.05in;padding: 0.02in; border: 1.00pt solid #000000;">
@@ -1921,7 +1918,7 @@ require_once("$incdir/patient_file/encounter/new_form.php");
                       </div>  <br />
                       <div class="QP_shorten" id="ANTSEG_COMMENTS_DIV"> 
                         <b><?php echo xlt('Comments'); ?>:</b><div class="kb kb_left">ACOM</div><br />
-                          <textarea id="ANTSEG_COMMENTS" name="ANTSEG_COMMENTS"><?php echo text($ANTSEG_COMMENTS); ?> </textarea>
+                          <textarea id="ANTSEG_COMMENTS" name="ANTSEG_COMMENTS"><?php echo text($ANTSEG_COMMENTS); ?></textarea>
                       </div>   
                       <div class="QP_not" id="ANTSEG_keyboard_left" style="position: absolute;bottom:0.05in;right:0.1in;font-size:0.7em;text-align:left;padding-left:25px;">
                       <span onclick="$('.kb').toggleClass('nodisplay');" title="<?php echo xla('Click to display shorthand field names.'); ?>"><b>Keyboard Entry</b></span>
@@ -3147,24 +3144,26 @@ require_once("$incdir/patient_file/encounter/new_form.php");
 
 
  
-  <div id="left-panel" name="left-panel" class="panel_side">
-    
+  <div id="right-panel" name="right-panel" class="panel_side">
       <?php 
-
-      //$PMSFH = display_PRIOR_section("left-nav",$id,$id,$pid);
-      
-       // We are building the panel bar with the patient medical info
+      // We are building the panel bar with the patient medical info
       // Since the "lists" table has a "subtype" field now
-      // each section can be customized, like SOCHx, subtype "smoking"
-      // Theoretcially we could pull this information out of the current "History table"
-      // and to do this we would pull it in the eye_mag_functions.php file sub routine display_PRIOR_section('left-nav')
+      // each section could be customized, like SOCHx, subtype "smoking"
+      // However openEMR stores mos of this SocHx data in the layout_options table with
+      // the form_id='HIS' and group_name='4Lifestyle' fields.  
+      // So we need to conform and pull this information out of the current "History" fields.
+      // We do this in the eye_mag_functions.php file by creating a new array $PMSFH 
+      // pulling in the issues, Scial History and FH into one place.
       // When done, FH and Soc HX will just be another part of the PMSFH associative array.
-      // Probably a smart way to go with ROS too.
-      // When done remove this text... Get to work and stop dillydallying writing text notes to yourself!
-$output_PMSFH_panel = show_PMSFH_panel($PMSFH);
-      //var_dump($PMSFH);
-     echo $output_PMSFH_panel;
-     ?>
+      // The function display_PRIOR_section("PMSFH",$id,$id,$pid) in php/eye_mag_functions 
+      // shows the PMSFH to the right of the PMH zone in the QP zone.  
+      // It is tough to format this in a visually pleasing way when there is 
+      // a lot of data.  Will need to crimp boxes to make it fit phsyical constraints of QP box. 
+      // Right panel does not have such problems if screen is large enough, and if not it is scrollable.
+      // The sub routine show_PMSFH_panel($PMSFH) creates the right panel NavBar from this array...
+      // Probably a good way to go with ROS too.  We'll see when we get to doing ROS.
+      echo $output_PMSFH_panel = show_PMSFH_panel($PMSFH);  
+      ?>
   </div>
 </div>
     
@@ -3175,7 +3174,9 @@ $('#right-panel-link').panelslider({side: 'right', clickClose: false, duration: 
 $('#close-panel-bt').click(function() {
 $.panelslider.close();
 });
-                  
+<?php if ($PANEL_RIGHT) { ?>
+  $("#right-panel-link").trigger("click");
+<?php } ?>
 
 </script>
 
