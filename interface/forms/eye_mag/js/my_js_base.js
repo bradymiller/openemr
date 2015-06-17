@@ -90,11 +90,30 @@ function submit_form() {
            url 		: url,      // the url where we want to POST
            data 	: formData // our data object
            }).done(function(o) {
+                   if (o == 'Code 400') {
+                    if (confirm('LOCKED: Do you wish to take ownership?')) {
+                        var value_2 = $("#uniqueID").val();
+                        var locked_by = $("#LOCKEDBY").val();
+                        $("#ownership").val(locked_by);
+                        $("#LOCKEDBY").val(value_2);
+                        $("#warning").addClass("nodisplay");
+                        $.ajax({
+                               type 	: 'POST',   // define the type of HTTP verb we want to use (POST for our form)
+                               url 		: url,      // the url where we want to POST
+                               data     : {
+                                    'ownership'     : locked_by,  //this contains the new strokes, the sketch.js foreground
+                                    'LOCKEDBY'        : value_2,
+                               'uniqueID'           : value_2,
+                               'form_id'    : $("#form_id").val()
+                                }
+                               }).done(function(d) {
+                                       console.log(d);
+                                       }
+                                       )
+                   }
                    //nice to flash a "saved" widget in menu bar if fullscreen or elsewhere if not
-                   //  console.log(o);
-                   
-                   //       $("#IMP").html(formData);
-                   })
+                   // console.log(o);
+                   }});
 };
 
 
@@ -170,16 +189,17 @@ function finalize() {
     var url = "../../forms/eye_mag/save.php?mode=update&id=" + $("#form_id").val();
     var formData = {
         'action'           : "finalize",
-        'final'            : "1",
-        'id'               : $('#id').val(),
+        'finalize'         : "1",
         'encounter'        : $('#encounter').val(),
-        'pid'              : $('#pid').val()
+        'pid'              : $('#pid').val(),
+        'form_id'    : $("#form_id").val()
+
     };
     $.ajax({
            type 		: 'POST',
            url          : url,
            data 		: formData }).done(function(o) {
-                                           //   console.log(o);
+                                        console.log(o);
                                            $("#tellme").html(o);
                                            });
 }
@@ -198,8 +218,7 @@ function delete_issue(issue_number,issue_type,subtype) {
 function refreshIssues() {
     var url = "../../forms/eye_mag/view.php?display=PMSFH";
     var formData = {
-        'action'           : "finalize",
-        'final'            : "1",
+        'action'           : "refresh",
         'id'               : $('#id').val(),
         'encounter'        : $('#encounter').val(),
         'pid'              : $('#pid').val(),
@@ -226,8 +245,7 @@ function refresh_panel() {
         //now refresh the panel
     var url = "../../forms/eye_mag/view.php?display=PMSFH_panel";
     var formData = {
-        'action'           : "finalize",
-        'final'            : "1",
+        'action'           : "refresh",
         'id'               : $('#id').val(),
         'encounter'        : $('#encounter').val(),
         'pid'              : $('#pid').val(),
@@ -238,7 +256,7 @@ function refresh_panel() {
            url          : url,
            data 		: formData,
            success:(function(result2) {
-                    $("#left-panel").html(result2);
+                    $("#right-panel").html(result2);
                     // console.log(result2);
                     })
            })
@@ -714,6 +732,8 @@ function check_exam_detail() {
         $(".detailed_HPI").css("color","#C0C0C0");
     }
 }
+
+
 $(document).ready(function() {
                  
                   $(".kb").addClass('nodisplay');
@@ -2257,7 +2277,8 @@ $(document).ready(function() {
                                               });
                   
                   
-                  $("#EXAM_DRAW, #BUTTON_DRAW_menu, #BUTTON_DRAW_ALL").click(function() {
+                  $("#EXAM_DRAW, #BUTTON_DRAW_menu, #PANEL_DRAW").click(function() {
+                                                                        
                                                                              if ($("#PREFS_CLINICAL").value !='0') {
                                                                              show_right();
                                                                              $("#PREFS_CLINICAL").val('0');
@@ -2273,7 +2294,7 @@ $(document).ready(function() {
                                                                              show_DRAW();
                                                                              $(document).scrollTop( $("#clinical_anchor").offset().top );
                                                                              });
-                  $("#EXAM_QP").click(function() {
+                  $("#EXAM_QP,#PANEL_QP").click(function() {
                                       if ($("#PREFS_CLINICAL").value !='0') {
                                       $("#PREFS_CLINICAL").val('0');
                                       update_PREFS();
@@ -2289,7 +2310,7 @@ $(document).ready(function() {
                                       $(document).scrollTop( $("#clinical_anchor").offset().top );
                                       });
                   
-                  $("#EXAM_TEXT").click(function() {
+                  $("#EXAM_TEXT,#PANEL_TEXT").click(function() {
                                         
                                         // also hide QP, DRAWs, and PRIORS
                                         hide_DRAW();
@@ -2551,15 +2572,44 @@ $(document).ready(function() {
                   $("#construction").click(function() {
                                            $("[id^='CONSTRUCTION_']").toggleClass('nodisplay');
                                            });
-                  window.addEventListener("beforeunload", function () {
-                                          // if (confirm('Store this visit with this data?')&&(fred !='1')) {
-                                          //var fred = 1;
-                                          
-                                          $("#final").val('1');
-                                          //} else {
+                  
+                  $("#take_ownership").click(function() {
+                                            //<form method="post" action="'.$rootdir.'/forms/'.$form_folder.'/save.php?mode=update&ownership='.$LOCKEDBY.'&LOCKEDBY='.$take_ownership.'" id="eye_mag" class="eye_mag pure-form" name="eye_mag">
+                                             var url = "../../forms/eye_mag/save.php";
+                                             var randomnumber=Math.floor(Math.random()*100000)
+                                             var formData = {
+                                             'mode'                 : "update",
+                                             'ownership'            : $("#LOCKEDBY").val(),
+                                             'LOCKEDBY'             : $("#uniqueID").val(),
+                                             'form_id'              : $("#form_id").val()
+                                             };
+                                            $.ajax({
+                                                   type 	: 'POST',   // define the type of HTTP verb we want to use (POST for our form)
+                                                   url 		: url,      // the url where we want to POST
+                                                   data 	: formData // our data object
+                                                   }).done(function(o) {
+                                                                                                                      //nice to flash a "saved" widget in menu bar if fullscreen or elsewhere if not
+                                                           console.log(o);
+                                                           //if (o == 'locked') {
+                                                           alert("OK.  Now you can edit it!");
+                                                           // if yes we send a request to unlock and relock it for us, which may not require the page to refresh...
+                                                           //}
+                                                          
+                                                           //       $("#IMP").html(formData);
+                                                           });
+                                             });
+                                             
+                  //  window.addEventListener("beforeunload", function () {
+                  //                       alert('in EventListener');
+                  //                          $("#finalize").val('1');
+                  //                      goodBye;
+                  //                       submit_form();
+                                           //   } //else {
                                           //ok to exit page
                                           //}
-                                          });
+                  //                      });
+                  window.onunload = finalize;
+                  window.onbeforeunload = finalize;
                   // set default to ccDist.  Change as desired.
                   $('#NEURO_ACT_zone').val('CCDIST').trigger('change');
                   $("[name$='_loading']").addClass('nodisplay');

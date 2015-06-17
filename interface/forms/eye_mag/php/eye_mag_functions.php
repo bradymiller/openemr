@@ -1519,7 +1519,7 @@ function display_PRIOR_section ($zone,$orig_id,$id_to_show,$pid,$report = '0') {
                 </tr>
             </table>
 
-            <?php echo $counter; $counter++;if ($counter > $column) {echo $div; $counter="1";} ?>
+            <?php $counter++;if ($counter > $column) {echo $div; $counter="1";} ?>
             <table style="width:1.6in;">
                 <tr>
                     <td width="90%">
@@ -1669,8 +1669,8 @@ function build_PMSFH($pid) {
                 }
     }
     //build the SocHx portion of $PMSFH
-    $given ="coffee,tobacco,alcohol,sleep_patterns,exercise_patterns,seatbelt_use,counseling,hazardous_activities,recreational_drugs";
-    $result1 = sqlQuery("select $given from history_data where pid=? order by date DESC limit 0,1", array($pid) );
+    //$given ="coffee,tobacco,alcohol,sleep_patterns,exercise_patterns,seatbelt_use,counseling,hazardous_activities,recreational_drugs";
+    $result1 = sqlQuery("select * from history_data where pid=? order by date DESC limit 0,1", array($pid) );
      
     $group_fields_query = sqlStatement("SELECT * FROM layout_options " .
     "WHERE form_id = 'HIS' AND group_name = '4Lifestyle' AND uor > 0 " .
@@ -1737,19 +1737,108 @@ function build_PMSFH($pid) {
         if ($field_id =="hazardous_activities") $PMSFH['SOCH'][$field_id]['short_title'] = "Thrills";
         if ($field_id =="recreational_drugs") $PMSFH['SOCH'][$field_id]['short_title'] = "Drug Use";
     }
-    //next we haveto build the FH portion of $PMSFH
+    
+    //  Need to draw in Marital status and Employment history to this Social Hx area?  Probably.
+
+    //next we have to build the FH portion of $PMSFH,$PMSFH['FH']
+    // history_mother  history_father  history_siblings    history_offspring   history_spouse  
+    // relatives_cancer    relatives_tuberculosis  relatives_diabetes  relatives_high_blood_pressure   relatives_heart_problems    relatives_stroke    relatives_epilepsy  relatives_mental_illness    relatives_suicide
+    //  There are two ways FH is stored in the history area, one on a specific relationship basis
+    // ie. parent,sibling, offspring has X, or the other by "relatives_disease" basis.  
+    // Hmmm, neither really meets our needs.  This is an eye form,
+    // and we don't really care about most non-eye FH diseases - we do a focused family history.
+    // Cataracts, glaucoma, AMD, RD, cancer, heart disease etc.  
+    // The openEMR people who want to adapt this for another specialty will no doubt
+    // have different diseases they want listed in the FH specifically.  We all need to be able to 
+    // adjust the form.  Perhaps we should use the UserDefined fields at the end of this history_data table?
+    // Question is, does anything use this family history data - any higher function like reporting? 
+    // If there is an engine to validate level of exam, how do we tell it that this was completed?
+    // First we would need to know the criteria it looks for and I don't think in reality there is anything 
+    // written yet that does, so maybe we should create a flag in the user defined area of the history_data 
+    // table to notate that the FH portion of the exam was completed.
+    /*
+    Cancer:     Tuberculosis:   
+    Diabetes:       High Blood Pressure:    
+    Heart Problems:     Stroke: 
+    Epilepsy:       Mental Illness: 
+    Suicide:    
+    */
+  //return array($PMSFH);
+    $group_fields_query = sqlStatement("SELECT * FROM layout_options " .
+    "WHERE form_id = 'HIS' AND group_name = '3Relatives' AND uor > 0 " .
+    "ORDER BY seq");
+    while ($group_fields = sqlFetchArray($group_fields_query)) {
+        $titlecols  = $group_fields['titlecols'];
+        $datacols   = $group_fields['datacols'];
+        $data_type  = $group_fields['data_type'];
+        $field_id   = $group_fields['field_id'];
+        $list_id    = $group_fields['list_id'];
+        $currvalue  = '';
+
+        if ((preg_match("/^\|?0\|?\|?/", $result1[$field_id]))|| ($result1[$field_id]=='')) {
+            continue;
+        } else {
+            $currvalue = $result1[$field_id];
+        }
+    
+        $PMSFH['FH'][$field_id]['resnote'] = nl2br(htmlspecialchars($currvalue,ENT_NOQUOTES));
+        
+        if ($PMSFH['FH'][$field_id]['resnote'] > '') {
+            $PMSFH['FH'][$field_id]['display'] = substr($PMSFH['FH'][$field_id]['resnote'],0,10);
+        } elseif ($PMSFH['FH'][$field_id]['restype']) {
+            $PMSFH['FH'][$field_id]['display'] = str_replace($field_id,'',$PMSFH['FH'][$field_id]['restype']);
+        } else {
+            $PMSFH['FH'][$field_id]['display'] = "denies";
+        }
+      
+        //coffee,tobacco,alcohol,sleep_patterns,exercise_patterns,seatbelt_use,counseling,hazardous_activities,recreational_drugs
+        if ($field_id =="relatives_cancer") $PMSFH['FH'][$field_id]['short_title'] = "Cancer";
+        if ($field_id =="relatives_diabetes") $PMSFH['FH'][$field_id]['short_title'] = "Diabetes";
+        if ($field_id =="relatives_high_blood_pressure") $PMSFH['FH'][$field_id]['short_title'] = "HTN";
+        if ($field_id =="relatives_diabetes") $PMSFH['FH'][$field_id]['short_title'] = "Diabetes";
+
+        if ($field_id =="relatives_heart_problems") $PMSFH['FH'][$field_id]['short_title'] = "Cor Disease";
+        if ($field_id =="relatives_epilepsy") $PMSFH['FH'][$field_id]['short_title'] = "Epilepsy";
+        if ($field_id =="relatives_mental_illness") $PMSFH['FH'][$field_id]['short_title'] = "Psych";
+        if ($field_id =="relatives_suicide") $PMSFH['FH'][$field_id]['short_title'] = "Suicide";
+
+        if ($field_id =="relatives_stroke") $PMSFH['FH'][$field_id]['short_title'] = "Stroke";
+        if ($field_id =="relatives_tuberculosis") $PMSFH['FH'][$field_id]['short_title'] = "TB";
+        
+   }
+     //now make some of our own using the usertext11-30 fields
+   if (!$result1['usertext11']) $result1['usertext11'] = "None";
+  if (!$result1['usertext12']) $result1['usertext12'] = "None";
+   if (!$result1['usertext13']) $result1['usertext13'] = "None";
+   if (!$result1['usertext14']) $result1['usertext14'] = "None";
+   //if (!$result1['usertext15']) $result1['usertext15'] = "denies";
+    $PMSFH['FH']['glaucoma']['display'] = (substr($result1['usertext11'],0,10));
+    $PMSFH['FH']['glaucoma']['short_title'] = "Glaucoma";
+    $PMSFH['FH']['cataract']['display'] = (substr($result1['usertext12'],0,10));
+    $PMSFH['FH']['cataract']['short_title'] = "Cataract";
+    $PMSFH['FH']['amd']['display'] = (substr($result1['usertext13'],0,10));
+    $PMSFH['FH']['amd']['short_title'] = "AMD";
+    $PMSFH['FH']['RD']['display'] = (substr($result1['usertext14'],0,10));
+    $PMSFH['FH']['RD']['short_title'] = "RD";
+    //last_retinal    last_hemoglobin     
+    //   $PMSFH['SOCH'][$field_id]['resnote'] = nl2br(htmlspecialchars($currvalue,ENT_NOQUOTES));
+    //$PMSFH=$PMSFH[0];
     return array($PMSFH);
 }
 
 function show_PMSFH_panel($PMSFH) {
-    echo '<div style="font-size:1.0em;padding:10 2 2 5;">';
+    echo '<div style="font-size:1.0em;padding:30 2 2 5;z-index:1;">';
       //nice idea to put a TEXT-DRAW-DB selector up here.. ;)
-      ?><span class="closeButton2 fa fa-paint-brush" id="BUTTON_DRAW_ALL" name="BUTTON_DRAW_ALL"></span>
-      <button id="close-panel-bt" style="margin-left:50;">Close</button><BR />
+      ?><div style="margin:top:10px;text-align:center;">
+      <span class="fa fa-file-text-o" id="PANEL_TEXT" name="PANEL_TEXT" style="margin:5;"></span>
+      <span class="fa fa-database" id="PANEL_QP" name="PANEL_QP" style="margin:5;"></span>
+      <span class="fa fa-paint-brush" id="PANEL_DRAW" name="PANEL_DRAW" style="margin:5;"></span>
+      <span class="fa fa-close" id="close-panel-bt" style="margin:5;"></span><BR />
+      </div>
         <div>
       <?php
       //<!-- POH -->
-      echo "<br /><b><u>POH</u>:</b>";
+      echo "<br /><span class='panel_title'>POH:</span>";
       //nice idea to put a TEXT-DRAW-DB selector up here.. ;)
       ?>
       <span class="top-right btn-sm" href="#PMH_anchor" 
@@ -1762,7 +1851,8 @@ function show_PMSFH_panel($PMSFH) {
       }
       
        //<!-- PMH -->
-      echo "<br /><b><u>PMH:</u></b>";
+      echo "<br />
+      <span class='panel_title'>PMH:</span>";
       ?><span class="top-right btn-sm" href="#PMH_anchor" 
       onclick="alter_issue('0','medical_problem','');" style="text-align:right;font-size:8px;">Add</span>
       <br />
@@ -1773,7 +1863,7 @@ function show_PMSFH_panel($PMSFH) {
       }
       
        //<!-- Meds -->
-      echo "<br /><b><u>Medication:</u></b>";
+      echo "<br /><span class='panel_title'>Medication:</span>";
       ?><span class="top-right btn-sm" href="#PMH_anchor" 
       onclick="alter_issue('0','medication','');" style="text-align:right;font-size:8px;">Add</span>
       <br />
@@ -1784,7 +1874,7 @@ function show_PMSFH_panel($PMSFH) {
       }
       
       //<!-- Surgeries -->
-      echo "<br /><b><u>Surgery:</u></b>";
+      echo "<br /><span class='panel_title'>Surgery:</span>";
       ?><span class="top-right btn-sm" href="#PMH_anchor" 
       onclick="alter_issue('0','surgery','');" style="text-align:right;font-size:8px;">Add</span>
       <br />
@@ -1802,14 +1892,14 @@ function show_PMSFH_panel($PMSFH) {
       }
       
       //<!-- Allergies -->
-      echo "<br /><b><u>Allergy:</u></b>";
+      echo "<br /><span class='panel_title'>Allergy:</span>";
       ?><span class="top-right btn-sm" href="#PMH_anchor" 
       onclick="alter_issue('0','allergy','');" style="text-align:right;font-size:8px;">Add</span>
       <br />
       <?php
       if (count($PMSFH[0]['allergy']) > '0') {
         foreach ($PMSFH[0]['allergy'] as $item) {
-          echo "<span name='QP_PMH_".$item['rowid']."' href='#PMH_anchor' id='QP_PMH_".$item['rowid']."' 
+          echo "<span style='color:red;' name='QP_PMH_".$item['rowid']."' href='#PMH_anchor' id='QP_PMH_".$item['rowid']."' 
           onclick=\"alter_issue('".$item['rowid']."','".$item['row_type']."','');\">".$item['title']."</span><br />";
         } 
       } else { ?>
@@ -1818,8 +1908,8 @@ function show_PMSFH_panel($PMSFH) {
         <?
       }
       
-       //<!-- SocHx -->
-      echo "<br /><b><u>Soc Hx:</u></b>";
+       //<!-- Social History -->
+      echo "<br /><span class='panel_title'>Soc Hx:</span>";
       ?><span class="top-right btn-sm" href="#PMH_anchor" 
       onclick="alter_issue('0','SOCH','');" style="text-align:right;font-size:8px;">Add</span>
       <br />
@@ -1836,7 +1926,8 @@ function show_PMSFH_panel($PMSFH) {
         <?
       }
 
-      echo "<br /><b><u>FH:</u></b>";
+        //<!-- Family History -->
+      echo "<br /><span class='panel_title'>FH:</span>";
       ?><span class="top-right btn-sm" href="#PMH_anchor" 
       onclick="alter_issue('0','FH','');" style="text-align:right;font-size:8px;">Add</span>
       <br />
@@ -1844,16 +1935,16 @@ function show_PMSFH_panel($PMSFH) {
       if (count($PMSFH[0]['FH']) > '0') {
         foreach ($PMSFH[0]['FH'] as $item) {
           echo "<span name='QP_PMH_".$item['rowid']."' href='#PMH_anchor' id='QP_PMH_".$item['rowid']."' 
-          onclick=\"alter_issue('".$item['rowid']."','".$item['row_type']."');\">".$item['title']."</span><br />";
+          onclick=\"alter_issue('".$item['rowid']."','".$item['row_type']."');\">".$item['short_title'].": ".$item['display']."</span><br />";
         }
       } else {
         ?>
         <span href="#PMH_anchor" 
-        onclick="alter_issue('0','FH','');" style="text-align:right;">In development</span><br />
+        onclick="alter_issue('0','FH','');" style="text-align:right;">TBD</span><br />
         <?
       }
 
-      echo "<br /><b><u>ROS:</u></b>";
+      echo "<br /><span class='panel_title'>ROS:</span>";
       ?><span class="top-right btn-sm" href="#PMH_anchor" 
       onclick="alter_issue('0','ROS','');" style="text-align:right;font-size:8px;">Add</span>
       <br />
@@ -1870,7 +1961,109 @@ function show_PMSFH_panel($PMSFH) {
         <?
       }
 }
+function show_PMSFH_report($PMSFH) {
+      ?>        
+    
+      <?php
+      //<!-- POH -->
+      echo "<span class='panel_title'>POH:</span>";
+      //nice idea to put a TEXT-DRAW-DB selector up here.. ;)
+      ?>
+      <br />
+      <?php
+      foreach ($PMSFH[0]['POH'] as $item) {
+        echo $item['title']."<br />";
+      }
+      
+       //<!-- PMH -->
+      echo "<br />
+      <span class='panel_title'>PMH:</span>";
+      ?>
+      <br />
+      <?php
+      foreach ($PMSFH[0]['medical_problem'] as $item) {
+        echo $item['title']."<br />";
+      }
+      
+       //<!-- Meds -->
+      echo "<br /><span class='panel_title'>Medication:</span>";
+      ?>
+      <br />
+      <?php
+      foreach ($PMSFH[0]['medication'] as $item) {
+        echo $item['title']."<br />";
+      }
+      
+      //<!-- Surgeries -->
+      echo "<br /><span class='panel_title'>Surgery:</span>";
+      ?><br />
+      <?php
+      if (count($PMSFH[0]['surgery']) > '0') {
+        foreach ($PMSFH[0]['surgery'] as $item) {
+          echo $item['title']."<br />";
+        }
+      } else { ?>
+        None<br />
+        <?
 
+      }
+      
+      //<!-- Allergies -->
+      echo "<br /><span class='panel_title'>Allergy:</span>";
+      ?>
+      <br />
+      <?php
+      if (count($PMSFH[0]['allergy']) > '0') {
+        foreach ($PMSFH[0]['allergy'] as $item) {
+          echo $item['title']."<br />";
+        } 
+      } else { ?>
+        NKDA<br />
+        <?
+      }
+      
+       //<!-- SocHx -->
+      echo "<br /><span class='panel_title'>Soc Hx:</span>";
+      ?>
+      <br />
+      <?php
+      if (count($PMSFH[0]['SOCH']) > '0') {
+        foreach ($PMSFH[0]['SOCH'] as $k => $item) {
+            echo $item['display']."<br />";
+        }
+      } else {
+        ?>
+        Not documented<br />
+        <?
+      }
+
+      echo "<br /><span class='panel_title'>FH:</span>";
+      ?>
+      <br />
+      <?php
+      if (count($PMSFH[0]['FH']) > '0') {
+        foreach ($PMSFH[0]['FH'] as $item) {
+          echo $item['title']."<br />";
+        }
+      } else {
+        ?>
+        In development<br />
+        <?
+      }
+
+      echo "<br /><span class='panel_title'>ROS:</span>";
+      ?><br />
+      <?php
+      if (count($PMSFH[0]['ROS']) > '0') {
+        foreach ($PMSFH[0]['ROS'] as $item) {
+          echo $item['title']."<br />";
+        }
+      } else {
+        ?>
+        In development<br />
+        <?
+      }
+}
 function show_Social() {
     echo "<br /><b><u>Soc Hx:</u></b>";
       ?><span class="top-right btn-sm" href="#PMH_anchor" 
@@ -2625,7 +2818,7 @@ function menu_overhaul_top($pid,$encounter,$title="Eye Exam") {
         <!-- Navigation -->
                 <!-- Navigation -->
                 <br /><br />
-    <nav class="navbar-fixed-top navbar-custom navbar-bright navbar-fixed-top" role="banner" role="navigation" style="margin-bottom: 0;z-index:10000000;">
+    <nav class="navbar-fixed-top navbar-custom navbar-bright navbar-fixed-top" role="banner" role="navigation" style="margin-bottom: 0;z-index:1999999;">
         <!-- Brand and toggle get grouped for better mobile display -->
         <div class="navbar-header">
             <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#oer-navbar-collapse-1">
@@ -2707,6 +2900,7 @@ function menu_overhaul_top($pid,$encounter,$title="Eye Exam") {
                       <li role="presentation" class="disabled"><a role="menuitem"  class="disabled" tabindex="-1" href="#">Pending Approval</a></li>
                     </ul>
                 </li>
+                <!--
                 <li class="dropdown">
                     <a class="dropdown-toggle" role="button" id="menu_dropdown_clinical" data-toggle="dropdown">Encounter</a>
                     <?php
@@ -2725,6 +2919,7 @@ function menu_overhaul_top($pid,$encounter,$title="Eye Exam") {
                         <li role="presentation" class="disabled"><a role="menuitem" tabindex="-1" href="#IOP_CHART">IOP Chart</a></li>
                     </ul>
                 </li>
+
                 <li class="dropdown">
                     <a class="dropdown-toggle" role="button" id="menu_dropdown_window" data-toggle="dropdown">Window</a>
                     <ul class="dropdown-menu" role="menu" aria-labelledby="menu1">
@@ -2752,7 +2947,8 @@ function menu_overhaul_top($pid,$encounter,$title="Eye Exam") {
                         <li class="disabled"><a href="#">One more separated link</a></li>
                     </ul>
                 </li>
-                <!-- let's import the openEMR menu here.  -->
+             -->  
+               <!-- let's import the openEMR menu here.  -->
                 <?php
                     $reg = Menu_myGetRegistered();
                     if (!empty($reg)) {
@@ -3392,7 +3588,7 @@ if (!empty($irow['type'])) {
             <td>
 
              <input type='text' size='10' name='form_begin' id='form_begin'
-              value='<?php echo attr($irow['begdate']) ?>'¸ 
+              value="<?php echo attr($irow['begdate']) ?>"
               style="width: 75px;"
               onkeyup='datekeyup(this,mypcc)' onblur='dateblur(this,mypcc)'
               title='<?php echo xla('yyyy-mm-dd date of onset, surgery or start of medication'); ?>' />

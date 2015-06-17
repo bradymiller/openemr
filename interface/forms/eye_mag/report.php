@@ -363,9 +363,14 @@
 </style>
 
 <div class="body2">
+ <div style="float:left;left:0px;padding-right:5px;margin-right:15px;width:160px;border-right:2pt grey solid;">
+   
+  <?php 
+    $PMSFH = build_PMSFH($pid);
+    show_PMSFH_report($PMSFH);
+  ?> 
 
-  <div style="float:left;left:0px;padding-right:5px;margin-right:15px;border-right:2pt grey solid;">
-    <?
+  <? /*
     require_once($GLOBALS['fileroot'].'/custom/code_types.inc.php');
     require_once($GLOBALS['srcdir'].'/options.inc.php');
              // Check authorization.
@@ -469,17 +474,20 @@
                         //print out a ROS.  Give ?expand option to see full list in a pop-up?
                   }
 
-                  ?>
-                </div> 
+        */            
+  ?>
+    
 
-                <table border=1>
+</div> 
+
+                <table >
                   <tr>
                     <!-- Begin right column -->
                     <td colspan="2" style="text-align:left;padding-left:10px;font-size:0.9em">
                       <b><?php echo xlt('Chief Complaint'); ?>:</b> <br>&nbsp;<?php echo text($CC1); ?>
                       <br><br>
                       <b><?php echo xlt('HPI'); ?>:</b> <br>  
-                      & nbsp;<?php echo text($HPI1); ?>
+                      &nbsp;<?php echo text($HPI1); ?>
                       <br><br>
                       <div style="padding-left:10px;">
                         <?php 
@@ -589,10 +597,15 @@
                         ?>
                         <br><br>
                       </div>
-                      <br>
-                      
+                      <?php if ($CHRONIC1) { ?>
+                        <b><?php echo xlt('Chronic or Inactive Problems'); ?>:</b> 
+                        <br>&nbsp;<?php echo text($CHRONIC1); 
+                        if ($CHRONIC2) echo "<br />&nbsp;".$CHRONIC2;
+                        if ($CHRONIC3) echo "<br />&nbsp;".$CHRONIC3;
+                        echo "<br /><br /><hr>";
+                      } ?>
                       <!-- Start of the Vision box -->   
-                      <div style="float:left;border-right:1pt black solid;font=size:0.7em;">
+                      <div style="float:left;border-right:1pt black solid;margin-bottom:20px;">
                         <b class="underline"><?php echo xlt('Visual Acuities'); ?>:</b>   
                         <table id="Additional_VA" cellspacing="2" style="margin:2;text-align:center;">
                           <tr style="font-weight:bold;">
@@ -689,7 +702,7 @@
                       </div>
                       
                       <!-- START OF THE PRESSURE BOX -->
-                      <div style="position:relative;float:left;text-align:center;padding-left:20px;border-right:1pt solid black;">    
+                      <div style="position:relative;float:left;text-align:center;padding-left:20px;padding-right:10px;border-right:1pt solid black;margin-bottom:20px;">    
                         <b class="underline"><?php echo xlt('Intraocular Pressures'); ?>:</b>
                         <table> 
                           <tr style="font-weight:bold;">
@@ -711,7 +724,7 @@
                       </div>
                       
                       <!-- START OF THE AMSLER BOX -->
-                      <div style="text-align:center;padding-left:20px;border-right:1pt solid black;" class="<?php if (!$ODAMSLER && !$OSAMSLER) echo "nodisplay"; ?>">    
+                      <div style="text-align:center;padding-left:20px;border-right:1pt solid black;margin-bottom:20px;" class="<?php if (!$ODAMSLER && !$OSAMSLER) echo "nodisplay"; ?>">    
                         <b class="underline"><?php echo xlt('Amsler'); ?>:</b>      
                         <?php 
                               if (!$AMSLEROD) $AMSLEROD= "0";
@@ -740,7 +753,7 @@
                         </table>
                       </div>
                       <!-- start of the Fields box -->
-                      <div style="float:left;text-align:center;padding-left:10px;" class="">   
+                      <div style="float:left;text-align:center;padding-left:10px;margin-bottom:20px;" class="">   
                         <b class="underline"><?php echo xlt('Fields'); ?>:</b>
                         <?php 
                                   // if the VF zone is checked, display it
@@ -813,7 +826,7 @@
                         <?php } ?>
                       </div>
                      <br>
-                      <div style="float:left;text-align:center;margin:5;">
+                      <div style="float:left;text-align:center;margin:5;margin-bottom:20px;">
                       <table style="text-align:center;padding-top:20px;">
                         <tr>
                           <? if ($ODPUPILSIZE1||$OSPUPILSIZE1) { ?>
@@ -1322,8 +1335,9 @@
                       </table>
                     </div>
                     <!-- end of the refraction boxes -->  
+
                     <div style="clear:both;text-align:center;">
-                      <table style="max-width:7in;" border=1>
+                     <hr> <table style="max-width:7in;" >
                         <tr style="border-bottom:1pt grey dashed;margin-bottom:5px;">
                           <td style="text-align:center;padding:10px;vertical-align:top;max-width:3.5in;">           
                             <!-- start of external exam -->

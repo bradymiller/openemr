@@ -42,7 +42,7 @@ include_once("../../forms/".$form_folder."/php/".$form_folder."_functions.php");
 //@extract($_SESSION);
 $form_id    = $_REQUEST['id']; //what form are we working on?  Each encounter can have multiple forms, like the eye_mag, ROS, Vitals, whatever
 $action     = $_REQUEST['action'];
-$final      = $_REQUEST['final'];
+$finalize      = $_REQUEST['finalize'];
 
 //$encounter  = $_REQUEST['encounter'];
 //if ($encounter =='') $encounter = $_SESSION['id'];
@@ -91,11 +91,12 @@ $encounter_data =sqlQuery($query,array($encounter,$pid));
   If a chart is "completed", the user should not be able to open this form for editing, just viewing.
   This is where the report.php becomes important.
   If the chart is "completed", ie. done, locked, only "amendable", there must be a link to the report only.
-  If the user gets here and requests to see it,
-  they are sent to report.php where they are presented with options to view and export.  Maybe.
-  if ($LOCKED) { report.php }
-  But really, if it is locked, they should not be able to get here...
-  What if another user is editing it?  Consider flag the form_eye_mag table "locked" field with username/id and unflag when form is closed.
+  This is done with e-signing - you cn't get here when it is e-signed, on to the report.php.
+  if ($LOCKED) { we pop-up soemting to say the form is being edited elsewhere, do you want to take ownership?
+  If you don't your changes will not be saved.  Need to allow view without incessant pop-ups.
+  Maybe just once? }
+  What if another user is editing it?  
+  Consider flag the form_eye_mag table "locked" field with username/id and unflag when form is closed.
   Any attempt to save the form will meet with resistance, maybe a pop-up to say it is opened elsewhere, and an override option?
   and failure to alter DB on attempted submit_form if locked...  Once active user closes the form, 
   ie finalized for the active session, flag is removed.
@@ -108,6 +109,21 @@ $encounter_data =sqlQuery($query,array($encounter,$pid));
   as they are entered by the tech?  Maybe there is a visible mode that does this without submitting, and auto refreshes every minute or so?
   Need to think this through.  Suggestions welcome...
 */
+  $warning = 'nodisplay';
+// echo $_REQUEST['LOCKEDBY'] ." and ". $LOCKEDBY;exit;
+$uniqueID = rand();
+if (!$LOCKED||!$LOCKEDBY) {
+    
+    $LOCKEDBY= $uniqueID;
+    $LOCKED='1';
+  // echo "lockedBY =".$LOCKEDBY;exit;
+  } else {
+    //warning.  This form is locked by another user.
+    $warning = ""; //remove nodisplay class
+    $take_ownership = rand();
+    $warning_text ='<br />You do not have ownership - Changes will not be saved!<br />
+    <span id="take_ownership">Take Ownership</span>';
+  }
 $dated = new DateTime($encounter_data['encounter_date']);
 if ($GLOBALS['date_display_format'] == 1)      
   {   
@@ -190,16 +206,9 @@ require_once("$incdir/patient_file/encounter/new_form.php");
       echo $input_echo;
       ?>
       <div id="page-wrapper" style="margin: 0px 0px 0px 0px;">
-        <!--
-            <div class="alert alert-warning">
-                <button type="button" class="close" data-dismiss="alert">&times;</button>
-                <strong>Warning!</strong> Best check yo self, you're not looking too good.
-            </div>
-        -->
-        <div id="Layer2" name="Layer2" class="nodisplay">
-        </div>
- 
-        <div id="Layer3" name="Layer3" class="container" style="text-align:center;">
+      <div id="Layer2" name="Layer2" class="nodisplay">
+      </div>
+      <div id="Layer3" name="Layer3" class="container" style="text-align:center;">
             <!-- Page Heading -->
             <?php menu_overhaul_left($pid,$encounter);   
              echo    '<div class="col-sm-12"></div>';
@@ -210,6 +219,10 @@ require_once("$incdir/patient_file/encounter/new_form.php");
     ?>
 
     <div id="Layer1" name="Layer1" class="display">
+      <div id="warning" name="warning" class="alert alert-warning <?php echo $warning; ?>">
+                <span type="button" class="close" data-dismiss="alert">&times;</span>
+                <strong>Warning!</strong> <?php echo $warning_text; ?>
+            </div>
     <form method="post" action="<?php echo $rootdir;?>/forms/<?php echo $form_folder; ?>/save.php?mode=update" id="eye_mag" class="eye_mag pure-form" name="eye_mag">
       <!-- start container for the main body of the form -->
       <div class="body_top text-center" id="form_container" name="form_container">
@@ -243,12 +256,15 @@ require_once("$incdir/patient_file/encounter/new_form.php");
         <input type="hidden" name="PREFS_NEURO_RIGHT" id="PREFS_NEURO_RIGHT" value="<?php echo attr($NEURO_RIGHT); ?>">
         <input type="hidden" name="PREFS_IMPPLAN_RIGHT" id="PREFS_IMPPLAN_RIGHT" value="<?php echo attr($IMPPLAN_RIGHT); ?>">
         <input type="hidden" name="PREFS_PANEL_RIGHT" id="PREFS_PANEL_RIGHT" value="<?php echo attr($PANEL_RIGHT); ?>">
-        
+        <input type="hidden" name="ownership" id="ownership" value="<?php echo attr($ownership); ?>">
         <input type="hidden" name="PREFS_ACT_SHOW"  id="PREFS_ACT_SHOW" value="<?php echo attr($ACT_SHOW); ?>">
         <input type="hidden" name="COPY_SECTION"  id="COPY_SECTION" value="">
         <input type="hidden" name="UNDO_ID"  id="UNDO_ID" value="<?php echo attr($UNDO_ID); ?>">
-
-        <input type="hidden" name="final"  id="final" value="0">
+        <input type="hidden" name="LOCKEDBY" style="width:200px;" id="LOCKEDBY" value="<?php echo attr($LOCKEDBY); ?>">
+        <input type="hidden" name="LOCKED"  id="LOCKED" value="<?php echo attr($LOCKED); ?>">
+        <input type="hidden" name="uniqueID" style="width:200px;"   id="uniqueID" value="<?php echo attr($uniqueID); ?>">
+        
+        <input type="hidden" name="finalize"  id="finalize" value="0">
         <!-- start      accordion div -->
 
         <div id="accordion" name="accordion" class="text_clinical" style="position:relative;font-size: 14px;">
@@ -685,7 +701,7 @@ require_once("$incdir/patient_file/encounter/new_form.php");
           <?php 
           if ($display != "fullscreen") {   ?>      
           
-                  <i onclick="top.restoreSession();dopopup('<?php echo $_SERVER['REQUEST_URI']. '&display=fullscreen&encounter='.$encounter; ?>');openNewForm('<?php echo $GLOBALS['webroot']; ?>/interface/patient_file/encounter/load_form.php?formname=fee_sheet');" 
+                  <i onclick="top.restoreSession();openNewForm('<?php echo $GLOBALS['webroot']; ?>/interface/patient_file/encounter/load_form.php?formname=fee_sheet');dopopup('<?php echo $_SERVER['REQUEST_URI']. '&display=fullscreen&encounter='.$encounter; ?>');" 
                     class="fa fa-plus-square-o top_right" style="top: -0.2in;right: 0.2in;"></i>
                      <?php 
           }  else { ?>
@@ -702,10 +718,15 @@ require_once("$incdir/patient_file/encounter/new_form.php");
                  <i class="fa fa-spinner fa-spin"></i>
           </div> 
           <div id="LayerTechnical_sections" name="LayerTechnical_sections" class="section nodisplay" style="vertical-align:text-top;text-align:center;">
-            <div id="LayerAlert" class="vitals" style="width: 1.0in; min-height: 1.05in;padding: 0.02in; border: 1.00pt solid #000000;text-align:left;padding-left:10px;">
-                  <input type="checkbox" <?php if ($alert) echo "checked='checked'"; ?> value="<?php echo $alert; ?>"> Alert<br />
-                  <input type="checkbox" <?php if ($oriented) echo "checked='checked'"; ?> value="<?php echo $oriented; ?>"> Oriented
-                </div>
+            <div id="LayerAlert" class="vitals" style="width: 1.0in; min-height: 1.05in;padding: 0.02in;padding-top:25px; border: 1.00pt solid #000000;text-align:left;padding-left:10px;">
+              <div id="Lyr2.9" class="top_left ">
+                <th class="text_clinical"><b id="MS_tab"><?php echo xlt('Mental Status'); ?>:</b></th>
+              </div>    
+                <input type="checkbox" <?php if ($alert) echo "checked='checked'"; ?> value="<?php echo $alert; ?>"> Alert<br />
+                <input type="checkbox" <?php if ($oriented) echo "checked='checked'"; ?> value="<?php echo $oriented; ?>"> Oriented<br />
+                <input type="checkbox" <?php if ($confused) echo "checked='checked'"; ?> value="<?php echo $confused; ?>"> Confused<br />
+                <input type="checkbox" <?php if ($confused) echo "checked='checked'"; ?> value="<?php echo $confused; ?>"> Mood/Affect
+            </div>
 
                   <!-- start of the VISION BOX -->                  
                   <div id="LayerVision" class="vitals" style="width: 2.0in; min-height: 1.05in;padding: 0.02in; border: 1.00pt solid #000000;">
@@ -3021,7 +3042,7 @@ require_once("$incdir/patient_file/encounter/new_form.php");
                   <span class="closeButton fa fa-close pull-right" id="BUTTON_TEXTD_IMPPLAN" name="BUTTON_TEXTD_IMPPLAN" value="1"></span>
                    
                   
-                  <a href="/openemr/interface/patient_file/report/custom_report.php?printable=1&pdf=0&<?php echo $form_folder."_".$form_id."=".$encounter; ?>&">Printable Report</a><br />
+                  <a target="_report" href="/openemr/interface/patient_file/report/custom_report.php?printable=1&pdf=0&<?php echo $form_folder."_".$form_id."=".$encounter; ?>&">Printable Report</a><br />
                   <br />Coding IN DEVELOPMENT ONLY - NOT FUNCTIONAL:<br />
                   <span class="CODE_HIGH nodisplay"><i class="fa fa-check"></i> Detailed HPI documentation.</span><br />
                   <span class="DIL_RISKS nodisplay"><i class="fa fa-check"></i> Detailed Exam documentation.</span><br />
@@ -3174,7 +3195,7 @@ $('#right-panel-link').panelslider({side: 'right', clickClose: false, duration: 
 $('#close-panel-bt').click(function() {
 $.panelslider.close();
 });
-<?php if ($PANEL_RIGHT) { ?>
+<?php if ($PANEL_RIGHT >'0') { ?>
   $("#right-panel-link").trigger("click");
 <?php } ?>
 

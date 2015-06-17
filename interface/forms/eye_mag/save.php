@@ -214,10 +214,10 @@ if ($encounter == "") $encounter = date("Ymd");
 $form_id        = $_REQUEST['form_id'];
 $zone           = $_REQUEST['zone'];
 
-if ($_GET["mode"] == "new")             { 
+if ($_REQUEST["mode"] == "new")             { 
   $newid = formSubmit($table_name, $_POST, $id, $userauthorized);
   addForm($encounter, $form_name, $newid, $form_folder, $pid, $userauthorized);
-} elseif ($_GET["mode"] == "update")    { 
+} elseif ($_REQUEST["mode"] == "update")    { 
   // The form is submitted to be updated.
   // Submission are ongoing and then the final unload of page changes the 
   // DOM variable $("#final") to == 1.  As one draws on the HTML5 canvas, each step is saved incrementally allowing
@@ -229,7 +229,60 @@ if ($_GET["mode"] == "new")             {
   // Need help here.
   // If this is LOCKED by esigning,tell user to move along, nothing to see here... Goto Report?
   // if this form/encounter? is esigned and locked, then return without touching data.
-  
+
+  // We also have the situation where the form is being udated in one place but opened in another.
+  // We need to have only ONE be able to update the DB.
+  // Give each instance of a form a uniqueID.  If the form has no owner, update it with this uniqueID.
+  // If it has an owner, ask if they wish to take ownership.  If yes, any other attemot to save fiedls/form
+  // are denied and the return code says you are not the owner...
+
+if ($_REQUEST['finalize'] == '1') { // we are releasing the form by closing the page, so unlock it
+  $_REQUEST['LOCKED'] ='0';
+  $_REQUEST['LOCKEDDATE'] ='';
+  $_REQUEST['LOCKEDBY'] ='no one';
+  echo "\nUNLOCKED";  
+  $query = "update form_eye_mag set LOCKED='',LOCKEDBY='',LOCKEDDATE='' where id=?";
+  sqlQuery ($query,array($form_id));
+  exit;
+} else {
+
+  $query = "SELECT LOCKED,LOCKEDBY,LOCKEDDATE from form_eye_mag WHERE ID=?";
+  $lock = sqlQuery($query,array($form_id));
+  if (($lock['LOCKED']) && ($_REQUEST['uniqueID'] != $lock['LOCKEDBY']))  { 
+      // we are not the owner or it is not new so it is locked
+      //Did the user send a demand to take ownership?
+    // echo "1. LOCKEDBY = ".$lock['LOCKEDBY']. " and ".$_REQUEST['ownership']." and ".$_REQUEST['LOCKEDBY'];
+   // var_dump($_REQUEST['ownership']);exit;
+    if ($lock['LOCKEDBY'] != $_REQUEST['ownership']) {
+      //tell them they are locked out by another user now
+      // eg. echo "CODE 400";  For now, console log to figure it out.
+       echo "Code 400";
+       // No return a JSON encoded string with current LOCK ID
+       // echo "Sorry Charlie, you get nothing since this is locked...  No save for you!";
+        exit;
+    } elseif ($lock['LOCKEDBY'] == $_REQUEST['ownership']) { 
+      //then they are taking ownership - all others get locked...
+      // new LOCKEDBY becomes our uniqueID LOCKEDBY
+      $_REQUEST['LOCKED'] = '1';
+      $_REQUEST['LOCKEDBY'] = $_REQUEST['uniqueID'];
+//      echo "2. LOCKEDBY = ".$_REQUEST['LOCKEDBY'];
+    }
+  } elseif (!$lock['LOCKED']) { // it is not locked yet
+    $_REQUEST['LOCKED'] = '1';
+    echo "OK then ".$_REQUEST['LOCKEDBY']." - ".$form_id;
+    $query = "update form_eye_mag set LOCKED=?,LOCKEDBY=? where id=?";
+  sqlQuery ($query,array('1',$_REQUEST['LOCKEDBY'],$form_id));
+  exit;
+
+  }
+
+if (!$_REQUEST['LOCKEDBY'])  $_REQUEST['LOCKEDBY'] = rand();
+//echo "LOCKEDBY = ".$_REQUEST['LOCKEDBY'];
+}
+
+
+  //OK WE OWN IT, let's save it.
+ 
   // Any field that exists in the database could be updated
   // so we need to exclude the important ones...
   // id  date  pid   user  groupname   authorized  activity.  Any other just add them below.
