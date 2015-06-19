@@ -37,21 +37,17 @@ require_once($GLOBALS['srcdir'].'/csv_like_join.php');
 require_once($GLOBALS['srcdir'].'/htmlspecialchars.inc.php');
 require_once($GLOBALS['srcdir'].'/formdata.inc.php');
 require_once($GLOBALS['srcdir'].'/log.inc');
-$form_folder = "eye_mag";
-
-include_once("../../forms/".$form_folder."/php/".$form_folder."_functions.php");
+require_once("../../forms/".$form_folder."/php/".$form_folder."_functions.php");
 //specifically to build $PMSFH
-
-//require_once($GLOBALS['srcdir'].'/restoreSession.php");
 
 $thispid = 0 + (empty($_REQUEST['thispid']) ? $pid : $_REQUEST['thispid']);
 $info_msg = "";
 
 // A nonempty thisenc means we are to link the issue to the encounter.
-// ie. we are going to use this as a billing issue?
+// ie. we are going to use this as a billing issue? What?
 $thisenc = 0 + (empty($_REQUEST['thisenc']) ? 0 : $_REQUEST['thisenc']);
 
-// A nonempty thistype is an issue type to be forced for a new issue.
+// A nonempty thistype is an issue type to be forced for a new issue.  What?
 $thistype = empty($_REQUEST['thistype']) ? '' : $_REQUEST['thistype'];
 $issue = $_REQUEST['issue'];
 $thispid = $_REQUEST['thispid'];
@@ -72,6 +68,7 @@ $patient = getPatientData($thispid, "*");
 $ISSUE_TYPES['POH'] = array("Past Ocular History","POH","O","1");
 $ISSUE_TYPES['FH'] = array("Family History","FH","O","1");
 $ISSUE_TYPES['SOCH'] = array("Social History","SocH","O","1");
+$ISSUE_TYPES['ROS'] = array("Review of Systems","ROS","O","1");
  
 function QuotedOrNull($fld) {
   if ($fld) return "'".add_escape_custom($fld)."'";
@@ -100,7 +97,7 @@ if ($delete ==1) {
   row_delete("issue_encounter", "list_id = '$issue'");
   row_delete("lists", "id = '$issue'");
   //need to return something to tell them we did it?
-  //need to clear the fields too.  Do it w/ javascript.
+  //need to clear the fields too.  Do it w/ javascript in client
   exit;
  }
 
@@ -141,9 +138,12 @@ function issueTypeIndex($tstr) {
   }
   return $i;
 }
-
-if ($_REQUEST['form_save']) {
-
+if ($form_save) {
+  if ($_REQUEST["form_type"]=='8') { //ROS
+    $query="UPDATE form_eye_mag set ROSGENERAL=?,ROSHEENT=?,ROSCV=?,ROSPULM=?,ROSGI=?,ROSGU=?,ROSDERM=?,ROSNEURO=?,ROSPSYCH=?,ROSMUSCULO=?,ROSIMMUNO=?,ROSENDOCRINE=? where id=? and pid=?";
+    sqlStatement($query,array($_REQUEST['ROSGENERAL'],$_REQUEST['ROSHEENT'],$_REQUEST['ROSCV'],$_REQUEST['ROSPULM'],$_REQUEST['ROSGI'],$_REQUEST['ROSGU'],$_REQUEST['ROSDERM'],$_REQUEST['ROSNEURO'],$_REQUEST['ROSPSYCH'],$_REQUEST['ROSMUSCULO'],$_REQUEST['ROSIMMUNO'],$_REQUEST['ROSENDOCRINE'],$form_id,$pid));
+    exit;
+  }
   if ($_REQUEST["form_type"]=='7') { //SocHx
     $newdata = array();
     $fres = sqlStatement("SELECT * FROM layout_options " .
@@ -152,34 +152,63 @@ if ($_REQUEST['form_save']) {
     while ($frow = sqlFetchArray($fres)) {
       $field_id  = $frow['field_id'];
       $newdata[$field_id] = get_layout_form_value($frow);
-      echo $field_id."\n"; 
     }
     updateHistoryData($pid, $newdata);
-    
-    $query="select * from list_options where list_id='marital'";
-    while ($frow = sqlFetchArray($query)) { // have to match list_option
-      if (($_REQUEST['status'] == $frow['option_id'])||($_REQUEST['status'] == $frow['title'])) {
-        $status = $frow['title'];
+    if ($_REQUEST['marital_status'] >'') {
+      $query="select * from list_options where list_id='marital'";
+      $fres = sqlStatement($query);
+      while ($frow = sqlFetchArray($fres)) { 
+       // echo $frow['option_id'];
+        // have to match input with list_option for marital to not break openEMR
+        if (($_REQUEST['marital_status'] == $frow['option_id'])||($_REQUEST['marital_status'] == $frow['title'])) {
+          $status = $frow['option_id'];
+          $query = "UPDATE patient_data set status=? where pid=?";
+          sqlStatement($query,array($status,$pid));
+          //echo $query;
+
+        }
       }
     }
-    if ($status) {
-      $query = "UPDATE patient_data set occupation=?,status=? where pid=?";
-      sqlStatement($query,array($_REQUEST['occupation'],$status,$pid));
+    if ($_REQUEST['occupation'] > '') { 
+      $query = "UPDATE patient_data set occupation=? where pid=?";
+      sqlStatement($query,array($_REQUEST['occupation'],$pid));
     }
     exit;
-  }
+  } //done if social history
+  if ($_REQUEST['form_type'] =='6') { //FH
+    //we are doing a save for FH
+    $query = "UPDATE history_data set 
+            relatives_cancer=?,
+            relatives_diabetes=?,
+            relatives_high_blood_pressure=?,
+            relatives_heart_problems=?, 
+            relatives_stroke=?,
+            relatives_epilepsy=?,
+            relatives_mental_illness=?,
+            relatives_suicide=?,
+            usertext11=?,
+            usertext12=?,
+            usertext13=?,
+            usertext14=?,
+            usertext15=?,
+            usertext16=?,
+            usertext17=?,
+            usertext18=? where pid=?";
+            //echo $_REQUEST['relatives_cancer'],$_REQUEST['relatives_diabetes'],$_REQUEST['relatives_high_blood_pressure'],$_REQUEST['relatives_heart_problems'],$_REQUEST['relatives_stroke'],$_REQUEST['relatives_epilepsy'],$_REQUEST['relatives_mental_illness'],$_REQUEST['relatives_suicide'],$_REQUEST['usertext11'],$_REQUEST['usertext12'],$_REQUEST['usertext13'],$_REQUEST['usertext14'],$_REQUEST['usertext15'],$_REQUEST['usertext16'],$_REQUEST['usertext17'],$_REQUEST['usertext18'],$pid;
+    $resFH = sqlStatement($query,array($_REQUEST['relatives_cancer'],$_REQUEST['relatives_diabetes'],$_REQUEST['relatives_high_blood_pressure'],$_REQUEST['relatives_heart_problems'],$_REQUEST['relatives_stroke'],$_REQUEST['relatives_epilepsy'],$_REQUEST['relatives_mental_illness'],$_REQUEST['relatives_suicide'],$_REQUEST['usertext11'],$_REQUEST['usertext12'],$_REQUEST['usertext13'],$_REQUEST['usertext14'],$_REQUEST['usertext15'],$_REQUEST['usertext16'],$_REQUEST['usertext17'],$_REQUEST['usertext18'],$pid));
+    exit;
+  } //done if FH
+
   $i = 0;
   $text_type = "unknown";
-  if ($_REQUEST['form_type'] =='5') {
+  if ($_REQUEST['form_type'] =='5') { 
+  // This ISSUE_TYPE 5 --> we manufactured it === POH, is a subset of medical_problem, subtype eye
     $_REQUEST['form_type'] ='0';
     $subtype="eye";
   } else {
     $subtype ='';
   }
-  if ($_REQUEST['form_type'] =='6') {
-    //we are doing a save for FH so for now do nothing
-    return;
-  }
+ 
   foreach ($ISSUE_TYPES as $key => $value) {
    if ($i++ == $_REQUEST['form_type']) $text_type = $key;
   }
@@ -189,14 +218,18 @@ if ($_REQUEST['form_save']) {
 
   // if there is an issue with this title already for this patient, 
   // we want to update it, not add a new one.
-  if ($subtype == '') {
-    $query = "SELECT id,pid from lists where title = ? and type = ? and pid = ?";
-    $issue2 = sqlQuery($query,array($_REQUEST['form_title'],$_REQUEST['form_type'],$pid));
-    $issue = $issue2['id'];
-  } else {
-    $query = "SELECT id,pid from lists where title = ? and type = ? and pid = ? and subtype = ?";
-    $issue2 = sqlQuery($query,array($_REQUEST['form_title'],$_REQUEST['form_type'],$pid,$subtype));
-    $issue = $issue2['id'];
+  // better yet, if $issue is defined, we know we have to update it.
+  // if there isn't then see if there was one already.
+  if (!$issue) {
+    if ($subtype == '') {
+      $query = "SELECT id,pid from lists where title =? and type =? and pid =?";
+      $issue2 = sqlQuery($query,array($_REQUEST['form_title'],$_REQUEST['form_type'],$pid));
+      $issue = $issue2['id'];
+    } else {
+      $query = "SELECT id,pid from lists where title =? and type =? and pid =? and subtype =?";
+      $issue2 = sqlQuery($query,array($_REQUEST['form_title'],$_REQUEST['form_type'],$pid,$subtype));
+      $issue = $issue2['id'];
+    }
   }
   if ($issue) { //if an issue with this title/subtype already exists we are updating it...
 
@@ -304,6 +337,9 @@ if (!empty($irow['type'])) {
     ++$type_index;
   }
 }
+$query="SELECT ROSGENERAL,ROSHEENT,ROSCV, ROSPULM, ROSGI, ROSGU, ROSDERM, ROSNEURO,ROSPSYCH,ROSMUSCULO,ROSIMMUNO,ROSENDOCRINE from form_eye_mag where id=? and pid=?";
+$ROS = sqlQuery($query,array($form_id,$pid));
+@extract($ROS);
 
 ?><html>
 <head>
@@ -346,7 +382,9 @@ div.section {
  margin: 0 0 0 10pt;
  padding: 5pt;
 }
-
+.ROS_class input[type="text"] {
+  width:120px;
+}
 </style>
 
 <style type="text/css">@import url(<?php echo $GLOBALS['webroot']; ?>/library/dynarch_calendar.css);</style>
@@ -363,8 +401,7 @@ div.section {
  var aitypes = new Array(); // issue type attributes
  var aopts   = new Array(); // Option objects
 <?php
- $i = 0;  
-
+ 
 //This builds the litle quick pick list in this section.
  // Would be better as an autocomplete so lots of stuff can be seen.
  //or it is an ajax autocomplete live to the DB where a 
@@ -378,7 +415,7 @@ div.section {
  //draws from the VIEW table.  Nice.  Real time update...  Need to consider top picks and that can be the role
  // of the current list_options table...  Ok.  1-10 from list_options, after that from VIEW via trigger that
  // ranks them by frequency over a limited time to keep DB humming...  Or maybe just a query with a subselect?
-       $i='0';
+  $i='0';
   foreach ($ISSUE_TYPES as $key => $value) {
     echo " aitypes[$i] = " . attr($value[3]) . ";\n";
     echo " aopts[$i] = new Array();\n";
@@ -386,25 +423,27 @@ div.section {
     if ($i < "4") { // "0" = medical_problem_issue_list leave out Dental "4"
       $qry = sqlStatement("SELECT title, title as option_id, count(title) AS freq  FROM `lists` WHERE `type` LIKE ? and 
         subtype = '' and pid in (select pid from form_encounter where provider_id =? 
-        and date BETWEEN NOW() - INTERVAL 30 DAY AND NOW()) GROUP BY title order by freq desc limit 10", array($key,$_SESSION['authProvider'])); 
+        and date BETWEEN NOW() - INTERVAL 30 DAY AND NOW()) GROUP BY title order by freq desc limit 10", array($key,$_SESSION['authId'])); 
     //have to make sure a Tech sees what the provider prefers.  Is $_SESSION[authProvider] going to work here?
       if (sqlNumRows($qry) < ' 2') { //if they are just starting out, use the list_options for all
         $qry = sqlStatement("SELECT * FROM list_options WHERE list_id = ? and subtype not like 'eye'",array($key."_issue_list"));
       }
     } elseif ($i == "5") { // POH medical group - leave POsurgicalH for now. Surgical will require a new issue type above too
-      $query = "SELECT title, title as option_id, count(title) AS freq  FROM `lists` WHERE `type` LIKE 'medical_problem' and subtype = 'eye' and pid in (select pid from form_encounter where provider_id ='? and date BETWEEN NOW() - INTERVAL 30 DAY AND NOW()) GROUP BY title order by freq desc limit 10";
-       $qry = sqlStatement($query,array($_SESSION['authProvider'])); 
+      $query = "SELECT title, title as option_id, count(title) AS freq  FROM `lists` WHERE `type` LIKE 'medical_problem' and subtype = 'eye' and pid in (select pid from form_encounter where provider_id =? and date BETWEEN NOW() - INTERVAL 30 DAY AND NOW()) GROUP BY title order by freq desc limit 10";
+      $qry = sqlStatement($query,array($_SESSION['authProvider'])); 
       if (sqlNumRows($qry) < ' 2') { //if they are just starting out, use the list_options for all
         $qry = sqlStatement("SELECT * FROM list_options WHERE list_id = 'medical_problem_issue_list' and subtype = 'eye'");
-    }
+      }
     } else if ($i == "6") { // FH group
       //need a way to pull FH out of patient_data and will display frame very differently
       $qry = "";
     } else if ($i == "7") { // SocHx group - leave blank for now?
       $qry = ""; 
     } 
-    while($res = sqlFetchArray($qry)){
-      echo " aopts[$i][aopts[$i].length] = new Option('".attr(trim($res['option_id']))."', '".attr(xl_list_label(trim($res['title'])))."', false, false);\n";
+    if ($i <"6") {
+      while($res = sqlFetchArray($qry)){
+        echo " aopts[$i][aopts[$i].length] = new Option('".attr(trim($res['option_id']))."', '".attr(xl_list_label(trim($res['title'])))."', false, false);\n";
+      }
     }
   ++$i;
   }
@@ -421,11 +460,12 @@ div.section {
   var f = document.forms[0];
   var theopts = f.form_titles.options;
   theopts.length = 0;
+  if (aopts[index]) {
   var i = 0;
   for (i = 0; i < aopts[index].length; ++i) {
    theopts[i] = aopts[index][i];
   }
-  
+  }
   document.getElementById('row_quick_picks'     ).style.display = i ? '' : 'none'; //select list of things
   document.getElementById('row_title'           ).style.display = '';
   document.getElementById('row_diagnosis'       ).style.display = 'none';
@@ -439,6 +479,9 @@ div.section {
   document.getElementById('row_outcome'         ).style.display = 'none';
   document.getElementById('row_destination'     ).style.display = 'none';
   document.getElementById('row_social'          ).style.display = 'none';
+  document.getElementById('row_FH'              ).style.display = 'none';
+  document.getElementById('row_ROS'             ).style.display = 'none';
+  document.getElementById('row_PLACEHOLDER'     ).style.display = 'none';
 
 
   if (index == 0) { //PMH
@@ -465,8 +508,8 @@ div.section {
     
   } else if (index == 3) { //surgery
     document.getElementById('row_begindate'     ).style.display = '';
-    document.getElementById('row_referredby'      ).style.display = '';
-    document.getElementById('by_whom'          ).textContent ="Surgeon:";
+    document.getElementById('row_referredby'    ).style.display = '';
+    document.getElementById('by_whom'           ).textContent ="Surgeon:";
     document.getElementById('onset'             ).textContent = "Date:";
     
     document.getElementById('row_comments'      ).style.display = '';
@@ -475,19 +518,25 @@ div.section {
   } else if (index == 5) { //POH
     document.getElementById('row_diagnosis'     ).style.display = '';
     document.getElementById('row_begindate'     ).style.display = '';
-    document.getElementById('row_referredby'      ).style.display = '';
-    document.getElementById('by_whom'          ).textContent ="Collaborator:";
+    document.getElementById('row_referredby'    ).style.display = '';
+    document.getElementById('by_whom'           ).textContent ="Collaborator:";
     document.getElementById('onset'             ).textContent = "Date:";   
     document.getElementById('row_comments'      ).style.display = '';
 
   } else if (index == 6) { //FH
+    document.getElementById('row_title'         ).style.display = 'none';
+    document.getElementById('row_FH'            ).style.display = '';
+
   } else if (index == 7) { //SocH
-    document.getElementById('row_title'           ).style.display = 'none';
-    document.getElementById('row_social'      ).style.display = '';
+    document.getElementById('row_title'         ).style.display = 'none';
+    document.getElementById('row_social'        ).style.display = '';
 
   } else if (index == 8) { //ROS
+    document.getElementById('row_title'         ).style.display = 'none';
+    document.getElementById('row_ROS'           ).style.display = '';
   } else { //show nothing
-
+    document.getElementById('row_title'         ).style.display = 'none';
+    document.getElementById('row_PLACEHOLDER'   ).style.display = '';
   }
  }
  // If a clickoption title is selected, copy it to the title field.
@@ -513,13 +562,22 @@ function submit_this_form() {
         }).done(function(result){
           f.form_title.value = '';
           f.form_diagnosis.value = '';
-           //$("#page").html(result);
+          f.form_begin.value ='';
+          f.form_end.value ='';
+          f.form_referredby.value ='';
+          f.form_reaction.value ='';
+          f.form_classification.value ='';
+          f.form_comments.value ='';
+          f.form_outcome.value ='';
+          f.form_destination.value ='';
+          f.issue.value ='';
+ //$("#page").html(result);
           refreshIssue();
         });
 }
  // Process click on Delete link.
 function deleteme() {
-    var url = "../../forms/eye_mag/a_issue.php?issue=<?php echo attr($issue); ?>&delete=1";
+    var url = "../../forms/eye_mag/a_issue.php"; //?issue=<?php echo attr($issue); ?>&delete=1";
     var formData = $("form#theform").serialize();
     var f = document.forms[0];
     //alert(formData);
@@ -533,11 +591,21 @@ function deleteme() {
            
            }).done(function (o){
             //CLEAR THE FORM TOO...
-            console.log(o);
+           // console.log(o);
             //refreshIssues();
             f.form_title.value = '';
-          f.form_diagnosis.value = '';
-          refreshIssue();
+            f.form_diagnosis.value = '';
+            f.form_begin.value ='';
+            f.form_end.value ='';
+            f.form_referredby.value ='';
+            f.form_reaction.value ='';
+            f.form_classification.value ='';
+            f.form_comments.value ='';
+            f.form_outcome.value ='';
+            f.form_destination.value ='';
+            f.issue.value ='';
+            
+            refreshIssue();
            });
 }
  // Called by the deleteme.php window on a successful delete.
@@ -700,7 +768,17 @@ function radioChange(rbutton)
             echo "code_options_js"."['" . attr($val) . "']='" . attr($code) . "';\n";
       }
  ?>
-  
+function clear_option(section) {
+  //click the field, erase the Negative radio and input Y
+  var f = document.forms[0];
+  var name = 'radio_'+section.name;
+  var radio = document.getElementById(name);
+    radio.checked = false;
+  if (section.value==''){
+    section.value="Y";
+    section.select();
+  }
+}
 </script>
 
 </head>
@@ -709,9 +787,10 @@ function radioChange(rbutton)
 
   <div id="page" name="page">
     <form method='POST' name='theform' id='theform'
-     action='a_issue.php?issue=<?php echo attr($issue); ?>&thispid=<?php echo attr($thispid); ?>&thisenc=<?php echo attr($thisenc); ?>'
+     action='a_issue.php?thispid=<?php echo attr($thispid); ?>&thisenc=<?php echo attr($thisenc); ?>'
      onsubmit='return validate();'>
      <input type="hidden" name="form_id" id="form_id" value = "<?php echo $form_id; ?>">
+     <input type="hidden" name="issue" id="issue" value = "<?php echo attr($issue); ?>">
         <?php
          $index = 0;
          $output ='';
@@ -729,12 +808,15 @@ function radioChange(rbutton)
             if ($focustitles[1] == "Medication") $focustitles[1] = "Meds";
             if ($focustitles[1] == "Problem") $focustitles[1] = "PMH";
             if ($focustitles[1] == "Surgery") $focustitles[1] = "Surg";
+            if ($focustitles[1] == "SocH") $focustitles[1] = "Soc";
             $HELLO[$focustitles[1]] = "<input type='radio' name='form_type' id='".xla($index)."' value='".xla($index)."' ".$checked. " onclick='top.restoreSession();newtype($index);' />
-            <span style='margin-top:2px;font-size:0.8em;font-weight:bold;'><label class='input-helper input-helper--checkbox' for='".xla($index)."'>" . xlt($focustitles[1]) . "</label></span>&nbsp;\n";
+            <span style='margin-top:2px;font-size:0.6em;font-weight:bold;'><label class='input-helper input-helper--checkbox' for='".xla($index)."'>" . xlt($focustitles[1]) . "</label></span>&nbsp;\n";
             ++$index;
         }
+        $HELLO['ROS']="<input type='radio' name='form_type' id='8' value='8' ".$checked. " onclick='top.restoreSession();newtype(8);' />
+            <span style='margin-top:2px;font-size:0.6em;font-weight:bold;'><label class='input-helper input-helper--checkbox' for='8'>ROS</label></span>&nbsp;\n";
   
-        echo $HELLO['POH'].$HELLO['PMH'].$HELLO['Meds'].$HELLO['Surg'].$HELLO['Allergy'].$HELLO['FH'].$HELLO['SocH'];
+        echo $HELLO['POH'].$HELLO['PMH'].$HELLO['Meds'].$HELLO['Surg'].$HELLO['Allergy'].$HELLO['FH'].$HELLO['Soc'].$HELLO['ROS'];
 
         ?>
       <div class="borderShadow" style="text-align:center;margin-top:7px;width;100%;">
@@ -855,11 +937,9 @@ function radioChange(rbutton)
           </td>
         </tr>
       </table>
-      <table id="row_social" width="100%">
-        
-        
+      <table id="row_social" width="100%">      
             <?php 
-              $given ="coffee,tobacco,alcohol,sleep_patterns,exercise_patterns,seatbelt_use,counseling,hazardous_activities,recreational_drugs";
+              $given ="*";
               $dateStart=$_POST['dateState'];
               $dateEnd=$_POST['dateEnd'];
               if ($dateStart && $dateEnd) {
@@ -1011,7 +1091,10 @@ function radioChange(rbutton)
                     <tr>
                       <td><input type="text" name="form_coffee" id="form_box" size="20" value="<?php echo $result2['coffee']['resnote']; ?>">&nbsp;</td>
                       <td class="bold">&nbsp;&nbsp;</td>
-                      <td class="text"><input type="radio" name="radio_coffee" id="radio_coffee[current]" value="currentcoffee" <?php if ($PMSFH[0]['SOCH']['coffee']['restype'] =='currentcoffee') echo "checked"; ?>>Current&nbsp;</td><td class="text"><input type="radio" name="radio_coffee" id="radio_coffee[quit]" value="quitcoffee">Quit&nbsp;</td><td class="text"><input type="text" size="6" name="date_coffee" id="date_coffee" value="" title="Caffeine consumption" onkeyup="datekeyup(this,mypcc)" onblur="dateblur(this,mypcc)"><img src="/openemr/interface/pic/show_calendar.gif" align="absbottom" width="15" height="15" id="img_coffee" border="0" alt="[?]" style="cursor:pointer" title="Click here to choose a date">&nbsp;</td><td class="text"><input type="radio" name="radio_coffee" id="radio_coffee[never]" value="nevercoffee">Never&nbsp;</td>
+                      <td class="text"><input type="radio" name="radio_coffee" id="radio_coffee[current]" value="currentcoffee" <?php if ($PMSFH[0]['SOCH']['coffee']['restype'] =='currentcoffee') echo "checked"; ?>>Current&nbsp;</td>
+                      <td class="text"><input type="radio" name="radio_coffee" id="radio_coffee[quit]" value="quitcoffee" <?php if ($PMSFH[0]['SOCH']['coffee']['restype'] =='quitcoffee') echo "checked"; ?>>Quit&nbsp;</td>
+                      <td class="text"><input type="text" size="6" name="date_coffee" id="date_coffee" value="" title="Caffeine consumption" onkeyup="datekeyup(this,mypcc)" onblur="dateblur(this,mypcc)"><img src="/openemr/interface/pic/show_calendar.gif" align="absbottom" width="15" height="15" id="img_coffee" border="0" alt="[?]" style="cursor:pointer" title="Click here to choose a date">&nbsp;</td>
+                      <td class="text"><input type="radio" name="radio_coffee" id="radio_coffee[never]" value="nevercoffee" <?php if ($PMSFH[0]['SOCH']['coffee']['restype'] =='nevercoffee') echo "checked"; ?>>Never&nbsp;</td>
                     </tr>
                   </tbody>
                     </table>
@@ -1023,7 +1106,10 @@ function radioChange(rbutton)
                   <td class="text data" colspan="3">
                     <table cellpadding="0" cellspacing="0">
                       <tbody>
-                        <tr><td><input type="text" name="form_alcohol" id="form_box" size="20" value="<?php echo $result2['alcohol']['resnote']; ?>">&nbsp;</td><td class="bold">&nbsp;&nbsp;</td><td class="text"><input type="radio" name="radio_alcohol" id="radio_alcohol[current]" value="currentalcohol">Current&nbsp;</td><td class="text"><input type="radio" name="radio_alcohol" id="radio_alcohol[quit]" value="quitalcohol">Quit&nbsp;</td><td class="text"><input type="text" size="6" name="date_alcohol" id="date_alcohol" value="" title="Alcohol consumption" onkeyup="datekeyup(this,mypcc)" onblur="dateblur(this,mypcc)"><img src="/openemr/interface/pic/show_calendar.gif" align="absbottom" width="15" height="15" id="img_alcohol" border="0" alt="[?]" style="cursor:pointer" title="Click here to choose a date">&nbsp;</td><td class="text"><input type="radio" name="radio_alcohol" id="radio_alcohol[never]" value="neveralcohol">Never&nbsp;</td>
+                        <tr><td><input type="text" name="form_alcohol" id="form_box" size="20" value="<?php echo $result2['alcohol']['resnote']; ?>">&nbsp;</td><td class="bold">&nbsp;&nbsp;</td><td class="text"><input type="radio" name="radio_alcohol" id="radio_alcohol[current]" value="currentalcohol" <?php if ($PMSFH[0]['SOCH']['alcohol']['restype'] =='currentalcohol') echo "checked"; ?>>Current&nbsp;</td>
+                          <td class="text"><input type="radio" name="radio_alcohol" id="radio_alcohol[quit]" value="quitalcohol" <?php if ($PMSFH[0]['SOCH']['alcohol']['restype'] =='quitalcohol') echo "checked"; ?>>Quit&nbsp;</td>
+                          <td class="text"><input type="text" size="6" name="date_alcohol" id="date_alcohol" value="" title="Alcohol consumption" onkeyup="datekeyup(this,mypcc)" onblur="dateblur(this,mypcc)"><img src="/openemr/interface/pic/show_calendar.gif" align="absbottom" width="15" height="15" id="img_alcohol" border="0" alt="[?]" style="cursor:pointer" title="Click here to choose a date">&nbsp;</td>
+                          <td class="text"><input type="radio" name="radio_alcohol" id="radio_alcohol[never]" value="neveralcohol" <?php if ($PMSFH[0]['SOCH']['alcohol']['restype'] =='neveralcohol') echo "checked"; ?>>Never&nbsp;</td>
                         </tr>
                       </tbody>
                     </table>
@@ -1037,21 +1123,32 @@ function radioChange(rbutton)
                       <tbody>
                         <tr>
                           <td><input type="text" name="form_recreational_drugs" id="form_box" size="20" value="<?php echo $result2['recreational_drugs']['resnote']; ?>">&nbsp;</td><td class="bold">&nbsp;&nbsp;</td>
-                          <td class="text"><input type="radio" name="radio_recreational_drugs" id="radio_recreational_drugs[current]" value="currentrecreational_drugs">Current&nbsp;</td><td class="text"><input type="radio" name="radio_recreational_drugs" id="radio_recreational_drugs[quit]" value="quitrecreational_drugs">Quit&nbsp;</td><td class="text"><input type="text" size="6" name="date_recreational_drugs" id="date_recreational_drugs" value="" title="Recreational drug use" onkeyup="datekeyup(this,mypcc)" onblur="dateblur(this,mypcc)"><img src="/openemr/interface/pic/show_calendar.gif" align="absbottom" width="15" height="15" id="img_recreational_drugs" border="0" alt="[?]" style="cursor:pointer" title="Click here to choose a date">&nbsp;</td> 
-                          <td class="text"><input type="radio" name="radio_recreational_drugs" id="radio_recreational_drugs[never]" value="neverrecreational_drugs">Never&nbsp;</td>
+                          <td class="text"><input type="radio" name="radio_recreational_drugs" id="radio_recreational_drugs[current]" value="currentrecreational_drugs" <?php if ($PMSFH[0]['SOCH']['recreational_drugs']['restype'] =='currentrecreational_drugs') echo "checked"; ?>>Current&nbsp;</td>
+                          <td class="text"><input type="radio" name="radio_recreational_drugs" id="radio_recreational_drugs[quit]" value="quitrecreational_drugs" <?php if ($PMSFH[0]['SOCH']['recreational_drugs']['restype'] =='quitrecreational_drugs') echo "checked"; ?>>Quit&nbsp;</td>
+                          <td class="text"><input type="text" size="6" name="date_recreational_drugs" id="date_recreational_drugs" value="" title="Recreational drug use" onkeyup="datekeyup(this,mypcc)" onblur="dateblur(this,mypcc)"><img src="/openemr/interface/pic/show_calendar.gif" align="absbottom" width="15" height="15" id="img_recreational_drugs" border="0" alt="[?]" style="cursor:pointer" title="Click here to choose a date">&nbsp;</td> 
+                          <td class="text"><input type="radio" name="radio_recreational_drugs" id="radio_recreational_drugs[never]" value="neverrecreational_drugs" <?php if ($PMSFH[0]['SOCH']['recreational_drugs']['restype'] =='neverrecreational_drugs') echo "checked"; ?>>Never&nbsp;</td>
                         </tr>
                       </tbody>
                     </table>
                   </td>
                 </tr>
                
-                <tr class="nodisplay" ><td class="label right"  nowrap>Counseling:</td><td class="text data" colspan="3"><table cellpadding="0" cellspacing="0"><tbody><tr><td><input type="text" name="form_counseling" id="form_box" size="20" value="<?php echo $result2['counseling']['resnote']; ?>">&nbsp;</td><td class="bold">&nbsp;&nbsp;</td><td class="text"><input type="radio" name="radio_counseling" id="radio_counseling[current]" value="currentcounseling">Current&nbsp;</td><td class="text"><input type="radio" name="radio_counseling" id="radio_counseling[quit]" value="quitcounseling">Quit&nbsp;</td><td class="text"><input type="text" size="6" name="date_counseling" id="date_counseling" value="" title="Counseling activities" onkeyup="datekeyup(this,mypcc)" onblur="dateblur(this,mypcc)"><img src="/openemr/interface/pic/show_calendar.gif" align="absbottom" width="15" height="15" id="img_counseling" border="0" alt="[?]" style="cursor:pointer" title="Click here to choose a date">&nbsp;</td><td class="text"><input type="radio" name="radio_counseling" id="radio_counseling[never]" value="nevercounseling">Never&nbsp;</td>
+                <tr class="nodisplay" ><td class="label right"  nowrap>Counseling:</td><td class="text data" colspan="3"><table cellpadding="0" cellspacing="0"><tbody><tr><td><input type="text" name="form_counseling" id="form_box" size="20" value="<?php echo $result2['counseling']['resnote']; ?>">&nbsp;</td><td class="bold">&nbsp;&nbsp;</td><td class="text"><input type="radio" name="radio_counseling" id="radio_counseling[current]" value="currentcounseling" <?php if ($PMSFH[0]['SOCH']['counseling']['restype'] =='currentcounseling') echo "checked"; ?>>Current&nbsp;</td>
+                  <td class="text"><input type="radio" name="radio_counseling" id="radio_counseling[quit]" value="quitcounseling" <?php if ($PMSFH[0]['SOCH']['counseling']['restype'] =='quitcounseling') echo "checked"; ?>>Quit&nbsp;</td>
+                  <td class="text"><input type="text" size="6" name="date_counseling" id="date_counseling" value="" title="Counseling activities" onkeyup="datekeyup(this,mypcc)" onblur="dateblur(this,mypcc)"><img src="/openemr/interface/pic/show_calendar.gif" align="absbottom" width="15" height="15" id="img_counseling" border="0" alt="[?]" style="cursor:pointer" title="Click here to choose a date">&nbsp;</td>
+                  <td class="text"><input type="radio" name="radio_counseling" id="radio_counseling[never]" value="nevercounseling" <?php if ($PMSFH[0]['SOCH']['counseling']['restype'] =='nevercounseling') echo "checked"; ?>>Never&nbsp;</td>
                 </tr></tbody></table></td></tr>
             
-                <tr><td class="label right" nowrap>Exercise:</td><td class="text data" colspan="3"><table cellpadding="0" cellspacing="0"><tbody><tr><td><input type="text" name="form_exercise_patterns" id="form_box" size="20" value="<?php echo $result2['exercise_patterns']['resnote']; ?>">&nbsp;</td><td class="bold">&nbsp;&nbsp;</td><td class="text"><input type="radio" name="radio_exercise_patterns" id="radio_exercise_patterns[current]" value="currentexercise_patterns">Current&nbsp;</td><td class="text"><input type="radio" name="radio_exercise_patterns" id="radio_exercise_patterns[quit]" value="quitexercise_patterns">Quit&nbsp;</td><td class="text"><input type="text" name="date_exercise_patterns" id="date_exercise_patterns" value="" title="Exercise patterns" onkeyup="datekeyup(this,mypcc)" onblur="dateblur(this,mypcc)"><img src="/openemr/interface/pic/show_calendar.gif" align="absbottom" width="15" height="15" id="img_exercise_patterns" border="0" alt="[?]" style="cursor:pointer" title="Click here to choose a date">&nbsp;</td><td class="text"><input type="radio" name="radio_exercise_patterns" id="radio_exercise_patterns[never]" value="neverexercise_patterns">Never&nbsp;</td>
+                <tr><td class="label right" nowrap>Exercise:</td><td class="text data" colspan="3"><table cellpadding="0" cellspacing="0"><tbody><tr><td><input type="text" name="form_exercise_patterns" id="form_box" size="20" value="<?php echo $result2['exercise_patterns']['resnote']; ?>">&nbsp;</td><td class="bold">&nbsp;&nbsp;</td><td class="text"><input type="radio" name="radio_exercise_patterns" id="radio_exercise_patterns[current]" value="currentexercise_patterns" <?php if ($PMSFH[0]['SOCH']['exercise_patterns']['restype'] =='currentexercise_patterns') echo "checked"; ?>>Current&nbsp;</td>
+                  <td class="text"><input type="radio" name="radio_exercise_patterns" id="radio_exercise_patterns[quit]" value="quitexercise_patterns" <?php if ($PMSFH[0]['SOCH']['exercise_patterns']['restype'] =='quitexercise_patterns') echo "checked"; ?>>Quit&nbsp;</td>
+                  <td class="text"><input type="text" name="date_exercise_patterns" id="date_exercise_patterns" value="" title="Exercise patterns" onkeyup="datekeyup(this,mypcc)" onblur="dateblur(this,mypcc)"><img src="/openemr/interface/pic/show_calendar.gif" align="absbottom" width="15" height="15" id="img_exercise_patterns" border="0" alt="[?]" style="cursor:pointer" title="Click here to choose a date">&nbsp;</td>
+                  <td class="text"><input type="radio" name="radio_exercise_patterns" id="radio_exercise_patterns[never]" value="neverexercise_patterns"<?php if ($PMSFH[0]['SOCH']['exercise_patterns']['restype'] =='neverexercise_patterns') echo "checked"; ?>>Never&nbsp;</td>
                 </tr></tbody></table></td></tr>
                 
-                <tr class="nodisplay"><td class="label right"  nowrap>Hazardous Activities:</td><td class="text data" colspan="3"><table cellpadding="0" cellspacing="0"><tbody><tr><td><input type="text" name="form_hazardous_activities" id="form_box" size="20" value="<?php echo $result2['hazardous_activities']['resnote']; ?>">&nbsp;</td><td class="bold">&nbsp;&nbsp;</td><td class="text"><input type="radio" name="radio_hazardous_activities" id="radio_hazardous_activities[current]" value="currenthazardous_activities">Current&nbsp;</td><td class="text"><input type="radio" name="radio_hazardous_activities" id="radio_hazardous_activities[quit]" value="quithazardous_activities">Quit&nbsp;</td><td class="text"><input type="text" name="date_hazardous_activities" id="date_hazardous_activities" value="" title="Hazardous activities" onkeyup="datekeyup(this,mypcc)" onblur="dateblur(this,mypcc)"><img src="/openemr/interface/pic/show_calendar.gif" align="absbottom" width="15" height="15" id="img_hazardous_activities" border="0" alt="[?]" style="cursor:pointer" title="Click here to choose a date">&nbsp;</td><td class="text"><input type="radio" name="radio_hazardous_activities" id="radio_hazardous_activities[never]" value="neverhazardous_activities">Never&nbsp;</td>
+                <tr class="nodisplay"><td class="label right"  nowrap>Hazardous Activities:</td><td class="text data" colspan="3"><table cellpadding="0" cellspacing="0"><tbody><tr><td><input type="text" name="form_hazardous_activities" id="form_box" size="20" value="<?php echo $result2['hazardous_activities']['resnote']; ?>">&nbsp;</td><td class="bold">&nbsp;&nbsp;</td><td class="text"><input type="radio" name="radio_hazardous_activities" id="radio_hazardous_activities[current]" value="currenthazardous_activities" <?php if ($PMSFH[0]['SOCH']['hazardous_activities']['restype'] =='currenthazardous_activities') echo "checked"; ?>>Current&nbsp;</td>
+                  <td class="text"><input type="radio" name="radio_hazardous_activities" id="radio_hazardous_activities[quit]" value="quithazardous_activities" <?php if ($PMSFH[0]['SOCH']['hazardous_activities']['restype'] =='quithazardous_activities') echo "checked"; ?>>Quit&nbsp;</td>
+                  <td class="text"><input type="text" name="date_hazardous_activities" id="date_hazardous_activities" value="" title="Hazardous activities" onkeyup="datekeyup(this,mypcc)" onblur="dateblur(this,mypcc)"><img src="/openemr/interface/pic/show_calendar.gif" align="absbottom" width="15" height="15" id="img_hazardous_activities" border="0" alt="[?]" style="cursor:pointer" title="Click here to choose a date">&nbsp;</td>
+                  <td class="text"><input type="radio" name="radio_hazardous_activities" id="radio_hazardous_activities[never]" value="neverhazardous_activities" <?php if ($PMSFH[0]['SOCH']['hazardous_activities']['restype'] =='neverhazardous_activities') echo "checked"; ?>>Never&nbsp;</td>
                 </tr></tbody></table></td></tr>
                
                 <tr><td class="label right"  nowrap>Sleep:</td><td class="text data" colspan="3"><input type="text" name="form_sleep_patterns" id="form_box" size="20" title="Sleep patterns" value="<?php echo $result2['sleep_patterns']['resnote']; ?>"></td></tr>
@@ -1062,12 +1159,137 @@ function radioChange(rbutton)
                     <input type="text" name="form_seatbelt_use" id="form_box" size="20" title="Seatbelt use" value="<?php echo $result2['seatbelt_use']['resnote']; ?>">
                   </td>
                 </tr>
-                
             </tbody>
-            
       </table>
-      </div>
-      <center>
+      <table id="row_FH" name="row_FH" width="100%">
+        <tr>
+          <td class="label right" nowrap>Glaucoma:</td>
+          <td class="text data"><input type="text" name="usertext11" id="usertext11" value="<?php echo $result1['usertext11']; ?>"></td>
+          <td class="label right" nowrap>Cataract:</td>
+          <td class="text data"><input type="text" name="usertext12" id="usertext12" value="<?php echo $result1['usertext12']; ?>"></td>
+        </tr>
+        <tr>
+          <td class="label right" nowrap>AMD:</td>
+          <td class="text data"><input type="text" name="usertext13" id="usertext13" value="<?php echo $result1['usertext13']; ?>"></td>
+          <td class="label right" nowrap>RD:</td>
+          <td class="text data"><input type="text" name="usertext14" id="usertext14" value="<?php echo $result1['usertext14']; ?>"></td>
+        </tr>
+        <tr>
+          <td class="label right" nowrap>Blindness:</td>
+          <td class="text data"><input type="text" name="usertext15" id="usertext15" value="<?php echo $result1['usertext15']; ?>"></td>
+          <td class="label right" nowrap>Amblyopia:</td>
+          <td class="text data"><input type="text" name="usertext16" id="usertext16" value="<?php echo $result1['usertext16']; ?>"></td>
+        </tr>
+        <tr>
+          <td class="label right" nowrap>Strabismus:</td>
+          <td class="text data"><input type="text" name="usertext17" id="usertext17" value="<?php echo $result1['usertext17']; ?>"></td>
+          <td class="label right" nowrap>Other:</td>
+          <td class="text data"><input type="text" name="usertext18" id="usertext18" value="<?php echo $result1['usertext18']; ?>"></td>
+        </tr>
+        <tr>
+          <td class="label right" nowrap>Cancer:</td>
+          <td class="text data"><input type="text" name="relatives_cancer" id="relatives_cancer" value="<?php echo $result1['relatives_cancer']; ?>"></td>
+          <td class="label right" nowrap>Diabetes:</td>
+          <td class="text data"><input type="text" name="relatives_diabetes" id="relatives_diabetes" value="<?php echo $result1['relatives_diabetes']; ?>"></td>
+        </tr>
+        <tr>
+          <td class="label right" nowrap>HTN:</td>
+          <td class="text data"><input type="text" name="relatives_high_blood_pressure" id="relatives_high_blood_pressure" value="<?php echo $result1['relatives_high_blood_pressure']; ?>"></td>
+          <td class="label right" nowrap>Heart Problems:</td>
+          <td class="text data"><input type="text" name="relatives_heart_problems" id="relatives_heart_problems" value="<?php echo $result1['relatives_heart_problems']; ?>"></td>
+        </tr>
+        <tr>
+          <td class="label right" nowrap>Stroke:</td>
+          <td class="text data"><input type="text" name="relatives_stroke" id="relatives_stroke" value="<?php echo $result1['relatives_stroke']; ?>"></td>
+          <td class="label right" nowrap>Epilepsy:</td>
+          <td class="text data"><input type="text" name="relatives_epilepsy" id="relatives_epilepsy" value="<?php echo $result1['relatives_epilepsy']; ?>"></td>
+        </tr>
+      </table>
+      <table id="row_ROS" name="row_ROS" width="100%" class="ROS_class">
+        <tr>
+          <td>
+            <h2>ROS:</h2>
+          </td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>
+            <span class="underline" style="padding:5px;">Neg</span><span class="underline" style="margin:30px;">Positive</span>
+          </td>
+          <td></td>
+          <td><span class="underline" style="padding:5px;">Neg</span><span class="underline" style="margin:30px;">Positive</span>
+          </td>
+        </tr>
+        <tr>
+          <td class="label right" nowrap>General:</td>
+          <td>
+            <input type="radio" id="radio_ROSGENERAL" name="radio_ROSGENERAL" <?php if (!$ROSGENERAL) echo "checked='checked'"; ?>>
+            <input type="text" name="ROSGENERAL" id="ROSGENERAL" onclick='clear_option(this)' value="<?php echo $ROSGENERAL; ?>"></td>
+          <td class="label right" nowrap>HEENT:</td>
+          <td>
+            <input type="radio" id="radio_ROSHEENT" name="radio_ROSHEENT"<?php if (!$ROSHEENT) echo "checked='checked'"; ?>>
+            <input type="text" name="ROSHEENT" id="ROSHEENT" onclick='clear_option(this)' value="<?php echo $ROSHEENT; ?>"></td>
+        </tr>  
+        <tr>
+          <td class="label right" nowrap>CV:</td>
+          <td>
+            <input type="radio" id="radio_ROSCV" name="radio_ROSCV"<?php if (!$ROSCV) echo "checked='checked'"; ?>>
+            <input type="text" name="ROSCV" id="ROSCV" onclick='clear_option(this)' value="<?php echo $ROSCV; ?>"></td>
+          <td class="label right" nowrap>Pulmonary:</td>
+          <td>
+            <input type="radio" id="radio_ROSPULM" name="radio_ROSPULM"<?php if (!$ROSPULM) echo "checked='checked'"; ?>>
+            <input type="text" name="ROSPULM" id="ROSPULM" onclick='clear_option(this)' value="<?php echo $ROSPULM; ?>"></td>
+          </tr>  
+        <tr>
+          <td class="label right" nowrap>GI:</td>
+          <td>
+            <input type="radio"  id="radio_ROSGI" name="radio_ROSGI"<?php if (!$ROSGI) echo "checked='checked'"; ?>>
+            <input type="text" name="ROSGI" id="ROSGI" onclick='clear_option(this)' value="<?php echo $ROSGI; ?>"></td>
+          <td class="label right" nowrap>GU:</td>
+          <td>
+            <input type="radio"  id="radio_ROSGU" name="radio_ROSGU"<?php if (!$ROSGU) echo "checked='checked'"; ?>>
+            <input type="text" name="ROSGU" id="ROSGU" onclick='clear_option(this)' value="<?php echo $ROSGU; ?>"></td>
+        </tr>  
+        <tr>
+          <td class="label right" nowrap>Derm:</td>
+          <td>
+            <input type="radio"  id="radio_ROSDERM" name="radio_ROSDERM"<?php if (!$ROSDERM) echo "checked='checked'"; ?>>
+            <input type="text" name="ROSDERM" id="ROSDERM" onclick='clear_option(this)' value="<?php echo $ROSDERM; ?>"></td>
+          <td class="label right" nowrap>Neuro:</td>
+          <td>
+           <input type="radio"  id="radio_ROSNEURO" name="radio_ROSNEURO"<?php if (!$ROSNEURO) echo "checked='checked'"; ?>>
+            <input type="text" name="ROSNEURO" id="ROSNEURO" onclick='clear_option(this)' value="<?php echo $ROSNEURO; ?>"></td>
+        </tr> 
+        <tr>
+          <td class="label right" nowrap>Psych:</td>
+          <td>
+            <input type="radio"  id="radio_ROSPSYCH" name="radio_ROSPSYCH"<?php if (!$ROSPSYCH) echo "checked='checked'"; ?>>
+            <input type="text" name="ROSPSYCH" id="ROSPSYCH" onclick='clear_option(this)' value="<?php echo $ROSPSYCH; ?>"></td>
+          <td class="label right" nowrap>Musculo:</td>
+          <td>
+           <input type="radio"  id="radio_ROSMUSCULO" name="radio_ROSMUSCULO"<?php if (!$ROSMUSCULO) echo "checked='checked'"; ?>>
+            <input type="text" name="ROSMUSCULO" id="ROSMUSCULO" onclick='clear_option(this)' value="<?php echo $ROSMUSCULO; ?>"></td>
+          </tr>   
+        <tr>
+          <td class="label right" nowrap>Immuno:</td>
+          <td>
+            <input type="radio"  id="radio_ROSIMMUNO" name="radio_ROSIMMUNO"<?php if (!$ROSIMMUNO) echo "checked='checked'"; ?>>
+            <input type="text" name="ROSIMMUNO" id="ROSIMMUNO" onclick='clear_option(this)' value="<?php echo $ROSIMMUNO; ?>"></td>
+          <td class="label right" nowrap>Endocrine:</td>
+          <td>
+            <input type="radio"  id="radio_ROSENDOCRINE" name="radio_ROSENDOCRINE"<?php if (!$ROSENDOCRINE) echo "checked='checked'"; ?>>
+            <input type="text" name="ROSENDOCRINE" id="ROSENDOCRINE" onclick='clear_option(this)' value="<?php echo $ROSENDOCRINE; ?>"></td>
+          </tr>  
+        <tr><td></td></tr>
+      </table>
+      <table id="row_PLACEHOLDER" name="row_PLACEHOLDER" width="100%">
+        <tr>
+          <td>
+          </td>
+        </tr>
+      </table>
+    </div>
+    <center>
       <p style="margin-top:4px;">
 
         <input type='button' id='form_save' name='form_save' onclick='top.restoreSession();submit_this_form();' value='<?php echo xla('Save'); ?>' />

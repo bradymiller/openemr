@@ -1039,7 +1039,7 @@ foreach ($ar as $key => $val) {
 } // end $ar loop
 
 if ($printable)
-  echo "<br /><br />" . xl('Signature') . ": _______________________________<br />";
+  echo "" . xl('Signature') . ": _______________________________<br />";
 ?>
 
 </div> <!-- end of report_custom DIV -->

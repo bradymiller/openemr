@@ -331,7 +331,15 @@ if (!$_REQUEST['LOCKEDBY'])  $_REQUEST['LOCKEDBY'] = rand();
     if (!$_POST['NEO25']) $fields['NEO25'] = '0';
     if (!$_POST['TROPICAMIDE']) $fields['TROPICAMIDE'] = '0';
     if (!$_POST['BALANCED']) $fields['BALANCED'] = '0';
-    if (!$_POST['RX1']) $fields['RX1'] = '0';
+    if (!$_POST['ODVF1']) $fields['ODVF1'] = '0';
+    if (!$_POST['ODVF2']) $fields['ODVF2'] = '0';
+    if (!$_POST['ODVF3']) $fields['ODVF3'] = '0';
+    if (!$_POST['ODVF4']) $fields['ODVF4'] = '0';
+    if (!$_POST['OSVF1']) $fields['OSVF1'] = '0';
+    if (!$_POST['OSVF2']) $fields['OSVF2'] = '0';
+    if (!$_POST['OSVF3']) $fields['OSVF3'] = '0';
+    if (!$_POST['OSVF4']) $fields['OSVF4'] = '0';
+   
     $success = formUpdate($table_name, $fields, $form_id, $_SESSION['userauthorized']);
   //  $table_name = "form_".$form_folder."_undo";
  //   $update_undo = formSubmit($table_name, $fields, $form_id, $_SESSION['userauthorized']);

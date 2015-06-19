@@ -1505,15 +1505,19 @@ function display_PRIOR_section ($zone,$orig_id,$id_to_show,$pid,$report = '0') {
                 <tr>
                     <td style='min-height:1.2in;min-width:1.5in;padding-left:5px;'>
                     <?php
-                    foreach ($PMSFH[0]['FH'] as $item) {
-                        echo "<span name='QP_PMH_".$item['rowid']."' href='#PMH_anchor' id='QP_PMH_".$item['rowid']."' 
-                        onclick=\"alter_issue('".$item['rowid']."','".$item['row_type']."','');\">".$item['title']."</span><br />";
-                        $counter++;
+                    if (count($PMSFH[0]['FH']) > '0') {
+                        foreach ($PMSFH[0]['FH'] as $item) {
+                          echo "<span name='QP_PMH_".$item['rowid']."' href='#PMH_anchor' id='QP_PMH_".$item['rowid']."' 
+                          onclick=\"alter_issue('0','FH','');\">".$item['short_title'].": ".$item['display']."</span><br />";
+                        }
+                    } else {
+                        ?>
+                        <span href="#PMH_anchor" 
+                        onclick="alter_issue('0','FH','');" style="text-align:right;">TBD</span><br />
+                        <?
                     }
-                    if (count($PMSFH[0]['FH']) < 1) {
-                        echo  "".xla("None") ."<br /><br /><br />";
-                        $counter = $counter+4; 
-                    }
+
+                   
                     ?>
                     </td>
                 </tr>
@@ -1971,18 +1975,25 @@ function show_PMSFH_report($PMSFH) {
       ?>
       <br />
       <?php
-      foreach ($PMSFH[0]['POH'] as $item) {
-        echo $item['title']."<br />";
+      if (count($PMSFH[0]['POH']) > '0') {
+        foreach ($PMSFH[0]['POH'] as $item) {
+            echo $item['title']."<br />";
+        }
+      } else {
+        echo "None<br />";
       }
-      
        //<!-- PMH -->
       echo "<br />
       <span class='panel_title'>PMH:</span>";
       ?>
       <br />
       <?php
-      foreach ($PMSFH[0]['medical_problem'] as $item) {
-        echo $item['title']."<br />";
+      if (count($PMSFH[0]['medical_problem']) > '0') {
+          foreach ($PMSFH[0]['medical_problem'] as $item) {
+            echo $item['title']."<br />";
+          }
+      } else {
+        echo "None<br />";
       }
       
        //<!-- Meds -->
@@ -1990,9 +2001,13 @@ function show_PMSFH_report($PMSFH) {
       ?>
       <br />
       <?php
-      foreach ($PMSFH[0]['medication'] as $item) {
-        echo $item['title']."<br />";
-      }
+        if (count($PMSFH[0]['medication']) > '0') {
+            foreach ($PMSFH[0]['medication'] as $item) {
+                echo $item['title']."<br />";
+            }
+        } else {
+            echo "None<br />";
+        }
       
       //<!-- Surgeries -->
       echo "<br /><span class='panel_title'>Surgery:</span>";
@@ -2029,7 +2044,7 @@ function show_PMSFH_report($PMSFH) {
       <?php
       if (count($PMSFH[0]['SOCH']) > '0') {
         foreach ($PMSFH[0]['SOCH'] as $k => $item) {
-            echo $item['display']."<br />";
+            echo $item['short_title'].": ".$item['display']."<br />";
         }
       } else {
         ?>
@@ -2043,7 +2058,7 @@ function show_PMSFH_report($PMSFH) {
       <?php
       if (count($PMSFH[0]['FH']) > '0') {
         foreach ($PMSFH[0]['FH'] as $item) {
-          echo $item['title']."<br />";
+          echo $item['short_title'].": ".$item['display']."<br />";
         }
       } else {
         ?>
@@ -2100,8 +2115,8 @@ function show_Social() {
         $result1 = sqlQuery("select $given from history_data where pid=? order by date DESC limit 0,1", array($pid) );
     }
 
-/*    return $res;
-*/
+        /*    return $res;
+        */
     $group_fields_query = sqlStatement("SELECT * FROM layout_options " .
     "WHERE form_id = 'HIS' AND group_name = '4Lifestyle' AND uor > 0 " .
     "ORDER BY seq");
@@ -2114,7 +2129,7 @@ function show_Social() {
                 $field_id   = isset($frow['field_id']) ? $frow['field_id'] : "";
                 $list_id    = isset($frow['list_id']) ? $frow['list_id'] : "";
                 $currvalue  = '';
-*/
+        */
             ?>
             
           <table border='0' cellpadding='0'>
@@ -2173,8 +2188,8 @@ function show_Social() {
                           
         <?php
                    ?>
-</div>
-<?
+    </div>
+    <?
 }
 /**
  *  This function returns display the draw/sketch diagram for a zone (4 input values)

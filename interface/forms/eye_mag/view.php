@@ -702,7 +702,7 @@ require_once("$incdir/patient_file/encounter/new_form.php");
           if ($display != "fullscreen") {   ?>      
           
                   <i onclick="top.restoreSession();openNewForm('<?php echo $GLOBALS['webroot']; ?>/interface/patient_file/encounter/load_form.php?formname=fee_sheet');dopopup('<?php echo $_SERVER['REQUEST_URI']. '&display=fullscreen&encounter='.$encounter; ?>');" 
-                    class="fa fa-plus-square-o top_right" style="top: -0.2in;right: 0.2in;"></i>
+                    class="fa fa-plus-square-o top_right" style="top: -0.2in;right: 0.2in;z-index:10000001;"></i>
                      <?php 
           }  else { ?>
            <!--<i class="fa fa-close top_right" OnClick="window.close()"></i>-->
@@ -722,10 +722,9 @@ require_once("$incdir/patient_file/encounter/new_form.php");
               <div id="Lyr2.9" class="top_left ">
                 <th class="text_clinical"><b id="MS_tab"><?php echo xlt('Mental Status'); ?>:</b></th>
               </div>    
-                <input type="checkbox" <?php if ($alert) echo "checked='checked'"; ?> value="<?php echo $alert; ?>"> Alert<br />
-                <input type="checkbox" <?php if ($oriented) echo "checked='checked'"; ?> value="<?php echo $oriented; ?>"> Oriented<br />
-                <input type="checkbox" <?php if ($confused) echo "checked='checked'"; ?> value="<?php echo $confused; ?>"> Confused<br />
-                <input type="checkbox" <?php if ($confused) echo "checked='checked'"; ?> value="<?php echo $confused; ?>"> Mood/Affect
+                <input type="checkbox" name="alert" id="alert" <?php if ($alert) echo "checked='checked'"; ?> value="<?php echo $alert; ?>"> Alert<br />
+                <input type="checkbox" name="oriented" id="oriented" <?php if ($oriented) echo "checked='checked'"; ?> value="<?php echo $oriented; ?>"> Oriented<br />
+                <input type="checkbox" name="confused" id="confused" <?php if ($confused) echo "checked='checked'"; ?> value="<?php echo $confused; ?>"> Mood/Affect
             </div>
 
                   <!-- start of the VISION BOX -->                  
@@ -2253,10 +2252,10 @@ require_once("$incdir/patient_file/encounter/new_form.php");
                                             <?php echo xlt('Color'); ?>: 
                                         </td>
                                         <td>
-                                            <input type="text"  name="ODCOLOR" id="ODCOLOR" value="<?php if ($ODCOLOR) { echo  $ODCOLOR; } else { echo "   /  "; } ?>"/>
+                                            <input type="text"  name="ODCOLOR" id="ODCOLOR" value="<?php if ($ODCOLOR) { echo  $ODCOLOR; } else { echo ""; } ?>"/>
                                         </td>
                                         <td>
-                                            <input type="text" name="OSCOLOR" id="OSCOLOR" value="<?php if ($OSCOLOR) { echo  $OSCOLOR; } else { echo "   /  "; } ?>"/>
+                                            <input type="text" name="OSCOLOR" id="OSCOLOR" value="<?php if ($OSCOLOR) { echo  $OSCOLOR; } else { echo ""; } ?>"/>
                                         </td>
                                         <td><!-- //Normals may be 11/11 or 15/15.  Need to make a preference here for the user.
                                             //or just take the normal they use and incorporate that ongoing?
