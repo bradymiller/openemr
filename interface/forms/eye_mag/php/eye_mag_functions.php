@@ -1320,9 +1320,12 @@ function display_PRIOR_section ($zone,$orig_id,$id_to_show,$pid,$report = '0') {
         if (acl_check('patients','med')) {
             $tmp = getPatientData($pid);
         }
+
+        $PMSFH = build_PMSFH($pid);
+           
         // Collect parameter(s)
         $category = empty($_REQUEST['category']) ? '' : $_REQUEST['category'];
-        $div = '</div><div id="PMH_QP_block2" name="PMH_QP_block2" class="QP_block_outer  borderShadow text_clinical" style="height:3.2in;overflow:auto;"">';
+        $div = '</div><div id="PMH_QP_block2" name="PMH_QP_block2" class="QP_block_outer borderShadow text_clinical" style="height:3.2in;overflow:auto;"">';
                                               
         ?><span class="closeButton fa fa-close pull-right" id="BUTTON_TEXTD_PMH" name="BUTTON_TEXTD_PMH" value="1"></span>
             
@@ -1333,15 +1336,12 @@ function display_PRIOR_section ($zone,$orig_id,$id_to_show,$pid,$report = '0') {
             $first = 1; // flag for first section
             $counter="1";
             $column = '19';
-            $PMSFH = build_PMSFH($pid);
-            //each column can handle 25? rows, so a toal of 50, 
+            //each column can handle 19? rows, so a toal of 38, 
             // including 8 for headings (as of today) and at least 12 for
-            // separating lines, leaving room for 20 items.
-            // None counts as 2 lines right now...
+            // separating lines, leaving room for 18 actual items.
+            // "None" counts as 2 lines right now...
             // So if count($PMSFH[0]) > 20, maybe less for "None"s, there will be overflow
             // causing the display to be funky looking...
-
-            //var_dump($PMSFH[0]['medical_problem']);
             ?>
             <table style="width:1.6in;">
                 <tr>
@@ -1569,13 +1569,17 @@ function display_PRIOR_section ($zone,$orig_id,$id_to_show,$pid,$report = '0') {
                     <td style='min-height:1.2in;min-width:1.5in;padding-left:5px;'>
                     <?php
                     foreach ($PMSFH[0]['ROS'] as $item) {
-                        echo "<span name='QP_PMH_".$item['rowid']."' href='#PMH_anchor' id='QP_PMH_".$item['rowid']."' 
-                        onclick=\"alter_issue('".$item['rowid']."','".$item['row_type']."','');\">".$item['title']."</span><br />";
-                        $counter++;
+                        //var_dump($item);
+                        if ($item['display'] > '') {
+                            echo "<span name='QP_PMH_".$item['rowid']."' href='#PMH_anchor' id='QP_PMH_".$item['rowid']."' 
+                             onclick=\"alter_issue('0','ROS','');\">".$item['short_title'].": ".$item['display']."</span><br />";
+                            $counter++;
+                            $mention++;
+                        }
                     }
-                    if (count($PMSFH[0]['ROS']) < 1) {
-                        echo  "".xla("None") ."<br /><br /><br />";
-                        $counter = $counter+4; 
+                    if ($mention < 1) {
+                        echo  "".xla("Negative") ."<br />";
+                        $counter = $counter+2; 
                     }
                     ?>
                     </td>
@@ -1590,6 +1594,7 @@ function display_PRIOR_section ($zone,$orig_id,$id_to_show,$pid,$report = '0') {
 
 function build_PMSFH($pid) {
     global $form_folder;
+    global $form_id;
     global $id;
     global $ISSUE_TYPES;
     global $ISSUE_TYPE_STYLES;
@@ -1742,9 +1747,15 @@ function build_PMSFH($pid) {
         if ($field_id =="recreational_drugs") $PMSFH['SOCH'][$field_id]['short_title'] = "Drug Use";
     }
     
-    //  Need to draw in Marital status and Employment history to this Social Hx area?  Probably.
+    //  Drag in Marital status and Employment history to this Social Hx area.
+    $patient = getPatientData($thispid, "*");
+    $PMSFH['SOCH']['marital_status']['short_title']="Marital";
+    $PMSFH['SOCH']['marital_status']['display']=$patient['marital_status'];
+    $PMSFH['SOCH']['occupation']['short_title']="Occupation";
+    $PMSFH['SOCH']['occupation']['display']=$patient['occupation'];
 
-    //next we have to build the FH portion of $PMSFH,$PMSFH['FH']
+
+    // Build the FH portion of $PMSFH,$PMSFH['FH']
     // history_mother  history_father  history_siblings    history_offspring   history_spouse  
     // relatives_cancer    relatives_tuberculosis  relatives_diabetes  relatives_high_blood_pressure   relatives_heart_problems    relatives_stroke    relatives_epilepsy  relatives_mental_illness    relatives_suicide
     //  There are two ways FH is stored in the history area, one on a specific relationship basis
@@ -1811,11 +1822,11 @@ function build_PMSFH($pid) {
         
    }
      //now make some of our own using the usertext11-30 fields
-   if (!$result1['usertext11']) $result1['usertext11'] = "None";
-  if (!$result1['usertext12']) $result1['usertext12'] = "None";
-   if (!$result1['usertext13']) $result1['usertext13'] = "None";
-   if (!$result1['usertext14']) $result1['usertext14'] = "None";
-   //if (!$result1['usertext15']) $result1['usertext15'] = "denies";
+    if (!$result1['usertext11']) $result1['usertext11'] = "None";
+    if (!$result1['usertext12']) $result1['usertext12'] = "None";
+    if (!$result1['usertext13']) $result1['usertext13'] = "None";
+    if (!$result1['usertext14']) $result1['usertext14'] = "None";
+        //if (!$result1['usertext15']) $result1['usertext15'] = "denies";
     $PMSFH['FH']['glaucoma']['display'] = (substr($result1['usertext11'],0,10));
     $PMSFH['FH']['glaucoma']['short_title'] = "Glaucoma";
     $PMSFH['FH']['cataract']['display'] = (substr($result1['usertext12'],0,10));
@@ -1824,9 +1835,46 @@ function build_PMSFH($pid) {
     $PMSFH['FH']['amd']['short_title'] = "AMD";
     $PMSFH['FH']['RD']['display'] = (substr($result1['usertext14'],0,10));
     $PMSFH['FH']['RD']['short_title'] = "RD";
+
     //last_retinal    last_hemoglobin     
     //   $PMSFH['SOCH'][$field_id]['resnote'] = nl2br(htmlspecialchars($currvalue,ENT_NOQUOTES));
     //$PMSFH=$PMSFH[0];
+
+    // Build ROS into $PMSFH['ROS'] also
+    $given="ROSGENERAL,ROSHEENT,ROSCV,ROSPULM,ROSGI,ROSGU,ROSDERM,ROSNEURO,ROSPSYCH,ROSMUSCULO,ROSIMMUNO,ROSENDOCRINE";
+    $query="SELECT $given from form_eye_mag where id=? and pid=?";
+    $ROS = sqlStatement($query,array($form_id,$pid));
+    while ($row = sqlFetchArray($ROS)) {
+        foreach (split(',',$given) as $item) {
+            $PMSFH['ROS'][$item]['display']= $row[$item];
+        }
+    }
+    $PMSFH['ROS']['ROSGENERAL']['short_title']="GEN";
+    $PMSFH['ROS']['ROSHEENT']['short_title']="HEENT";
+    $PMSFH['ROS']['ROSCV']['short_title']="CV";
+    $PMSFH['ROS']['ROSPULM']['short_title']="PULM";
+    $PMSFH['ROS']['ROSGI']['short_title']="GI";
+    $PMSFH['ROS']['ROSGU']['short_title']="GU";
+    $PMSFH['ROS']['ROSDERM']['short_title']="DERM";
+    $PMSFH['ROS']['ROSNEURO']['short_title']="NEURO";
+    $PMSFH['ROS']['ROSPSYCH']['short_title']="PSYCH";
+    $PMSFH['ROS']['ROSMUSCULO']['short_title']="ORTHO";
+    $PMSFH['ROS']['ROSIMMUNO']['short_title']="IMMUNO";
+    $PMSFH['ROS']['ROSENDOCRINE']['short_title']="ENDO";
+
+    $PMSFH['ROS']['ROSGENERAL']['title']="General";
+    $PMSFH['ROS']['ROSHEENT']['title']="HEENT";
+    $PMSFH['ROS']['ROSCV']['title']="Cardiovascular";
+    $PMSFH['ROS']['ROSPULM']['title']="Pulmonary";
+    $PMSFH['ROS']['ROSGI']['title']="GI";
+    $PMSFH['ROS']['ROSGU']['title']="GU";
+    $PMSFH['ROS']['ROSDERM']['title']="Dermatology";
+    $PMSFH['ROS']['ROSNEURO']['title']="Neurology";
+    $PMSFH['ROS']['ROSPSYCH']['title']="Pyschiatry";
+    $PMSFH['ROS']['ROSMUSCULO']['title']="Musculoskeletal";
+    $PMSFH['ROS']['ROSIMMUNO']['title']="Immune System";
+    $PMSFH['ROS']['ROSENDOCRINE']['title']="Endocrine";
+
     return array($PMSFH);
 }
 
@@ -1892,7 +1940,6 @@ function show_PMSFH_panel($PMSFH) {
         <span href="#PMH_anchor" 
         onclick="alter_issue('0','surgery','');" style="text-align:right;">None</span><br />
         <?
-
       }
       
       //<!-- Allergies -->
@@ -1953,15 +2000,17 @@ function show_PMSFH_panel($PMSFH) {
       onclick="alter_issue('0','ROS','');" style="text-align:right;font-size:8px;">Add</span>
       <br />
       <?php
-      if (count($PMSFH[0]['ROS']) > '0') {
         foreach ($PMSFH[0]['ROS'] as $item) {
-          echo "<span name='QP_PMH_".$item['rowid']."' href='#PMH_anchor' id='QP_PMH_".$item['rowid']."' 
-          onclick=\"alter_issue('".$item['rowid']."','".$item['row_type']."');\">".$item['title']."</span><br />";
+            if ($item['display']) {
+                echo "<span name='QP_PMH_".$item['rowid']."' href='#PMH_anchor' id='QP_PMH_".$item['rowid']."' 
+                onclick=\"alter_issue('0','ROS','');\">".$item['short_title'].": ".$item['display']."</span><br />";
+            $mentions++;
+            }
         }
-      } else {
-        ?>
+      if ($mentions < '1') {
+              ?>
         <span href="#PMH_anchor" 
-        onclick="alter_issue('0','ROS','');" style="text-align:right;">In development</span><br />
+        onclick="alter_issue('0','ROS','');" style="text-align:right;">Negative</span><br />
         <?
       }
 }
@@ -2079,118 +2128,7 @@ function show_PMSFH_report($PMSFH) {
         <?
       }
 }
-function show_Social() {
-    echo "<br /><b><u>Soc Hx:</u></b>";
-      ?><span class="top-right btn-sm" href="#PMH_anchor" 
-      onclick="alter_issue('0','SOCH','');" style="text-align:right;font-size:8px;">Add</span>
-      <br />
-      <?php
-      if (count($PMSFH[0]['SOCH']) > '0') {
-        foreach ($PMSFH[0]['SOCH'] as $k => $item) {
-            echo "<span name='QP_PMH_".$item['rowid']."' href='#PMH_anchor' id='QP_PMH_".$item['rowid']."' 
-            onclick=\"alter_issue('0','SOCH','');\">".$item['short_title'].": ".$item['display']."</span><br />";
-        }
-      } else {
-        ?>
-        <span href="#PMH_anchor" 
-        onclick="alter_issue('0','SOCH','');" style="text-align:right;">Not documented</span><br />
-        <?
-      }
-      ?>
-    <div class="tabContainer">
-                   <?php 
-  $given ="coffee,tobacco,alcohol,sleep_patterns,exercise_patterns,seatbelt_use,counseling,hazardous_activities,recreational_drugs";
-  $dateStart=$_POST['dateState'];
-  $dateEnd=$_POST['dateEnd'];
-  if ($dateStart && $dateEnd) {
-        $result1 = sqlQuery("select $given from history_data where pid = ? and date >= ? and date <= ? order by date DESC limit 0,1", array($pid,$dateStart,$dateEnd) );
-    }
-    else if ($dateStart && !$dateEnd) {
-        $result1 = sqlQuery("select $given from history_data where pid = ? and date >= ? order by date DESC limit 0,1", array($pid,$dateStart) );
-    }
-    else if (!$dateStart && $dateEnd) {
-        $result1 = sqlQuery("select $given from history_data where pid = ? and date <= ? order by date DESC limit 0,1", array($pid,$dateEnd) );
-    }
-    else {
-        $result1 = sqlQuery("select $given from history_data where pid=? order by date DESC limit 0,1", array($pid) );
-    }
 
-        /*    return $res;
-        */
-    $group_fields_query = sqlStatement("SELECT * FROM layout_options " .
-    "WHERE form_id = 'HIS' AND group_name = '4Lifestyle' AND uor > 0 " .
-    "ORDER BY seq");
-    
-   /* while ($frow = sqlFetchArray($fres)) {
-                $this_group = isset($frow['group_name']) ? $frow['group_name'] : "" ;
-                $titlecols  = isset($frow['titlecols']) ? $frow['titlecols'] : "";
-                $datacols   = isset($frow['datacols']) ? $frow['datacols'] : "";
-                $data_type  = isset($frow['data_type']) ? $frow['data_type'] : "";
-                $field_id   = isset($frow['field_id']) ? $frow['field_id'] : "";
-                $list_id    = isset($frow['list_id']) ? $frow['list_id'] : "";
-                $currvalue  = '';
-        */
-            ?>
-            
-          <table border='0' cellpadding='0'>
-            <?php
-            while ($group_fields = sqlFetchArray($group_fields_query)) {
-                $titlecols  = $group_fields['titlecols'];
-                $datacols   = $group_fields['datacols'];
-                $data_type  = $group_fields['data_type'];
-                $field_id   = $group_fields['field_id'];
-                $list_id    = $group_fields['list_id'];
-                $currvalue  = '';
-            if (isset($result1[$field_id])) $currvalue = $result1[$field_id];
-            
-            // Handle starting of a new row.
-                                        if (($titlecols > 0 && $cell_count >= $CPR) || $cell_count == 0) {
-                                          disp_end_row();
-                                          echo "<tr>";
-                                        }
-
-                                        if ($item_count == 0 && $titlecols == 0) {
-                                                $titlecols = 1;
-                                        }
-
-                                        // Handle starting of a new label cell.
-                                        if ($titlecols > 0) {
-                                          disp_end_cell();
-                                          $titlecols_esc = htmlspecialchars( $titlecols, ENT_QUOTES);
-                                          echo "<td class='right' colspan='$titlecols_esc' ";
-                                          echo "><b>";
-                                          $cell_count += $titlecols;
-                                        }
-                                        ++$item_count;
-                    // Added 5-09 by BM - Translate label if applicable
-                                        if ($group_fields['title']) echo htmlspecialchars(xl_layout_label($group_fields['title']).":",ENT_NOQUOTES)."</b>"; else echo "&nbsp;";
-
-
-                                        // Handle starting of a new data cell.
-                                        if ($datacols > 0) {
-                                          disp_end_cell();
-                                          $datacols_esc = htmlspecialchars( $datacols, ENT_QUOTES);
-                                          echo "<td class='text data' style='padding-left:10px;' colspan='$datacols_esc'";
-                                          echo ">";
-                                          $cell_count += $datacols;
-                                        }
-
-                                        ++$item_count;
-                                        echo generate_display_field($group_fields, $currvalue);
-                                  }
-
-                        disp_end_row();
-                        ?>
-
-                        </table>
-    
-
-                          
-        <?php
-                   ?>
-    </div>
-    <?
-}
 /**
  *  This function returns display the draw/sketch diagram for a zone (4 input values)
  * 

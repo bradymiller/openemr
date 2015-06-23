@@ -56,15 +56,19 @@ $form_save = $_REQUEST['form_save'];
 $pid = $_SESSION['pid'];
 $encounter = $_SESSION['encounter'];
 $form_id = $_REQUEST['form_id'];
+$form_type = $_REQUEST['form_type'];
 
 if ($thispid=='') $thispid = $pid;
-$PMSFH = build_PMSFH($thispid);
 if ($issue && !acl_check('patients','med','','write') ) die(xlt("Edit is not authorized!"));
 if ( !acl_check('patients','med','',array('write','addonly') )) die(xlt("Add is not authorized!"));
 
 $patient = getPatientData($thispid, "*");
+$PMSFH = build_PMSFH($thispid);
 
 //add in our specific ISSUE_TYPES.  Will need to extract list_options and store these separately too
+//transition to using PMSFH soley...  We may not need this at all...
+//this is still used to display PMSFHROS radio selectors. 
+
 $ISSUE_TYPES['POH'] = array("Past Ocular History","POH","O","1");
 $ISSUE_TYPES['FH'] = array("Family History","FH","O","1");
 $ISSUE_TYPES['SOCH'] = array("Social History","SocH","O","1");
@@ -129,6 +133,7 @@ function rbcell($name, $value, $desc, $colname) {
 }
 
 // Given an issue type as a string, compute its index.
+//Not sure of the value of this sub given transition to array $PMSFH
 function issueTypeIndex($tstr) {
   global $ISSUE_TYPES;
   $i = 0;
@@ -138,13 +143,14 @@ function issueTypeIndex($tstr) {
   }
   return $i;
 }
+
 if ($form_save) {
-  if ($_REQUEST["form_type"]=='8') { //ROS
+  if ($form_type=='8') { //ROS
     $query="UPDATE form_eye_mag set ROSGENERAL=?,ROSHEENT=?,ROSCV=?,ROSPULM=?,ROSGI=?,ROSGU=?,ROSDERM=?,ROSNEURO=?,ROSPSYCH=?,ROSMUSCULO=?,ROSIMMUNO=?,ROSENDOCRINE=? where id=? and pid=?";
     sqlStatement($query,array($_REQUEST['ROSGENERAL'],$_REQUEST['ROSHEENT'],$_REQUEST['ROSCV'],$_REQUEST['ROSPULM'],$_REQUEST['ROSGI'],$_REQUEST['ROSGU'],$_REQUEST['ROSDERM'],$_REQUEST['ROSNEURO'],$_REQUEST['ROSPSYCH'],$_REQUEST['ROSMUSCULO'],$_REQUEST['ROSIMMUNO'],$_REQUEST['ROSENDOCRINE'],$form_id,$pid));
     exit;
   }
-  if ($_REQUEST["form_type"]=='7') { //SocHx
+  if ($form_type=='7') { //SocHx
     $newdata = array();
     $fres = sqlStatement("SELECT * FROM layout_options " .
       "WHERE form_id = 'HIS' AND uor > 0 AND field_id != '' " .
@@ -154,18 +160,15 @@ if ($form_save) {
       $newdata[$field_id] = get_layout_form_value($frow);
     }
     updateHistoryData($pid, $newdata);
-    if ($_REQUEST['marital_status'] >'') {
+    if ($_REQUEST['marital_status'] >'') {  
+      // have to match input with list_option for marital to not break openEMR
       $query="select * from list_options where list_id='marital'";
       $fres = sqlStatement($query);
       while ($frow = sqlFetchArray($fres)) { 
-       // echo $frow['option_id'];
-        // have to match input with list_option for marital to not break openEMR
         if (($_REQUEST['marital_status'] == $frow['option_id'])||($_REQUEST['marital_status'] == $frow['title'])) {
           $status = $frow['option_id'];
           $query = "UPDATE patient_data set status=? where pid=?";
           sqlStatement($query,array($status,$pid));
-          //echo $query;
-
         }
       }
     }
@@ -175,7 +178,7 @@ if ($form_save) {
     }
     exit;
   } //done if social history
-  if ($_REQUEST['form_type'] =='6') { //FH
+  if ($form_type =='6') { //FH
     //we are doing a save for FH
     $query = "UPDATE history_data set 
             relatives_cancer=?,
@@ -199,18 +202,24 @@ if ($form_save) {
     exit;
   } //done if FH
 
-  $i = 0;
-  $text_type = "unknown";
-  if ($_REQUEST['form_type'] =='5') { 
-  // This ISSUE_TYPE 5 --> we manufactured it === POH, is a subset of medical_problem, subtype eye
-    $_REQUEST['form_type'] ='0';
+  /* FROM HERE ON OUT ie form_type < 6, we must use the openEMR convention ISSUE_TYPES
+   * to keep from breaking reporting stuff - CQM, etc.  We will skip Dental (form_type==4)
+   * as it has no place in this H&P.  Save this 
+   */
+
+  if ($form_type =='5') { // POH, is a subset of medical_problem, subtype eye
+    //$_REQUEST['form_type'] ='0';
+    $form_type='0';
     $subtype="eye";
   } else {
     $subtype ='';
   }
+
+  $i = 0;
+  $text_type = "unknown";
  
   foreach ($ISSUE_TYPES as $key => $value) {
-   if ($i++ == $_REQUEST['form_type']) $text_type = $key;
+   if ($i++ == $form_type) $text_type = $key;
   }
 
   $form_begin = fixDate($_REQUEST['form_begin'], '');
@@ -222,17 +231,17 @@ if ($form_save) {
   // if there isn't then see if there was one already.
   if (!$issue) {
     if ($subtype == '') {
-      $query = "SELECT id,pid from lists where title =? and type =? and pid =?";
+      $query = "SELECT id,pid from lists where title=? and type=? and pid=?";
       $issue2 = sqlQuery($query,array($_REQUEST['form_title'],$_REQUEST['form_type'],$pid));
       $issue = $issue2['id'];
     } else {
-      $query = "SELECT id,pid from lists where title =? and type =? and pid =? and subtype =?";
+      $query = "SELECT id,pid from lists where title=? and type=? and pid=? and subtype=?";
       $issue2 = sqlQuery($query,array($_REQUEST['form_title'],$_REQUEST['form_type'],$pid,$subtype));
       $issue = $issue2['id'];
     }
   }
-  if ($issue) { //if an issue with this title/subtype already exists we are updating it...
 
+  if ($issue) { //if an issue with this title/subtype already exists we are updating it...
    $query = "UPDATE lists SET " .
     "type = '"        . add_escape_custom($text_type)                  . "', " .
     "title = '"       . add_escape_custom($_REQUEST['form_title'])        . "', " .
@@ -262,9 +271,7 @@ if ($form_save) {
         . " and upper(trim(drug)) = ? "
         . ' and medication = 1', array($thispid,strtoupper($_REQUEST['form_title'])) );
     }
-
   } else {
-
    $query =  "INSERT INTO lists ( " .
     "date, pid, type, title, activity, comments, begdate, enddate, returndate, " .
     "diagnosis, occurrence, classification, referredby, user, groupname, " .
@@ -316,6 +323,7 @@ if ($form_save) {
   //if it is a medication do we need to do something with dosage fields? 
   //leave all in title field form now.
 }
+//---- end save
 
 $irow = array();
 if ($issue) {
@@ -337,9 +345,13 @@ if (!empty($irow['type'])) {
     ++$type_index;
   }
 }
-$query="SELECT ROSGENERAL,ROSHEENT,ROSCV, ROSPULM, ROSGI, ROSGU, ROSDERM, ROSNEURO,ROSPSYCH,ROSMUSCULO,ROSIMMUNO,ROSENDOCRINE from form_eye_mag where id=? and pid=?";
-$ROS = sqlQuery($query,array($form_id,$pid));
-@extract($ROS);
+$given="ROSGENERAL,ROSHEENT,ROSCV,ROSPULM,ROSGI,ROSGU,ROSDERM,ROSNEURO,ROSPSYCH,ROSMUSCULO,ROSIMMUNO,ROSENDOCRINE";
+    $query="SELECT $given from form_eye_mag where id=? and pid=?";
+    $rres = sqlQuery($query,array($form_id,$pid));
+    foreach (split(',',$given) as $item) {
+        $$item = $rres[$item];
+    }
+
 
 ?><html>
 <head>
@@ -557,8 +569,7 @@ function submit_this_form() {
     $.ajax({
            type   : 'POST',   // define the type of HTTP verb we want to use (POST for our form)
            url    : url,      // the url where we want to POST
-           data   : formData // our data object
-  
+           data   : formData  // our data object
         }).done(function(result){
           f.form_title.value = '';
           f.form_diagnosis.value = '';
@@ -571,7 +582,7 @@ function submit_this_form() {
           f.form_outcome.value ='';
           f.form_destination.value ='';
           f.issue.value ='';
- //$("#page").html(result);
+          //$("#page").html(result);
           refreshIssue();
         });
 }
@@ -758,16 +769,6 @@ function radioChange(rbutton)
      else
         $("#smoke_code").html(""); 
 }
- //Added on 5-jun-2k14 (regarding 'Smoking Status - display SNOMED code description')
- var code_options_js = Array();
- 
- <?php
- $smoke_codes = getSmokeCodes();
-  
- foreach ($smoke_codes as $val => $code) {
-            echo "code_options_js"."['" . attr($val) . "']='" . attr($code) . "';\n";
-      }
- ?>
 function clear_option(section) {
   //click the field, erase the Negative radio and input Y
   var f = document.forms[0];
@@ -779,6 +780,24 @@ function clear_option(section) {
     section.select();
   }
 }
+
+function negate_radio(section) {
+  if (section.checked ==true){
+    var rfield = section.name.match(/radio_(.*)/);
+    document.getElementById(rfield[1]).value='';
+  } 
+}
+  //Added on 5-jun-2k14 (regarding 'Smoking Status - display SNOMED code description')
+ var code_options_js = Array();
+ 
+ <?php
+ $smoke_codes = getSmokeCodes();
+  
+ foreach ($smoke_codes as $val => $code) {
+            echo "code_options_js"."['" . attr($val) . "']='" . attr($code) . "';\n";
+      }
+ ?>
+
 </script>
 
 </head>
@@ -1164,45 +1183,65 @@ function clear_option(section) {
       <table id="row_FH" name="row_FH" width="100%">
         <tr>
           <td class="label right" nowrap>Glaucoma:</td>
-          <td class="text data"><input type="text" name="usertext11" id="usertext11" value="<?php echo $result1['usertext11']; ?>"></td>
+          <td class="text data"><input type="radio" onclick='negate_radio(this);' id="radio_usertext11" name="radio_usertext11" <?php if (!$usertext11) echo "checked='checked'"; ?>>
+            <input type="text" name="usertext11" id="usertext11" onclick='clear_option(this)' value="<?php echo $result1['usertext11']; ?>"></td>
           <td class="label right" nowrap>Cataract:</td>
-          <td class="text data"><input type="text" name="usertext12" id="usertext12" value="<?php echo $result1['usertext12']; ?>"></td>
+          <td class="text data"><input type="radio" onclick='negate_radio(this);' id="radio_usertext12" name="radio_usertext12" <?php if (!$usertext12) echo "checked='checked'"; ?>>
+            <input type="text" name="usertext12" id="usertext12" onclick='clear_option(this)' value="<?php echo $result1['usertext12']; ?>"></td>
         </tr>
         <tr>
           <td class="label right" nowrap>AMD:</td>
-          <td class="text data"><input type="text" name="usertext13" id="usertext13" value="<?php echo $result1['usertext13']; ?>"></td>
+          <td class="text data"><input type="radio" onclick='negate_radio(this);' id="radio_usertext13" name="radio_usertext13" <?php if (!$usertext13) echo "checked='checked'"; ?>>
+            <input type="text" name="usertext13" id="usertext13" onclick='clear_option(this)' value="<?php echo $result1['usertext13']; ?>"></td>
           <td class="label right" nowrap>RD:</td>
-          <td class="text data"><input type="text" name="usertext14" id="usertext14" value="<?php echo $result1['usertext14']; ?>"></td>
+          <td class="text data"><input type="radio" onclick='negate_radio(this);' id="radio_usertext14" name="radio_usertext14" <?php if (!$usertext14) echo "checked='checked'"; ?>>
+            <input type="text" name="usertext14" id="usertext14" onclick='clear_option(this)' value="<?php echo $result1['usertext14']; ?>"></td>
         </tr>
         <tr>
           <td class="label right" nowrap>Blindness:</td>
-          <td class="text data"><input type="text" name="usertext15" id="usertext15" value="<?php echo $result1['usertext15']; ?>"></td>
+          <td class="text data"><input type="radio" onclick='negate_radio(this);' id="radio_usertext15" name="radio_usertext15" <?php if (!$usertext15) echo "checked='checked'"; ?>>
+            <input type="text" name="usertext15" id="usertext15" onclick='clear_option(this)' value="<?php echo $result1['usertext15']; ?>"></td>
           <td class="label right" nowrap>Amblyopia:</td>
-          <td class="text data"><input type="text" name="usertext16" id="usertext16" value="<?php echo $result1['usertext16']; ?>"></td>
+          <td class="text data"><input type="radio" onclick='negate_radio(this);' id="radio_usertext16" name="radio_usertext16" <?php if (!$usertext16) echo "checked='checked'"; ?>>
+            <input type="text" name="usertext16" id="usertext16" onclick='clear_option(this)' value="<?php echo $result1['usertext16']; ?>"></td>
         </tr>
         <tr>
           <td class="label right" nowrap>Strabismus:</td>
-          <td class="text data"><input type="text" name="usertext17" id="usertext17" value="<?php echo $result1['usertext17']; ?>"></td>
+          <td class="text data"><input type="radio" onclick='negate_radio(this);' id="radio_usertext17" name="radio_usertext17" <?php if (!$usertext17) echo "checked='checked'"; ?>>
+            <input type="text" name="usertext17" id="usertext17" onclick='clear_option(this)' value="<?php echo $result1['usertext17']; ?>"></td>
           <td class="label right" nowrap>Other:</td>
-          <td class="text data"><input type="text" name="usertext18" id="usertext18" value="<?php echo $result1['usertext18']; ?>"></td>
+          <td class="text data"><input type="radio" onclick='negate_radio(this);' id="radio_usertext18" name="radio_usertext18" <?php if (!$usertext18) echo "checked='checked'"; ?>>
+            <input type="text" name="usertext18" id="usertext18" onclick='clear_option(this)' value="<?php echo $result1['usertext18']; ?>"></td>
         </tr>
         <tr>
           <td class="label right" nowrap>Cancer:</td>
-          <td class="text data"><input type="text" name="relatives_cancer" id="relatives_cancer" value="<?php echo $result1['relatives_cancer']; ?>"></td>
+          <td class="text data">
+            <input type="radio" onclick='negate_radio(this);' id="radio_relatives_cancer" name="radio_relatives_cancer" <?php if (!$result1['relatives_cancer']) echo "checked='checked'"; ?>>
+            <input type="text" name="relatives_cancer" id="relatives_cancer" onclick='clear_option(this)' value="<?php echo $result1['relatives_cancer']; ?>"></td>
           <td class="label right" nowrap>Diabetes:</td>
-          <td class="text data"><input type="text" name="relatives_diabetes" id="relatives_diabetes" value="<?php echo $result1['relatives_diabetes']; ?>"></td>
+          <td class="text data">
+            <input type="radio" onclick='negate_radio(this);' id="radio_relatives_diabetes" name="radio_relatives_diabetes" <?php if (!$result1['relatives_diabetes']) echo "checked='checked'"; ?>>
+            <input type="text" name="relatives_diabetes" id="relatives_diabetes" onclick='clear_option(this)' value="<?php echo $result1['relatives_diabetes']; ?>"></td>
         </tr>
         <tr>
           <td class="label right" nowrap>HTN:</td>
-          <td class="text data"><input type="text" name="relatives_high_blood_pressure" id="relatives_high_blood_pressure" value="<?php echo $result1['relatives_high_blood_pressure']; ?>"></td>
+          <td class="text data">
+            <input type="radio" onclick='negate_radio(this);' id="radio_relatives_high_blood_pressure" name="radio_relatives_high_blood_pressure" <?php if (!$result1['relatives_high_blood_pressure']) echo "checked='checked'"; ?>>
+            <input type="text" name="relatives_high_blood_pressure" id="relatives_high_blood_pressure" onclick='clear_option(this)' value="<?php echo $result1['relatives_high_blood_pressure']; ?>"></td>
           <td class="label right" nowrap>Heart Problems:</td>
-          <td class="text data"><input type="text" name="relatives_heart_problems" id="relatives_heart_problems" value="<?php echo $result1['relatives_heart_problems']; ?>"></td>
+          <td class="text data">
+            <input type="radio" onclick='negate_radio(this);' id="radio_relatives_heart_problems" name="radio_relatives_heart_problems" <?php if (!$result1['relatives_heart_problems']) echo "checked='checked'"; ?>>
+            <input type="text" name="relatives_heart_problems" id="relatives_heart_problems" onclick='clear_option(this)' value="<?php echo $result1['relatives_heart_problems']; ?>"></td>
         </tr>
         <tr>
           <td class="label right" nowrap>Stroke:</td>
-          <td class="text data"><input type="text" name="relatives_stroke" id="relatives_stroke" value="<?php echo $result1['relatives_stroke']; ?>"></td>
+          <td class="text data">
+            <input type="radio" onclick='negate_radio(this);' id="radio_relatives_stroke" name="radio_relatives_stroke" <?php if (!$result1['relatives_heart_problems']) echo "checked='checked'"; ?>>
+            <input type="text" name="relatives_stroke" id="relatives_heart_problems" onclick='clear_option(this)' value="<?php echo $result1['relatives_stroke']; ?>"></td>
           <td class="label right" nowrap>Epilepsy:</td>
-          <td class="text data"><input type="text" name="relatives_epilepsy" id="relatives_epilepsy" value="<?php echo $result1['relatives_epilepsy']; ?>"></td>
+          <td class="text data">
+            <input type="radio" onclick='negate_radio(this);' id="radio_relatives_epilepsy" name="radio_relatives_epilepsy" <?php if (!$result1['relatives_epilepsy']) echo "checked='checked'"; ?>>
+            <input type="text" name="relatives_epilepsy" id="relatives_epilepsy" onclick='clear_option(this)' value="<?php echo $result1['relatives_epilepsy']; ?>"></td>
         </tr>
       </table>
       <table id="row_ROS" name="row_ROS" width="100%" class="ROS_class">
@@ -1223,61 +1262,63 @@ function clear_option(section) {
         <tr>
           <td class="label right" nowrap>General:</td>
           <td>
-            <input type="radio" id="radio_ROSGENERAL" name="radio_ROSGENERAL" <?php if (!$ROSGENERAL) echo "checked='checked'"; ?>>
+            <input type="radio" onclick='negate_radio(this);' id="radio_ROSGENERAL" name="radio_ROSGENERAL" <?php if (!$ROSGENERAL) echo "checked='checked'"; ?>>
             <input type="text" name="ROSGENERAL" id="ROSGENERAL" onclick='clear_option(this)' value="<?php echo $ROSGENERAL; ?>"></td>
           <td class="label right" nowrap>HEENT:</td>
           <td>
-            <input type="radio" id="radio_ROSHEENT" name="radio_ROSHEENT"<?php if (!$ROSHEENT) echo "checked='checked'"; ?>>
+            <input type="radio" onclick='negate_radio(this);' id="radio_ROSHEENT" name="radio_ROSHEENT"<?php if (!$ROSHEENT) echo "checked='checked'"; ?>>
             <input type="text" name="ROSHEENT" id="ROSHEENT" onclick='clear_option(this)' value="<?php echo $ROSHEENT; ?>"></td>
         </tr>  
         <tr>
           <td class="label right" nowrap>CV:</td>
           <td>
-            <input type="radio" id="radio_ROSCV" name="radio_ROSCV"<?php if (!$ROSCV) echo "checked='checked'"; ?>>
+            <input type="radio" onclick='negate_radio(this);' id="radio_ROSCV" name="radio_ROSCV"<?php if (!$ROSCV) echo "checked='checked'"; ?>>
             <input type="text" name="ROSCV" id="ROSCV" onclick='clear_option(this)' value="<?php echo $ROSCV; ?>"></td>
           <td class="label right" nowrap>Pulmonary:</td>
           <td>
-            <input type="radio" id="radio_ROSPULM" name="radio_ROSPULM"<?php if (!$ROSPULM) echo "checked='checked'"; ?>>
+            <input type="radio" onclick='negate_radio(this);' id="radio_ROSPULM" name="radio_ROSPULM"<?php if (!$ROSPULM) echo "checked='checked'"; ?>>
             <input type="text" name="ROSPULM" id="ROSPULM" onclick='clear_option(this)' value="<?php echo $ROSPULM; ?>"></td>
           </tr>  
         <tr>
           <td class="label right" nowrap>GI:</td>
           <td>
-            <input type="radio"  id="radio_ROSGI" name="radio_ROSGI"<?php if (!$ROSGI) echo "checked='checked'"; ?>>
+            <input type="radio" onclick='negate_radio(this);' id="radio_ROSGI" name="radio_ROSGI"<?php if (!$ROSGI) echo "checked='checked'"; ?>>
             <input type="text" name="ROSGI" id="ROSGI" onclick='clear_option(this)' value="<?php echo $ROSGI; ?>"></td>
           <td class="label right" nowrap>GU:</td>
           <td>
-            <input type="radio"  id="radio_ROSGU" name="radio_ROSGU"<?php if (!$ROSGU) echo "checked='checked'"; ?>>
+            <input type="radio" onclick='negate_radio(this);' id="radio_ROSGU" name="radio_ROSGU"<?php if (!$ROSGU) echo "checked='checked'"; ?>>
             <input type="text" name="ROSGU" id="ROSGU" onclick='clear_option(this)' value="<?php echo $ROSGU; ?>"></td>
         </tr>  
         <tr>
           <td class="label right" nowrap>Derm:</td>
           <td>
-            <input type="radio"  id="radio_ROSDERM" name="radio_ROSDERM"<?php if (!$ROSDERM) echo "checked='checked'"; ?>>
+            <input type="radio" onclick='negate_radio(this);' id="radio_ROSDERM" name="radio_ROSDERM"<?php if (!$ROSDERM) echo "checked='checked'"; ?>>
             <input type="text" name="ROSDERM" id="ROSDERM" onclick='clear_option(this)' value="<?php echo $ROSDERM; ?>"></td>
           <td class="label right" nowrap>Neuro:</td>
           <td>
-           <input type="radio"  id="radio_ROSNEURO" name="radio_ROSNEURO"<?php if (!$ROSNEURO) echo "checked='checked'"; ?>>
+           <input type="radio" onclick='negate_radio(this);' id="radio_ROSNEURO" name="radio_ROSNEURO"<?php if (!$ROSNEURO) echo "checked='checked'"; ?>>
             <input type="text" name="ROSNEURO" id="ROSNEURO" onclick='clear_option(this)' value="<?php echo $ROSNEURO; ?>"></td>
         </tr> 
         <tr>
           <td class="label right" nowrap>Psych:</td>
           <td>
-            <input type="radio"  id="radio_ROSPSYCH" name="radio_ROSPSYCH"<?php if (!$ROSPSYCH) echo "checked='checked'"; ?>>
+            <input type="radio" onclick='negate_radio(this);' id="radio_ROSPSYCH" name="radio_ROSPSYCH"<?php if (!$ROSPSYCH) echo "checked='checked'"; ?>>
             <input type="text" name="ROSPSYCH" id="ROSPSYCH" onclick='clear_option(this)' value="<?php echo $ROSPSYCH; ?>"></td>
           <td class="label right" nowrap>Musculo:</td>
           <td>
-           <input type="radio"  id="radio_ROSMUSCULO" name="radio_ROSMUSCULO"<?php if (!$ROSMUSCULO) echo "checked='checked'"; ?>>
+           <input type="radio" onclick='negate_radio(this);' id="radio_ROSMUSCULO" name="radio_ROSMUSCULO"<?php if (!$ROSMUSCULO) echo "checked='checked'"; ?>>
             <input type="text" name="ROSMUSCULO" id="ROSMUSCULO" onclick='clear_option(this)' value="<?php echo $ROSMUSCULO; ?>"></td>
           </tr>   
         <tr>
           <td class="label right" nowrap>Immuno:</td>
           <td>
-            <input type="radio"  id="radio_ROSIMMUNO" name="radio_ROSIMMUNO"<?php if (!$ROSIMMUNO) echo "checked='checked'"; ?>>
+            <input type="radio" onclick='negate_radio(this);' id="radio_ROSIMMUNO" name="radio_ROSIMMUNO"<?php if (!$ROSIMMUNO) echo "checked='checked'"; ?>>
             <input type="text" name="ROSIMMUNO" id="ROSIMMUNO" onclick='clear_option(this)' value="<?php echo $ROSIMMUNO; ?>"></td>
           <td class="label right" nowrap>Endocrine:</td>
           <td>
-            <input type="radio"  id="radio_ROSENDOCRINE" name="radio_ROSENDOCRINE"<?php if (!$ROSENDOCRINE) echo "checked='checked'"; ?>>
+
+
+            <input type="radio" onclick='negate_radio(this);' id="radio_ROSENDOCRINE" name="radio_ROSENDOCRINE"<?php if (!$ROSENDOCRINE) echo "checked='checked'"; ?>>
             <input type="text" name="ROSENDOCRINE" id="ROSENDOCRINE" onclick='clear_option(this)' value="<?php echo $ROSENDOCRINE; ?>"></td>
           </tr>  
         <tr><td></td></tr>

@@ -86,6 +86,9 @@ $query="select form_encounter.date as encounter_date,form_encounter.*, form_eye_
 $encounter_data =sqlQuery($query,array($encounter,$pid));
 @extract($encounter_data); //gotta have it. encodes whole form and every value is used, mostly ;) so far...
 
+// build $PMSFH array
+$PMSFH = build_PMSFH($pid); 
+
 /*
   Re: incorporating e-signing and document finalization
   If a chart is "completed", the user should not be able to open this form for editing, just viewing.
@@ -109,8 +112,8 @@ $encounter_data =sqlQuery($query,array($encounter,$pid));
   as they are entered by the tech?  Maybe there is a visible mode that does this without submitting, and auto refreshes every minute or so?
   Need to think this through.  Suggestions welcome...
 */
-  $warning = 'nodisplay';
-// echo $_REQUEST['LOCKEDBY'] ." and ". $LOCKEDBY;exit;
+  
+$warning = 'nodisplay';
 $uniqueID = rand();
 if (!$LOCKED||!$LOCKEDBY) {
     
@@ -135,9 +138,11 @@ if (!$form_id && !$encounter) { echo $encounter."-".$form_id." No encounter...";
 //ideally this would point to an error databased by problem #, cause it'd be a problem.
 
 if ($refresh and $refresh != 'fullscreen') {
-  if ($refresh == "PMSFH")  { display_PRIOR_section($refresh,$id,$id,$pid); }
+  if ($refresh == "PMSFH")  { 
+    display_PRIOR_section($refresh,$id,$id,$pid); 
+  }
   if ($refresh == "PMSFH_panel") {
-    $PMSFH = build_PMSFH($pid); 
+    
     show_PMSFH_panel($PMSFH);
   }
   exit;

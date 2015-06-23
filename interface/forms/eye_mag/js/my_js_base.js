@@ -225,13 +225,12 @@ function refreshIssues() {
         'refresh'          : 'PMSFH'
     };
     $.ajax({
-           type 		: 'GET',
+           type 		: 'POST',
            url          : url,
            data 		: formData,
            success:(function(result) {
                     $("#QP_PMH").html(result);
                     //console.log(result);
-                    
                     })
            })
     .fail(function() { //alert("error");
@@ -262,7 +261,7 @@ function refresh_panel() {
            })
     .fail(function() { //alert("error");
           })
-    .always(function() { //alert("complete");
+    .always(function() { //alert("complete panel_refresh");
             });
     
 }

@@ -225,6 +225,15 @@
 
 
             <style>
+            h2 {
+              font-size:1.3em;
+            }
+            .title {
+              font-size:1em;
+              position:absolute;
+              right:10px;
+              top:30px;
+            }
 
             .refraction_panel {
               display:none;
@@ -241,19 +250,19 @@
               -moz-box-flex: 0;
               box-flex: 0;
               display:inline-block;
-              font-size: 0.8em;
+              font-size: 1.0em;
 
             }
             .refraction td {
               text-align:center;
-              font-size:0.7em;
+              font-size:0.9em;
               width:0.35in;
               vertical-align: text-middle;
               text-decoration: none;
               padding: 3px;
             }
             .refraction_report th {
-              font-size: 0.8em;
+              font-size: 1.0em;
               text-align: left;
               padding: 5 0 2 0;
               color: black; 
@@ -369,19 +378,15 @@
 </style>
 
 <div class="body2">
- <div style="float:left;left:0px;padding-right:5px;margin-right:15px;width:120px;border-right:2pt grey solid;">
+  <div style="float:left;left:0px;padding-right:5px;margin-right:15px;width:90px;border-right:2pt grey solid;">
 
-  <?php 
-  $PMSFH = build_PMSFH($pid);
-  show_PMSFH_report($PMSFH);
-  ?> 
-
-
-
-                </div> 
-
-                <table >
-                  <tr>
+    <?php 
+    $PMSFH = build_PMSFH($pid);
+    show_PMSFH_report($PMSFH);
+    ?> 
+  </div> 
+  <table >
+              <tr>
                     <!-- Begin right column -->
                     <td colspan="2" style="text-align:left;padding-left:10px;font-size:0.7em">
                       <b><?php echo xlt('Chief Complaint'); ?>:</b> &nbsp;<?php echo text($CC1); ?>
@@ -791,7 +796,7 @@
                                     <td></td>
                                     <td style="width:0.5in;padding: 0;font-size: 0.7em;text-align:center;"><?php echo xlt('size'); ?> (<?php echo xlt('mm'); ?>)
                                     </td>
-                                    <td rowspan="4" style="padding-left:3px;text-align:bottom;max-width:100px;">
+                                    <td rowspan="4" style="padding-left:3px;text-align:bottom;max-width:100px;font-size:0.8em;">
                                       
                                       <?php echo text($PUPIL_COMMENTS); ?>
                                     </td>
@@ -830,18 +835,18 @@
               </tr>
             </table>
 
+ 
 
             <!-- start of the refraction boxes -->
-            <div style="float:left;margin-left:10px;border:0pt solid black;text-align:left;" class="refraction_report">
-              <table border=1 cellpadding="5" cellspacing="2" style="padding:10px;">
+              <table style="padding:10;font-size:0.9em;">
                 <?php ($WODSPH||$WOSSPH) ? ($display_W = "display") : ($display_W = "nodisplay"); ?>
                 <tr class="<?php echo $display_W; ?>">
-                  <td style="padding:10px;">
+                  <td style="padding:10 0;">
                     <table id="wearing" >
                       <tr>
-                        <th colspan="9" id="wearing_title"><?php echo xlt('Current Glasses'); ?>
+                        <td colspan="9" id="wearing_title"><?php echo xlt('Current Glasses'); ?>
 
-                        </th>
+                        </td>
                       </tr>
                       <tr style="text-align:center;">
                         <td style="width:50px;"></td>
@@ -851,14 +856,16 @@
                         <td style="font-weight:600;font-size:0.7em;text-align:center;"><?php echo xlt('Axis'); ?></td>
                         <td style="font-weight:600;font-size:0.7em;text-align:center;"><?php echo xlt('Prism'); ?></td>
                         <td style="font-weight:600;font-size:0.7em;text-align:center;"><?php echo xlt('Acuity'); ?></td>
-                        <td rowspan="7" class="right" style="padding:10 0 10 0;font-size:0.6em;">
+                        <td rowspan="7" class="right" style="padding:10 0 10 10;font-size:0.6em;">
                           <?php echo xlt('Single'); ?>
                           <input type="radio" value="0" id="Single" name="RX1" <?php if ($RX1 == '0') echo 'checked="checked"'; ?> />
-
+                          <br />
                           <?php echo xlt('Bifocal'); ?>
                           <input type="radio" value="1" id="Bi" name="RX1" <?php if ($RX1 == '1') echo 'checked="checked"'; ?> />
+                          <br />
                           <?php echo xlt('Trifocal'); ?>
                           <input type="radio" value="2" id="Tri" name="RX1" <?php if ($RX1 == '2') echo 'checked="checked"'; ?> />
+                          <br />
                           <?php echo xlt('Prog.'); ?>
                           <input type="radio" value="3" id="Prog" name="RX1" <?php if ($RX1 == '3') echo 'checked="checked"'; ?> />
                         </td>
@@ -902,7 +909,7 @@
 
                       <?php ($WCOMMENTS) ? ($display_WC = "display") : ($display_WC = "nodisplay");?>
                       <tr style="top:3.5in;" class="<?php echo $display_WC; ?>">
-                        <td colspan="6" style="text-align:left;vertical-align:top;top:0px;"><b><?php echo xlt('Comments'); ?>:</b>
+                        <td colspan="6" style="text-align:left;vertical-align:top;top:0px;font-size:0.8em;"><b><?php echo xlt('Comments'); ?>:</b>
                           <?php echo text($WCOMMENTS); ?>   
                         </td>
                       </tr>
@@ -912,9 +919,9 @@
 
                 <?php ($ARODSPH||$AROSSPH) ? ($display_AR = "display") : ($display_AR = "nodisplay");?>
                 <tr class="<?php echo $display_AR; ?>">
-                  <td id="LayerVision_MR" style="padding:10px;" >
+                  <td id="LayerVision_MR" style="padding:10 0;" >
                     <table id="autorefraction">
-                      <th colspan=9>Autorefraction Refraction</th>
+                      <td colspan=9>Autorefraction Refraction</td>
                       <tr>
                         <td></td>
                         <td style="font-weight:600;font-size:0.7em;text-align:center;"><?php echo xlt('Sph'); ?></td>
@@ -951,9 +958,9 @@
 
                 <?php ($MRODSPH||$MROSSPH) ? ($display_MR = "display") : ($display_MR = "nodisplay");?>
                 <tr class="<?php echo $display_MR; ?>">
-                  <td id="MRrefraction" style="padding:10px;">
-                    <table>
-                      <tr><th colspan="7">Manifest (Dry) Refraction</th></tr>
+                  <td id="MRrefraction" style="padding:10 0;">
+                    <table style="font-size:1em;">
+                      <tr><td colspan="7">Manifest (Dry) Refraction</td></tr>
                       <tr>
                         <td></td>
                         <td style="font-weight:600;font-size:0.7em;text-align:center;"><?php echo xlt('Sph'); ?></td>
@@ -993,7 +1000,7 @@
                 <tr>
                   <td id="LayerVision_CR" class="<?php echo $display_Cyclo; ?>" style="padding:10px;">
                     <table id="cycloplegia">
-                      <th colspan=9><?php echo xlt('Cycloplegic (Wet) Refraction'); ?></th>
+                      <td colspan=9><?php echo xlt('Cycloplegic (Wet) Refraction'); ?></td>
                       <tr>
                         <td></td>
                         <td style="font-weight:600;font-size:0.7em;text-align:center;"><?php echo xlt('Sph'); ?></td>
@@ -1055,7 +1062,7 @@
                         </td>
                       </tr>
                       <tr class="<?php if (!$CRCOMMENTS) echo "nodisplay"; ?>">
-                        <td colspan="6" style="vertical-align:bottom;text-align:left;"><b><?php echo xlt('Comments'); ?>:</b></br />
+                        <td colspan="6" style="vertical-align:bottom;text-align:left;font-size:0.8em;"><b><?php echo xlt('Comments'); ?>:</b></br />
                           <?php echo attr($CRCOMMENTS); ?>
                         </td>
                       </tr>
@@ -1067,7 +1074,7 @@
                 <tr>
                   <td id="LayerVision_CTL" class="<?php echo $display_CTL; ?>" style="padding:10px;">
                     <table id="CTL" style="width:100%;">
-                      <th colspan="9"><?php echo xlt('Contact Lens Refraction'); ?></th>
+                      <td colspan="9"><?php echo xlt('Contact Lens Refraction'); ?></td>
                       <tr>
                         <td style="text-align:center;">
                           <div style="box-shadow: 1px 1px 2px #888888;border-radius: 8px; margin: 5 auto; position:inline-block; Xpadding: 0.02in; border: 1.00pt solid #000000; ">
@@ -1171,7 +1178,7 @@
                 <tr>
                   <td id="LayerVision_ADDITIONAL" class="refraction <?php echo $display_Add; ?>" style="padding:10px;">
                     <table id="Additional">
-                      <tr><th colspan=9><?php echo xlt('Additional Data Points'); ?></th></tr>
+                      <tr><td colspan=9><?php echo xlt('Additional Data Points'); ?></td></tr>
                       <tr><td></td>
                         <td><?php echo xlt('PH'); ?></td>
                         <td><?php echo xlt('PAM'); ?></td>
@@ -1234,168 +1241,172 @@
                   </td>
                 </tr>  
               </table>
-            </div>
+            
             <!-- end of the refraction boxes -->  
-
-            <div style="text-align:center;">
-             <br /> 
-             <table style="max-width:7in;font-size:1em;" >
-              <tr style="border-bottom:1pt grey dashed;margin-bottom:5px;">
-                <td style="text-align:center;padding:10 0 10 10;vertical-align:top;max-width:50%;">           
-                  <!-- start of external exam -->
-                  <div style="text-align:left;border-right:1pt grey dashed;border-top:1pt grey dashed;margin-bottom:5px;">
-                    <b><u><?php echo xlt('External Exam'); ?>:</u></b>
-                    <table style="width:2.5in;padding:5px;font-size:1.1em;">
-                      <tr>
-                        <td class="bold" style="text-align:center;text-decoration:underline;width:200px;"><?php echo xlt('Right'); ?></td>
-                        <td style="width:100px;"></td>
-                        <td class="bold" style="text-align:center;text-decoration:underline;width:200px;"><?php echo xlt('Left'); ?></td>
-                      </tr>
-                      <tr>
-                        <td class="report_text right"><?php echo text($RBROW); ?></td>
-                        <td class="middle"><?php echo xlt('Brow'); ?></td>
-                        <td class="report_text"><?php echo text($LBROW); ?></td>
-                      </tr> 
-                      <tr>
-                        <td class="report_text right "><?php echo text($RUL); ?></td>
-                        <td  class="middle"><?php echo xlt('Upper Lids'); ?></td>
-                        <td class="report_text"><?php echo text($LUL); ?></td>
-                      </tr> 
-                      <tr>
-                        <td class="report_text right "><?php echo text($RLL); ?></td>
-                        <td class="middle"><?php echo xlt('Lower Lids'); ?></td>
-                        <td class="report_text"><?php echo text($LLL); ?></td>
-                      </tr>
-                      <tr>
-                        <td class="report_text right "><?php echo text($RMCT); ?></td>
-                        <td class="middle"><?php echo xlt('Medial Canthi'); ?></td>
-                        <td class="report_text"><?php echo text($LMCT); ?></td>
-                      </tr>
-                        <?php 
-                        if ($RADNEXA || $LADNEXA) { 
-                        ?> 
-                      <tr>
-                          <td class="report_text right"><?php echo text($RADNEXA); ?></td>
-                          <td class="middle"><?php echo xlt('Adnexa'); ?></td>
-                          <td class="report_text"><?php echo text($LADNEXA); ?></td>
-                      </tr>
-                        <?php  } ?>
-
-                      <tr class="<?php if (!$EXT_COMMENTS) echo "nodisplay"; ?>">
-                        <td colspan="3" style="font-size:1.0em;">
-
-                          <b><?php echo xlt('Comments'); ?>:</b>
-                          <span style="width:2.5in;height:3.0em;">
-                            <?php echo text($EXT_COMMENTS); ?>
-                          </span>
-                        </td>
-                      </tr>
-                    </table>
-                  </div>
-                    <?php 
-                    display_draw_image ("EXT",$encounter,$pid); 
-                    ?>           
-                    <!-- end of external exam -->
-                </td>   
-                <td  style="text-align:center;padding:10 0 10 10;vertical-align:top;max-width:50%;">
-                  <!-- start of Anterior Segment exam -->
-                    <div style="text-align:left;padding:10px;margin-bottom:5px;border-top:1pt grey dashed;">
-                      <b><u><?php echo xlt('Anterior Segment'); ?></u>:</b>
+         
+            <table style="font-size:1em;" >
+                <tr style="border-bottom:1pt grey dashed;margin-bottom:5px;">
+                  <td style="text-align:center;padding:10 0 10 0;vertical-align:top;max-width:40%;">           
+                    <!-- start of external exam -->
+                    <div style="text-align:left;border-right:1pt grey dashed;border-top:1pt grey dashed;margin-bottom:5px;">
+                      <b><u><?php echo xlt('External Exam'); ?>:</u></b>
                       <table style="width:2.5in;padding:5px;font-size:1.1em;">
+                        <tr>
+                          <td class="bold" style="text-align:center;text-decoration:underline;width:200px;"><?php echo xlt('Right'); ?></td>
+                          <td style="width:100px;"></td>
+                          <td class="bold" style="text-align:center;text-decoration:underline;width:200px;"><?php echo xlt('Left'); ?></td>
+                        </tr>
+                        <tr>
+                          <td class="report_text right"><?php echo text($RBROW); ?></td>
+                          <td class="middle"><?php echo xlt('Brow'); ?></td>
+                          <td class="report_text"><?php echo text($LBROW); ?></td>
+                        </tr> 
+                        <tr>
+                          <td class="report_text right "><?php echo text($RUL); ?></td>
+                          <td  class="middle"><?php echo xlt('Upper Lids'); ?></td>
+                          <td class="report_text"><?php echo text($LUL); ?></td>
+                        </tr> 
+                        <tr>
+                          <td class="report_text right "><?php echo text($RLL); ?></td>
+                          <td class="middle"><?php echo xlt('Lower Lids'); ?></td>
+                          <td class="report_text"><?php echo text($LLL); ?></td>
+                        </tr>
+                        <tr>
+                          <td class="report_text right "><?php echo text($RMCT); ?></td>
+                          <td class="middle"><?php echo xlt('Medial Canthi'); ?></td>
+                          <td class="report_text"><?php echo text($LMCT); ?></td>
+                        </tr>
+                          <?php 
+                          if ($RADNEXA || $LADNEXA) { 
+                          ?> 
+                        <tr>
+                            <td class="report_text right"><?php echo text($RADNEXA); ?></td>
+                            <td class="middle"><?php echo xlt('Adnexa'); ?></td>
+                            <td class="report_text"><?php echo text($LADNEXA); ?></td>
+                        </tr>
+                          <?php  } ?>
 
-                                <tr>
-                                  <td class="bold" style="text-align:center;text-decoration:underline;width:200px;"><?php echo xlt('Right'); ?></td>
-                                  <td style="width:100px;"></td>
-                                  <td class="bold" style="text-align:center;text-decoration:underline;width:200px;"><?php echo xlt('Left'); ?></td>
-                                </tr>
-                                <tr>
-                                  <td class="report_text right"><?php echo text($ODCONJ); ?></td>
-                                  <td class="middle"><?php echo xlt('Conj'); ?></td>
-                                  <td class="report_text"><?php echo text($OSCONJ); ?></td>
-                                </tr> 
-                                <tr>
-                                  <td class="report_text right "><?php echo text($ODCORNEA); ?></td>
-                                  <td  class="middle"><?php echo xlt('Cornea'); ?></td>
-                                  <td class="report_text"><?php echo text($OSCORNEA); ?></td>
-                                </tr> 
-                                <tr>
-                                  <td class="report_text right "><?php echo text($ODAC); ?></td>
-                                  <td class="middle"><?php echo xlt('A/C'); ?></td>
-                                  <td class="report_text"><?php echo text($OSAC); ?></td>
-                                </tr>
-                                <tr>
-                                  <td class="report_text right "><?php echo text($ODLENS); ?></td>
-                                  <td class="middle"><?php echo xlt('Lens'); ?></td>
-                                  <td class="report_text"><?php echo text($OSLENS); ?></td>
-                                </tr>
-                                <tr>
-                                  <td class="report_text right"><?php echo text($ODIRIS); ?></td>
-                                  <td class="middle"><?php echo xlt('Iris'); ?></td>
-                                  <td class="report_text"><?php echo text($OSIRIS); ?></td>
-                                </tr>
-                                <?php if ($ODGONIO||$OSDGONIO) { ?>
-                                <tr>
-                                  <td class="report_text right" style="width:100px;"><?php echo $ODGONIO; ?></td>
-                                  <td class="middle"><?php echo xlt('Gonioscopy'); ?></td>
-                                  <td class="report_text" style="width:100px;"><?php echo text($OSGONIO); ?></td>
-                                </tr> 
-                                <?php } if ($ODKTHICKNESS||$OSKTHICKNESS) { ?>
-                                <tr>
-                                  <td class="report_text right"><?php echo text($ODKTHICKNESS); ?></td>
-                                  <td class="middle" title="<?php echo xla('Pachymetry'); ?>"><?php echo xlt('Pachymetry'); ?></td>
-                                  <td  class="report_text"><?php echo text($OSKTHICKNESS); ?></td>
-                                </tr>
-                                <?php } if ($ODSCHIRMER1||$OSSCHIRMER1) { ?>
-                                <tr>
-                                  <td class="report_text right"><?php echo attr($ODSCHIRMER1); ?></td>
-                                  <td class="middle" title="<?php echo xla('Schirmers I'); ?>"><?php echo xlt('Schirmers I'); ?></td>
-                                  <td class="report_text"><?php echo attr($OSSCHIRMER1); ?></td>
-                                </tr>
-                                <?php } if ($ODSCHIRMER2||$OSSCHIRMER2) { ?>
-                                <tr>
-                                  <td class="report_text right"><?php echo attr($ODSCHIRMER2); ?></td>
-                                  <td class="middle" title="<?php echo xla('Schirmers II'); ?>"><?php echo xlt('Schirmers II'); ?></td>
-                                  <td class="report_text"><?php echo attr($OSSCHIRMER2); ?></td>
-                                </tr>
-                                <?php } if ($ODTBUT||$OSTBUT) { ?>
-                                <tr>
-                                  <td class="report_text right"><?php echo attr($ODTBUT); ?></td>
-                                  <td class="middle" title="<?php echo xla('Tear Break Up Time'); ?>"><?php echo xlt('TBUT'); ?></td>
-                                  <td class="report_text"><?php echo attr($OSTBUT); ?></td>
-                                </tr>
-                                <?php }  ?>
-                              
-                        <tr class="<?php if (!$ANTSEG_COMMENTS) echo "nodisplay"; ?>">
-                          <td colspan="2" style="font-size:0.7em;">
+                        <tr class="<?php if (!$EXT_COMMENTS) echo "nodisplay"; ?>">
+                          <td colspan="3" style="font-size:1.0em;">
 
                             <b><?php echo xlt('Comments'); ?>:</b>
-                            <span style="width:4.0in;height:3.0em;">
-                              <?php echo text($ANTSEG_COMMENTS); ?>
+                            <span style="width:2.5in;height:3.0em;">
+                              <?php echo text($EXT_COMMENTS); ?>
                             </span>
                           </td>
                         </tr>
                       </table>
                     </div>
+                      <?php 
+                      display_draw_image ("EXT",$encounter,$pid); 
+                      ?>           
+                      <!-- end of external exam -->
+                  </td>   
+                  <td  style="text-align:center;padding:10 0 10 0;vertical-align:top;max-width:40%;">
+                    <!-- start of Anterior Segment exam -->
+                      <div style="text-align:left;padding:10px;margin-bottom:5px;border-top:1pt grey dashed;">
+                        <b><u><?php echo xlt('Anterior Segment'); ?></u>:</b>
+                        <table style="width:2.5in;padding:5px;font-size:1.1em;">
+
+                                  <tr>
+                                    <td class="bold" style="text-align:center;text-decoration:underline;width:200px;"><?php echo xlt('Right'); ?></td>
+                                    <td style="width:100px;"></td>
+                                    <td class="bold" style="text-align:center;text-decoration:underline;width:200px;"><?php echo xlt('Left'); ?></td>
+                                  </tr>
+                                  <tr>
+                                    <td class="report_text right"><?php echo text($ODCONJ); ?></td>
+                                    <td class="middle"><?php echo xlt('Conj'); ?></td>
+                                    <td class="report_text"><?php echo text($OSCONJ); ?></td>
+                                  </tr> 
+                                  <tr>
+                                    <td class="report_text right "><?php echo text($ODCORNEA); ?></td>
+                                    <td  class="middle"><?php echo xlt('Cornea'); ?></td>
+                                    <td class="report_text"><?php echo text($OSCORNEA); ?></td>
+                                  </tr> 
+                                  <tr>
+                                    <td class="report_text right "><?php echo text($ODAC); ?></td>
+                                    <td class="middle"><?php echo xlt('A/C'); ?></td>
+                                    <td class="report_text"><?php echo text($OSAC); ?></td>
+                                  </tr>
+                                  <tr>
+                                    <td class="report_text right "><?php echo text($ODLENS); ?></td>
+                                    <td class="middle"><?php echo xlt('Lens'); ?></td>
+                                    <td class="report_text"><?php echo text($OSLENS); ?></td>
+                                  </tr>
+                                  <tr>
+                                    <td class="report_text right"><?php echo text($ODIRIS); ?></td>
+                                    <td class="middle"><?php echo xlt('Iris'); ?></td>
+                                    <td class="report_text"><?php echo text($OSIRIS); ?></td>
+                                  </tr>
+                                  <?php if ($ODGONIO||$OSDGONIO) { ?>
+                                  <tr>
+                                    <td class="report_text right" style="width:100px;"><?php echo $ODGONIO; ?></td>
+                                    <td class="middle"><?php echo xlt('Gonioscopy'); ?></td>
+                                    <td class="report_text" style="width:100px;"><?php echo text($OSGONIO); ?></td>
+                                  </tr> 
+                                  <?php } if ($ODKTHICKNESS||$OSKTHICKNESS) { ?>
+                                  <tr>
+                                    <td class="report_text right"><?php echo text($ODKTHICKNESS); ?></td>
+                                    <td class="middle" title="<?php echo xla('Pachymetry'); ?>"><?php echo xlt('Pachymetry'); ?></td>
+                                    <td  class="report_text"><?php echo text($OSKTHICKNESS); ?></td>
+                                  </tr>
+                                  <?php } if ($ODSCHIRMER1||$OSSCHIRMER1) { ?>
+                                  <tr>
+                                    <td class="report_text right"><?php echo attr($ODSCHIRMER1); ?></td>
+                                    <td class="middle" title="<?php echo xla('Schirmers I'); ?>"><?php echo xlt('Schirmers I'); ?></td>
+                                    <td class="report_text"><?php echo attr($OSSCHIRMER1); ?></td>
+                                  </tr>
+                                  <?php } if ($ODSCHIRMER2||$OSSCHIRMER2) { ?>
+                                  <tr>
+                                    <td class="report_text right"><?php echo attr($ODSCHIRMER2); ?></td>
+                                    <td class="middle" title="<?php echo xla('Schirmers II'); ?>"><?php echo xlt('Schirmers II'); ?></td>
+                                    <td class="report_text"><?php echo attr($OSSCHIRMER2); ?></td>
+                                  </tr>
+                                  <?php } if ($ODTBUT||$OSTBUT) { ?>
+                                  <tr>
+                                    <td class="report_text right"><?php echo attr($ODTBUT); ?></td>
+                                    <td class="middle" title="<?php echo xla('Tear Break Up Time'); ?>"><?php echo xlt('TBUT'); ?></td>
+                                    <td class="report_text"><?php echo attr($OSTBUT); ?></td>
+                                  </tr>
+                                  <?php }  ?>
+                                
+                          <tr class="<?php if (!$ANTSEG_COMMENTS) echo "nodisplay"; ?>">
+                            <td colspan="2" style="font-size:0.7em;">
+
+                              <b><?php echo xlt('Comments'); ?>:</b>
+                              <span style="width:4.0in;height:3.0em;">
+                                <?php echo text($ANTSEG_COMMENTS); ?>
+                              </span>
+                            </td>
+                          </tr>
+                        </table>
+                      </div>
+                      <?php 
+                      display_draw_image ("ANTSEG",$encounter,$pid); 
+                      ?>
+                      <!-- end of Anterior Segment exam -->    
+                  </td>
+                </tr>
+            </table>
+            
+            <br />
+            
+            <table style="font-size:1em;">
+                <tr style="border-bottom:1pt grey dashed;margin-bottom:5px;">
                     <?php 
-                    display_draw_image ("ANTSEG",$encounter,$pid); 
-                    ?>
-                    <!-- end of Anterior Segment exam -->    
-                </td>
-              </tr>
-              <tr style="border-bottom:1pt grey dashed;margin-bottom:5px;">
-                  <?php 
-                  if ($ODDISC||$ODCUP||$ODMACULA||$ODVESSELS||$ODPERIPH) {
-                    ?>
-                    <td style="text-align:center;padding:10px;vertical-align:top;">
+                    if ($ODDISC||$ODCUP||$ODMACULA||$ODVESSELS||$ODPERIPH) {
+                      ?>
+                    <td style="text-align:center;padding:10 0 10 0;vertical-align:top;max-width:40%;">
+
                       <!-- start of RETINA exam -->
                       <div style="text-align:left;border-right:1pt grey dashed;margin-bottom:5px;">
                         <b><u><?php echo xlt('Retina'); ?>:</u></b>
                         <table style="width:2.5in;text-align:left;margin:0;padding:5px;font-size:1em;">
                           <tr>
-                                  <td class="title" style="text-align:center;text-decoration:underline;width:200px;">
+                                  <td class="titled" style="text-align:center;text-decoration:underline;width:200px;">
                                     <?php echo xlt('Right'); ?></td>
                                     <td></td>
-                                    <td class="title" style="text-align:center;text-decoration:underline;width:200px;"><?php echo xlt('Left'); ?></td>
+                                    <td class="titled" style="text-align:center;text-decoration:underline;width:200px;"><?php echo xlt('Left'); ?></td>
                                   </tr>
                                   <tr>
                                     <td class="right"><?php echo $ODDISC; ?></td>
@@ -1451,7 +1462,7 @@
                       <!-- end of RETINA exam -->
                     </td>
                     <?php } ?>
-                    <td style="vertical-align:top;">
+                    <td style="text-align:center;padding:10 0 10 0;vertical-align:top;max-width:40%;">
                       <!-- start Neuro -->
                       <div style="position:relative;left:0px;top:0px;width:3.5in;text-align:left;margin:5;padding:10px;">
                         <b><u><?php echo xlt('Neuro'); ?>:</u></b>  <span id="ACTNORMAL_CHECK" name="ACTNORMAL_CHECK" style="padding-left:70px;font-size:0.8em;">
@@ -1460,85 +1471,85 @@
                         <table style="font-size:1em;margin:5;">
                             <?php if ($RLF || $LLF) { ?> 
                           <tr>
-                        <td class="report_text right" style=""><?php echo $RLF; ?></td>
-                        <td class="middle" style="width:100px;"><?php echo xlt('Levator Function'); ?></td>
-                        <td class="report_text" style=""><?php echo text($LLF); ?></td>
+                            <td class="report_text right" style=""><?php echo $RLF; ?></td>
+                            <td class="middle" style="width:100px;"><?php echo xlt('Levator Function'); ?></td>
+                            <td class="report_text" style=""><?php echo text($LLF); ?></td>
                           </tr> 
-                      <?php  } 
-                      if ($RMRD || $LMRD) { ?> 
-                      <tr>
-                        <td class="report_text right"><?php echo text($RMRD); ?></td>
-                        <td class="middle" title="<?php echo xla('Marginal Reflex Distance'); ?>"><?php echo xlt('MRD'); ?></td>
-                        <td  class="report_text"><?php echo text($LMRD); ?></td>
-                      </tr>
-                      <?php  } 
-                      if ($RVFISSURE || $LVFISSURE) { ?> 
+                                <?php  } 
+                                if ($RMRD || $LMRD) { ?> 
+                          <tr>
+                            <td class="report_text right"><?php echo text($RMRD); ?></td>
+                            <td class="middle" title="<?php echo xla('Marginal Reflex Distance'); ?>"><?php echo xlt('MRD'); ?></td>
+                            <td  class="report_text"><?php echo text($LMRD); ?></td>
+                          </tr>
+                          <?php  } 
+                          if ($RVFISSURE || $LVFISSURE) { ?> 
 
-                      <tr>
-                        <td class="report_text right"><?php echo attr($RVFISSURE); ?></td>
-                        <td class="middle" title="<?php echo xla('Vertical Fissure: central height between lid margins'); ?>"><?php echo xlt('Vert Fissure'); ?></td>
-                        <td class="report_text"><?php echo attr($LVFISSURE); ?></td>
-                      </tr>
-                      <?php  } 
-                      if ($RCAROTID || $LCAROTID) { ?> 
+                          <tr>
+                            <td class="report_text right"><?php echo attr($RVFISSURE); ?></td>
+                            <td class="middle" title="<?php echo xla('Vertical Fissure: central height between lid margins'); ?>"><?php echo xlt('Vert Fissure'); ?></td>
+                            <td class="report_text"><?php echo attr($LVFISSURE); ?></td>
+                          </tr>
+                          <?php  } 
+                          if ($RCAROTID || $LCAROTID) { ?> 
 
-                      <tr>
-                        <td class="report_text right"><?php echo attr($RCAROTID); ?></td>
-                        <td class="middle" title="<?php echo xla('Any carotid bruits appreciated?'); ?>"><?php echo xlt('Carotid'); ?></td>
-                        <td class="report_text"><?php echo attr($LCAROTID); ?></td>
-                      </tr>
-                      <?php  } 
-                      if ($RTEMPART || $LTEMPART) { ?> 
+                          <tr>
+                            <td class="report_text right"><?php echo attr($RCAROTID); ?></td>
+                            <td class="middle" title="<?php echo xla('Any carotid bruits appreciated?'); ?>"><?php echo xlt('Carotid'); ?></td>
+                            <td class="report_text"><?php echo attr($LCAROTID); ?></td>
+                          </tr>
+                          <?php  } 
+                          if ($RTEMPART || $LTEMPART) { ?> 
 
-                      <tr>
-                        <td class="report_text right"><?php echo attr($RTEMPART); ?></td>
-                        <td class="middle" title="<?php echo xla('Temporal Arteries'); ?>"><?php echo xlt('Temp. Art.'); ?></td>
-                        <td class="report_text"><?php echo attr($LTEMPART); ?></td>
-                      </tr>
-                      <?php  } 
-                      if ($RCNV || $LCNV) { ?> 
+                          <tr>
+                            <td class="report_text right"><?php echo attr($RTEMPART); ?></td>
+                            <td class="middle" title="<?php echo xla('Temporal Arteries'); ?>"><?php echo xlt('Temp. Art.'); ?></td>
+                            <td class="report_text"><?php echo attr($LTEMPART); ?></td>
+                          </tr>
+                          <?php  } 
+                          if ($RCNV || $LCNV) { ?> 
 
-                      <tr>
-                        <td class="report_text right"><?php echo attr($RCNV); ?></td>
-                        <td class="middle" title="<?php echo xla('Cranial Nerve 5: Trigeminal Nerve'); ?>"><?php echo xlt('CN V'); ?></td>
-                        <td class="report_text"><?php echo attr($LCNV); ?></td>
-                      </tr>
-                      <?php  } 
-                      if ($RCNVII || $LCNVII) { ?> 
+                          <tr>
+                            <td class="report_text right"><?php echo attr($RCNV); ?></td>
+                            <td class="middle" title="<?php echo xla('Cranial Nerve 5: Trigeminal Nerve'); ?>"><?php echo xlt('CN V'); ?></td>
+                            <td class="report_text"><?php echo attr($LCNV); ?></td>
+                          </tr>
+                          <?php  } 
+                          if ($RCNVII || $LCNVII) { ?> 
 
-                      <tr>
-                        <td class="report_text right"><?php echo text($RCNVII); ?></td>
-                        <td class="middle" title="<?php echo xla('Cranial Nerve 7: Facial Nerve'); ?>"><?php echo xlt('CN VII'); ?></td>
-                        <td class="report_text"><?php echo attr($LCNVII); ?></td>
-                      </tr>
-                      <?php  } 
-                      if ($HERTELBASE) { ?> 
-                      <tr>
-                        <td colspan="3" style="text-align:center;">
-                          <span style="text-decoration:underline;margin-bottom:5em;">
-                            <?php echo xlt('Hertel Exophthalmometry'); ?>
-                          </span>
-                          <br />
-                          <? 
-                          if ($HERTELBASE) { ?>
+                          <tr>
+                            <td class="report_text right"><?php echo text($RCNVII); ?></td>
+                            <td class="middle" title="<?php echo xla('Cranial Nerve 7: Facial Nerve'); ?>"><?php echo xlt('CN VII'); ?></td>
+                            <td class="report_text"><?php echo attr($LCNVII); ?></td>
+                          </tr>
+                          <?php  } 
+                          if ($HERTELBASE) { ?> 
+                          <tr>
+                            <td colspan="3" style="text-align:center;">
+                              <span style="text-decoration:underline;margin-bottom:5em;">
+                                <?php echo xlt('Hertel Exophthalmometry'); ?>
+                              </span>
+                              <br />
+                              <? 
+                              if ($HERTELBASE) { ?>
 
-                          <span style="border:1pt solid black;width:30px;text-align:center;padding:0 5;">
-                            <?php echo attr($ODHERTEL); ?>
-                          </span>
-                          <i class="fa fa-minus"></i> 
-                          <span style="border:1pt solid black;width:40px;text-align:center;padding:0 5;">
-                            <?php echo attr($HERTELBASE); ?>
-                          </span>
-                          <i class="fa fa-minus"></i> 
-                          <span style="border:1pt solid black;width:30px;text-align:center;padding:0 5;">
-                            <?php echo attr($OSHERTEL); ?>
-                          </span>
-                          <? 
-                        } ?>
-                          </td>
-                      </tr>
-                        <?php  }  ?> 
-                    </table>
+                              <span style="border:1pt solid black;width:30px;text-align:center;padding:0 5;">
+                                <?php echo attr($ODHERTEL); ?>
+                              </span>
+                              <i class="fa fa-minus"></i> 
+                              <span style="border:1pt solid black;width:40px;text-align:center;padding:0 5;">
+                                <?php echo attr($HERTELBASE); ?>
+                              </span>
+                              <i class="fa fa-minus"></i> 
+                              <span style="border:1pt solid black;width:30px;text-align:center;padding:0 5;">
+                                <?php echo attr($OSHERTEL); ?>
+                              </span>
+                              <? 
+                            } ?>
+                              </td>
+                          </tr>
+                          <?php  }  ?> 
+                        </table>
 
                         <div id="NEURO_MOTILITY" class="text_clinical xborderShadow nodisplay" 
                         style="float:left;font-size:0.9em;margin:5 2 5 0;padding:5 5 10 5;font-weight:bold;height:135px;width:175px;">
@@ -1602,47 +1613,48 @@
                             <div class="rdivCell" name="MOTILITY_LSL" id="MOTILITY_LSL"><?php echo attr($MOTILITY_LIL); ?></div>
                           </div>
                         </div> 
-                      </div>
+                        </div>
 
-                      <?php if ($ODCOLOR||$OSCOLOR|$ODREDDESAT||$OSREDDESAT||$ODCOINS||$OSCOINS) { ?> 
-                      <div class="xborderShadow" style="float:right;width:130px;margin-top:5;padding:10px;">
+                        <?php if ($ODCOLOR||$OSCOLOR|$ODREDDESAT||$OSREDDESAT||$ODCOINS||$OSCOINS) { ?> 
+                        <div class="xborderShadow" style="float:right;width:130px;margin-top:5;padding:10px;">
                         <table>
                           <tr>
-                            <td></td><td style="text-align:center;"><?php echo xlt('OD'); ?></td><td style="text-align:center;"><?php echo xlt('OS'); ?></td></tr>
-                            <tr>
-                              <td class="right" style="font-size:0.7em;">
-                                <?php echo xlt('Color'); ?>: 
-                              </td>
-                              <td style="width:175px;text-align:center;">
-                                <?php echo $ODCOLOR." </td><td style='width:175px;text-align:center;'> " .$OSCOLOR; ?>
-                              </td>
-                            </tr>
-                            <tr>
-                              <td class="right" style="white-space: nowrap;font-size:0.7em;">
-                                <span title="Variation in red color discrimination between the eyes (eg. OD=100, OS=75)"><?php echo xlt('Red Desat'); ?>:</span>
-                              </td>
-                              <td>
-                                <?php echo attr($ODREDDESAT); ?> </td><td> <?php echo attr($OSREDDESAT); ?>
-                              </td>
-                            </tr>
-                            <tr>
-                              <td class="right" style="white-space: nowrap;font-size:0.7em;">
-                                <span title="<?php echo xlt('Variation in white (muscle) light brightness discrimination between the eyes (eg. OD=$1.00, OS=$0.75)'); ?>"><?php echo xlt('Coins'); ?>:</span>
-                              </td>
-                              <td>
-                                <?php echo attr($ODCOINS); ?>
-                              </td>
-                              <td>
-                                <?php echo attr($OSCOINS); ?>
-                              </td>
-                            </tr>
-                          </table>
+                              <td></td><td style="text-align:center;"><?php echo xlt('OD'); ?></td><td style="text-align:center;"><?php echo xlt('OS'); ?></td>
+                          </tr>
+                          <tr>
+                            <td class="right" style="font-size:0.7em;">
+                              <?php echo xlt('Color'); ?>: 
+                            </td>
+                            <td style="width:175px;text-align:center;">
+                              <?php echo $ODCOLOR." </td><td style='width:175px;text-align:center;'> " .$OSCOLOR; ?>
+                            </td>
+                          </tr>
+                          <tr>
+                            <td class="right" style="white-space: nowrap;font-size:0.7em;">
+                              <span title="Variation in red color discrimination between the eyes (eg. OD=100, OS=75)"><?php echo xlt('Red Desat'); ?>:</span>
+                            </td>
+                            <td>
+                              <?php echo attr($ODREDDESAT); ?> </td><td> <?php echo attr($OSREDDESAT); ?>
+                            </td>
+                          </tr>
+                          <tr>
+                            <td class="right" style="white-space: nowrap;font-size:0.7em;">
+                              <span title="<?php echo xlt('Variation in white (muscle) light brightness discrimination between the eyes (eg. OD=$1.00, OS=$0.75)'); ?>"><?php echo xlt('Coins'); ?>:</span>
+                            </td>
+                            <td>
+                              <?php echo attr($ODCOINS); ?>
+                            </td>
+                            <td>
+                              <?php echo attr($OSCOINS); ?>
+                            </td>
+                          </tr>
+                        </table>
                         </div>
                         <?php } ?>
                       </div>
                     </td>
-                  </tr>
-                  <tr>
+                </tr>
+                <tr>
                     <td colspan="2">
                       <?php if ($NPA||$NPC||$STEREOPSIS||$DACCDIST||$DACCNEAR||$CACCDIST||$CACCDIST||$VERTFUSAMPS) { ?>
                       <div class="xborderShadow" style="margin:2;position:relative;float:left;text-align:center;width:235px;height:234px;">                               
@@ -1766,242 +1778,248 @@
                                             <td style="border-left:1pt solid black;border-bottom:1pt solid black;text-align:left;">
                                               <textarea id="ACT3CCDIST"  name="ACT3CCDIST" class="ACT"><?php echo text($ACT3CCDIST); ?></textarea></td>
                                               <td style="text-align:center;"><?php echo xlt('L'); ?></td> 
-                                            </tr>
-                                            <tr>    
+                                      </tr>
+                                      <tr>    
+                                        <td style="text-align:right;"><i class="fa fa-reply rotate-left"></i></td> 
+                                        <td style="border:1pt solid black;border-left:0pt;text-align:right;">
+                                          <textarea id="ACT4CCDIST" name="ACT4CCDIST" class="ACT"><?php echo text($ACT4CCDIST); ?></textarea></td>
+                                          <td style="border:1pt solid black;text-align:center;">
+                                            <textarea id="ACT5CCDIST" name="ACT5CCDIST" class="ACT"><?php echo text($ACT5CCDIST); ?></textarea></td>
+                                            <td style="border:1pt solid black;border-right:0pt;text-align:left;">
+                                              <textarea id="ACT6CCDIST" name="ACT6CCDIST" class="ACT"><?php echo text($ACT6CCDIST); ?></textarea></td>
+                                              <td><i class="fa fa-share rotate-right"></i></td> 
+                                      </tr> 
+                                      <tr> 
+                                        <td style="border:0; border-top:2pt solid black;border-right:2pt solid black;text-align:right;">
+                                          <textarea id="ACT10CCDIST" name="ACT10CCDIST" class="ACT"><?php echo text($ACT10CCDIST); ?></textarea></td>
+                                          <td style="border-right:1pt solid black;border-top:1pt solid black;text-align:right;">
+                                            <textarea id="ACT7CCDIST" name="ACT7CCDIST" class="ACT"><?php echo text($ACT7CCDIST); ?></textarea></td>
+                                            <td style="border:1pt solid black;border-bottom:0pt;text-align:center;">
+                                              <textarea id="ACT8CCDIST" name="ACT8CCDIST" class="ACT"><?php echo text($ACT8CCDIST); ?></textarea></td>
+                                              <td style="border-left:1pt solid black;border-top:1pt solid black;text-align:left;">
+                                                <textarea id="ACT9CCDIST" name="ACT9CCDIST" class="ACT"><?php echo text($ACT9CCDIST); ?></textarea></td>
+                                                <td style="border:0; border-top:2pt solid black;border-left:2pt solid black;text-align:left;vertical-align:middle;">
+                                                  <textarea id="ACT11CCDIST" name="ACT11CCDIST" class="ACT"><?php echo text($ACT11CCDIST); ?></textarea>
+                                        </td>
+                                      </tr>
+                                    </table>
+                                  </td>
+
+                                  <?php } if ($ACT5SCNEAR) { ?>
+                                  <td>
+                                    <table style="border:1pt solid black;"> 
+                                      <tr> 
+                                        <td style="text-align:center;"><?php echo xlt('R'); ?></td>    
+                                        <td style="border-right:1pt solid black;border-bottom:1pt solid black;text-align:right;">
+                                          <textarea id="ACT1SCNEAR" name="ACT1SCNEAR" class="ACT"><?php echo text($ACT1SCNEAR); ?></textarea></td>
+                                          <td style="border:1pt solid black;border-top:0pt;text-align:center;">
+                                            <textarea id="ACT2SCNEAR"  name="ACT2SCNEAR"class="ACT"><?php echo text($ACT2SCNEAR); ?></textarea></td>
+                                            <td style="border-left:1pt solid black;border-bottom:1pt solid black;text-align:left;">
+                                              <textarea id="ACT3SCNEAR"  name="ACT3SCNEAR" class="ACT"><?php echo text($ACT3SCNEAR); ?></textarea></td>
+                                              <td style="text-align:center;"><?php echo xlt('L'); ?></td> 
+                                      </tr>
+                                      <tr>    
+                                        <td style="text-align:right;"><i class="fa fa-reply rotate-left"></i></td> 
+                                        <td style="border:1pt solid black;border-left:0pt;text-align:right;">
+                                          <textarea id="ACT4SCNEAR" name="ACT4SCNEAR" class="ACT"><?php echo text($ACT4SCNEAR); ?></textarea></td>
+                                          <td style="border:1pt solid black;text-align:center;">
+                                            <textarea id="ACT5SCNEAR" name="ACT5SCNEAR" class="ACT"><?php echo text($ACT5SCNEAR); ?></textarea></td>
+                                            <td style="border:1pt solid black;border-right:0pt;text-align:left;">
+                                              <textarea id="ACT6SCNEAR" name="ACT6SCNEAR" class="ACT"><?php echo text($ACT6SCNEAR); ?></textarea></td>
+                                        <td><i class="fa fa-share rotate-right"></i></td> 
+                                      </tr> 
+                                      <tr> 
+                                        <td style="border:0; border-top:2pt solid black;border-right:2pt solid black;text-align:right;">
+                                          <textarea id="ACT10SCNEAR" name="ACT10SCNEAR" class="ACT"><?php echo text($ACT10SCNEAR); ?></textarea></td>
+                                          <td style="border-right:1pt solid black;border-top:1pt solid black;text-align:right;">
+                                            <textarea id="ACT7SCNEAR" name="ACT7SCNEAR" class="ACT"><?php echo text($ACT7SCNEAR); ?></textarea></td>
+                                            <td style="border:1pt solid black;border-bottom:0pt;text-align:center;">
+                                              <textarea id="ACT8SCNEAR" name="ACT8SCNEAR" class="ACT"><?php echo text($ACT8SCNEAR); ?></textarea></td>
+                                              <td style="border-left:1pt solid black;border-top:1pt solid black;text-align:left;">
+                                                <textarea id="ACT9SCNEAR" name="ACT9SCNEAR" class="ACT"><?php echo text($ACT9SCNEAR); ?></textarea></td>
+                                                <td style="border:0; border-top:2pt solid black;border-left:2pt solid black;text-align:left;vertical-align:middle;">
+                                                  <textarea id="ACT11SCNEAR" name="ACT11SCNEAR" class="ACT"><?php echo text($ACT11SCNEAR); ?></textarea>
+                                        </td>
+                                      </tr>
+                                    </table>
+                                  </td>
+
+                                  <?php } if ($ACT5CCNEAR) { ?>
+                                  <td>
+                                    <table style="border:1pt solid black;"> 
+                                      <tr> 
+                                        <td style="text-align:center;"><?php echo xlt('R'); ?></td>    
+                                        <td style="border-right:1pt solid black;border-bottom:1pt solid black;text-align:right;">
+                                          <textarea id="ACT1CCNEAR" name="ACT1CCNEAR" class="ACT"><?php echo text($ACT1CCNEAR); ?></textarea></td>
+                                          <td style="border:1pt solid black;border-top:0pt;text-align:center;">
+                                            <textarea id="ACT2CCNEAR"  name="ACT2CCNEAR"class="ACT"><?php echo text($ACT2CCNEAR); ?></textarea></td>
+                                            <td style="border-left:1pt solid black;border-bottom:1pt solid black;text-align:left;">
+                                              <textarea id="ACT3CCNEAR"  name="ACT3CCNEAR" class="ACT"><?php echo text($ACT3CCNEAR); ?></textarea></td>
+                                              <td style="text-align:center;"><?php echo xlt('L'); ?></td>
+                                      </tr>
+                                      <tr>    
                                               <td style="text-align:right;"><i class="fa fa-reply rotate-left"></i></td> 
                                               <td style="border:1pt solid black;border-left:0pt;text-align:right;">
-                                                <textarea id="ACT4CCDIST" name="ACT4CCDIST" class="ACT"><?php echo text($ACT4CCDIST); ?></textarea></td>
+                                                <textarea id="ACT4CCNEAR" name="ACT4CCNEAR" class="ACT"><?php echo text($ACT4CCNEAR); ?></textarea></td>
                                                 <td style="border:1pt solid black;text-align:center;">
-                                                  <textarea id="ACT5CCDIST" name="ACT5CCDIST" class="ACT"><?php echo text($ACT5CCDIST); ?></textarea></td>
+                                                  <textarea id="ACT5CCNEAR" name="ACT5CCNEAR" class="ACT"><?php echo text($ACT5CCNEAR); ?></textarea></td>
                                                   <td style="border:1pt solid black;border-right:0pt;text-align:left;">
-                                                    <textarea id="ACT6CCDIST" name="ACT6CCDIST" class="ACT"><?php echo text($ACT6CCDIST); ?></textarea></td>
-                                                    <td><i class="fa fa-share rotate-right"></i></td> 
-                                                  </tr> 
-                                                  <tr> 
+                                                    <textarea id="ACT6CCNEAR" name="ACT6CCNEAR" class="ACT"><?php echo text($ACT6CCNEAR); ?></textarea></td><td><i class="fa fa-share rotate-right"></i></td> 
+                                      </tr> 
+                                      <tr> 
                                                     <td style="border:0; border-top:2pt solid black;border-right:2pt solid black;text-align:right;">
-                                                      <textarea id="ACT10CCDIST" name="ACT10CCDIST" class="ACT"><?php echo text($ACT10CCDIST); ?></textarea></td>
+                                                      <textarea id="ACT10CCNEAR" name="ACT10CCNEAR" class="ACT"><?php echo text($ACT10CCNEAR); ?></textarea></td>
                                                       <td style="border-right:1pt solid black;border-top:1pt solid black;text-align:right;">
-                                                        <textarea id="ACT7CCDIST" name="ACT7CCDIST" class="ACT"><?php echo text($ACT7CCDIST); ?></textarea></td>
+                                                        <textarea id="ACT7CCNEAR" name="ACT7CCNEAR" class="ACT"><?php echo text($ACT7CCNEAR); ?></textarea></td>
                                                         <td style="border:1pt solid black;border-bottom:0pt;text-align:center;">
-                                                          <textarea id="ACT8CCDIST" name="ACT8CCDIST" class="ACT"><?php echo text($ACT8CCDIST); ?></textarea></td>
+                                                          <textarea id="ACT8CCNEAR" name="ACT8CCNEAR" class="ACT"><?php echo text($ACT8CCNEAR); ?></textarea></td>
                                                           <td style="border-left:1pt solid black;border-top:1pt solid black;text-align:left;">
-                                                            <textarea id="ACT9CCDIST" name="ACT9CCDIST" class="ACT"><?php echo text($ACT9CCDIST); ?></textarea></td>
+                                                            <textarea id="ACT9CCNEAR" name="ACT9CCNEAR" class="ACT"><?php echo text($ACT9CCNEAR); ?></textarea></td>
                                                             <td style="border:0; border-top:2pt solid black;border-left:2pt solid black;text-align:left;vertical-align:middle;">
-                                                              <textarea id="ACT11CCDIST" name="ACT11CCDIST" class="ACT"><?php echo text($ACT11CCDIST); ?></textarea>
+                                                              <textarea id="ACT11CCNEAR" name="ACT11CCNEAR" class="ACT"><?php echo text($ACT11CCNEAR); ?></textarea>
                                                             </td>
-                                                          </tr>
-                                                        </table>
-                                                      </td>
-
-                                                      <?php } if ($ACT5SCNEAR) { ?>
-                                                      <td>
-                                                        <table style="border:1pt solid black;"> 
-                                                          <tr> 
-                                                            <td style="text-align:center;"><?php echo xlt('R'); ?></td>    
-                                                            <td style="border-right:1pt solid black;border-bottom:1pt solid black;text-align:right;">
-                                                              <textarea id="ACT1SCNEAR" name="ACT1SCNEAR" class="ACT"><?php echo text($ACT1SCNEAR); ?></textarea></td>
-                                                              <td style="border:1pt solid black;border-top:0pt;text-align:center;">
-                                                                <textarea id="ACT2SCNEAR"  name="ACT2SCNEAR"class="ACT"><?php echo text($ACT2SCNEAR); ?></textarea></td>
-                                                                <td style="border-left:1pt solid black;border-bottom:1pt solid black;text-align:left;">
-                                                                  <textarea id="ACT3SCNEAR"  name="ACT3SCNEAR" class="ACT"><?php echo text($ACT3SCNEAR); ?></textarea></td>
-                                                                  <td style="text-align:center;"><?php echo xlt('L'); ?></td> 
-                                                                </tr>
-                                                                <tr>    
-                                                                  <td style="text-align:right;"><i class="fa fa-reply rotate-left"></i></td> 
-                                                                  <td style="border:1pt solid black;border-left:0pt;text-align:right;">
-                                                                    <textarea id="ACT4SCNEAR" name="ACT4SCNEAR" class="ACT"><?php echo text($ACT4SCNEAR); ?></textarea></td>
-                                                                    <td style="border:1pt solid black;text-align:center;">
-                                                                      <textarea id="ACT5SCNEAR" name="ACT5SCNEAR" class="ACT"><?php echo text($ACT5SCNEAR); ?></textarea></td>
-                                                                      <td style="border:1pt solid black;border-right:0pt;text-align:left;">
-                                                                        <textarea id="ACT6SCNEAR" name="ACT6SCNEAR" class="ACT"><?php echo text($ACT6SCNEAR); ?></textarea></td>
-                                                                        <td><i class="fa fa-share rotate-right"></i></td> 
-                                                                      </tr> 
-                                                                      <tr> 
-                                                                        <td style="border:0; border-top:2pt solid black;border-right:2pt solid black;text-align:right;">
-                                                                          <textarea id="ACT10SCNEAR" name="ACT10SCNEAR" class="ACT"><?php echo text($ACT10SCNEAR); ?></textarea></td>
-                                                                          <td style="border-right:1pt solid black;border-top:1pt solid black;text-align:right;">
-                                                                            <textarea id="ACT7SCNEAR" name="ACT7SCNEAR" class="ACT"><?php echo text($ACT7SCNEAR); ?></textarea></td>
-                                                                            <td style="border:1pt solid black;border-bottom:0pt;text-align:center;">
-                                                                              <textarea id="ACT8SCNEAR" name="ACT8SCNEAR" class="ACT"><?php echo text($ACT8SCNEAR); ?></textarea></td>
-                                                                              <td style="border-left:1pt solid black;border-top:1pt solid black;text-align:left;">
-                                                                                <textarea id="ACT9SCNEAR" name="ACT9SCNEAR" class="ACT"><?php echo text($ACT9SCNEAR); ?></textarea></td>
-                                                                                <td style="border:0; border-top:2pt solid black;border-left:2pt solid black;text-align:left;vertical-align:middle;">
-                                                                                  <textarea id="ACT11SCNEAR" name="ACT11SCNEAR" class="ACT"><?php echo text($ACT11SCNEAR); ?></textarea>
-                                                                                </td>
-                                                                              </tr>
-                                                                            </table>
-                                                                          </td>
-
-                                                                          <?php } if ($ACT5CCNEAR) { ?>
-                                                                          <td>
-                                                                            <table style="border:1pt solid black;"> 
-                                                                              <tr> 
-                                                                                <td style="text-align:center;"><?php echo xlt('R'); ?></td>    
-                                                                                <td style="border-right:1pt solid black;border-bottom:1pt solid black;text-align:right;">
-                                                                                  <textarea id="ACT1CCNEAR" name="ACT1CCNEAR" class="ACT"><?php echo text($ACT1CCNEAR); ?></textarea></td>
-                                                                                  <td style="border:1pt solid black;border-top:0pt;text-align:center;">
-                                                                                    <textarea id="ACT2CCNEAR"  name="ACT2CCNEAR"class="ACT"><?php echo text($ACT2CCNEAR); ?></textarea></td>
-                                                                                    <td style="border-left:1pt solid black;border-bottom:1pt solid black;text-align:left;">
-                                                                                      <textarea id="ACT3CCNEAR"  name="ACT3CCNEAR" class="ACT"><?php echo text($ACT3CCNEAR); ?></textarea></td>
-                                                                                      <td style="text-align:center;"><?php echo xlt('L'); ?></td>
-                                                                                    </tr>
-                                                                                    <tr>    
-                                                                                      <td style="text-align:right;"><i class="fa fa-reply rotate-left"></i></td> 
-                                                                                      <td style="border:1pt solid black;border-left:0pt;text-align:right;">
-                                                                                        <textarea id="ACT4CCNEAR" name="ACT4CCNEAR" class="ACT"><?php echo text($ACT4CCNEAR); ?></textarea></td>
-                                                                                        <td style="border:1pt solid black;text-align:center;">
-                                                                                          <textarea id="ACT5CCNEAR" name="ACT5CCNEAR" class="ACT"><?php echo text($ACT5CCNEAR); ?></textarea></td>
-                                                                                          <td style="border:1pt solid black;border-right:0pt;text-align:left;">
-                                                                                            <textarea id="ACT6CCNEAR" name="ACT6CCNEAR" class="ACT"><?php echo text($ACT6CCNEAR); ?></textarea></td><td><i class="fa fa-share rotate-right"></i></td> 
-                                                                                          </tr> 
-                                                                                          <tr> 
-                                                                                            <td style="border:0; border-top:2pt solid black;border-right:2pt solid black;text-align:right;">
-                                                                                              <textarea id="ACT10CCNEAR" name="ACT10CCNEAR" class="ACT"><?php echo text($ACT10CCNEAR); ?></textarea></td>
-                                                                                              <td style="border-right:1pt solid black;border-top:1pt solid black;text-align:right;">
-                                                                                                <textarea id="ACT7CCNEAR" name="ACT7CCNEAR" class="ACT"><?php echo text($ACT7CCNEAR); ?></textarea></td>
-                                                                                                <td style="border:1pt solid black;border-bottom:0pt;text-align:center;">
-                                                                                                  <textarea id="ACT8CCNEAR" name="ACT8CCNEAR" class="ACT"><?php echo text($ACT8CCNEAR); ?></textarea></td>
-                                                                                                  <td style="border-left:1pt solid black;border-top:1pt solid black;text-align:left;">
-                                                                                                    <textarea id="ACT9CCNEAR" name="ACT9CCNEAR" class="ACT"><?php echo text($ACT9CCNEAR); ?></textarea></td>
-                                                                                                    <td style="border:0; border-top:2pt solid black;border-left:2pt solid black;text-align:left;vertical-align:middle;">
-                                                                                                      <textarea id="ACT11CCNEAR" name="ACT11CCNEAR" class="ACT"><?php echo text($ACT11CCNEAR); ?></textarea>
-                                                                                                    </td>
-                                                                                                  </tr>
-                                                                                                </table>
-                                                                                              </td>
-                                                                                            </tr>
-                                                                                            <?php } ?>
-                                                                                          </table>
+                                      </tr>
+                                    </table>
+                                  </td>
+                                </tr>
+                                <?php } ?>
+                              </table>
                                                                                           <?php } ?> 
-                                                                                        </td>
-                                                                                      </tr>
+                            </td>
+                          </tr>
 
-                                                                                      <!-- end ACT section -->
-                                                                                      <?php if ($NEURO_COMMENTS) { ?><!-- start neuro comments -->
-                                                                                      <tr>
-                                                                                        <td>
-                                                                                          <div style="font-size:0.7em;text-align:left;margin:10 5 10 5 ;"> 
-                                                                                            <b><?php echo xlt('Comments'); ?>:</b>
-                                                                                            <?php echo text($NEURO_COMMENTS); ?></textarea>
-                                                                                          </div>
-                                                                                        </td>
-                                                                                      </tr>
-                                                                                      <?php } ?>
+                          <!-- end ACT section -->
+                          <?php if ($NEURO_COMMENTS) { ?><!-- start neuro comments -->
+                          <tr>
+                            <td>
+                              <div style="font-size:0.7em;text-align:left;margin:10 5 10 5 ;"> 
+                                <b><?php echo xlt('Comments'); ?>:</b>
+                                <?php echo text($NEURO_COMMENTS); ?></textarea>
+                              </div>
+                            </td>
+                          </tr>
+                          <?php } ?>
 
-                                                                                      <tr>
-                                                                                        <td colspan="2">
+                          <tr>
+                            <td colspan="2">
 
-                                                                                          <!-- start of IMPPLAN exam -->
-                                                                                          <div style="display:inline-block;width:600px;left:0px;text-align:center;margin:15px;">    
-                                                                                            <table>
-                                                                                              <tr>
-                                                                                                <td style="width:600px;vertical-align:top;padding:10px;font-size:0.8em;"> 
-                                                                                                  <b><?php echo xlt('Impression/Plan'); ?>:</b>
-                                                                                                  <br />
+                              <!-- start of IMPPLAN exam -->
+                              <div style="display:inline-block;width:600px;left:0px;text-align:center;margin:15px;">    
+                                <table>
+                                  <tr>
+                                    <td style="width:600px;vertical-align:top;padding:10px;font-size:0.8em;"> 
+                                      <b><?php echo xlt('Impression/Plan'); ?>:</b>
+                                    <br />
 
-                                                                                                  <?php 
+                                    <?php 
 
-                                                                                                  $order   = array("\r\n", "\n", "\r");
-                                                                                                  $replace = '<br />';
+                                    $order   = array("\r\n", "\n", "\r");
+                                    $replace = '<br />';
                                     // Processes \r\n's first so they aren't converted twice.
-                                                                                                  $IMP = str_replace($order, $replace, $IMP);
-                                //    $PLAN = str_replace($order, $replace, $PLAN);
-                                                                                                  echo $IMP; ?>
+                                    $IMP = str_replace($order, $replace, $IMP);
+                                    //    $PLAN = str_replace($order, $replace, $PLAN);
+                                    echo $IMP; ?>
 
-                                                                                                </td>
+                                    </td>
 
-                                                                                              </tr>
-                                                                                            </table>
+                                  </tr>
+                                </table>
 
-                                                                                            <?php 
-                                                                                            display_draw_image ("IMPPLAN",$encounter,$pid); 
-                                                                                            ?>
-                                                                                          </div>
-                                                                                          <!-- end of IMPPLAN exam -->    
-                                                                                        </td>
-                                                                                      </tr>
-                                                                                    </table>  
-                                                                                  </div>
-                                                                                  <?php
-      //http://www.oculoplasticsllc.com/openemr/interface/forms/eye_mag/images/sign_4.jpg
+                                <?php 
+                                display_draw_image ("IMPPLAN",$encounter,$pid); 
+                                ?>
+                              </div>
+                              <!-- end of IMPPLAN exam -->    
+                            </td>
+                          </tr>
+                        </table>  
+                      </div>
+                    </td>
+                </tr>
+            </table>
+       
+                    <?php
+                    
 
-                                                                                  $signature = $GLOBALS["webserver_root"]."/interface/forms/eye_mag/images/sign_".$_SESSION['authUserID'].".jpg";
-                                                                                  if (file_exists($signature)) {
-                                                                                    ?>
-                                                                                    <div style="position:relative;left:0.in;padding-left:40px;">
-                                                                                      <img src="/openemr/interface/forms/eye_mag/images/sign_<?php echo $_SESSION['authUserID']; ?>.jpg" style="width:200px;height:70px;bottom:1px;" /> 
-                                                                                    </div>
-                                                                                    <?php
-                                                                                  }
-                                                                                  ?> 
-                                                                                </div>
-                                                                                <?php
-      //end central_wrapper
-              //return;
-       //end central_wrapper
-              //return;
-                                                                              }
-                                                                              function display_draw_image($zone,$encounter,$pid){
-                                                                                global $form_folder;
-                                                                                return;
-                                                                                $side = "OU";
+                      $signature = $GLOBALS["webserver_root"]."/interface/forms/eye_mag/images/sign_".$_SESSION['authUserID'].".jpg";
+                      if (file_exists($signature)) {
+                        ?>
+                        <div style="position:relative;left:0.in;padding-left:40px;">
+                          <img src="/openemr/interface/forms/eye_mag/images/sign_<?php echo $_SESSION['authUserID']; ?>.jpg" style="width:200px;height:70px;bottom:1px;" /> 
+                        </div>
+                        <?php
+                      }
+                      ?> 
+   </div>
+ <?php exit; ?>    
+                    <?php
+                              //end central_wrapper
+                              //return;
+                                    //end central_wrapper
+                                  //return;
+                }
+                function display_draw_image($zone,$encounter,$pid){
+                  global $form_folder;
+                  return;
+                  $side = "OU";
 
-                                                                                $file_location = $GLOBALS["OE_SITES_BASE"]."/".$_SESSION['site_id']."/documents/".$pid."/".$form_folder."/".$encounter."/".$side."_".$zone."_VIEW.png";
+                  $file_location = $GLOBALS["OE_SITES_BASE"]."/".$_SESSION['site_id']."/documents/".$pid."/".$form_folder."/".$encounter."/".$side."_".$zone."_VIEW.png";
 
-                                                                                $sql = "SELECT * from documents where url='file://".$file_location."'";
-                                                                                $doc = sqlQuery($sql);
-            // random to not pull from cache.
-                                                                                if (file_exists($file_location) && ($doc['id'] > '0')) {
-                                                                                  $filetoshow = $GLOBALS['web_root']."/controller.php?document&retrieve&patient_id=$pid&document_id=".$doc['id']."&as_file=false&blahblah=".rand();
-                                                                                  echo '<div style="float:left;margin:70 10 auto 10;border:2pt solid grey;">';
-                                                                                  echo "<img src='".$filetoshow."' style='padding: 0px 0px 0px 5px;'>
-                                                                                  </div>";
-                                                                                } else {
-                //base image. 
-                //$filetoshow = "../../forms/".$form_folder."/images/".$side."_".$zone."_BASE.png"; 
-                                                                                }
-
-
-                                                                                return;
-
-                                                                              }
+                  $sql = "SELECT * from documents where url='file://".$file_location."'";
+                  $doc = sqlQuery($sql);
+                    // random to not pull from cache.
+                  if (file_exists($file_location) && ($doc['id'] > '0')) {
+                    $filetoshow = $GLOBALS['web_root']."/controller.php?document&retrieve&patient_id=$pid&document_id=".$doc['id']."&as_file=false&blahblah=".rand();
+                    echo '<div style="float:left;margin:70 10 auto 10;border:2pt solid grey;">';
+                    echo "<img src='".$filetoshow."' style='padding: 0px 0px 0px 5px;'>
+                    </div>";
+                  } else {
+                  //base image. 
+                  //$filetoshow = "../../forms/".$form_folder."/images/".$side."_".$zone."_BASE.png"; 
+                  }
 
 
-                                                                              function full_report( $pid, $encounter, $cols='2', $id) {
+                  return;
 
-                                                                                /** CHANGE THIS - name of the database table associated with this form **/
-                                                                                $table_name = "form_eye_mag";
+                }
 
-                                                                                $count = 0;
-                                                                                $data = formFetch($table_name, $id);
 
-                                                                                if ($data) {
+                function full_report( $pid, $encounter, $cols='2', $id) {
+                  return;
 
-                                                                                  print "<table><tr>";
+                  /** CHANGE THIS - name of the database table associated with this form **/
+                  $table_name = "form_eye_mag";
 
-                                                                                  foreach($data as $key => $value) {
-                                                                                    if ($key == "id" || $key == "pid" || $key == "user" || 
-                                                                                      $key == "groupname" || $key == "authorized" || 
-                                                                                      $key == "activity" || $key == "date" || 
-                                                                                      $value == "" || $value == "0000-00-00 00:00:00" || 
-                                                                                      $value == "n") 
-                                                                                    {
-                    // skip certain fields and blank data
-                                                                                      continue;
-                                                                                    }
+                  $count = 0;
+                  $data = formFetch($table_name, $id);
 
-                                                                                    $key=ucwords(str_replace("_"," ",$key));
-                                                                                    print("<tr>\n");  
-                                                                                    print("<tr>\n");  
-                                                                                    print "<td><span class=bold>$key: </span><span class=text>$value</span></td>";
-                                                                                    $count++;
-                                                                                    if ($count == $cols) {
-                                                                                      $count = 0;
-                                                                                      print "</tr><tr>\n";
-                                                                                    }
-                                                                                  }
-                                                                                }
-                                                                                print "</tr></table><h4>Electronically signed: Raymond Magauran, MD, MBA";
-                                                                              }
+                  if ($data) {
 
-                                                                              ?> 
+                    print "<table><tr>";
+
+                    foreach($data as $key => $value) {
+                      if ($key == "id" || $key == "pid" || $key == "user" || 
+                        $key == "groupname" || $key == "authorized" || 
+                        $key == "activity" || $key == "date" || 
+                        $value == "" || $value == "0000-00-00 00:00:00" || 
+                        $value == "n") 
+                      {
+                      // skip certain fields and blank data
+                        continue;
+                      }
+
+                      $key=ucwords(str_replace("_"," ",$key));
+                      print("<tr>\n");  
+                      print("<tr>\n");  
+                      print "<td><span class=bold>$key: </span><span class=text>$value</span></td>";
+                      $count++;
+                      if ($count == $cols) {
+                        $count = 0;
+                        print "</tr><tr>\n";
+                      }
+                    }
+                  }
+                  print "</tr></table><h4>Electronically signed: Raymond Magauran, MD, MBA";
+                }
+
+                ?> 
