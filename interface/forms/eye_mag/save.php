@@ -380,6 +380,43 @@ if (!$_REQUEST['LOCKEDBY'])  $_REQUEST['LOCKEDBY'] = rand();
  * Save the canvas drawings  
  */
 if ($_REQUEST['canvas']) {
+//try using addNewDocument from document.php
+
+  require_once($GLOBALS['fileroot']."/controllers/C_Document.class.php");
+function addNewDocument($name,$type,$tmp_name,$error,$size,$owner='',$patient_id_or_simple_directory="00",$category_id='1',$higher_level_path='',$path_depth='1') {
+
+    if (empty($owner)) {
+      $owner = $_SESSION['authUserID'];
+    }
+
+    // Build the $_FILES array
+    $TEMP_FILES = array();
+    $TEMP_FILES['file']['name'][0]="OU_".$zone."_VIEW.png";
+    $TEMP_FILES['file']['type'][0]=$type;
+    $TEMP_FILES['file']['tmp_name'][0]=$tmp_name;
+    $TEMP_FILES['file']['error'][0]=$error;
+    $TEMP_FILES['file']['size'][0]=$size;
+    $_FILES = $TEMP_FILES;
+
+    // Build the parameters
+    $_GET['higher_level_path']=$higher_level_path;
+    $_GET['patient_id']=$patient_id_or_simple_directory;
+    $_POST['destination']='';
+    $_POST['submit']='Upload';
+    $_POST['path_depth']=$path_depth;
+    $_POST['patient_id']=(is_numeric($patient_id_or_simple_directory) && $patient_id_or_simple_directory>0) ? $patient_id_or_simple_directory : "00";
+    $_POST['category_id']=$category_id;
+    $_POST['process']='true';
+
+    // Add the Document and return the newly added document id
+    $cd = new C_Document();
+    $cd->manual_set_owner=$owner;
+    $cd->upload_action_process();
+    $v = $cd->get_template_vars("file");
+    if (!isset($v) || !$v) return false;
+    return array ("doc_id" => $v[0]->id, "url" => $v[0]->url); 
+}
+
   /**
    * Make the directory for this encounter to store the images
    * we are storing the images after the mouse leaves the canvas here:

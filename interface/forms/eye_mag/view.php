@@ -174,11 +174,13 @@ require_once("$incdir/patient_file/encounter/new_form.php");
       alert("<?php xl('You are not authorized to add/edit issues','e'); ?>");
       <?php endif; ?>
     }
-     function doscript(type,id,encounter) {
-
-          dlgopen('../../forms/eye_mag/SpectacleRx.php?target=' + type + '&id='+id+'&encounter='+ encounter, '_blank', 560, 590);
-        }
+    function doscript(type,id,encounter) {
+      dlgopen('../../forms/eye_mag/SpectacleRx.php?target=' + type + '&id='+id+'&encounter='+ encounter, '_blank', 560, 590);
+    }
      
+    function dispensed(pid) {
+      dlgopen('../../forms/eye_mag/SpectacleRx.php?dispensed=1&pid='+pid, '_blank', 560, 590);
+    }
      
     </script>
       
@@ -205,18 +207,21 @@ require_once("$incdir/patient_file/encounter/new_form.php");
     if ($display=="fullscreen") { 
       // trial fullscreen with mobile menu will lead to tablet versions and bootstrap menu 
       // this function is in php/eye_mag_functions.php
-      echo "";
+      echo '<div class="col-sm-12"><div class="row"> ';
   
       $input_echo = menu_overhaul_top($pid,$encounter);
       echo $input_echo;
-      ?>
+      ?></div>
+    </div>
       <div id="page-wrapper" style="margin: 0px 0px 0px 0px;">
       <div id="Layer2" name="Layer2" class="nodisplay">
       </div>
       <div id="Layer3" name="Layer3" class="container" style="text-align:center;">
             <!-- Page Heading -->
-            <?php menu_overhaul_left($pid,$encounter);   
-             echo    '<div class="col-sm-12"></div>';
+            <?php   
+             echo    '<div class="col-sm-12"><div class="row">';
+             menu_overhaul_left($pid,$encounter); 
+             echo "</div></div>";
     } else {
       ?>
        <?php
@@ -224,10 +229,10 @@ require_once("$incdir/patient_file/encounter/new_form.php");
     ?>
 
     <div id="Layer1" name="Layer1" class="display">
-      <div id="warning" name="warning" class="alert alert-warning <?php echo $warning; ?>">
+     <!-- <div id="warning" name="warning" class="alert alert-warning <?php echo $warning; ?>">
                 <span type="button" class="close" data-dismiss="alert">&times;</span>
                 <strong>Warning!</strong> <?php echo $warning_text; ?>
-            </div>
+            </div> -->
     <form method="post" action="<?php echo $rootdir;?>/forms/<?php echo $form_folder; ?>/save.php?mode=update" id="eye_mag" class="eye_mag pure-form" name="eye_mag">
       <!-- start container for the main body of the form -->
       <div class="body_top text-center" id="form_container" name="form_container">
@@ -285,7 +290,7 @@ require_once("$incdir/patient_file/encounter/new_form.php");
             <?php ($CLINICAL =='1') ? ($display_Add = "size100") : ($display_Add = "size50"); ?>
             <?php ($CLINICAL =='0') ? ($display_Visibility = "display") : ($display_Visibility = "nodisplay"); ?>
             <!-- start    HPI row -->
-          <div id="HPIPMH_sections" name="HPIPMH_sections" style="margin: 10 auto;width:100%;text-align: center;font-size:1.0em;" class="nodisplay" >   
+          <div id="HPIPMH_sections" name="HPIPMH_sections" style="margin: 80 auto;width:100%;text-align: center;font-size:1.0em;" class="nodisplay" >   
             <!-- start    CC_HPI-->
             <div id="HPI_1" name="HPI_1" class="<?php echo attr($display_Add); ?>">
               <span class="anchor" id="HPI_anchor"></span>
@@ -741,7 +746,7 @@ require_once("$incdir/patient_file/encounter/new_form.php");
                                               //if the prefs show a field, ie visible, the highlight the zone.
                        if ($W == '1') $button_W = "buttonRefraction_selected";
                        if ($MR == '1') $button_MR = "buttonRefraction_selected";
-                       if ($CR == '1') $button_CR = "buttonRefraction_selected";
+                       if ($CR == '1') $button_AR = "buttonRefraction_selected";
                        if ($CTL == '1') $button_CTL = "buttonRefraction_selected";
                        if ($ADDITIONAL == '1') $button_ADDITIONAL = "buttonRefraction_selected";
                        if ($VAX == '1') $button_VAX = "buttonRefraction_selected";
@@ -751,7 +756,7 @@ require_once("$incdir/patient_file/encounter/new_form.php");
                               <ul>
                                   <li id="LayerVision_W_lightswitch" class="<?php echo attr($button_W); ?>" value="Current">W</li> | 
                                   <li  id="LayerVision_MR_lightswitch" class="<?php echo attr($button_MR); ?>" value="Auto">MR</li> | 
-                                  <li  id="LayerVision_CR_lightswitch" class="<?php echo attr($button_CR); ?>" value="Cyclo">CR</li> | 
+                                  <li  id="LayerVision_CR_lightswitch" class="<?php echo attr($button_AR); ?>" value="Cyclo">AR</li> | 
                                   <li  id="LayerVision_CTL_lightswitch" class="<?php echo attr($button_CTL); ?>" value="Contact Lens">CTL</li> | 
                                   <li  id="LayerVision_ADDITIONAL_lightswitch" class="<?php echo attr($button_ADDITIONAL); ?>" value="Additional"><?php echo xlt('Add.'); ?></li> | 
                                   <li  id="LayerVision_VAX_lightswitch" class="<?php echo attr($button_VAX); ?>" value="Visual Acuities">Va</li>                           
@@ -759,7 +764,7 @@ require_once("$incdir/patient_file/encounter/new_form.php");
                           </span>
                       </div>    
 
-                      <div id="Lyr3.1" style="position: absolute; top: 0.30in; left: 0.1in; width: 0.4in;height: 0.3in; border: none; padding: 0in; " dir="LTR">
+                      <div id="Lyr3.1" style="position: absolute; top: 0.23in; left: 0.09in;width: 0.4in;height: 0.3in; border: none; padding: 0in; " dir="LTR">
                           <font style="font-face:'San Serif'; font-size:3.5em;">V</font>
                           <font style="font-face:arial; font-size:0.9em;"></font>
 
@@ -802,7 +807,7 @@ require_once("$incdir/patient_file/encounter/new_form.php");
                   <!-- START OF THE PRESSURE BOX -->
                   <div id="LayerTension" class="vitals" style="width: 1.5in; height: 1.05in;padding: 0.02in; border: 1.00pt solid #000000;">
                       
-                      <span title="This will display a graph of IOPs over time in a pop-up window" id="LayerVision_IOP_lightswitch" name="LayerVision_IOP_lightswitch" class="closeButton fa  fa-line-chart" id="IOP_Graph" name="IOP_Graph"></span>
+                      <span title="This will display a graph of IOPs\n over time in a pop-up window" id="LayerVision_IOP_lightswitch" name="LayerVision_IOP_lightswitch" class="closeButton fa  fa-line-chart" id="IOP_Graph" name="IOP_Graph"></span>
                       <!-- -->
                       <div id="Lyr4.0" style="position:absolute; left:0.05in; width: 1.4in; top:0.0in; padding: 0in; ">
                           <span class="top_left">
@@ -818,7 +823,7 @@ require_once("$incdir/patient_file/encounter/new_form.php");
                               </div>    
                           </span>
                       </div>
-                      <div id="Lyr4.1" style="position: absolute; top: 0.3in; left: 0.12in; width: 0.37in;height: 0.45in; border: none; padding: 0in;">
+                      <div id="Lyr4.1" style="position: absolute; top: 0.23in; left: 0.09in; width: 0.37in;height: 0.45in; border: none; padding: 0in;">
                           <font style="font-face:arial; font-size:3.5em;">T</font>
                           <font style="font-face:arial; font-size: 0.9em;"></font>
                       </div>
@@ -936,10 +941,10 @@ require_once("$incdir/patient_file/encounter/new_form.php");
                       <div id="Lyr5.1" style="position: relative; top: 0.08in; left: 0.0in; border: none; background: white">
                           <table cellpadding='1' cellspacing="1" style="font-size: 0.8em;margin:auto;"> 
                               <tr>    
-                                  <td style="width:0.6in;" colspan="2"><b><?php echo xlt('OD'); ?></b><br /></td>
+                                  <td style="width:0.6in;text-align:center;" colspan="2"><b><?php echo xlt('OD'); ?></b><br /></td>
 
                                   <td style="width:0.05in;"> </td>
-                                  <td style="width:0.6in;" colspan="2"><b><?php echo xlt('OS'); ?></b></td>
+                                  <td style="width:0.6in;text-align:center;" colspan="2"><b><?php echo xlt('OS'); ?></b></td>
                               </tr> 
                               <tr>    
                                   <td style="border-right:1pt solid black;border-bottom:1pt solid black;text-align:right;">
@@ -988,8 +993,8 @@ require_once("$incdir/patient_file/encounter/new_form.php");
                   <div id="LayerPupils" class="vitals" style="width: 1.85in; height: 1.05in; padding: 0.02in; border: 1.00pt solid #000000; ">  
                       <span class="top_left"><b id="pupils"><?php echo xlt('Pupils'); ?>:</b> </span>
                       <div style="position:absolute;text-align:right; top:0.03in;font-size:0.8em;right:0.1in;">
-                                  <label for="Pupil_normal" class="input-helper input-helper--checkbox"><?php echo xlt('Normal'); ?></label>
-                                  <input id="Pupil_normal" type="checkbox" value="1" checked="checked">
+                                  <label for="PUPIL_NORMAL" class="input-helper input-helper--checkbox"><?php echo xlt('Normal'); ?></label>
+                                  <input id="PUPIL_NORMAL" name="PUPIL_NORMAL" type="checkbox" value="1" <?php if ($PUPIL_NNORMAL =='1') echo 'checked="checked"'; ?>>
                       </div>
                       <div id="Lyr7.0" style="position: absolute; top: 0.3in; left: 0.15in; border: none;">
                           <table cellpadding=2 cellspacing=1 style="font-size: 0.9em;;"> 
@@ -1099,14 +1104,16 @@ require_once("$incdir/patient_file/encounter/new_form.php");
                             <!-- end IOP chart section -->
                             <?php ($W ==1) ? ($display_W = "display") : ($display_W = "nodisplay"); ?>
                             <div id="LayerVision_W" class="refraction borderShadow <?php echo $display_W; ?>">
-                              <span class="closeButton fa fa-close" id="Close_W" name="Close_W"></span>
+                              <span class="closeButton fa fa-close" id="Close_W" name="Close_W" title="<?php echo attr('Close and make this a Preference'); ?>"></span>
                               <i onclick="top.restoreSession();  doscript('W','<?php echo attr($pid); ?>','<?php echo attr($encounter); ?>'); return false;" 
-                               class="closeButton2 fa fa-print"></i>
+                               title="<?php echo attr("Dispense Rx"); ?>" class="closeButton2 fa fa-print"></i>
+                              <i onclick="top.restoreSession();  dispensed('<?php echo attr($pid); ?>');return false;" 
+                                 title="<?php echo attr("Previously dispensed\n  Spectacle Rxs  "); ?>" class=" fa fa-list-ul closebutton3"></i>
+                                        
                             
                                 <table id="wearing" >
                                     <tr>
                                         <th colspan="9" id="wearing_title"><?php echo xlt('Current Glasses'); ?>
-                                            
                                         </th>
                                     </tr>
                                     <tr style="font-weight:400;">
@@ -1117,7 +1124,7 @@ require_once("$incdir/patient_file/encounter/new_form.php");
                                         <td><?php echo xlt('Axis'); ?></td>
                                         <td><?php echo xlt('Prism'); ?></td>
                                         <td><?php echo xlt('Acuity'); ?></td>
-                                        <td rowspan="7" class="right" style="padding:10 0 10 0;">
+                                        <td rowspan="7" class="right" style="padding:10 0 10 0;font-size:0.6em;">
                                             <b style="font-weight:600;text-decoration:underline;">Rx Type</b><br />
                                             <label for="Single" class="input-helper input-helper--checkbox"><?php echo xlt('Single'); ?></label>
                                             <input type="radio" value="0" id="Single" name="RX1" <?php if ($RX1 == '0') echo 'checked="checked"'; ?> /></span><br /><br />
@@ -1187,42 +1194,16 @@ require_once("$incdir/patient_file/encounter/new_form.php");
 
                             <?php ($MR==1) ? ($display_AR = "display") : ($display_AR = "nodisplay");?>
                             <div id="LayerVision_MR" class="refraction borderShadow <?php echo $display_AR; ?>">
-                                <span class="closeButton fa  fa-close" id="Close_MR" name="Close_MR"></span>
-                                <i class="closeButton2 fa fa-print" onclick="top.restoreSession();doscript('AR',<?php echo attr($pid); ?>,<?php echo attr($encounter); ?>);return false;"></i></a>
-                                <table id="autorefraction">
-                                    <th colspan=9>Autorefraction Refraction</th>
-                                    <tr>
-                                        <td></td>
-                                        <td><?php echo xlt('Sph'); ?></td>
-                                        <td><?php echo xlt('Cyl'); ?></td>
-                                        <td><?php echo xlt('Axis'); ?></td>
-                                        <td><?php echo xlt('Acuity'); ?></td>
-                                        <td><?php echo xlt('ADD'); ?></td>
-                                        <td><?php echo xlt('Jaeger'); ?></td>
-                                        <td><?php echo xlt('Prism'); ?></td>
-                                    </tr>
-                                    <tr>
-                                        <td><b><?php echo xlt('OD'); ?>:</b></td>
-                                        <td><input type=text id="ARODSPH" name="ARODSPH" value="<?php echo attr($ARODSPH); ?>" tabindex="120"></td>
-                                        <td><input type=text id="ARODCYL" name="ARODCYL" value="<?php echo attr($ARODCYL); ?>" tabindex="121"></td>
-                                        <td><input type=text id="ARODAXIS" name="ARODAXIS" value="<?php echo attr($ARODAXIS); ?>" tabindex="122"></td>
-                                        <td><input type=text id="ARODVA" name="ARODVA" value="<?php echo attr($ARODVA); ?>" tabindex="128"></td>
-                                        <td><input type=text id="ARODADD" name="ARODADD" value="<?php echo attr($ARODADD); ?>" tabindex="126"></td>
-                                        <td><input type=text id="ARNEARODVA" name="ARNEARODVA" value="<?php echo attr($ARNEARODVA); ?>"></td>
-                                        <td><input type=text id="ARODPRISM" name="ARODPRISM" value="<?php echo attr($ARODPRISM); ?>"></td>
-                                    </tr>
-                                     <tr>
-                                        <td><b><?php echo xlt('OS'); ?>:</b></td>
-                                        <td><input type=text id="AROSSPH" name="AROSSPH" value="<?php echo attr($AROSSPH); ?>" tabindex="123"></td>
-                                        <td><input type=text id="AROSCYL" name="AROSCYL" value="<?php echo attr($AROSCYL); ?>" tabindex="124"></td>
-                                        <td><input type=text id="AROSAXIS" name="AROSAXIS" value="<?php echo attr($AROSAXIS); ?>" tabindex="125"></td>
-                                        <td><input type=text id="AROSVA" name="AROSVA" value="<?php echo attr($AROSVA); ?>" tabindex="129"></td>
-                                        <td><input type=text id="AROSADD" name="AROSADD" value="<?php echo attr($AROSADD); ?>" tabindex="127"></td>
-                                        <td><input type=text id="ARNEAROSVA" name="ARNEAROSVA" value="<?php echo attr($ARNEAROSVA); ?>"></td>
-                                        <td><input type=text id="AROSPRISM" name="AROSPRISM" value="<?php echo attr($AROSPRISM); ?>"></td>
-                                    </tr>
-                                    <th colspan="7">Manifest (Dry) Refraction</th>
-                                    <th colspan="2" style="text-align:right;"><a class="fa fa-print" style="margin:0 7;" onclick="top.restoreSession();doscript('MR',<?php echo attr($pid); ?>,<?php echo attr($encounter); ?>);return false;"></a></th>
+                                <span class="closeButton fa  fa-close" id="Close_MR" name="Close_MR" title="<?php echo attr('Close and make this a Preference'); ?>"></span>
+                                <span class="closeButton2 fa fa-print"  style="margin:0 7;" title="<?php echo attr("Dispense Rx"); ?>" onclick="top.restoreSession();doscript('MR',<?php echo attr($pid); ?>,<?php echo attr($encounter); ?>);return false;"></span>
+                                    
+                                <table id="dry_wet_refraction">
+                                    <th colspan="5"><?php echo xlt('Manifest (Dry) Refraction'); ?></th>
+                                    <th NOWRAP colspan="2">
+                                            <input type="checkbox" name="BALANCED" id="Balanced" value="on" <?php if ($BALANCED =='on') echo "checked='checked'"; ?>>
+                                            <label for="Balanced" class="input-helper input-helper--checkbox"><?php echo xlt('Balanced'); ?></label>
+                                    </th>
+                                   
                                     <tr>
                                         <td></td>
                                         <td><?php echo xlt('Sph'); ?></td>
@@ -1254,41 +1235,24 @@ require_once("$incdir/patient_file/encounter/new_form.php");
                                         <td><input type=text id="MROSPRISM"  name="MROSPRISM" value="<?php echo attr($MROSPRISM); ?>"></td>
                                     </tr>
                                 </table>
-                            </div>
+                                <table >
+                                    <th colspan=6 style="padding-top:10px;"><?php echo xlt('Cycloplegic (Wet) Refraction'); ?></th>
+                                     <th colspan=4 style="text-align:right;"><i title="<?php echo attr("Dispense Rx"); ?>" class="fa fa-print" onclick="top.restoreSession();doscript(CR',<?php echo attr($pid); ?>,<?php echo attr($encounter); ?>);return false;"></i></th>
 
-                            <?php ($CR==1)  ? ($display_Cyclo = "display") : ($display_Cyclo = "nodisplay"); ?>
-                            <div id="LayerVision_CR" class="refraction borderShadow <?php echo $display_Cyclo; ?>">
-                                <span class="closeButton fa  fa-close" id="Close_CR" name="Close_CR"></span>
-                                <i class="closeButton2 fa fa-print" onclick="top.restoreSession();doscript('CR',<?php echo attr($pid); ?>,<?php echo attr($encounter); ?>);return false;"></i>
-                                <table id="cycloplegia">
-                                    <th colspan=9><?php echo xlt('Cycloplegic (Wet) Refraction'); ?></th>
                                     <tr>
                                         <td></td>
                                         <td><?php echo xlt('Sph'); ?></td>
                                         <td><?php echo xlt('Cyl'); ?></td>
                                         <td><?php echo xlt('Axis'); ?></td>
                                         <td><?php echo xlt('Acuity'); ?></td>
-                                        <td colspan="1" style="text-align:left;width:60px;">
+                                        <td colspan="1" style="text-align:left;width:75px;">
                                             <input type="radio" name="WETTYPE" id="Flash" value="Flash" <?php if ($WETTYPE == "Flash") echo "checked='checked'"; ?>/>
                                             <label for="Flash" class="input-helper input-helper--checkbox"><?php echo xlt('Flash'); ?></label>
                                         </td>
-                                        <td colspan="2" rowspan="4" style="text-align:left;width:75px;font-size:0.5em;"><b style="text-align:center;width:70px;text-decoration:underline;"><?php echo xlt('Dilated with'); ?>:</b><br />
-                                            <input type="checkbox" class="dil_drug" id="CycloMydril" name="CYCLOMYDRIL" value="Cyclomydril" <?php if ($CYCLOMYDRIL == 'Cyclomydril') echo "checked='checked'"; ?> />
-                                            <label for="CycloMydril" class="input-helper input-helper--checkbox"><?php echo xlt('CycloMydril'); ?></label>
-                                            <br />
-                                            <input type="checkbox" class="dil_drug" id="Tropicamide" name="TROPICAMIDE" value="Tropicamide 2.5%" <?php if ($TROPICAMIDE == 'Tropicamide 2.5%') echo "checked='checked'"; ?> />
-                                            <label for="Tropicamide" class="input-helper input-helper--checkbox"><?php echo xlt('Tropic 2.5%'); ?></label>
-                                            <br />
-                                            <input type="checkbox" class="dil_drug" id="Neo25" name="NEO25" value="Neosynephrine 2.5%"  <?php if ($NEO25 =='Neosynephrine 2.5%') echo "checked='checked'"; ?> />
-                                            <label for="Neo25" class="input-helper input-helper--checkbox"><?php echo xlt('Neo 2.5%'); ?></label>
-                                            <br />
-                                            <input type="checkbox" class="dil_drug" id="Cyclogyl" name="CYCLOGYL" value="Cyclopentolate 1%"  <?php if ($CYCLOGYL == 'Cyclopentolate 1%') echo "checked='checked'"; ?> />
-                                            <label for="Cyclogyl" class="input-helper input-helper--checkbox"><?php echo xlt('Cyclo 1%'); ?></label>
-                                            <br />
-                                            <input type="checkbox" class="dil_drug" id="Atropine" name="ATROPINE" value="Atropine 1%"  <?php if ($ATROPINE == 'Atropine 1%') echo "checked='checked'"; ?> />
-                                            <label for="Atropine" class="input-helper input-helper--checkbox"><?php echo xlt('Atropine 1%'); ?></label>
-                                            <br />
+                                        <td><?php echo xlt('IOP'); ?>
+                                          <input type="hidden" name="IOPPOSTTIME" id="IOPPOSTTIME" value="">
                                         </td>
+                                        
                                     </tr>
                                     <tr>
                                         <td><b><?php echo xlt('OD'); ?>:</b></td>
@@ -1300,6 +1264,7 @@ require_once("$incdir/patient_file/encounter/new_form.php");
                                             <input type="radio" name="WETTYPE" id="Auto" value="Auto" <?php if ($WETTYPE == "Auto") echo "checked='checked'"; ?>>
                                             <label for="Auto" class="input-helper input-helper--checkbox"><?php echo xlt('Auto'); ?></label>
                                         </td>
+                                        <td><input type=text id="ODIOPPOST" name="ODIOPPOST"  value="<?php echo attr($ODIOPPOST); ?>">
                                     </tr>
                                     <tr>
                                         <td><b><?php echo xlt('OS'); ?>:</b></td>
@@ -1311,15 +1276,47 @@ require_once("$incdir/patient_file/encounter/new_form.php");
                                             <input type="radio" name="WETTYPE" id="Manual" value="Manual" <?php if ($WETTYPE == "Manual") echo "checked='checked'"; ?>>
                                             <label for="Manual" class="input-helper input-helper--checkbox"><?php echo xlt('Manual'); ?></label>
                                         </td>
+                                        <td><input type=text id="OSIOPPOST" name="OSIOPPOST"  value="<?php echo attr($OSIOPPOST); ?>"></td>
+                                    </tr>
+                                    
+                                  </table>
+                            </div>
+
+                            <?php ($CR==1)  ? ($display_Cyclo = "display") : ($display_Cyclo = "nodisplay"); ?>
+                            <div id="LayerVision_CR" class="refraction borderShadow <?php echo $display_Cyclo; ?>">
+                                <span title="<?php echo attr('Close and make this a Preference'); ?>" class="closeButton fa  fa-close" id="Close_CR" name="Close_CR"></span>
+                                <i title="<?php echo attr("Dispense Rx"); ?>" class="closeButton2 fa fa-print" onclick="top.restoreSession();doscript('CR',<?php echo attr($pid); ?>,<?php echo attr($encounter); ?>);return false;"></i>
+                                <table id="autorefraction">
+                                  <th colspan=9>Auto Refraction</th>
+                                    <tr>
+                                        <td></td>
+                                        <td><?php echo xlt('Sph'); ?></td>
+                                        <td><?php echo xlt('Cyl'); ?></td>
+                                        <td><?php echo xlt('Axis'); ?></td>
+                                        <td><?php echo xlt('Acuity'); ?></td>
+                                        <td><?php echo xlt('ADD'); ?></td>
+                                        <td><?php echo xlt('Jaeger'); ?></td>
+                                        <td><?php echo xlt('Prism'); ?></td>
                                     </tr>
                                     <tr>
-                                        <td colspan="5" style="vertical-align:text-top;">
-                                            <span class="DIL_RISKS nodisplay"><i class="fa fa-check"></i>Dilation order given<br /><i class="fa fa-check"></i>Dilated/risks reviewed</span>
-                                        </td>
-                                        <td colspan="1" style="text-align:left;">
-                                            <input type="checkbox" name="BALANCED" id="Balanced" value="on" <?php if ($BALANCED =='on') echo "checked='checked'"; ?>>
-                                            <label for="Balanced" class="input-helper input-helper--checkbox"><?php echo xlt('Balanced'); ?></label>
-                                        </td>
+                                        <td><b><?php echo xlt('OD'); ?>:</b></td>
+                                        <td><input type=text id="ARODSPH" name="ARODSPH" value="<?php echo attr($ARODSPH); ?>" tabindex="120"></td>
+                                        <td><input type=text id="ARODCYL" name="ARODCYL" value="<?php echo attr($ARODCYL); ?>" tabindex="121"></td>
+                                        <td><input type=text id="ARODAXIS" name="ARODAXIS" value="<?php echo attr($ARODAXIS); ?>" tabindex="122"></td>
+                                        <td><input type=text id="ARODVA" name="ARODVA" value="<?php echo attr($ARODVA); ?>" tabindex="128"></td>
+                                        <td><input type=text id="ARODADD" name="ARODADD" value="<?php echo attr($ARODADD); ?>" tabindex="126"></td>
+                                        <td><input type=text id="ARNEARODVA" name="ARNEARODVA" value="<?php echo attr($ARNEARODVA); ?>"></td>
+                                        <td><input type=text id="ARODPRISM" name="ARODPRISM" value="<?php echo attr($ARODPRISM); ?>"></td>
+                                    </tr>
+                                     <tr>
+                                        <td><b><?php echo xlt('OS'); ?>:</b></td>
+                                        <td><input type=text id="AROSSPH" name="AROSSPH" value="<?php echo attr($AROSSPH); ?>" tabindex="123"></td>
+                                        <td><input type=text id="AROSCYL" name="AROSCYL" value="<?php echo attr($AROSCYL); ?>" tabindex="124"></td>
+                                        <td><input type=text id="AROSAXIS" name="AROSAXIS" value="<?php echo attr($AROSAXIS); ?>" tabindex="125"></td>
+                                        <td><input type=text id="AROSVA" name="AROSVA" value="<?php echo attr($AROSVA); ?>" tabindex="129"></td>
+                                        <td><input type=text id="AROSADD" name="AROSADD" value="<?php echo attr($AROSADD); ?>" tabindex="127"></td>
+                                        <td><input type=text id="ARNEAROSVA" name="ARNEAROSVA" value="<?php echo attr($ARNEAROSVA); ?>"></td>
+                                        <td><input type=text id="AROSPRISM" name="AROSPRISM" value="<?php echo attr($AROSPRISM); ?>"></td>
                                     </tr>
                                     <tr>
                                         <td colspan="2" style="vertical-align:bottom;"><b><?php echo xlt('Comments'); ?>:</b></td>
@@ -1335,8 +1332,8 @@ require_once("$incdir/patient_file/encounter/new_form.php");
 
                             <?php ($CTL==1) ? ($display_CTL = "display") : ($display_CTL = "nodisplay"); ?>
                             <div id="LayerVision_CTL" class="refraction borderShadow <?php echo $display_CTL; ?>">
-                                <span class="closeButton fa  fa-close" id="Close_CTL" name="Close_CTL"></span>
-                                <i class="closeButton2 fa fa-print" onclick="top.restoreSession();doscript('CTL',<?php echo attr($pid); ?>,<?php echo attr($encounter); ?>);return false;"></i>
+                                <span title="<?php echo attr("Dispense Rx"); ?>" title="<?php echo attr('Close and make this a Preference'); ?>" class="closeButton fa  fa-close" id="Close_CTL" name="Close_CTL"></span>
+                                <i title="<?php echo attr("Dispense Rx"); ?>" class="closeButton2 fa fa-print" onclick="top.restoreSession();doscript('CTL',<?php echo attr($pid); ?>,<?php echo attr($encounter); ?>);return false;"></i>
                                 <table id="CTL" style="width:100%;">
                                     <th colspan="9"><?php echo xlt('Contact Lens Refraction'); ?></th>
                                     <tr>
@@ -1378,6 +1375,7 @@ require_once("$incdir/patient_file/encounter/new_form.php");
                                                         <td><b><?php echo xlt('OS'); ?>:</b></td>
                                                         <td>
                                                             <select id="CTLMANUFACTUREROS" name="CTLMANUFACTUREROS">
+                                                              <!-- gotta generate this from a list -->
                                                                 <option></option>
                                                                 <option value="BL"><?php echo xlt('Bausch and Lomb'); ?></option>
                                                                 <option value="JNJ"><?php echo xlt('JNJ'); ?></option>
@@ -1439,7 +1437,7 @@ require_once("$incdir/patient_file/encounter/new_form.php");
 
                             <?php ($ADDITIONAL==1) ? ($display_Add = "display") : ($display_Add = "nodisplay"); ?>
                             <div id="LayerVision_ADDITIONAL" class="refraction borderShadow <?php echo $display_Add; ?>">
-                                <span class="closeButton fa  fa-close" id="Close_ADDITIONAL" name="Close_ADDITIONAL"></span>
+                                <span title="<?php echo attr("Dispense Rx"); ?>" title="<?php echo attr('Close and make this a Preference'); ?>" class="closeButton fa  fa-close" id="Close_ADDITIONAL" name="Close_ADDITIONAL"></span>
 
                                 <table id="Additional">
                                     <th colspan=9><?php echo xlt('Additional Data Points'); ?></th>
@@ -1506,7 +1504,7 @@ require_once("$incdir/patient_file/encounter/new_form.php");
 
                             <?php ($VAX==1) ? ($display_Add = "display") : ($display_Add = "nodisplay"); ?>
                             <div id="LayerVision_VAX" class="refraction borderShadow <?php echo $display_Add; ?>">
-                                <span class="closeButton fa  fa-close" id="Close_ADDITIONAL_VISION" name="Close_VAX"></span> 
+                                <span title="<?php echo attr('Close and make this a Preference'); ?>" class="closeButton fa  fa-close" id="Close_ADDITIONAL_VISION" name="Close_VAX"></span> 
                                 <table id="Additional_VA">
                                     <th colspan="9"><?php echo xlt('Visual Acuity'); ?></th>
                                     <tr><td></td>
@@ -1842,7 +1840,7 @@ require_once("$incdir/patient_file/encounter/new_form.php");
                               echo $episode;
                           ?>
                         </table>
-                          <table style="text-align:center;font-size:0.7em;font-weight:600;width:160px;"> 
+                          <table style="text-align:center;font-size:0.7em;font-weight:600;width:170px;padding-left:5px;"> 
                               <tr >
                                   <td></td><td><?php echo xlt('R'); ?></td><td><?php echo xlt('L'); ?></td>
                               </tr>
@@ -1887,15 +1885,39 @@ require_once("$incdir/patient_file/encounter/new_form.php");
                                     <div class="kb kb_center">LTBUT</div></td>
                               </tr>
                               <tr style="text-align:center;">
-                                  <td style="width:59px;text-align:right;">
-                                  &nbsp;&nbsp;
-                                  </td>
-                                  <td style="width:45px;">
-                                    &nbsp;
-                                  </td>
-                                  <td style="width:45px;">
-                                    &nbsp;
-                                  </td>
+                                <td colspan="3" rowspan="4" style="text-align:left;width:75px;padding:15px;font-size:1.0em;"><b style="text-align:center;width:70px;text-decoration:underline;"><?php echo xlt('Dilated with'); ?>:</b><br />
+                                  <table style="font-size:1.0em;">
+                                    <tr>
+                                      <td>
+                                            <input type="checkbox" class="dil_drug" id="CycloMydril" name="CYCLOMYDRIL" value="Cyclomydril" <?php if ($CYCLOMYDRIL == 'Cyclomydril') echo "checked='checked'"; ?> />
+                                            <label for="CycloMydril" class="input-helper input-helper--checkbox"><?php echo xlt('CycloMydril'); ?></label>
+                                      </td>
+                                      <td>        
+                                            <input type="checkbox" class="dil_drug" id="Tropicamide" style="left:150px;" name="TROPICAMIDE" value="Tropicamide 2.5%" <?php if ($TROPICAMIDE == 'Tropicamide 2.5%') echo "checked='checked'"; ?> />
+                                            <label for="Tropicamide" class="input-helper input-helper--checkbox"><?php echo xlt('Tropic 2.5%'); ?></label>
+                                      </td>
+                                    </tr>
+                                    <tr>
+                                      <td>        
+                                            <input type="checkbox" class="dil_drug" id="Neo25" name="NEO25" value="Neosynephrine 2.5%"  <?php if ($NEO25 =='Neosynephrine 2.5%') echo "checked='checked'"; ?> />
+                                            <label for="Neo25" class="input-helper input-helper--checkbox"><?php echo xlt('Neo 2.5%'); ?></label>
+                                      </td>
+                                      <td>        
+                                            <input type="checkbox" class="dil_drug" id="Neo10" name="NEO10" value="Neosynephrine 10%"  <?php if ($NEO10 =='Neosynephrine 10%') echo "checked='checked'"; ?> />
+                                            <label for="Neo10" class="input-helper input-helper--checkbox"><?php echo xlt('Neo 10%'); ?></label>
+                                      </td>
+                                    </tr>
+                                    <tr>
+                                      <td>        
+                                            <input type="checkbox" class="dil_drug" id="Cyclogyl" style="left:150px;" name="CYCLOGYL" value="Cyclopentolate 1%"  <?php if ($CYCLOGYL == 'Cyclopentolate 1%') echo "checked='checked'"; ?> />
+                                            <label for="Cyclogyl" class="input-helper input-helper--checkbox"><?php echo xlt('Cyclo 1%'); ?></label>
+                                      </td>
+                                      <td>      <input type="checkbox" class="dil_drug" id="Atropine" name="ATROPINE" value="Atropine 1%"  <?php if ($ATROPINE == 'Atropine 1%') echo "checked='checked'"; ?> />
+                                            <label for="Atropine" class="input-helper input-helper--checkbox"><?php echo xlt('Atropine 1%'); ?></label>
+                                      </td>
+                                    </tr>
+                                  </table>
+                                </td>
                               </tr>
                           </table>
                       </div>
@@ -2060,7 +2082,7 @@ require_once("$incdir/patient_file/encounter/new_form.php");
                                       
                                         ?>
                                         <input style="margin-left:100px;" type="checkbox" id="DIL_RISKS" name="DIL_RISKS" value="on" <?php if ($DIL_RISKS =='on') echo "checked='checked'"; ?>>
-                                            <label for="DIL_RISKS" class="input-helper input-helper--checkbox"><?php echo xlt('Dilation risks reviewed'); ?></label>
+                                            <label for="DIL_RISKS" class="input-helper input-helper--checkbox"><?php echo xlt('Dilation orders/risks reviewed'); ?></label>
                                         <?
                                       
                                       ?><br />
@@ -3208,5 +3230,3 @@ $.panelslider.close();
 
   </body>   
 </html>
-
-

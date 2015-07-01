@@ -1061,6 +1061,12 @@ height: 18px;
         top:8px;
         right:24px;
     }
+    .closeButton3 {
+        display:inline-block;
+        position:absolute;
+        top:8px;
+        right:44px;
+    }
     .closeButton {
         display:inline-block;
         float:right;

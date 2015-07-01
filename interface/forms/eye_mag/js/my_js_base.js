@@ -913,6 +913,13 @@ $(document).ready(function() {
                                                                    (appendix == ".a") ? ($('#'+field).val($('#'+field).val() +', '+text)) : $('#'+field).val(text);
                                                                    $('#RUL').css("background-color","#F0F8FF");
                                                                    $('#LUL').css("background-color","#F0F8FF");
+                                                                   } else if (field == 'BAD') {
+                                                                   field = "RAD";
+                                                                   (appendix == ".a") ? ($('#'+field).val($('#'+field).val() +', '+text)) : $('#'+field).val(text);
+                                                                   field = "LAD";
+                                                                   (appendix == ".a") ? ($('#'+field).val($('#'+field).val() +', '+text)) : $('#'+field).val(text);
+                                                                   $('#RAD').css("background-color","#F0F8FF");
+                                                                   $('#LAD').css("background-color","#F0F8FF");
                                                                    } else if ((field == 'FH')||(field == "BB")) {
                                                                    field = "RBROW";
                                                                    (appendix == ".a") ? ($('#'+field).val($('#'+field).val() +', '+text)) : $('#'+field).val(text);

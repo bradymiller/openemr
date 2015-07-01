@@ -1748,9 +1748,9 @@ function build_PMSFH($pid) {
     }
     
     //  Drag in Marital status and Employment history to this Social Hx area.
-    $patient = getPatientData($thispid, "*");
+    $patient = getPatientData($pid, "*");
     $PMSFH['SOCH']['marital_status']['short_title']="Marital";
-    $PMSFH['SOCH']['marital_status']['display']=$patient['marital_status'];
+    $PMSFH['SOCH']['marital_status']['display']=$patient['status'];
     $PMSFH['SOCH']['occupation']['short_title']="Occupation";
     $PMSFH['SOCH']['occupation']['display']=$patient['occupation'];
 
@@ -1835,6 +1835,14 @@ function build_PMSFH($pid) {
     $PMSFH['FH']['amd']['short_title'] = "AMD";
     $PMSFH['FH']['RD']['display'] = (substr($result1['usertext14'],0,10));
     $PMSFH['FH']['RD']['short_title'] = "RD";
+    $PMSFH['FH']['blindness']['short_title'] = "Blindness";
+    $PMSFH['FH']['blindness']['display'] = (substr($result1['usertext15'],0,10));
+    $PMSFH['FH']['amblyopia']['short_title'] = "Amblyopia";
+    $PMSFH['FH']['amblyopia']['display'] = (substr($result1['usertext16'],0,10));
+    $PMSFH['FH']['strabismus']['short_title'] = "Strabismus";
+    $PMSFH['FH']['strabismus']['display'] = (substr($result1['usertext17'],0,10));
+    $PMSFH['FH']['other']['short_title'] = "Other";
+    $PMSFH['FH']['other']['display'] = (substr($result1['usertext18'],0,10));
 
     //last_retinal    last_hemoglobin     
     //   $PMSFH['SOCH'][$field_id]['resnote'] = nl2br(htmlspecialchars($currvalue,ENT_NOQUOTES));
@@ -1965,17 +1973,19 @@ function show_PMSFH_panel($PMSFH) {
       onclick="alter_issue('0','SOCH','');" style="text-align:right;font-size:8px;">Add</span>
       <br />
       <?php
-      if (count($PMSFH[0]['SOCH']) > '0') {
         foreach ($PMSFH[0]['SOCH'] as $k => $item) {
+            if ($item['display']) {
             echo "<span name='QP_PMH_".$item['rowid']."' href='#PMH_anchor' id='QP_PMH_".$item['rowid']."' 
             onclick=\"alter_issue('0','SOCH','');\">".$item['short_title'].": ".$item['display']."</span><br />";
+            }
+            $mention_SOCH++;
         }
-      } else {
-        ?>
-        <span href="#PMH_anchor" 
-        onclick="alter_issue('0','SOCH','');" style="text-align:right;">Not documented</span><br />
-        <?
-      }
+        if (!$mention_SOCH) {
+            ?>
+            <span href="#PMH_anchor" 
+            onclick="alter_issue('0','SOCH','');" style="text-align:right;">Negative</span><br />
+            <?
+        }
 
         //<!-- Family History -->
       echo "<br /><span class='panel_title'>FH:</span>";
@@ -1983,17 +1993,19 @@ function show_PMSFH_panel($PMSFH) {
       onclick="alter_issue('0','FH','');" style="text-align:right;font-size:8px;">Add</span>
       <br />
       <?php
-      if (count($PMSFH[0]['FH']) > '0') {
         foreach ($PMSFH[0]['FH'] as $item) {
-          echo "<span name='QP_PMH_".$item['rowid']."' href='#PMH_anchor' id='QP_PMH_".$item['rowid']."' 
-          onclick=\"alter_issue('".$item['rowid']."','".$item['row_type']."');\">".$item['short_title'].": ".$item['display']."</span><br />";
+            if ($item['display'] > '') {
+                echo "<span name='QP_PMH_".$item['rowid']."' href='#PMH_anchor' id='QP_PMH_".$item['rowid']."' 
+                onclick=\"alter_issue('".$item['rowid']."','".$item['row_type']."');\">".$item['short_title'].": ".$item['display']."</span><br />";
+                $mention_FH++;
+            }
         }
-      } else {
-        ?>
-        <span href="#PMH_anchor" 
-        onclick="alter_issue('0','FH','');" style="text-align:right;">TBD</span><br />
-        <?
-      }
+        if (!$mention_FH) {
+            ?>
+            <span href="#PMH_anchor" 
+            onclick="alter_issue('0','FH','');" style="text-align:right;">Negative</span><br />
+            <?
+        }
 
       echo "<br /><span class='panel_title'>ROS:</span>";
       ?><span class="top-right btn-sm" href="#PMH_anchor" 
@@ -2020,7 +2032,6 @@ function show_PMSFH_report($PMSFH) {
       <?php
       //<!-- POH -->
       echo "<span class='panel_title'>POH:</span>";
-      //nice idea to put a TEXT-DRAW-DB selector up here.. ;)
       ?>
       <br />
       <?php
@@ -2091,42 +2102,46 @@ function show_PMSFH_report($PMSFH) {
       ?>
       <br />
       <?php
-      if (count($PMSFH[0]['SOCH']) > '0') {
         foreach ($PMSFH[0]['SOCH'] as $k => $item) {
+            if ($item['display']) {
             echo $item['short_title'].": ".$item['display']."<br />";
+            $mention_PSOCH++;
+            }
         }
-      } else {
+      if (!$PSOCH) {
         ?>
-        Not documented<br />
+        Negative<br />
         <?
       }
 
       echo "<br /><span class='panel_title'>FH:</span>";
       ?>
       <br />
-      <?php
-      if (count($PMSFH[0]['FH']) > '0') {
+        <?php
         foreach ($PMSFH[0]['FH'] as $item) {
-          echo $item['short_title'].": ".$item['display']."<br />";
+            if ($item['display']) {
+                echo $item['short_title'].": ".$item['display']."<br />";
+                $mention_FH++;
+            }
         }
-      } else {
-        ?>
-        In development<br />
-        <?
-      }
+        if (!$mention_FH) {
+            echo "Negative";
+        }
 
-      echo "<br /><span class='panel_title'>ROS:</span>";
-      ?><br />
-      <?php
-      if (count($PMSFH[0]['ROS']) > '0') {
+        echo "<br /><br /><span class='panel_title'>ROS:</span>";
+        ?><br />
+        <?php
+        $mentions='';
         foreach ($PMSFH[0]['ROS'] as $item) {
-          echo $item['title']."<br />";
+            if ($item['display']) {
+                echo $item['short_title'].": ".$item['display']."<br />";
+                $mentions++;
+            }
         }
-      } else {
-        ?>
-        In development<br />
-        <?
-      }
+        if ($mentions < '1') {
+            echo "Negative";
+        }
+      
 }
 
 /**
@@ -2599,12 +2614,12 @@ function copy_forward($zone,$copy_from,$copy_to,$pid) {
     }}
 
 /**
-*  This function builds an array of documents for this patient ($pid).
-*  We first list all the categories this practice has created by name and by category_id  
-*  
-*  Each document info from documents table is added to these as arrays
-*  
-*/
+  *  This function builds an array of documents for this patient ($pid).
+  *  We first list all the categories this practice has created by name and by category_id  
+  *  
+  *  Each document info from documents table is added to these as arrays
+  *  
+  */
 function document_engine($pid) {
     $sql1 =  sqlStatement("Select * from categories");
     while ($row1 = sqlFetchArray($sql1)) {
@@ -2708,8 +2723,7 @@ function display($pid,$encounter,$category_value) {
     //http://www.oculoplasticsllc.com/openemr/controller.php?document&view&patient_id=1&doc_id=411&
         $episode .= '</td></tr>';
         $i++;
-    }
-   
+    }  
     return array($documents,$episode);
 }
 
@@ -2966,7 +2980,7 @@ function menu_overhaul_left($pid,$encounter) {
      */
     list($documents) = document_engine($pid);
         ?>    
-    <div id="left_menu" name="left_menu" class="borderShadow" style="width:280px;position:relative;margin-left:18px;text-align:center;padding:5px 0px 5px 5px;">
+    <div id="left_menu" name="left_menu" class="borderShadow col-sm-3" style="position:relative;margin-left:18px;text-align:center;padding:5px 0px 5px 5px;">
             <?
             //if the patient has a photograph, use it else use generic avitar thing.
         if ($documents['docs_in_name']['Patient Photograph'][0]['id']) {
@@ -2981,8 +2995,10 @@ function menu_overhaul_left($pid,$encounter) {
                 <?php
         }
         ?>
-        <div style="position:relative;float:left;margin:auto 5px;width:140px;top:0px;right:0px;">
-                <table style="position:relative;float:left;margin:10px 15px;width:140px;top:0px;right:0px;font-size:1.0em;">
+        
+        
+        <div style="position:relative;float:left;margin:auto 5px;width:140px;top:0px;">
+            <table style="position:relative;float:left;margin:10px 15px;width:140px;top:0px;right:0px;font-size:12px;">
                     <tr>
                         <td class="right" >
                             <?php 
@@ -3015,13 +3031,25 @@ function menu_overhaul_left($pid,$encounter) {
                                         global $visit_date;
                                         echo "<tr><td class='right'><b>".xlt('Date').":</b></td><td>&nbsp;".$visit_date."</td></tr>";
                                     ?>
-                            </form>
+                           </form>
                         </td>
                     </tr>
-                </table>
+            </table>
         </div>
-    </div>  
-        <br />
+     </div>
+    <div id="left_menu2" name="left_menu2" class="borderShadow col-sm-3" 
+    style="width:280px;float:left;margin-left:18px;text-align:center;padding:5px 0px 5px 5px;">
+    <?php 
+    $query = "Select * from users where id =?";
+    $prov = sqlquery($query,array($prov['providerID']));
+    $provider = $prov['fname']." ".$prov['lname'];
+    ?>
+            <table style="font-size:12px;">
+                <tr><td class="right"><b>PCP:</b></td><td><?php echo $provider; ?></td></tr>
+                <tr><td class="right"><b>Referred By:</b></td><td><?php echo $pat_data['ref_providerID']; ?></td></tr>
+            </table>
+        </div>
+         <br />
 
     <?php
 }
@@ -3050,7 +3078,9 @@ function menu_overhaul_bottom($pid,$encounter) {
 }
 
 function undo() {
-    /**  In order to have an undo feature, we need to keep copies of the old records - not last visit but last save.
+    /**  
+      *  CURRENTLY JAVASCRIPT implementation 6/27/15
+      *  In order to have an undo feature, we need to keep copies of the old records - not last visit but last save.
       *  And how should we do that?  The form_eye_mag is the official current record.
       *  SERVER SIDE: Create another table form_eye_mag_undo.  Each save to form_eye_mag is also saved to this table, incrementally.
       *  CLIENT SIDE: Each snapshot of text values sent to the server during a save are stored in an inmemory array.
