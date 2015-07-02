@@ -8,6 +8,18 @@
 		background-color: #6692d1;
 	    }
 
+    .logo-left{ 
+	float: left;
+}
+
+   .logo-center{ 
+    text-align: center;
+}
+
+    .logo-right{ 
+    float: right;
+}
+        
 	input {
 	    -webkit-border-radius: 3px;
 	    -moz-border-radius: 3px;
@@ -48,10 +60,11 @@
 	.heading {
 	    position: absolute;
 	    top: -60px;
-	    margin-left: -21px;
-	    color: gray;
+	    margin-left: 35px;
+	    color: #0c2858;
 	    font-style: italic;
 	}
+
 	
 	#wrapper {
 	    width: 400px;
@@ -74,10 +87,17 @@
 		left: 50%;
 		margin-left: -200px;
 	    }
-	    
+
 	    .lefttop {
+        left: 50%;
 		margin-left: 75px;
+        top: 50%;
 		margin-top: 75px;
+	    }
+	    
+	    .leftwrapper {
+		margin-top: 200px;
+		margin-left: 400px;
 	    }
 	
 	#gradient  {

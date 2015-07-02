@@ -726,7 +726,7 @@ $GLOBALS_METADATA = array(
 		'1',                              // default = true
 		xl('Enable amendments feature')
 	),
-	
+
     'use_custom_daysheet' => array(
       xl('Use Custom End of Day Report'),
       array(
@@ -1635,6 +1635,55 @@ $GLOBALS_METADATA = array(
       'text',                           // data type
       'https://your_web_site.com/openemr/patients',
       xl('Website link for the Onsite Patient Portal.')
+    ),
+    
+    'portal_onsite_appt_modify' => array(
+      xl('Allow Patient Modification of Appointments'),
+      'bool',                           // data type
+      '0',
+      xl('Allow Patient Modification of Appointments in Onsite Patient Portal.')
+    ),
+    
+    'portal_start_days' => array(
+      xl('Number of Days from today to start Patients choice of Appointments'),
+      'num',                           // data type
+      '14',                             // Default
+      xl('Number of Days from today to start Patients choice of Appointments in Onsite Patient Portal.')
+    ),
+    
+    'portal_search_days' => array(
+      xl('Number of Days for Patient choice of Appointments'),
+      'num',                           // data type
+      '7',                             // Default
+      xl('Number of Days for Patient choice of Appointments in Onsite Patient Portal.')
+    ),
+    
+    'portal_first_dow' => array(
+      xl('Number for the first Day of the Work Week for Patient Portal'),
+      'num',                           // data type
+      '0',                             // Default
+      xl('Number for the first Day of the Work Week for Patient Portal. Zero is Sunday. ')
+    ),
+    
+    'portal_last_dow' => array(
+      xl('Number for the Last Day of the Work Week for Patient Portal'),
+      'num',                           // data type
+      '6',                             // Default
+      xl('Number for the Last Day of the Work Week for Patient Portal. Six is Saturday. ')
+    ),
+    
+    'portal_omit_dow' => array(
+      xl('Number for the Day of the Work Week to Omit from Patient Portal'),
+      'num',                           // data type
+      '3',                             // Default
+      xl('Number for the Day of the Work Week to Omit from Patient Portal. Three is Wednesday. ')
+    ),
+   
+    'portal_default_status' => array(
+      xl('Default Appointment Status from Patient Portal'),
+      'text',                           // data type
+      '-',                             // Default
+      xl('Default Appointment Status from Patient Portal.')
     ),
     
     'portal_offsite_enable' => array(

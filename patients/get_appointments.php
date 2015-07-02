@@ -30,7 +30,7 @@
 			 
 			 while($row = sqlFetchArray($res)) {
 			  $count++;
-			  $dayname = xl(date("l", strtotime($row['pc_eventDate'])));
+			  $dayname = xlt(date("l", strtotime($row['pc_eventDate'])));
 			  $dispampm = "am";
 			  $disphour = substr($row['pc_startTime'], 0, 2) + 0;
 			  $dispmin  = substr($row['pc_startTime'], 3, 2);
@@ -41,15 +41,15 @@
 			  if ($row['pc_hometext'] != "") {
 				$etitle = 'Comments'.": ".$row['pc_hometext']."\r\n";
 			  } else {
-				$etitle = "";
+				$etitle = "Patient Scheduled via Portal";
 			  }
               if ($GLOBALS['portal_onsite_appt_modify']) {
-                echo "<a href='add_edit_event_user.php?eid=" . htmlspecialchars($row['pc_eid'],ENT_QUOTES) .
-		  "' class='edit_event iframe' title='" . htmlspecialchars($etitle,ENT_QUOTES) . "'>";
+                echo "<a href='add_edit_event_user.php?eid=" . attr($row['pc_eid']) .
+		  "' class='edit_event iframe' title='" . text($etitle) . "'>";
               }
-			  echo "<b>" . htmlspecialchars($dayname . ", " . $row['pc_eventDate'],ENT_NOQUOTES) . "</b><br>";
-			  echo htmlspecialchars("$disphour:$dispmin " . $dispampm . " " . $row['pc_catname'],ENT_NOQUOTES) . "<br>\n";
-			  echo htmlspecialchars($row['fname'] . " " . $row['lname'],ENT_NOQUOTES);
+			  echo "<b>" . attr($dayname . ", " . $row['pc_eventDate']) . "</b><br>";
+			  echo attr("$disphour:$dispmin " . $dispampm . " " . $row['pc_catname']) . "<br>\n";
+			  echo attr($row['fname'] . " " . $row['lname']);
                           if ($GLOBALS['portal_onsite_appt_modify']) {
                             echo "</a><br>\n";
                           }
@@ -58,9 +58,9 @@
                           }
 			 }
 			 if (isset($res) && $res != null) {
-				if ( $count < 1 ) { echo "&nbsp;&nbsp;" . htmlspecialchars('None',ENT_NOQUOTES); }
+				if ( $count < 1 ) { echo "&nbsp;&nbsp;" . xlt('None'); }
 			 }
 	} else { // if no appts
-		echo htmlspecialchars( xl('No Appointments'),ENT_NOQUOTES);
+		echo xlt('No Appointments');
 	}
 ?>

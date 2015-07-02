@@ -27,7 +27,7 @@
     ini_set("error_log",E_ERROR || ~E_NOTICE);
     //exit if portal is turned off
     if ( !(isset($GLOBALS['portal_onsite_enable'])) || !($GLOBALS['portal_onsite_enable']) ) {
-      echo htmlspecialchars( xl('Patient Portal is turned off'), ENT_NOQUOTES);
+      echo xlt('Patient Portal is turned off');
       exit;
     }
 
@@ -84,7 +84,7 @@
         }
       }
       else {
-        $hiddenLanguageField = "<input type='hidden' name='languageChoice' value='".htmlspecialchars($defaultLangID,ENT_QUOTES)."' />\n";
+        $hiddenLanguageField = "<input type='hidden' name='languageChoice' value='". attr($defaultLangID)."' />\n";
       }
     }
 
@@ -104,7 +104,7 @@
         function process() {
             
             if (!(validate())) {
-                alert ('<?php echo addslashes( xl('Field(s) are missing!') ); ?>');
+                alert ('<?php echo addslashes( xlt('Field(s) are missing!') ); ?>');
                 return false;
             }
         }
@@ -123,15 +123,15 @@
         function process_new_pass() {
 
             if (!(validate_new_pass())) {
-                alert ('<?php echo addslashes( xl('Field(s) are missing!') ); ?>');
+                alert ('<?php echo addslashes( xlt('Field(s) are missing!') ); ?>');
                 return false;
             }
             if (document.getElementById('pass_new').value != document.getElementById('pass_new_confirm').value) {
-                alert ('<?php echo addslashes( xl('The new password fields are not the same.') ); ?>');
+                alert ('<?php echo addslashes( xlt('The new password fields are not the same.') ); ?>');
                 return false;
             }
             if (document.getElementById('pass').value == document.getElementById('pass_new').value) {
-                alert ('<?php echo addslashes( xl('The new password can not be the same as the current password.') ); ?>');
+                alert ('<?php echo addslashes( xlt('The new password can not be the same as the current password.') ); ?>');
                 return false;
             }
         }
@@ -178,50 +178,50 @@
         $_SESSION['password_update']=1;
         ?>
       <div id="wrapper" class="centerwrapper">
-        <h2 class="title"><?php echo htmlspecialchars( xl('Please Enter a New Password'), ENT_NOQUOTES); ?></h2>
+        <h2 class="title"><?php echo xlt('Please Enter a New Password'); ?></h2>
         <form action="get_patient_info.php" method="POST" onsubmit="return process_new_pass()" >
             <table>
                 <tr>
-                    <td class="algnRight"><?php echo htmlspecialchars( xl('User Name'), ENT_NOQUOTES); ?></td>
+                    <td class="algnRight"><?php echo xlt('User Name'); ?></td>
                     <td><input name="uname" id="uname" type="text" autocomplete="off" value="<?php echo attr($_SESSION['portal_username']); ?>"/></td>
                 </tr>
                 <tr>
-                    <td class="algnRight"><?php echo htmlspecialchars( xl('Current Password'), ENT_NOQUOTES);?></>
+                    <td class="algnRight"><?php echo xlt('Current Password');?></>
                     <td>
                         <input name="pass" id="pass" type="password" autocomplete="off" />
                     </td>
                 </tr>
                 <tr>
-                    <td class="algnRight"><?php echo htmlspecialchars( xl('New Password'), ENT_NOQUOTES);?></>
+                    <td class="algnRight"><?php echo xlt('New Password');?></>
                     <td>
                         <input name="pass_new" id="pass_new" type="password" />
                     </td>
                 </tr>
                 <tr>
-                    <td class="algnRight"><?php echo htmlspecialchars( xl('Confirm New Password'), ENT_NOQUOTES);?></>
+                    <td class="algnRight"><?php echo xlt('Confirm New Password');?></>
                     <td>
                         <input name="pass_new_confirm" id="pass_new_confirm" type="password" />
                     </td>
                 </tr>
                 <tr>
-                    <td colspan=2><br><center><input type="submit" value="<?php echo htmlspecialchars( xl('Log In'), ENT_QUOTES);?>" /></center></td>
+                    <td colspan=2><br><center><input type="submit" value="<?php echo xlt('Log In');?>" /></center></td>
                 </tr>
             </table>
         </form>
 
-        <div class="copyright"><?php echo htmlspecialchars( xl('Powered by'), ENT_NOQUOTES);?> OpenEMR</div>
+        <div class="copyright"><?php echo xlt('Powered by');?> OpenEMR</div>
       </div>
     <?php } else { ?>
       <div id="wrapper" class="centerwrapper">
-	<h2 class="title"><?php echo htmlspecialchars( xl('Patient Portal Login'), ENT_NOQUOTES); ?></h2>
+	<h2 class="title"><?php echo xlt('Patient Portal Login'); ?></h2>
 	<form action="get_patient_info.php" method="POST" onsubmit="return process()" >
 	    <table>
 		<tr>
-		    <td class="algnRight"><?php echo htmlspecialchars( xl('User Name'), ENT_NOQUOTES); ?></td>
+		    <td class="algnRight"><?php echo xlt('User Name'); ?></td>
 		    <td><input name="uname" id="uname" type="text" autocomplete="off" /></td>
 		</tr>
 		<tr>
-		    <td class="algnRight"><?php echo htmlspecialchars( xl('Password'), ENT_NOQUOTES);?></>
+		    <td class="algnLeft"><?php echo xlt('Password');?>  </td>
 		    <td>
 			<input name="pass" id="pass" type="password" autocomplete="off" />
 		    </td>
@@ -230,20 +230,20 @@
                 <?php if ($GLOBALS['language_menu_login']) { ?>
                  <?php if (count($result3) != 1) { ?>
                   <tr>
-                    <td><span class="text"><?php echo htmlspecialchars( xl('Language'), ENT_NOQUOTES); ?></span></td>
+                    <td><span class="text"><?php echo xlt('Language'); ?></span></td>
                     <td>
                         <select name=languageChoice size="1">
                             <?php
-                            echo "<option selected='selected' value='".htmlspecialchars($defaultLangID,ENT_QUOTES)."'>" . htmlspecialchars( xl('Default') . " - " . xl($defaultLangName), ENT_NOQUOTES) . "</option>\n";
+                            echo "<option selected='selected' value='". attr($defaultLangID)."'>" . xlt('Default') . " - " . attr($defaultLangName) . "</option>\n";
                             foreach ($result3 as $iter) {
                                 if ($GLOBALS['language_menu_showall']) {
                                     if ( !$GLOBALS['allow_debug_language'] && $iter[lang_description] == 'dummy') continue; // skip the dummy language
-                                    echo "<option value='".htmlspecialchars($iter[lang_id],ENT_QUOTES)."'>".htmlspecialchars($iter[trans_lang_description],ENT_NOQUOTES)."</option>\n";
+                                    echo "<option value='". attr($iter[lang_id])."'>". attr($iter[trans_lang_description])."</option>\n";
                                 }
                                 else {
                                     if (in_array($iter[lang_description], $GLOBALS['language_menu_show'])) {
                                         if ( !$GLOBALS['allow_debug_language'] && $iter[lang_description] == 'dummy') continue; // skip the dummy language
-                                        echo "<option value='".htmlspecialchars($iter[lang_id],ENT_QUOTES)."'>".htmlspecialchars($iter[trans_lang_description],ENT_NOQUOTES)."</option>\n";
+                                        echo "<option value='". attr($iter[lang_id])."'>". attr($iter[trans_lang_description])."</option>\n";
                                     }
                                 }
                             }
@@ -254,13 +254,13 @@
                 <?php }} ?>
 
 		<tr>
-		    <td colspan=2><br><center><input type="submit" value="<?php echo htmlspecialchars( xl('Log In'), ENT_QUOTES);?>" /></center></td>
+		    <td colspan=2><br><center><input type="submit" value="<?php echo xlt('Log In');?>" /></center></td>
 		</tr>
 	    </table>
             <?php if (!(empty($hiddenLanguageField))) echo $hiddenLanguageField; ?>
 	</form>
     
-        <div class="copyright"><?php echo htmlspecialchars( xl('Powered by'), ENT_NOQUOTES);?> OpenEMR</div>
+        <div class="copyright"><?php echo xlt('Powered by');?> OpenEMR</div>
       </div>
     <?php } ?>
 
@@ -272,8 +272,8 @@
 <?php // if something went wrong
      if (isset($_GET['w'])) { ?>    
 	var unique_id = $.gritter.add({
-	    title: '<span class="red"><?php echo htmlspecialchars( xl('Oops!'), ENT_QUOTES);?></span>',
-	    text: '<?php echo htmlspecialchars( xl('Something went wrong. Please try again.', ENT_QUOTES)); ?>',
+	    title: '<span class="red"><?php echo xlt('Oops!');?></span>',
+	    text: '<?php echo xlt('Something went wrong. Please try again.'); ?>',
 	    sticky: false,
 	    time: '5000',
 	    class_name: 'my-nonsticky-class'
@@ -283,8 +283,8 @@
 <?php // if successfully logged out
      if (isset($_GET['logout'])) { ?>    
 	var unique_id = $.gritter.add({
-	    title: '<span class="green"><?php echo htmlspecialchars( xl('Success'), ENT_QUOTES);?></span>',
-	    text: '<?php echo htmlspecialchars( xl('You have been successfully logged out.'), ENT_QUOTES);?>',
+	    title: '<span class="green"><?php echo xlt('Success');?></span>',
+	    text: '<?php echo xlt('You have been successfully logged out.');?>',
 	    sticky: false,
 	    time: '5000',
 	    class_name: 'my-nonsticky-class'
