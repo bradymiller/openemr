@@ -499,12 +499,12 @@ if ($printable) {
 <h2><?php echo $facility['name'] ?></h2>
 <?php echo $facility['street'] ?><br />
 <?php echo $facility['city'] ?>, <?php echo $facility['state'] ?> <?php echo $facility['postal_code'] ?><br clear='all' />
-<?php echo $facility['phone'] ?><br />
+<?php echo $facility['phone'] ?>
 
-<a href="javascript:window.close();"><span class='title'><?php echo $titleres['fname'] . " " . $titleres['lname']; ?></span></a><br />
-<span class='text'><?php xl('Generated on','e'); ?>: <?php echo oeFormatShortDate(); ?></span>
-<br /><br />
-
+<span class='title'><a href="javascript:window.close();"><?php echo $titleres['fname'] . " " . $titleres['lname']; ?></a><br />
+  <span class='text'><?php xl('Generated on','e'); ?>: <?php echo oeFormatShortDate(); ?></span>
+  <br /><br />
+</span>
 <?php
 
 } 
