@@ -76,11 +76,11 @@ global $ignoreAuth;
  function toggleIndicator(target,div) {
 
     $mode = $(target).find(".indicator").text();
-    if ( $mode == "<?php echo xlt('collapse'); ?>" ) {
-        $(target).find(".indicator").text( "<?php echo xlt('expand'); ?>" );
+    if ( $mode == "<?php echo xls('collapse'); ?>" ) {
+        $(target).find(".indicator").text( "<?php echo xls('expand'); ?>" );
         $("#"+div).hide();
     } else {
-        $(target).find(".indicator").text( "<?php echo xlt('collapse'); ?>" );
+        $(target).find(".indicator").text( "<?php echo xls('collapse'); ?>" );
         $("#"+div).show();
     }
  }
@@ -177,7 +177,7 @@ $(document).ready(function(){
                   }
           });
       });
-      
+
       refreshAppointments();
 
     // fancy box
@@ -215,7 +215,7 @@ $(document).ready(function(){
         function() {
                 if(document.getElementById('show_date').checked == true){
                         if(document.getElementById('Start').value == '' || document.getElementById('End').value == ''){
-                                alert('<?php echo addslashes(xlt('Please select a start date and end date')) ?>');
+                                alert('<?php echo xls('Please select a start date and end date') ?>');
                                 return false;
                         }
                 }
@@ -249,7 +249,7 @@ $(document).ready(function(){
         function() {
                 if(document.getElementById('show_date').checked == true){
                         if(document.getElementById('Start').value == '' || document.getElementById('End').value == ''){
-                                alert('<?php echo addslashes(xlt('Please select a start date and end date')) ?>');
+                                alert('<?php echo xls('Please select a start date and end date') ?>');
                                 return false;
                         }
                 }
@@ -302,19 +302,19 @@ $(document).ready(function(){
                 raw[0].value = 'send '+ccrRecipient;
                 if(ccrRecipient=="") {
                   $("#ccr_send_message").html("<?php
-       echo xlt('Please enter a valid Direct Address above.');?>");
+       echo xls('Please enter a valid Direct Address above.');?>");
                   $("#ccr_send_result").show();
                 } else {
                   $(".viewCCR_transmit").attr('disabled','disabled');
                   $("#ccr_send_message").html("<?php
-       echo xlt('Working... this may take a minute.');?>");
+       echo xls('Working... this may take a minute.');?>");
                   $("#ccr_send_result").show();
                   var action=$("#ccr_form").attr('action');
                   $.post(action, {ccrAction:'generate',raw:'send '+ccrRecipient,requested_by:'patient'},
                      function(data) {
                        if(data=="SUCCESS") {
                          $("#ccr_send_message").html("<?php
-       echo xlt('Your message was submitted for delivery to');
+       echo xls('Your message was submitted for delivery to');
                            ?> "+ccrRecipient);
                          $("#ccr_send_to").val("");
                        } else {
@@ -340,19 +340,19 @@ $(document).ready(function(){
                 raw[0].value = 'send '+ccdRecipient;
                 if(ccdRecipient=="") {
                   $("#ccd_send_message").html("<?php
-       echo xlt('Please enter a valid Direct Address above.');?>");
+       echo xls('Please enter a valid Direct Address above.');?>");
                   $("#ccd_send_result").show();
                 } else {
                   $(".viewCCD_transmit").attr('disabled','disabled');
                   $("#ccd_send_message").html("<?php
-       echo xlt('Working... this may take a minute.');?>");
+       echo xls('Working... this may take a minute.');?>");
                   $("#ccd_send_result").show();
                   var action=$("#ccr_form").attr('action');
                   $.post(action, {ccrAction:'viewccd',raw:'send '+ccdRecipient,requested_by:'patient'},
                      function(data) {
                        if(data=="SUCCESS") {
                          $("#ccd_send_message").html("<?php
-       echo xlt('Your message was submitted for delivery to');
+       echo xls('Your message was submitted for delivery to');
                            ?> "+ccdRecipient);
                          $("#ccd_send_to").val("");
                        } else {
@@ -616,12 +616,10 @@ expand_collapse_widget($widgetTitle, $widgetLabel, $widgetButtonLabel,
 	<div style='margin-left:10px' class='text'><img src='images/ajax-loader.gif'/></div><br/>
 	</td>
 	</tr>		
-
 <?php } ?>
 
-	<tr>
-		<td>
-			
+    <tr>
+      <td>
 <?php
 	// Show current and upcoming appointments.
 	 $query = "SELECT e.pc_eid, e.pc_aid, e.pc_title, e.pc_eventDate, " .
@@ -645,23 +643,19 @@ expand_collapse_widget($widgetTitle, $widgetLabel, $widgetButtonLabel,
 	$bodyClass = "summary_item small";
     if ($GLOBALS['portal_onsite_appt_modify']) 
     {
-	    $widgetAuth = true;
-        }
+      $widgetAuth = true;
+    }
     else 
     {
-            $widgetAuth = false;
-        }
+      $widgetAuth = false;
+    }
 	$fixedWidth = false;
-
 	expand_collapse_widget($widgetTitle, $widgetLabel, $widgetButtonLabel , $widgetButtonLink, $widgetButtonClass, $linkMethod, $bodyClass, $widgetAuth, $fixedWidth);
-
 			 $count = 0;
-			 
-			?>
+?>
 			<div id='stats_div' style="display:none">
             	<div style='margin-left:10px' class='text'><img src='images/ajax-loader.gif'/></div>
         	</div>
-
 		</td>
 	</tr>
    </table>

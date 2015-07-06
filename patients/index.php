@@ -104,7 +104,7 @@
         function process() {
             
             if (!(validate())) {
-                alert ('<?php echo addslashes( xlt('Field(s) are missing!') ); ?>');
+                alert ('<?php echo xls('Field(s) are missing!'); ?>');
                 return false;
             }
         }
@@ -123,15 +123,15 @@
         function process_new_pass() {
 
             if (!(validate_new_pass())) {
-                alert ('<?php echo addslashes( xlt('Field(s) are missing!') ); ?>');
+                alert ('<?php echo xls('Field(s) are missing!'); ?>');
                 return false;
             }
             if (document.getElementById('pass_new').value != document.getElementById('pass_new_confirm').value) {
-                alert ('<?php echo addslashes( xlt('The new password fields are not the same.') ); ?>');
+                alert ('<?php echo xls('The new password fields are not the same.'); ?>');
                 return false;
             }
             if (document.getElementById('pass').value == document.getElementById('pass_new').value) {
-                alert ('<?php echo addslashes( xlt('The new password can not be the same as the current password.') ); ?>');
+                alert ('<?php echo xls('The new password can not be the same as the current password.'); ?>');
                 return false;
             }
         }
@@ -272,8 +272,8 @@
 <?php // if something went wrong
      if (isset($_GET['w'])) { ?>    
 	var unique_id = $.gritter.add({
-	    title: '<span class="red"><?php echo xlt('Oops!');?></span>',
-	    text: '<?php echo xlt('Something went wrong. Please try again.'); ?>',
+	    title: '<span class="red"><?php echo xls('Oops!');?></span>',
+	    text: '<?php echo xls('Something went wrong. Please try again.'); ?>',
 	    sticky: false,
 	    time: '5000',
 	    class_name: 'my-nonsticky-class'
@@ -283,8 +283,8 @@
 <?php // if successfully logged out
      if (isset($_GET['logout'])) { ?>    
 	var unique_id = $.gritter.add({
-	    title: '<span class="green"><?php echo xlt('Success');?></span>',
-	    text: '<?php echo xlt('You have been successfully logged out.');?>',
+	    title: '<span class="green"><?php echo xls('Success');?></span>',
+	    text: '<?php echo xls('You have been successfully logged out.');?>',
 	    sticky: false,
 	    time: '5000',
 	    class_name: 'my-nonsticky-class'

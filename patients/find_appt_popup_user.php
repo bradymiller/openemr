@@ -63,7 +63,7 @@ $ignoreAuth = 1;
 
  // Exit if the modify calendar for portal flag is not set
  if (!($GLOBALS['portal_onsite_appt_modify'])) {
-   echo htmlspecialchars( xl('You are not authorized to schedule appointments.'),ENT_NOQUOTES);
+   echo xlt('You are not authorized to schedule appointments.');
    exit;
  }
 
@@ -158,7 +158,6 @@ $ignoreAuth = 1;
  //
  if ($_REQUEST['providerid']) {
   $providerid = $_REQUEST['providerid'];
-//error_log(print_r($_REQUEST, true));
   // Create and initialize the slot array. Values are bit-mapped:
   //   bit 0 = in-office occurs here
   //   bit 1 = out-of-office occurs here
@@ -317,7 +316,7 @@ $ignoreAuth = 1;
 
  function setappt(year,mon,mday,hours,minutes) {
   if (opener.closed || ! opener.setappt)
-   alert('<?php echo xlt('The destination form was closed; I cannot act on your selection.'); ?>');
+   alert('<?php echo xls('The destination form was closed; I cannot act on your selection.'); ?>');
   else
    opener.setappt(year,mon,mday,hours,minutes);
   window.close();
@@ -495,18 +494,6 @@ $(document).ready(function(){
     $(".oneresult a").mouseout(function() { $(this).toggleClass("blue_highlight"); $(this).children().toggleClass("blue_highlight"); });
     //$(".event").dblclick(function() { EditEvent(this); });
 });
-
-<?php if (!$ckavail) { ?>
-<?php if (acl_check('patients','appt','','write')) { ?>
- if (confirm('<?php echo addslashes(xlt('This appointment slot is already used, use it anyway?')); ?>')) {
-  opener.top.restoreSession();
-  opener.document.forms[0].submit();
-  window.close();
- }
-<?php } else { ?>
- alert('<?php echo addslashes(xlt('This appointment slot is not available, please choose another.')); ?>');
-<?php } ?>
-<?php } ?>
 
 </script>
 
