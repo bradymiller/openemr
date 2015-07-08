@@ -322,6 +322,9 @@ if (!$_REQUEST['LOCKEDBY'])  $_REQUEST['LOCKEDBY'] = rand();
       * if NOT checked they are NOT overridden in the DB, so DB won't change
       *  unless we include them into the $fields array as "0"...
       */
+    if (!$_POST['alert']) $fields['alert'] = '0';
+    if (!$_POST['oriented']) $fields['oriented'] = '0';
+    if (!$_POST['confused']) $fields['confused'] = '0';
     if (!$_POST['MOTILITYNORMAL']) $fields['MOTILITYNORMAL'] = '0';
     if (!$_POST['ACT']) $fields['ACT'] = '0';
     if (!$_POST['DIL_RISKS']) $fields['DIL_RISKS'] = '0';

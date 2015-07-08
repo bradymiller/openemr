@@ -728,13 +728,13 @@ require_once("$incdir/patient_file/encounter/new_form.php");
                  <i class="fa fa-spinner fa-spin"></i>
           </div> 
           <div id="LayerTechnical_sections" name="LayerTechnical_sections" class="section nodisplay" style="vertical-align:text-top;text-align:center;">
-            <div id="LayerAlert" class="vitals" style="width: 1.0in; min-height: 1.05in;padding: 0.02in;padding-top:25px; border: 1.00pt solid #000000;text-align:left;padding-left:10px;">
+            <div id="LayerAlert" class="vitals" style="width: 1.2in; min-height: 1.05in;padding: 0.02in;padding-top:25px; border: 1.00pt solid #000000;text-align:left;padding-left:10px;">
               <div id="Lyr2.9" class="top_left ">
                 <th class="text_clinical"><b id="MS_tab"><?php echo xlt('Mental Status'); ?>:</b></th>
               </div>    
-                <input type="checkbox" name="alert" id="alert" <?php if ($alert) echo "checked='checked'"; ?> value="<?php echo $alert; ?>"> Alert<br />
-                <input type="checkbox" name="oriented" id="oriented" <?php if ($oriented) echo "checked='checked'"; ?> value="<?php echo $oriented; ?>"> Oriented<br />
-                <input type="checkbox" name="confused" id="confused" <?php if ($confused) echo "checked='checked'"; ?> value="<?php echo $confused; ?>"> Mood/Affect
+                <input type="checkbox" name="alert" id="alert" <?php if ($alert) echo "checked='checked'"; ?> value="yes"> Alert<br />
+                <input type="checkbox" name="oriented" id="oriented" <?php if ($oriented) echo "checked='checked'"; ?> value="yes"> Oriented TPP<br />
+                <input type="checkbox" name="confused" id="confused" <?php if ($confused) echo "checked='checked'"; ?> value="nml"> Mood/Affect Nml
             </div>
 
                   <!-- start of the VISION BOX -->                  

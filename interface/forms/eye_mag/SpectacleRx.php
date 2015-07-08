@@ -201,7 +201,7 @@ if ($_REQUEST['dispensed']) {
     $query = "SELECT * FROM patient_data where pid=?";
     $pat_data =  sqlQuery($query,array($_REQUEST['pid']));
     
-    $query = "SELECT * from form_eye_mag_dispense where pid =?";
+    $query = "SELECT * from form_eye_mag_dispense where pid =? ORDER BY date DESC";
     $dispensed = sqlStatement($query,array($_REQUEST['pid']));
     ?><html><title>Rx Dispensed History</title>
     <head>
