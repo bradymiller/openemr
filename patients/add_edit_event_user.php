@@ -17,7 +17,7 @@
  * Provider __________________V                               *
  * Comments ________________________________________________  *
  *                                                            *
- *       [Save] [Find Open Appointments] [Cancel]             *
+ *    [Save] [Find Open Appointments] [Delete] [Cancel]       *
  *------------------------------------------------------------*
  *
  * Copyright (C) 2015 Terry Hill <terry@lillysystems.com> 
@@ -182,6 +182,32 @@ sqlInsert("INSERT INTO openemr_postcalendar_events ( " .
     "1, " .
     "1," .(int)$_POST['facility']. ")"); // FF stuff
   } // INSERT single
+}
+ else
+ {
+# appointment was edited and re-saved
+            sqlStatement("UPDATE openemr_postcalendar_events SET " .
+            "pc_catid = '"       . $_POST['form_category']             . "', " .
+            "pc_aid = '"         . $_POST['form_provider']             . "', " .
+            "pc_pid = '"         . $_POST['form_pid']                  . "', " .
+            "pc_title = '"       . $_POST['form_title']                . "', " .
+            "pc_time = NOW(), "                                                .
+            "pc_hometext = '"    . $_POST['form_comments']             . "', " .
+            "pc_informant = '"   . $_SESSION['authUserID']             . "', " .
+            "pc_eventDate = '"   . $event_date                         . "', " .
+            "pc_endDate = '"     . fixDate($_POST['form_enddate'])     . "', " .
+            "pc_duration = '"    . ($duration * 60)                    . "', " .
+            "pc_recurrtype = '"  . ($_POST['form_repeat'] ? '1' : '0') . "', " .
+            "pc_recurrspec = '$recurrspec', "                                  .
+            "pc_startTime = '$starttime', "                                    .
+            "pc_endTime = '$endtime', "                                        .
+            "pc_alldayevent = '" . $_POST['form_allday']               . "', " .
+            "pc_apptstatus = '"  . $_POST['form_apptstatus']           . "', "  .
+            "pc_prefcatid = '"   . $_POST['form_prefcat']              . "' ,"  .
+             "pc_facility = '"   .(int)$_POST['facility']               ."' "  . // FF stuff
+            "WHERE pc_eid = '$eid'");
+
+    }
  } // else - insert  EID End
 
   // Save new DOB if it's there.
@@ -190,8 +216,7 @@ sqlInsert("INSERT INTO openemr_postcalendar_events ( " .
    sqlStatement("UPDATE patient_data SET DOB = '$patient_dob' WHERE " .
     "pid = '" . $_POST['form_pid'] . "'");
   }
-
- }
+ 
  
  # not allowing the patient to delete appointments
  else if ($_POST['form_action'] == "delete") {
@@ -236,9 +261,28 @@ sqlInsert("INSERT INTO openemr_postcalendar_events ( " .
  $row = array();
 
  // If we are editing an existing event, then get its data.
- //if (!$eid) {
+ if ($eid) {
+  $row = sqlQuery("SELECT * FROM openemr_postcalendar_events WHERE pc_eid = $eid");
+  $date = $row['pc_eventDate'];
+  $userid = $row['pc_aid'];
+  $patientid = $row['pc_pid'];
+  $starttimeh = substr($row['pc_startTime'], 0, 2) + 0;
+  $starttimem = substr($row['pc_startTime'], 3, 2);
+  $repeats = $row['pc_recurrtype'];
+  $multiple_value = $row['pc_multiple'];
+
+  if (preg_match('/"event_repeat_freq_type";s:1:"(\d)"/', $row['pc_recurrspec'], $matches)) {
+   $repeattype = $matches[1];
+  }
+  if (preg_match('/"event_repeat_freq";s:1:"(\d)"/', $row['pc_recurrspec'], $matches)) {
+   $repeatfreq = $matches[1];
+  }
+  $hometext = $row['pc_hometext'];
+  if (substr($hometext, 0, 6) == ':text:') $hometext = substr($hometext, 6);
+ }
+ else {
   $patientid=$_GET['pid'];
-// }
+ }
 
  // If we have a patient ID, get the name and phone numbers to display.
  if ($patientid) {
@@ -636,6 +680,12 @@ td {
 &nbsp;
 <input type='button' value='<?php echo xla('Find Open Appointment');?>' onclick='find_available()' />
 &nbsp;
+<?php
+if($eid) {
+?>
+<input type='button' value='<?php echo xla('Delete');?>' onclick='deleteEvent()' />
+&nbsp;
+<?php } ?>
 <input type='button' value='<?php echo xla('Cancel');?>' onclick='parent.$.fn.fancybox.close()' />
 </p>
 </center>

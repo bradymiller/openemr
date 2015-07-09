@@ -726,7 +726,7 @@ $GLOBALS_METADATA = array(
 		'1',                              // default = true
 		xl('Enable amendments feature')
 	),
-
+    
     'use_custom_daysheet' => array(
       xl('Use Custom End of Day Report'),
       array(
@@ -1643,7 +1643,14 @@ $GLOBALS_METADATA = array(
       '0',
       xl('Allow Patient Modification of Appointments in Onsite Patient Portal.')
     ),
-    
+   
+    'portal_delete_change_appt' => array(
+      xl('Allow Patient to Delete or Change Appointments'),
+      'bool',                           // data type
+      '0',
+      xl('Allow Patient to Delete or Change Appointments in Onsite Patient Portal.')
+    ),
+   
     'portal_start_days' => array(
       xl('Number of Days from today to start Patients choice of Appointments'),
       'num',                           // data type

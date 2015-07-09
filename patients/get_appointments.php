@@ -43,14 +43,14 @@
 			  } else {
 				$etitle = "Patient Scheduled via Portal";
 			  }
-              if ($GLOBALS['portal_onsite_appt_modify']) {
+              if ($GLOBALS['portal_onsite_appt_modify'] && $GLOBALS['portal_delete_change_appt']) {   # add a global to allow delete/change portal_delete_change_appt
                 echo "<a href='add_edit_event_user.php?eid=" . attr($row['pc_eid']) .
 		  "' class='edit_event iframe' title='" . text($etitle) . "'>";
               }
 			  echo "<b>" . attr($dayname . ", " . $row['pc_eventDate']) . "</b><br>";
 			  echo attr("$disphour:$dispmin " . $dispampm . " " . $row['pc_catname']) . "<br>\n";
 			  echo attr($row['fname'] . " " . $row['lname']);
-                          if ($GLOBALS['portal_onsite_appt_modify']) {
+                          if ($GLOBALS['portal_onsite_appt_modify'] && $GLOBALS['portal_delete_change_appt']) {  # add a global to allow delete/change
                             echo "</a><br>\n";
                           }
                           else {
