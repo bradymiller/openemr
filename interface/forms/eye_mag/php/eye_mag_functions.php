@@ -1325,7 +1325,7 @@ function display_PRIOR_section ($zone,$orig_id,$id_to_show,$pid,$report = '0') {
            
         // Collect parameter(s)
         $category = empty($_REQUEST['category']) ? '' : $_REQUEST['category'];
-        $div = '</div><div id="PMH_QP_block2" name="PMH_QP_block2" class="QP_block_outer borderShadow text_clinical" style="height:3.2in;overflow:auto;"">';
+        $div = '</div><div id="PMH_QP_block2" name="PMH_QP_block2" class="QP_block_outer borderShadow text_clinical" style="height:3.2in;overflow:auto;">';
                                               
         ?><span class="closeButton fa fa-close pull-right" id="BUTTON_TEXTD_PMH" name="BUTTON_TEXTD_PMH" value="1"></span>
             
@@ -1505,15 +1505,17 @@ function display_PRIOR_section ($zone,$orig_id,$id_to_show,$pid,$report = '0') {
                 <tr>
                     <td style='min-height:1.2in;min-width:1.5in;padding-left:5px;'>
                     <?php
-                    if (count($PMSFH[0]['FH']) > '0') {
-                        foreach ($PMSFH[0]['FH'] as $item) {
-                          echo "<span name='QP_PMH_".$item['rowid']."' href='#PMH_anchor' id='QP_PMH_".$item['rowid']."' 
-                          onclick=\"alter_issue('0','FH','');\">".$item['short_title'].": ".$item['display']."</span><br />";
+                    foreach ($PMSFH[0]['FH'] as $item) {
+                        if ($item['display'] > '') {
+                            echo "<span name='QP_PMH_".$item['rowid']."' href='#PMH_anchor' id='QP_PMH_".$item['rowid']."' 
+                            onclick=\"alter_issue('0','FH','');\">".$item['short_title'].": ".$item['display']."</span><br />";
                         }
-                    } else {
+                        $mentions_FH++;
+                    }
+                    if (!$mentions_FH) {
                         ?>
                         <span href="#PMH_anchor" 
-                        onclick="alter_issue('0','FH','');" style="text-align:right;">TBD</span><br />
+                        onclick="alter_issue('0','FH','');" style="text-align:right;">Negative</span><br />
                         <?
                     }
 
@@ -1822,11 +1824,12 @@ function build_PMSFH($pid) {
         
    }
      //now make some of our own using the usertext11-30 fields
+   /*
     if (!$result1['usertext11']) $result1['usertext11'] = "None";
     if (!$result1['usertext12']) $result1['usertext12'] = "None";
     if (!$result1['usertext13']) $result1['usertext13'] = "None";
     if (!$result1['usertext14']) $result1['usertext14'] = "None";
-        //if (!$result1['usertext15']) $result1['usertext15'] = "denies";
+*/        //if (!$result1['usertext15']) $result1['usertext15'] = "denies";
     $PMSFH['FH']['glaucoma']['display'] = (substr($result1['usertext11'],0,10));
     $PMSFH['FH']['glaucoma']['short_title'] = "Glaucoma";
     $PMSFH['FH']['cataract']['display'] = (substr($result1['usertext12'],0,10));
@@ -1851,7 +1854,8 @@ function build_PMSFH($pid) {
     // Build ROS into $PMSFH['ROS'] also
     $given="ROSGENERAL,ROSHEENT,ROSCV,ROSPULM,ROSGI,ROSGU,ROSDERM,ROSNEURO,ROSPSYCH,ROSMUSCULO,ROSIMMUNO,ROSENDOCRINE";
     $query="SELECT $given from form_eye_mag where id=? and pid=?";
-    $ROS = sqlStatement($query,array($form_id,$pid));
+
+    $ROS = sqlStatement($query,array($id,$pid));
     while ($row = sqlFetchArray($ROS)) {
         foreach (split(',',$given) as $item) {
             $PMSFH['ROS'][$item]['display']= $row[$item];
@@ -3500,7 +3504,7 @@ if (!empty($irow['type'])) {
       <form method='post' name='theform' id='theform'
        action='a_issue.php?issue=<?php echo attr($issue); ?>&thispid=<?php echo attr($thispid); ?>&thisenc=<?php echo attr($thisenc); ?>'
        onsubmit='return validate();'>
-       
+       <input type="hiden" name="id" id="id" value="<?php echo attr($id); ?>">
           <?php
            $index = 0;
            $output ='';

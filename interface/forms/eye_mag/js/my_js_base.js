@@ -204,9 +204,10 @@ function finalize() {
                                            });
 }
 function alter_issue(issue_number,issue_type,subtype) {
+        // alert("alert_issue fired");
     result = '<center><iframe src="/openemr/interface/forms/eye_mag/a_issue.php?issue=' + issue_number + '&thistype=' + issue_type +  '&subtype=' + subtype + '&pid=' + $('#pid').val() +'&encounter=' + $('#encounter').val() + '&form_id='+ $('#form_id').val() +'" title="MyForm" width="435" height="320" scrolling = "yes" frameBorder = "0" ></iframe></center>';
         //show_QP();
-    $("#Enter_PMH").html(result);///QP_PMH
+    $("#Enter_PMH").html(result);
 }
 
 function delete_issue(issue_number,issue_type,subtype) {
