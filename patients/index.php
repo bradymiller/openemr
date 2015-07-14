@@ -30,6 +30,12 @@
       echo xlt('Patient Portal is turned off');
       exit;
     }
+     $newlogocode = '';
+     $portal_logo = "$OE_SITE_DIR/images/portal_logo.png";
+
+     if (file_exists($portal_logo)) {
+      $newlogocode = "<img src='$web_root/sites/" . $_SESSION['site_id'] . "/images/portal_logo.png'>";
+     } 
 
     // security measure -- will check on next page.
     $_SESSION['itsme'] = 1;
@@ -177,7 +183,8 @@
     <?php if (isset($_SESSION['password_update'])||isset($_GET['password_update'])) { 
         $_SESSION['password_update']=1;
         ?>
-      <div id="wrapper" class="centerwrapper">
+      <div id="wrapper" class="centerwrapper"><?php echo $newlogocode;?>
+
         <h2 class="title"><?php echo xlt('Please Enter a New Password'); ?></h2>
         <form action="get_patient_info.php" method="POST" onsubmit="return process_new_pass()" >
             <table>
@@ -212,7 +219,7 @@
         <div class="copyright"><?php echo xlt('Powered by');?> OpenEMR</div>
       </div>
     <?php } else { ?>
-      <div id="wrapper" class="centerwrapper">
+      <div id="wrapper" class="centerwrapper"><?php echo $newlogocode;?>
 	<h2 class="title"><?php echo xlt('Patient Portal Login'); ?></h2>
 	<form action="get_patient_info.php" method="POST" onsubmit="return process()" >
 	    <table>

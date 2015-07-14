@@ -48,6 +48,12 @@ global $ignoreAuth;
  require_once("$srcdir/formatting.inc.php");
  require_once("$srcdir/edi.inc");
  include_once("$srcdir/lists.inc");
+ $newlogocode = '';
+ $portal_logo = "$OE_SITE_DIR/images/portal_logo.png";
+
+ if (file_exists($portal_logo)) {
+    $newlogocode = "<img src='$web_root/sites/" . $_SESSION['site_id'] . "/images/portal_logo.png'>";
+} 
 
 ?>
 <html>
@@ -177,7 +183,7 @@ $(document).ready(function(){
                   }
           });
       });
-
+      
       refreshAppointments();
 
     // fancy box
@@ -373,7 +379,10 @@ $(document).ready(function(){
 <body class="body_top">
 
 <div id="wrapper" class="leftwrapper" style="width: 700px;">
-<h2><?php echo xlt('Patient Portal'); ?></h2>
+<div style="text-align: center;">
+<?php echo $newlogocode;?>
+</div>
+<h1 class="heading"><?php echo xlt("Patient Portal"); ?></h1>
 
 <?php
  $result = getPatientData($pid);
@@ -617,9 +626,9 @@ expand_collapse_widget($widgetTitle, $widgetLabel, $widgetButtonLabel,
 	</td>
 	</tr>		
 <?php } ?>
-
     <tr>
-      <td>
+      <td width='650px'>
+
 <?php
 	// Show current and upcoming appointments.
 	 $query = "SELECT e.pc_eid, e.pc_aid, e.pc_title, e.pc_eventDate, " .
@@ -649,7 +658,7 @@ expand_collapse_widget($widgetTitle, $widgetLabel, $widgetButtonLabel,
     {
       $widgetAuth = false;
     }
-	$fixedWidth = false;
+	$fixedWidth = true;
 	expand_collapse_widget($widgetTitle, $widgetLabel, $widgetButtonLabel , $widgetButtonLink, $widgetButtonClass, $linkMethod, $bodyClass, $widgetAuth, $fixedWidth);
 			 $count = 0;
 ?>

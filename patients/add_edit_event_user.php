@@ -217,7 +217,6 @@ sqlInsert("INSERT INTO openemr_postcalendar_events ( " .
     "pid = '" . $_POST['form_pid'] . "'");
   }
  
- 
  # not allowing the patient to delete appointments
  else if ($_POST['form_action'] == "delete") {
         // =======================================
@@ -261,6 +260,7 @@ sqlInsert("INSERT INTO openemr_postcalendar_events ( " .
  $row = array();
 
  // If we are editing an existing event, then get its data.
+
  if ($eid) {
   $row = sqlQuery("SELECT * FROM openemr_postcalendar_events WHERE pc_eid = $eid");
   $date = $row['pc_eventDate'];
@@ -557,24 +557,28 @@ td {
 
 <body onunload='imclosing()' onload='categoryChanged()'>
 
-<form method='post' name='theform' id='theform' action='add_edit_event_user.php?eid=<?php echo attr($eid) ?>' onsubmit='return top.restoreSession()' />
+<form method='post' name='theform' id='theform' action='add_edit_event_user.php?eid=<?php echo $eid ?>' onsubmit='return top.restoreSession()' />
 <input type="hidden" name="form_action" id="form_action" value="">
 <center>
 
 <table border='0' width='100%'>
-
  <tr>
-  <td width='1%' nowrap>
+ <td colspan='5' ><br>
+   <b><?php echo xlt('Please use Find Open Appointment Button to Scheduled an Appointment'); ?>:</b>
+ </td>
+ </tr>
+ <tr>
+  <td width='1%' nowrap><br>
    <b><?php echo xlt('Category'); ?>:</b>
   </td>
-  <td nowrap>
+  <td nowrap><br>
    <input type="text" id='form_category' name='form_category' value='Office Visit' readonly='readonly' style='width:100%'/>
   </td>
 
-  <td width='1%' nowrap>
+  <td width='1%' nowrap><br>
   	<b><?php echo xlt('Date'); ?>:</b>
   </td>
-  <td colspan='2' nowrap id='tdallday1'>
+  <td colspan='2' nowrap id='tdallday1'><br>
    <input type='text' size='7' name='form_date' readonly id='form_date' <?php echo $disabled ?>
     value='<?php if (isset($eid)) { echo $eid ? $row['pc_eventDate'] : $date; } ?>'
     onkeyup='datekeyup(this,mypcc)' onblur='dateblur(this,mypcc)' 
