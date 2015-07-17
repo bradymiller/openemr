@@ -216,6 +216,19 @@ require_once "$srcdir/report_database.inc";
     $type_title = xl('2014 Automated Measure Calculations (AMC)');
     $link="cqm.php?report_id=" . attr($row["report_id"]) . "&back=list";
   }
+  else if (strpos($row['type'], "amc_2014") !== false){
+	if (!$GLOBALS['enable_amc']) continue;
+	$stage_report = str_replace("amc_2014_", "", $row['type']); 
+    $type_title = xl('2014 Automated Measure Calculations (AMC)');
+	if($stage_report != ""){
+		$type_title .= " ";
+		if($stage_report == "stage1")
+			$type_title .=  xlt('Stage I');
+		else if($stage_report == "stage2")
+			$type_title .=  xlt('Stage II');
+	}
+    $link="cqm.php?report_id=" . attr($row["report_id"]) . "&back=list";  
+  }
   else if ($row['type'] == "process_reminders") {
     if (!$GLOBALS['enable_cdr']) continue;
     $type_title = xl('Processing Patient Reminders');
