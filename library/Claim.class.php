@@ -256,14 +256,19 @@ class Claim {
     $referrer_id = (empty($GLOBALS['MedicareReferrerIsRenderer']) ||
       $this->insurance_numbers['provider_number_type'] != '1C') ?
       $this->patient_data['ref_providerID'] : $provider_id;
-    $sql = "SELECT * FROM users WHERE id = '$referrer_id'";
-    $this->referrer = sqlQuery($sql);
+    $sql = "SELECT * FROM users WHERE id = ?";
+    $this->referrer = sqlQuery($sql, array($referrer_id));
     if (!$this->referrer) $this->referrer = array();
 
     $supervisor_id = $this->encounter['supervisor_id'];
-    $sql = "SELECT * FROM users WHERE id = '$supervisor_id'";
-    $this->supervisor = sqlQuery($sql);
+    $sql = "SELECT * FROM users WHERE id = ?";
+    $this->supervisor = sqlQuery($sql, array($supervisor_id));
     if (!$this->supervisor) $this->supervisor = array();
+    
+    $billing_options_id = $this->billing_options['provider_id'];
+    $sql = "SELECT * FROM users WHERE id = ?";
+    $this->billing_prov_id = sqlQuery($sql, array($billing_options_id));
+    if (!$this->billing_prov_id) $this->billing_prov_id = array();
 
     $sql = "SELECT * FROM insurance_numbers WHERE " .
       "(insurance_company_id = '" . $this->procs[0]['payer_id'] .
@@ -1109,6 +1114,14 @@ class Claim {
     return sprintf('%.2f', 0 + $this->billing_options['lab_amount']);
   }
 
+  function medicaidReferralCode() {
+    return x12clean(trim($this->billing_options['medicaid_referral_code']));
+  }
+  
+  function epsdtFlag() {
+    return x12clean(trim($this->billing_options['epsdt_flag']));
+  }
+  
   function medicaidResubmissionCode() {
     return x12clean(trim($this->billing_options['medicaid_resubmission_code']));
   }
@@ -1119,6 +1132,10 @@ class Claim {
 
   function frequencyTypeCode() {
     return empty($this->billing_options['replacement_claim']) ? '1' : '7';
+  }
+  
+ function icnResubmissionNumber() {
+    return x12clean($this->billing_options['icn_resubmission_number']);
   }
 
   function additionalNotes() {
@@ -1361,5 +1378,34 @@ class Claim {
     return x12clean(trim(str_replace('-', '', $this->supervisor_numbers['provider_number'])));
   }
 
+  function billingProviderLastName() {
+    return x12clean(trim($this->billing_prov_id['lname']));
+  }
+
+  function billingProviderFirstName() {
+    return x12clean(trim($this->billing_prov_id['fname']));
+  }
+
+  function billingProviderMiddleName() {
+    return x12clean(trim($this->billing_prov_id['mname']));
+  }
+
+  function billingProviderNPI() {
+    return x12clean(trim($this->billing_prov_id['npi']));
+  }
+
+  function billingProviderUPIN() {
+    return x12clean(trim($this->billing_prov_id['upin']));
+  }
+
+  function billingProviderSSN() {
+    return x12clean(trim(str_replace('-', '', $this->billing_prov_id['federaltaxid'])));
+  }
+
+  function billingProviderTaxonomy() {
+    if (empty($this->billing_prov_id['taxonomy'])) return '207Q00000X';
+    return x12clean(trim($this->billing_prov_id['taxonomy']));
+  }
+  
 }
 ?>

@@ -155,3 +155,23 @@ INSERT INTO list_options (list_id,option_id,title,seq) VALUES ('patient_flow_boa
 INSERT INTO list_options (list_id,option_id,title,seq) VALUES ('patient_flow_board_rooms', '2', 'Room 2', 20);
 INSERT INTO list_options (list_id,option_id,title,seq) VALUES ('patient_flow_board_rooms', '3', 'Room 3', 30);
 #EndIf
+
+#IfMissingColumn form_misc_billing_options medicaid_referral_code
+ALTER TABLE `form_misc_billing_options` ADD `medicaid_referral_code` varchar(2) DEFAULT NULL ;
+#EndIf
+
+#IfMissingColumn form_misc_billing_options epsdt_flag
+ALTER TABLE `form_misc_billing_options` ADD `epsdt_flag` tinyint(1) DEFAULT NULL ;
+#EndIf
+
+#IfMissingColumn form_misc_billing_options provider_qualifier_code
+ALTER TABLE `form_misc_billing_options` ADD `provider_qualifier_code` varchar(2) DEFAULT NULL ;
+#EndIf
+
+#IfMissingColumn form_misc_billing_options provider_id
+ALTER TABLE `form_misc_billing_options` ADD `provider_id` int(11) DEFAULT NULL ;
+#EndIf
+
+#IfMissingColumn form_misc_billing_options icn_resubmission_number
+ALTER TABLE `form_misc_billing_options` ADD `icn_resubmission_number` varchar(35) DEFAULT NULL ;
+#EndIf

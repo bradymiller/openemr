@@ -312,7 +312,14 @@ function gen_hcfa_1500_page($pid, $encounter, &$log, &$claim) {
       put_hcfa(26, 1, 28, $claim->planName(1));
     }
   }
-
+  
+  # Box 10d. Claim Codes  medicaid_referral_code
+  
+  if($claim->epsdtFlag()) {
+      put_hcfa(26, 34, 2, $claim->medicaidReferralCode());
+    }
+    
+    
   // Box 11d. Is There Another Health Benefit Plan
   if (!$new_medicare_logic) {
     put_hcfa(26, $claim->payerCount() > 1 ? 52 : 57, 1, 'X');
@@ -331,26 +338,6 @@ function gen_hcfa_1500_page($pid, $encounter, &$log, &$claim) {
   put_hcfa(32, 5, 2, substr($tmp,6,2));
   put_hcfa(32, 8, 4, substr($tmp,0,4));
   
-  if(hcfa_1500_version_02_12() && !empty($tmp))
-  {
-    // Only include the Box 14 qualifier if there we are using version 02/12 and there is a Box 14 date.
-    put_hcfa(32, 16, 3, $claim->box14qualifier());
-      
-  }
-  // Box 15. First Date of Same or Similar Illness, if applicable
-  $tmp = $claim->dateInitialTreatment();
-  if(hcfa_1500_version_02_12() && !empty($tmp))
-  {
-    // Only include the Box 15 qualifier if there we are using version 02/12 and there is a Box 15 date.
-    put_hcfa(32, 31, 3, $claim->box15qualifier());    
-  }
-
-
-  put_hcfa(32,37, 2, substr($tmp,4,2));
-  put_hcfa(32,40, 2, substr($tmp,6,2));
-  put_hcfa(32,43, 4, substr($tmp,0,4));
-
-
   // Box 16. Dates Patient Unable to Work in Current Occupation
   if ($claim->isUnableToWork()) {
     $tmp = $claim->offWorkFrom();
@@ -367,7 +354,8 @@ function gen_hcfa_1500_page($pid, $encounter, &$log, &$claim) {
   // Medicare forbids an entry here and other payers require one.
   // There is still confusion over this.
   //
-  if ($claim->referrerLastName() &&
+
+  if ($claim->referrerLastName() || $claim->billingProviderLastName() &&
     (empty($GLOBALS['MedicareReferrerIsRenderer']) || $claim->claimType() != 'MB'))
   {
     // Box 17a. Referring Provider Alternate Identifier
@@ -380,15 +368,28 @@ function gen_hcfa_1500_page($pid, $encounter, &$log, &$claim) {
     }
     *****************************************************************/
 
-    // Box 17. Name of Referring Provider or Other Source
+    // Box 17. Name of Referring Provider or Other Source leave it like it is just check if there is info in misc_billing the use it provider_qualifier_code
+    # Changed to look first at the misc hcfa billing form to complete this box if nothing on misc hcfa form use referrer
+
+    if (strlen($claim->billingProviderLastName()) !=0) {
+      $tmp2 = $claim->billingProviderLastName() . ', ' . $claim->billingProviderFirstName();
+      if ($claim->billingProviderMiddleName())
+        $tmp2 .= ', ' . substr($claim->billingProviderMiddleName(),0,1);
+      put_hcfa(34, 1, 3, $claim->billing_options['provider_qualifier_code']);
+      put_hcfa(34, 4, 25, $tmp2);
+      if ($claim->billingProviderNPI()) {
+        put_hcfa(34, 33, 15, $claim->billingProviderNPI());
+      }
+    }
+    else
+    {
     $tmp = $claim->referrerLastName() . ', ' . $claim->referrerFirstName();
     if ($claim->referrerMiddleName())
       $tmp .= ', ' . substr($claim->referrerMiddleName(),0,1);
     put_hcfa(34, 1, 25, $tmp);
-
-    // Box 17b. Referring Provider NPI
     if ($claim->referrerNPI()) {
       put_hcfa(34, 33, 15, $claim->referrerNPI());
+    }
     }
   }
 
@@ -436,7 +437,7 @@ function gen_hcfa_1500_page($pid, $encounter, &$log, &$claim) {
 
         // Box 22. Medicaid Resubmission Code and Original Ref. No.
         put_hcfa(38, 50, 10, $claim->medicaidResubmissionCode());
-        put_hcfa(38, 62, 10, $claim->medicaidOriginalReference());
+        put_hcfa(38, 62, 15, $claim->medicaidOriginalReference());
 
         // Box 21 continued. Diagnoses
         if (!empty($diags[1])) {
@@ -567,8 +568,11 @@ function gen_hcfa_1500_page($pid, $encounter, &$log, &$claim) {
     put_hcfa($lino, 59, 3, $claim->cptUnits($hcfa_proc_index));
 
     // 24h. EPSDT Family Plan
-    // Not currently supported.
-
+    // 
+    if($claim->epsdtFlag()) {
+      put_hcfa($lino, 63, 2, '03');
+    }
+    
     // 24j. Rendering Provider NPI
     put_hcfa($lino, 68, 10, $claim->providerNPI($hcfa_proc_index));
   }

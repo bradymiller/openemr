@@ -18,6 +18,14 @@ function misc_billing_options_report( $pid, $encounter, $cols, $id) {
             {
                 $value=text(qual_id_to_description($key,$value));
             }
+            if($key==='provider_id')
+            {
+                
+                $trow = sqlQuery("SELECT id, lname, fname FROM users WHERE ".
+                         "id = ? ",array($value));
+                $value=$trow['fname'] . ' ' . $trow['lname'];
+                
+            }
             $key=ucwords(str_replace("_"," ",$key));
             print "<td><span class=bold>$key: </span><span class=text>" . text($value) . "</span></td>";
             $count++;
