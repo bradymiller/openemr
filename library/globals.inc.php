@@ -1472,7 +1472,9 @@ $GLOBALS_METADATA = array(
       xl('Billing Log Option'),
       array(
         '1' => xl('Billing Log Append'),
-        '2' => xl('Billing Log Overwrite')
+        '2' => xl('Billing Log Overwrite'),
+        '3' => xl('Billing Log Append for one Day'),
+        '4' => xl('Billing Log Append for one Week')
       ),
       '1',                               // default
       xl('Billing log setting to append or overwrite the log file.')

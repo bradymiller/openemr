@@ -122,8 +122,29 @@ function process_form($ar) {
     if ($GLOBALS['billing_log_option'] == 1) {
       $hlog = fopen($GLOBALS['OE_SITE_DIR']. "/edi/process_bills.log", 'a');
     }
-    else { // ($GLOBALS['billing_log_option'] == 2)
+    elseif ($GLOBALS['billing_log_option'] == 2){
       $hlog = fopen($GLOBALS['OE_SITE_DIR']. "/edi/process_bills.log", 'w');
+    }
+    elseif ($GLOBALS['billing_log_option'] == 3) { 
+     $chdate = date("Y-m-d");
+     if (date("Y-m-d",filemtime($GLOBALS['OE_SITE_DIR']. "/edi/process_bills.log")) == $chdate) {
+       $hlog = fopen($GLOBALS['OE_SITE_DIR']. "/edi/process_bills.log", 'a');
+     }
+     else
+     {
+       $hlog = fopen($GLOBALS['OE_SITE_DIR']. "/edi/process_bills.log", 'w');
+     }  
+    }
+    else
+    {// ($GLOBALS['billing_log_option'] == 4)
+     $chdate = date('Y-m-d', strtotime('+1 week'));
+     if (date("Y-m-d",filemtime($GLOBALS['OE_SITE_DIR']. "/edi/process_bills.log")) <= $chdate) {
+       $hlog = fopen($GLOBALS['OE_SITE_DIR']. "/edi/process_bills.log", 'a');
+     }
+     else
+     {
+       $hlog = fopen($GLOBALS['OE_SITE_DIR']. "/edi/process_bills.log", 'w');
+     }   
     }
   }
 
