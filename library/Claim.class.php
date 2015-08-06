@@ -264,6 +264,11 @@ class Claim {
     $sql = "SELECT * FROM users WHERE id = '$supervisor_id'";
     $this->supervisor = sqlQuery($sql);
     if (!$this->supervisor) $this->supervisor = array();
+    
+    $billing_options_id = $this->billing_options['provider_id'];
+    $sql = "SELECT * FROM users WHERE id = '$billing_options_id'";
+    $this->billing_prov_id = sqlQuery($sql);
+    if (!$this->billing_prov_id) $this->billing_prov_id = array();
 
     $sql = "SELECT * FROM insurance_numbers WHERE " .
       "(insurance_company_id = '" . $this->procs[0]['payer_id'] .
@@ -1109,6 +1114,14 @@ class Claim {
     return sprintf('%.2f', 0 + $this->billing_options['lab_amount']);
   }
 
+  function medicaidReferralCode() {
+    return x12clean(trim($this->billing_options['medicaid_referral_code']));
+  }
+  
+  function epsdtFlag() {
+    return x12clean(trim($this->billing_options['epsdt_flag']));
+  }
+  
   function medicaidResubmissionCode() {
     return x12clean(trim($this->billing_options['medicaid_resubmission_code']));
   }
@@ -1361,5 +1374,34 @@ class Claim {
     return x12clean(trim(str_replace('-', '', $this->supervisor_numbers['provider_number'])));
   }
 
+  function billingProviderLastName() {
+    return x12clean(trim($this->billing_prov_id['lname']));
+  }
+
+  function billingProviderFirstName() {
+    return x12clean(trim($this->billing_prov_id['fname']));
+  }
+
+  function billingProviderMiddleName() {
+    return x12clean(trim($this->billing_prov_id['mname']));
+  }
+
+  function billingProviderNPI() {
+    return x12clean(trim($this->billing_prov_id['npi']));
+  }
+
+  function billingProviderUPIN() {
+    return x12clean(trim($this->billing_prov_id['upin']));
+  }
+
+  function billingProviderSSN() {
+    return x12clean(trim(str_replace('-', '', $this->billing_prov_id['federaltaxid'])));
+  }
+
+  function billingProviderTaxonomy() {
+    if (empty($this->billing_prov_id['taxonomy'])) return '207Q00000X';
+    return x12clean(trim($this->billing_prov_id['taxonomy']));
+  }
+  
 }
 ?>

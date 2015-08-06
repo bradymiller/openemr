@@ -643,7 +643,17 @@ function gen_x12_837($pid, $encounter, &$log, $encounter_claim=false) {
   // Segment CRC (Ambulance Certification) omitted.
   // Segment CRC (Patient Condition Information: Vision) omitted.
   // Segment CRC (Homebound Indicator) omitted.
-  // Segment CRC (EPSDT Referral) omitted.
+ 
+
+ // Segment CRC (EPSDT Referral).
+   if($claim->epsdtFlag()) {
+      ++$edicount;
+    $out .= "CRC" . 
+      "*ZZ" . 
+      "*Y" .
+      "*" . $claim->medicaidReferralCode() .
+      "~\n";
+  }
 
   // Diagnoses, up to $max_per_seg per HI segment.
   $max_per_seg = $CMS_5010 ? 12 : 8;
@@ -1076,8 +1086,19 @@ function gen_x12_837($pid, $encounter, &$log, $encounter_claim=false) {
       $out .= $dindex;
       if (++$i >= 4) break;
     }
+    # needed for epstd 
+  if($claim->epsdtFlag()) {
+    $out .= "*" .
+    "*" .
+    "*" .
+    "*Y" .    
+    "~\n";
+  }
+  else
+  {      
     $out .= "~\n";
-
+  }
+  
     if (!$claim->cptCharges($prockey)) {
       $log .= "*** Procedure '" . $claim->cptKey($prockey) . "' has no charges!\n";
     }
