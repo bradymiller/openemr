@@ -1,10 +1,29 @@
 <?php
-// Copyright (C) 2005-2015 Rod Roark <rod@sunsetsystems.com>
-//
-// This program is free software; you can redistribute it and/or
-// modify it under the terms of the GNU General Public License
-// as published by the Free Software Foundation; either version 2
-// of the License, or (at your option) any later version.
+/*
+* 
+* Fee Sheet Program used to create charges, copays and add diagnosis codes to the encounter
+* (TLH) Added the code to allow defaulting the provider. The current encounter is checked first
+*  if there is no provider in the encounter, meaning it did not auto generate from the calender 
+*  then the provider in the patient file is used.
+* 
+* Copyright (C) 2005-2015 Rod Roark <rod@sunsetsystems.com>
+* 
+* LICENSE: This program is free software; you can redistribute it and/or 
+* modify it under the terms of the GNU General Public License 
+* as published by the Free Software Foundation; either version 3 
+* of the License, or (at your option) any later version. 
+* This program is distributed in the hope that it will be useful, 
+* but WITHOUT ANY WARRANTY; without even the implied warranty of 
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the 
+* GNU General Public License for more details. 
+* You should have received a copy of the GNU General Public License 
+* along with this program. If not, see <http://opensource.org/licenses/gpl-license.php>;. 
+* 
+* @package OpenEMR 
+* @author Rod Roark <rod@sunsetsystems.com>
+* @author Terry Hill <terry@lillysystems.com>
+* @link http://www.open-emr.org 
+*/
 
 $fake_register_globals=false;
 $sanitize_all_escapes=true;
@@ -83,6 +102,20 @@ function contraceptionClass($code_type, $code) {
   }
   return $contra;
 }
+# finds the provider in the encounter file or patient file
+function findProvider() {
+  global $encounter, $pid;
+  $find_provider = sqlQuery("SELECT provider_id, supervisor_id FROM form_encounter " .
+		"WHERE pid = ? AND encounter = ? " .
+		"ORDER BY id DESC LIMIT 1", array($pid,$encounter) );
+  $providerid = $find_provider['provider_id'];
+  if($providerid == 0) {
+    $find_provider = sqlQuery("SELECT providerID FROM patient_data " .
+		"WHERE pid = ? ", array($pid) );
+    $providerid = $find_provider['providerID'];
+  }  
+  return $providerid;
+}
 
 // This writes a billing line item to the output page.
 //
@@ -92,6 +125,8 @@ function echoLine($lino, $codetype, $code, $modifier, $ndc_info='',
 {
   global $code_types, $ndc_applies, $ndc_uom_choices, $justinit, $pid;
   global $contraception, $usbillstyle, $hasCharges;
+
+ $provider_id=findProvider();
 
   if ($codetype == 'COPAY') {
     if (!$code_text) $code_text = 'Cash';
@@ -1195,7 +1230,7 @@ if ($_POST['newcodes']) {
 $tmp = sqlQuery("SELECT provider_id, supervisor_id FROM form_encounter " .
   "WHERE pid = ? AND encounter = ? " .
   "ORDER BY id DESC LIMIT 1", array($pid,$encounter) );
-$encounter_provid = 0 + $tmp['provider_id'];
+$encounter_provid =findProvider();
 $encounter_supid  = 0 + $tmp['supervisor_id'];
 ?>
 </table>
