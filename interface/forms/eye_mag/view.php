@@ -42,7 +42,7 @@ include_once("../../forms/".$form_folder."/php/".$form_folder."_functions.php");
 //@extract($_SESSION);
 $form_id    = $_REQUEST['id']; //what form are we working on?  Each encounter can have multiple forms, like the eye_mag, ROS, Vitals, whatever
 $action     = $_REQUEST['action'];
-$finalize      = $_REQUEST['finalize'];
+$finalize   = $_REQUEST['finalize'];
 
 //$encounter  = $_REQUEST['encounter'];
 //if ($encounter =='') $encounter = $_SESSION['id'];
@@ -290,7 +290,7 @@ require_once("$incdir/patient_file/encounter/new_form.php");
             <?php ($CLINICAL =='1') ? ($display_Add = "size100") : ($display_Add = "size50"); ?>
             <?php ($CLINICAL =='0') ? ($display_Visibility = "display") : ($display_Visibility = "nodisplay"); ?>
             <!-- start    HPI row -->
-          <div id="HPIPMH_sections" name="HPIPMH_sections" style="margin: 80 auto;width:100%;text-align: center;font-size:1.0em;" class="nodisplay" >   
+          <div id="HPIPMH_sections" name="HPIPMH_sections" style="margin: 80 auto 10;width:100%;text-align: center;font-size:1.0em;" class="nodisplay" >   
             <!-- start    CC_HPI-->
             <div id="HPI_1" name="HPI_1" class="<?php echo attr($display_Add); ?>">
               <span class="anchor" id="HPI_anchor"></span>
@@ -664,7 +664,7 @@ require_once("$incdir/patient_file/encounter/new_form.php");
                   <?php ($PMH_VIEW !=2) ? ($display_PMH_view = "wide_textarea") : ($display_PMH_view= "narrow_textarea");?>                                 
                   <?php ($display_PMH_view == "wide_textarea") ? ($marker ="fa-minus-square-o") : ($marker ="fa-plus-square-o");?>
                   <div id="PMSFH_sections" name="PMSFH_sections">
-                    <div id="Enter_PMH" name="Enter_PMH" class="PMH_class" style="text-align:left;vertical align:middle; min-height: 4.5in;overflow:auto;font-size:0.7em;">
+                    <div id="Enter_PMH" name="Enter_PMH" class="PMH_class" style="text-align:left;vertical align:middle; min-height: 2.3in;overflow:auto;font-size:0.7em;">
                       ../../forms/'.$form_folder.'/a_issue.php
 
                         <?php 
@@ -3087,13 +3087,12 @@ require_once("$incdir/patient_file/encounter/new_form.php");
                   
                   <?  //forach $PMSFH[0]['POH'] print + Code enter
                   $PMSFH = build_PMSFH($pid); 
-                  foreach ($PMSFH[0]['POH'] as $k => $v) {
-                  //  echo $k ." = ".$v['title'].": ".$k['formdiagnosis']."<br />";
+                  if (count($PMSFH[0]['POH']) > 0) {
+                    foreach ($PMSFH[0]['POH'] as $k => $v) {
+                    //  echo $k ." = ".$v['title'].": ".$k['formdiagnosis']."<br />";
+                    }
                   }
-                  //echo "<pre>";
-//var_dump($PMSFH);
-
-?>
+              ?>
                 </div>
               </div>   
             </div>

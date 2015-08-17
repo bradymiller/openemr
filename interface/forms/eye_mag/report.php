@@ -68,10 +68,10 @@
       @extract($prefs);    
       $$LOCATION = $VALUE; 
     }
-    function eye_mag_report($pid, $encounter, $cols, $id, $formname) {
+    function eye_mag_report($pid, $encounter, $cols, $id, $formname='eye_mag') {
       global $form_folder;
       global $form_name;
-    // get pat_data and user_data
+      // get pat_data and user_data
       $query = "SELECT * FROM patient_data where pid=?";
       $pat_data =  sqlQuery($query,array($pid));
       @extract($pat_data);
@@ -1565,7 +1565,7 @@
                   <?php  }  ?> 
               </table>
               <br />
-              <table style="width:2.5in;padding:20 5 5 5;font-size:1.1em;">
+              <table style="width:1.5in;padding:20 5 5 5;font-size:1.1em;">
                 <tr>
                     <td style="font-size:0.9em;margin:0 auto;font-weight:bold;text-decoration:underline;"><?php echo xlt('Motility'); ?>:</td>
                     <td style="font-size:0.8em;vertical-align:top;text-align:left;top:0.0in;right:0.1in;height:0px;">
