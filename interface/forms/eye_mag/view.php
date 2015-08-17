@@ -3069,6 +3069,7 @@ require_once("$incdir/patient_file/encounter/new_form.php");
                    
                   
                   <a target="_report" href="/openemr/interface/patient_file/report/custom_report.php?printable=1&pdf=0&<?php echo $form_folder."_".$form_id."=".$encounter; ?>&">Printable Report</a><br />
+            <!--
                   <br />Coding IN DEVELOPMENT ONLY - NOT FUNCTIONAL:<br />
                   <span class="CODE_HIGH nodisplay"><i class="fa fa-check"></i> Detailed HPI documentation.</span><br />
                   <span class="DIL_RISKS nodisplay"><i class="fa fa-check"></i> Detailed Exam documentation.</span><br />
@@ -3093,6 +3094,7 @@ require_once("$incdir/patient_file/encounter/new_form.php");
                     }
                   }
               ?>
+            -->
                 </div>
               </div>   
             </div>
