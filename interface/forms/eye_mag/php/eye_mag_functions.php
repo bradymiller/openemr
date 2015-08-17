@@ -39,8 +39,7 @@ function priors_select($zone,$orig_id,$id_to_show,$pid,$type='text') {
     global $form_folder;
     global $form_name;
     global $visit_date;
-    $form_name = "Eye Exam"; //this must be added on adding the form - BAD
-    // need to change this query.
+    $form_name = "Eye Exam"; 
     $output_return ="<span style='right:0.241in;
                                 font-size:0.72em;
                                 padding:1 0 0 10;
@@ -1357,15 +1356,18 @@ function display_PRIOR_section ($zone,$orig_id,$id_to_show,$pid,$report = '0') {
                 <tr>
                     <td style='min-height:1.2in;min-width:1.5in;padding-left:5px;'>
                     <?php
-                    foreach ($PMSFH[0]['POH'] as $item) {
-                        echo "<span name='QP_PMH_".$item['rowid']."' href='#PMH_anchor' id='QP_PMH_".$item['rowid']."' 
-                        onclick=\"alter_issue('".$item['rowid']."','".$item['row_type']."','eye');\">".$item['title']."</span><br />";
-                        $counter++;
+                    if (count($PMSFH[0]['POH']) > 0) {
+                        foreach ($PMSFH[0]['POH'] as $item) {
+                            echo "<span name='QP_PMH_".$item['rowid']."' href='#PMH_anchor' id='QP_PMH_".$item['rowid']."' 
+                            onclick=\"alter_issue('".$item['rowid']."','".$item['row_type']."','eye');\">".$item['title']."</span><br />";
+                            $counter++;
+                        }
                     }
                     if (count($PMSFH[0]['POH']) < 1) {
                         echo  "".xla("None") ."<br /><br /><br />";
                         $counter = $counter+4; 
                     }
+                
                     ?>
                     </td>
                 </tr>
@@ -1386,15 +1388,18 @@ function display_PRIOR_section ($zone,$orig_id,$id_to_show,$pid,$report = '0') {
                     <td style='min-height:1.2in;min-width:1.5in;padding-left:5px;'>
                     <?php
                     $counter++;
-                    foreach ($PMSFH[0]['medical_problem'] as $item) {
-                        echo "<span name='QP_PMH_".$item['rowid']."' href='#PMH_anchor' id='QP_PMH_".$item['rowid']."' 
-                        onclick=\"alter_issue('".$item['rowid']."','".$item['row_type']."','');\">".$item['title']."</span><br />";
-                        $counter++;
+                    if (count($PMSFH[0]['medical_problem']) > 0) {
+                        foreach ($PMSFH[0]['medical_problem'] as $item) {
+                            echo "<span name='QP_PMH_".$item['rowid']."' href='#PMH_anchor' id='QP_PMH_".$item['rowid']."' 
+                            onclick=\"alter_issue('".$item['rowid']."','".$item['row_type']."','');\">".$item['title']."</span><br />";
+                            $counter++;
+                        }
                     }
                     if (count($PMSFH[0]['medical_problem']) < 1) {
                         echo  "".xla("None") ."<br /><br />";
                         $counter = $counter+4; 
                     }
+                
                     ?>
                     </td>
                 </tr>
@@ -1416,15 +1421,18 @@ function display_PRIOR_section ($zone,$orig_id,$id_to_show,$pid,$report = '0') {
                 <tr>
                     <td style='min-height:1.2in;min-width:1.5in;padding-left:5px;'>
                     <?php
-                    foreach ($PMSFH[0]['surgery'] as $item) {
-                        echo "<span name='QP_PMH_".$item['rowid']."' href='#PMH_anchor' id='QP_PMH_".$item['rowid']."' 
-                        onclick=\"alter_issue('".$item['rowid']."','".$item['row_type']."','');\">".$item['title']."</span><br />";
-                        $counter++;
+                    if (count($PMSFH[0]['surgery']) > 0) {
+                        foreach ($PMSFH[0]['surgery'] as $item) {
+                            echo "<span name='QP_PMH_".$item['rowid']."' href='#PMH_anchor' id='QP_PMH_".$item['rowid']."' 
+                            onclick=\"alter_issue('".$item['rowid']."','".$item['row_type']."','');\">".$item['title']."</span><br />";
+                            $counter++;
+                        }
                     }
                     if (count($PMSFH[0]['surgery']) < 1) {
                         echo  "".xla("None") ."<br /><br />";
                         $counter = $counter+4; 
                     }
+                    
                     ?>
                     </td>
                 </tr>
@@ -1446,15 +1454,18 @@ function display_PRIOR_section ($zone,$orig_id,$id_to_show,$pid,$report = '0') {
                     <td style='min-height:1.2in;min-width:1.5in;padding-left:5px;'>
                     <?php
                         $counter++;
-                    foreach ($PMSFH[0]['allergy'] as $item) {
-                        echo "<span name='QP_PMH_".$item['rowid']."' href='#PMH_anchor' id='QP_PMH_".$item['rowid']."' 
-                        onclick=\"alter_issue('".$item['rowid']."','".$item['row_type']."','');\">".$item['title']."</span><br />";
-                        $counter++;
-                    }
-                    if (count($PMSFH[0]['allergy']) < 1) {
-                        echo  "".xla("None") ."<br /><br />";
-                        $counter = $counter+4; 
-                    }
+                        if (count($PMSFH[0]['allergy']) > 0) {
+                            foreach ($PMSFH[0]['allergy'] as $item) {
+                                echo "<span name='QP_PMH_".$item['rowid']."' href='#PMH_anchor' id='QP_PMH_".$item['rowid']."' 
+                                onclick=\"alter_issue('".$item['rowid']."','".$item['row_type']."','');\">".$item['title']."</span><br />";
+                                $counter++;
+                            }
+                        }
+                            if (count($PMSFH[0]['allergy']) < 1) {
+                                echo  "".xla("None") ."<br /><br />";
+                                $counter = $counter+4; 
+                            }
+                        
                     ?>
                     </td>
                 </tr>
@@ -1475,14 +1486,16 @@ function display_PRIOR_section ($zone,$orig_id,$id_to_show,$pid,$report = '0') {
                 <tr>
                     <td style='min-height:1.2in;min-width:1.5in;padding-left:5px;'>
                     <?php
-                    foreach ($PMSFH[0]['medication'] as $item) {
-                        echo "<span name='QP_PMH_".$item['rowid']."' href='#PMH_anchor' id='QP_PMH_".$item['rowid']."' 
-                        onclick=\"alter_issue('".$item['rowid']."','".$item['row_type']."','');\">".$item['title']."</span><br />";
-                        $counter++;
-                    }
-                    if (count($PMSFH[0]['medication']) < 1) {
-                        echo  "".xla("None") ."<br /><br />";
-                        $counter = $counter+4; 
+                    if (count($PMSFH[0]['medication']) > 0) {
+                        foreach ($PMSFH[0]['medication'] as $item) {
+                            echo "<span name='QP_PMH_".$item['rowid']."' href='#PMH_anchor' id='QP_PMH_".$item['rowid']."' 
+                            onclick=\"alter_issue('".$item['rowid']."','".$item['row_type']."','');\">".$item['title']."</span><br />";
+                            $counter++;
+                        }
+                        if (count($PMSFH[0]['medication']) < 1) {
+                            echo  "".xla("None") ."<br /><br />";
+                            $counter = $counter+4; 
+                        }
                     }
                     ?>
                     </td>
@@ -1909,11 +1922,12 @@ function show_PMSFH_panel($PMSFH) {
       onclick="alter_issue('0','medical_problem','eye');" style="text-align:right;font-size:8px;">Add</span>
       <br />
       <?php
-      foreach ($PMSFH[0]['POH'] as $item) {
-        echo "<span name='QP_PMH_".$item['rowid']."' href='#PMH_anchor' id='QP_PMH_".$item['rowid']."' 
-        onclick=\"alter_issue('".$item['rowid']."','".$item['row_type']."','eye');\">".$item['title']."</span><br />";
+      if (count($PMSFH[0]['POH']) > 0) {
+          foreach ($PMSFH[0]['POH'] as $item) {
+            echo "<span name='QP_PMH_".$item['rowid']."' href='#PMH_anchor' id='QP_PMH_".$item['rowid']."' 
+            onclick=\"alter_issue('".$item['rowid']."','".$item['row_type']."','eye');\">".$item['title']."</span><br />";
+          }
       }
-      
        //<!-- PMH -->
       echo "<br />
       <span class='panel_title'>PMH:</span>";
@@ -1921,9 +1935,11 @@ function show_PMSFH_panel($PMSFH) {
       onclick="alter_issue('0','medical_problem','');" style="text-align:right;font-size:8px;">Add</span>
       <br />
       <?php
-      foreach ($PMSFH[0]['medical_problem'] as $item) {
-        echo "<span name='QP_PMH_".$item['rowid']."' href='#PMH_anchor' id='QP_PMH_".$item['rowid']."' 
-        onclick=\"alter_issue('".$item['rowid']."','".$item['row_type']."','');\">".$item['title']."</span><br />";
+      if (count($PMSFH[0]['medical_problem']) > 0) {
+          foreach ($PMSFH[0]['medical_problem'] as $item) {
+            echo "<span name='QP_PMH_".$item['rowid']."' href='#PMH_anchor' id='QP_PMH_".$item['rowid']."' 
+            onclick=\"alter_issue('".$item['rowid']."','".$item['row_type']."','');\">".$item['title']."</span><br />";
+          }
       }
       
        //<!-- Meds -->
@@ -1932,11 +1948,12 @@ function show_PMSFH_panel($PMSFH) {
       onclick="alter_issue('0','medication','');" style="text-align:right;font-size:8px;">Add</span>
       <br />
       <?php
-      foreach ($PMSFH[0]['medication'] as $item) {
-        echo "<span name='QP_PMH_".$item['rowid']."' href='#PMH_anchor' id='QP_PMH_".$item['rowid']."' 
-        onclick=\"alter_issue('".$item['rowid']."','".$item['row_type']."','');\">".$item['title']."</span><br />";
+      if (count($PMSFH[0]['medication']) > 0) {
+          foreach ($PMSFH[0]['medication'] as $item) {
+            echo "<span name='QP_PMH_".$item['rowid']."' href='#PMH_anchor' id='QP_PMH_".$item['rowid']."' 
+            onclick=\"alter_issue('".$item['rowid']."','".$item['row_type']."','');\">".$item['title']."</span><br />";
+          }
       }
-      
       //<!-- Surgeries -->
       echo "<br /><span class='panel_title'>Surgery:</span>";
       ?><span class="top-right btn-sm" href="#PMH_anchor" 
@@ -1997,11 +2014,13 @@ function show_PMSFH_panel($PMSFH) {
       onclick="alter_issue('0','FH','');" style="text-align:right;font-size:8px;">Add</span>
       <br />
       <?php
-        foreach ($PMSFH[0]['FH'] as $item) {
-            if ($item['display'] > '') {
-                echo "<span name='QP_PMH_".$item['rowid']."' href='#PMH_anchor' id='QP_PMH_".$item['rowid']."' 
-                onclick=\"alter_issue('".$item['rowid']."','".$item['row_type']."');\">".$item['short_title'].": ".$item['display']."</span><br />";
-                $mention_FH++;
+        if (count($PMSFH[0]['FH']) > 0) {
+            foreach ($PMSFH[0]['FH'] as $item) {
+                if ($item['display'] > '') {
+                    echo "<span name='QP_PMH_".$item['rowid']."' href='#PMH_anchor' id='QP_PMH_".$item['rowid']."' 
+                    onclick=\"alter_issue('".$item['rowid']."','".$item['row_type']."');\">".$item['short_title'].": ".$item['display']."</span><br />";
+                    $mention_FH++;
+                }
             }
         }
         if (!$mention_FH) {
@@ -3045,12 +3064,12 @@ function menu_overhaul_left($pid,$encounter) {
     style="width:280px;float:left;margin-left:18px;text-align:center;padding:5px 0px 5px 5px;">
     <?php 
     $query = "Select * from users where id =?";
-    $prov = sqlquery($query,array($prov['providerID']));
+    $prov = sqlQuery($query,array($pat_data['ref_providerID']));
     $provider = $prov['fname']." ".$prov['lname'];
     ?>
             <table style="font-size:12px;">
                 <tr><td class="right"><b>PCP:</b></td><td><?php echo $provider; ?></td></tr>
-                <tr><td class="right"><b>Referred By:</b></td><td><?php echo $pat_data['ref_providerID']; ?></td></tr>
+                <tr><td class="right"><b>Referred By:</b></td><td><?php echo $provider; ?></td></tr>
             </table>
         </div>
          <br />
