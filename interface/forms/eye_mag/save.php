@@ -475,6 +475,7 @@ function addNewDocument($name,$type,$tmp_name,$error,$size,$owner='',$patient_id
   $doc = sqlQuery("Select * from documents where url='".$file_here."'");
   if ($doc['id'] < '1') {
     $doc = sqlQuery("select MAX(id)+1 as id from documents");
+  }
     $sql = "REPLACE INTO documents set 
               id=?,
               encounter_id=?,
@@ -486,13 +487,14 @@ function addNewDocument($name,$type,$tmp_name,$error,$size,$owner='',$patient_id
               docdate=NOW(),
               path_depth='3',
               url=?";
+              if ($doc['id'] == '0') { $doc['id'] ='1';}
     $doc_id = sqlQuery($sql,array($doc['id'],$encounter,filesize($file_here),$_SESSION['authUserID'],$pid,$file_here));  
   /*
     $category = sqlQuery("select id from categories where name='Drawings'");       
     $sql = "REPLACE INTO categories_to_documents set category_id = ?, document_id = ?";
     sqlQuery($sql,array($category['id'],$doc['id']));  
   */
-  }
+  
   exit;
 }
 
