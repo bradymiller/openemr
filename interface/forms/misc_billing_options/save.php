@@ -43,6 +43,7 @@ $sets = "pid = {$_SESSION["pid"]},
   medicaid_original_reference = '" . formData("medicaid_original_reference") . "',
   prior_auth_number           = '" . formData("prior_auth_number") . "',
   replacement_claim           = '" . formData("replacement_claim") . "',
+  icn_resubmission_number     = '" . formData("icn_resubmission_number") . "',
   box_14_date_qual            = '" . formData("box_14_date_qual") . "',
   box_15_date_qual            = '" . formData("box_15_date_qual") . "',
   comments                    = '" . formData("comments") . "'";

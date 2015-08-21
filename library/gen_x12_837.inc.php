@@ -609,8 +609,16 @@ function gen_x12_837($pid, $encounter, &$log, $encounter_claim=false) {
       "~\n";
   }
 
-  // Segment REF*F8 (Payer Claim Control Number) omitted.
-
+  // Segment REF*F8 Payer Claim Control Number for claim re-submission.    
+  if($claim->frequencyTypeCode() = 7){
+    ++$edicount;
+    $out .= "REF" . 
+      "*F8" .
+      "*" . $claim->icnResubmissionNumber() .
+      "~\n";       
+  }   
+  
+  
   if ($claim->cliaCode() && ($CMS_5010 || $claim->claimType() === 'MB')) {
     // Required by Medicare when in-house labs are done.
     ++$edicount;

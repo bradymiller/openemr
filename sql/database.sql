@@ -1234,6 +1234,7 @@ CREATE TABLE `form_misc_billing_options` (
   `prior_auth_number` varchar(20) default NULL,
   `comments` varchar(255) default NULL,
   `replacement_claim` tinyint(1) default 0,
+  `icn_resubmission_number` varchar(35) default NULL,
   `box_14_date_qual` char(3) default NULL,
   `box_15_date_qual` char(3) default NULL,
   PRIMARY KEY  (`id`)

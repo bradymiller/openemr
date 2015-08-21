@@ -1133,6 +1133,10 @@ class Claim {
   function frequencyTypeCode() {
     return empty($this->billing_options['replacement_claim']) ? '1' : '7';
   }
+  
+ function icnResubmissionNumber() {
+    return x12clean($this->billing_options['icn_resubmission_number']);
+  }
 
   function additionalNotes() {
     return x12clean(trim($this->billing_options['comments']));

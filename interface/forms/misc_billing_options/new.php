@@ -1,4 +1,5 @@
 <?php
+
 $fake_register_globals=false;
 $sanitize_all_escapes=true;
 
@@ -144,6 +145,7 @@ function genProviderSelect($selname, $toptext, $default=0, $disabled=false) {
 <span class=text><?php echo xlt(' Medicaid Original Reference No. ');?></span><input type=entry size=15 name="medicaid_original_reference" value="<?php echo attr($obj{"medicaid_original_reference"});?>" ><br><br>
 <span class=text><?php echo xlt('BOX 23. Prior Authorization No. ');?></span><input type=entry size=15 name="prior_auth_number" value="<?php echo attr($obj{"prior_auth_number"});?>" ><br><br>
 <label><span class=text><?php echo xlt('X12 only: Replacement Claim '); ?>: </span><input type=checkbox name="replacement_claim" value="1" <?php if ($obj['replacement_claim'] == "1") echo "checked";?>></label><br><br>
+<span class=text><?php echo xlt('X12 only ICN resubmission No. ');?></span><input type=entry size=35 name="icn_resubmission_number" value="<?php echo attr($obj{"icn_resubmission_number"});?>" ><br><br>
 
 <table>
 <tr>

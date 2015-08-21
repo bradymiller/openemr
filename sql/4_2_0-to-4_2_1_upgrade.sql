@@ -171,3 +171,7 @@ ALTER TABLE `form_misc_billing_options` ADD `provider_qualifier_code` varchar(2)
 #IfMissingColumn form_misc_billing_options provider_id
 ALTER TABLE `form_misc_billing_options` ADD `provider_id` int(11) DEFAULT NULL ;
 #EndIf
+
+#IfMissingColumn form_misc_billing_options icn_resubmission_number
+ALTER TABLE `form_misc_billing_options` ADD `icn_resubmission_number` varchar(35) DEFAULT NULL ;
+#EndIf
