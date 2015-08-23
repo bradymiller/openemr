@@ -11,7 +11,7 @@ require_once("date_qualifier_options.php");
 
 
 if (! $encounter) { // comes from globals.php
- die(xl("Internal error: we do not seem to be in an encounter!"));
+ die(xlt("Internal error: we do not seem to be in an encounter!"));
 }
 
 $formid   = 0 + formData('id', 'G');
@@ -46,7 +46,7 @@ function genProviderSelect($selname, $toptext, $default=0, $disabled=false) {
     if ($provid == $default) echo " selected";
     echo ">" . text($row['lname'] . ", " . $row['fname']) . "\n";
   }
-  echo $provid;
+  echo text($provid);
   echo "   </select>\n";
 }
 ?>
@@ -65,9 +65,9 @@ function genProviderSelect($selname, $toptext, $default=0, $disabled=false) {
 
 </head>
 <body class="body_top">
-<form method=post <?php echo "name='my_form' " .  "action='$rootdir/forms/misc_billing_options/save.php?id=$formid'>\n";?>
+<form method=post <?php echo "name='my_form' " .  "action='$rootdir/forms/misc_billing_options/save.php?id=attr($formid)'>\n";?>
 
-<span class="title"><?php echo xlt('Misc Billing Options for HCFA-1500'); ?></span><Br><br>
+<span class="title"><?php echo xlt('Misc Billing Options for HCFA-1500'); ?></span><br><br>
 <span class=text><?php echo xlt('Checked box = yes ,  empty = no');?><br><br>
 <label><span class=text><?php echo xlt('BOX 10 A. Employment related '); ?>: </span><input type=checkbox name="employment_related" value="1" <?php if ($obj['employment_related'] == "1") echo "checked";?>></label><br><br>
 <label><span class=text><?php echo xlt('BOX 10 B. Auto Accident '); ?>: </span><input type=checkbox name="auto_accident" value="1" <?php if ($obj['auto_accident'] == "1") echo "checked";?>></label>
@@ -150,7 +150,7 @@ function genProviderSelect($selname, $toptext, $default=0, $disabled=false) {
 <table>
 <tr>
 <td valign=top>
-<span class=text><?php echo xlt('Additional Notes'); ?>: </span><br><textarea cols=40 rows=8 wrap=virtual name="comments" ><?php echo attr($obj{"comments"});?></textarea><br>
+<span class=text><?php echo xlt('Additional Notes'); ?>: </span><br><textarea cols=40 rows=8 wrap=virtual name="comments" ><?php echo text($obj{"comments"});?></textarea><br>
 </td>
 </table>
 <br>
@@ -158,8 +158,8 @@ function genProviderSelect($selname, $toptext, $default=0, $disabled=false) {
 
  <div>
 <!-- Save/Cancel buttons -->
-<input type="button" class="save" value="<?php echo xlt('Save'); ?>"> &nbsp &nbsp &nbsp &nbsp; 
-<input type="button" class="dontsave" value="<?php echo xlt('Don\'t Save Changes'); ?>"> &nbsp; 
+<input type="button" class="save" value="<?php echo xla('Save'); ?>"> &nbsp &nbsp &nbsp &nbsp; 
+<input type="button" class="dontsave" value="<?php echo xla('Don\'t Save Changes'); ?>"> &nbsp; 
 </div>
 </form>
 <script language="javascript">

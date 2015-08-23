@@ -338,26 +338,6 @@ function gen_hcfa_1500_page($pid, $encounter, &$log, &$claim) {
   put_hcfa(32, 5, 2, substr($tmp,6,2));
   put_hcfa(32, 8, 4, substr($tmp,0,4));
   
-//  if(hcfa_1500_version_02_12() && !empty($tmp))
-//  {
-    // Only include the Box 14 qualifier if there we are using version 02/12 and there is a Box 14 date.
-//    put_hcfa(32, 16, 3, $claim->box14qualifier());
-      
-//  }
-  // Box 15. First Date of Same or Similar Illness, if applicable
-//  $tmp = $claim->dateInitialTreatment();
-//  if(hcfa_1500_version_02_12() && !empty($tmp))
-//  {
-    // Only include the Box 15 qualifier if there we are using version 02/12 and there is a Box 15 date.
-//    put_hcfa(32, 31, 3, $claim->box15qualifier());    
-//  }
-
-
- // put_hcfa(32,37, 2, substr($tmp,4,2));
- // put_hcfa(32,40, 2, substr($tmp,6,2));
- // put_hcfa(32,43, 4, substr($tmp,0,4));
-
-
   // Box 16. Dates Patient Unable to Work in Current Occupation
   if ($claim->isUnableToWork()) {
     $tmp = $claim->offWorkFrom();
@@ -411,10 +391,6 @@ function gen_hcfa_1500_page($pid, $encounter, &$log, &$claim) {
       put_hcfa(34, 33, 15, $claim->referrerNPI());
     }
     }
-    // Box 17b. Referring Provider NPI
-   // if ($claim->referrerNPI()) {
-   //   put_hcfa(34, 33, 15, $claim->referrerNPI());
-   // }
   }
 
   // Box 18. Hospitalization Dates Related to Current Services

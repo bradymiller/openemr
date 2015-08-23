@@ -256,18 +256,18 @@ class Claim {
     $referrer_id = (empty($GLOBALS['MedicareReferrerIsRenderer']) ||
       $this->insurance_numbers['provider_number_type'] != '1C') ?
       $this->patient_data['ref_providerID'] : $provider_id;
-    $sql = "SELECT * FROM users WHERE id = '$referrer_id'";
-    $this->referrer = sqlQuery($sql);
+    $sql = "SELECT * FROM users WHERE id = ?";
+    $this->referrer = sqlQuery($sql, array($referrer_id));
     if (!$this->referrer) $this->referrer = array();
 
     $supervisor_id = $this->encounter['supervisor_id'];
-    $sql = "SELECT * FROM users WHERE id = '$supervisor_id'";
-    $this->supervisor = sqlQuery($sql);
+    $sql = "SELECT * FROM users WHERE id = ?";
+    $this->supervisor = sqlQuery($sql, array($supervisor_id));
     if (!$this->supervisor) $this->supervisor = array();
     
     $billing_options_id = $this->billing_options['provider_id'];
-    $sql = "SELECT * FROM users WHERE id = '$billing_options_id'";
-    $this->billing_prov_id = sqlQuery($sql);
+    $sql = "SELECT * FROM users WHERE id = ?";
+    $this->billing_prov_id = sqlQuery($sql, array($billing_options_id));
     if (!$this->billing_prov_id) $this->billing_prov_id = array();
 
     $sql = "SELECT * FROM insurance_numbers WHERE " .
