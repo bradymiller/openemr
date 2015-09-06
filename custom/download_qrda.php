@@ -77,7 +77,7 @@ $type_report = (($type_report == "amc") || ($type_report == "amc_2011") || ($typ
 			criteriaArray.push($(this).attr("id"));
 		});
 		if ( criteriaArray.length == 0 ) {
-			alert("<?php echo xls('Please select atleast one criteria to download');?>");
+			alert("<?php echo xls('Please select at least one criteria to download');?>");
 			return false;
 		}
 		for( var i=0 ; i < criteriaArray.length ; i++) {
@@ -199,7 +199,7 @@ $type_report = (($type_report == "amc") || ($type_report == "amc_2011") || ($typ
 					$tempCqmAmcString = "";
 					if (($type_report == "cqm") || ($type_report == "cqm_2011") || ($type_report == "cqm_2014")) {
 					  if (!empty($row['cqm_pqri_code'])) {
-						$tempCqmAmcString .= " " . text( xl('PQRI') . ":" . $row['cqm_pqri_code']) . " ";
+						$tempCqmAmcString .= " " . xl('PQRI') . ":" . $row['cqm_pqri_code'] . " ";
 					  }
 					  if (!empty($row['cqm_nqf_code'])) {
 						$tempCqmAmcString .= " " .  xl('NQF') . ":" . $row['cqm_nqf_code'] . " ";
@@ -216,7 +216,7 @@ $type_report = (($type_report == "amc") || ($type_report == "amc_2011") || ($typ
 				echo "</td>";
 				echo "<td align=center>";
 				echo "<div id=download" . attr($counter) . ">";
-				echo "<img class='downloadIcon' src='" . $GLOBALS['webroot'] . "/images/downbtn.gif' onclick=downloadXML(" . $counter . ",1); />";
+				echo "<img class='downloadIcon' src='" . $GLOBALS['webroot'] . "/images/downbtn.gif' onclick=downloadXML(" . attr($counter) . ",1); />";
 				echo "</div>";
 				echo "<div style='display:none' id=spin" . attr($counter) . ">";
 				echo "<img src='" . $GLOBALS['webroot'] . "/interface/pic/ajax-loader.gif'/>";

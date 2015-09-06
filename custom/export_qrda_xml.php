@@ -1465,7 +1465,7 @@ fclose($fileQRDAOPen);
 <center>
 <form>
 <p class="text">
-	<a href="qrda_download.php?qrda_fname=<?php echo $qrda_fname;?>"><?php echo xlt("Download QRDA Category III File");?></a>
+	<a href="qrda_download.php?qrda_fname=<?php echo attr($qrda_fname);?>"><?php echo xlt("Download QRDA Category III File");?></a>
 </p>
 <textarea rows='50' cols='500' style='width:95%' readonly>
 <?php echo trim($xml->getXml()); ?>
