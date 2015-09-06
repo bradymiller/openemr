@@ -129,7 +129,7 @@ while ($org_row = sqlFetchArray($org_res)) {
             $selected = "SELECTED";
         }
     }
-    $optionsStr .= "<option value='".$org_row['id']."' $selected>".  htmlspecialchars($lab_org_name,ENT_QUOTES)."</option>";
+    $optionsStr .= "<option value='".attr($org_row['id'])."' $selected>".  text($lab_org_name)."</option>";
 }
 ?>
 
@@ -141,9 +141,6 @@ while ($org_row = sqlFetchArray($org_res)) {
  <tr>
   <td nowrap><b><?php echo xlt('Name'); ?>:</b></td>
   <td>
-   <!--<input type='text' size='40' name='form_name' maxlength='255'
-    value='<?php echo attr($row['name']); ?>'
-    style='width:100%' class='inputtext' />-->
 	<select name='form_name' id='form_name' class='inputtext' style='width:150px'> 
           <?php echo $optionsStr; ?>
     </select>

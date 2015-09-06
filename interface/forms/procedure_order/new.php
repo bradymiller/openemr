@@ -64,7 +64,7 @@ function QuotedOrNull($fld) {
 function getListOptions($list_id , $fieldnames=array('option_id', 'title', 'seq'))
 {
 	$output =  array();
-	$query = sqlStatement("SELECT ".implode(',',$fieldnames)." FROM list_options where list_id='".$list_id."' order by seq");
+	$query = sqlStatement("SELECT ".implode(',',$fieldnames)." FROM list_options where list_id=? order by seq", array($list_id));
 	while($ll = sqlFetchArray($query)) {
 		foreach($fieldnames as $val)
 		  $output[$ll['option_id']][$val] = $ll[$val];					
@@ -526,10 +526,10 @@ generate_form_field(array('data_type'=>1,'field_id'=>'order_status',
  <tr>
  <!--<td width='1%' valign='top'><b><?php echo xl('Procedure') . ' ' . ($i + 1); ?>:</b></td>-->
  <?php if(empty($formid) || empty($oprow['procedure_order_title'])) {?> 
-        <td width='1%' valign='top'><input type='hidden' name='form_proc_order_title[<?php echo $i; ?>]' value='Procedure'><b><?php echo xl('Procedure');?></b></td>
+        <td width='1%' valign='top'><input type='hidden' name='form_proc_order_title[<?php echo $i; ?>]' value='Procedure'><b><?php echo xlt('Procedure');?></b></td>
     <?php } else {?>
      <td width='1%' valign='top'>
-        <input type='hidden' name='form_proc_order_title[<?php echo $i; ?>]' value='<?php echo attr($oprow['procedure_order_title']) ?>'><b><?php echo attr($oprow['procedure_order_title']) ?></b>
+        <input type='hidden' name='form_proc_order_title[<?php echo $i; ?>]' value='<?php echo attr($oprow['procedure_order_title']) ?>'><b><?php echo text($oprow['procedure_order_title']) ?></b>
      </td>
     <?php } ?>
   <td valign='top'>
@@ -568,7 +568,7 @@ if ($qoe_init_javascript)
 <?php $procedure_order_type = getListOptions('order_type' , array('option_id', 'title')); ?>
 <select name="procedure_type_names" id="procedure_type_names">
 	<?php foreach($procedure_order_type as $ordered_types){?>
-	<option value="<?php echo attr($ordered_types['title']); ?>" ><?php echo text($ordered_types['title']) ; ?></option>
+	<option value="<?php echo attr($ordered_types['title']); ?>" ><?php echo text(xl_list_label($ordered_types['title'])) ; ?></option>
 	<?php } ?>    
 </select> 
 <input type='button' value='<?php echo xla('Add Procedure'); ?>' onclick="addProcLine()" />

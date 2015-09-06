@@ -52,16 +52,17 @@ if ( $fileName ) {
 		   echo xlt("FAILURE: Couldn't create the zip");
 		}
 		foreach ( $fileList as $eachFile ) {
-			$baseFileName = check_file_dir_name(basename($eachFile));
-			$zip->addFile($eachFile,$baseFileName);
+                        check_file_dir_name($eachFile);
+			$zip->addFile($qrda_file_path.$eachFile,$eachFile);
 		}
 		$zip->close();
 		foreach ( $fileList as $eachFile ) {
-			unlink($eachFile);
+			unlink($qrda_file_path.$eachFile);
 		}
-	} else
-		$finalZip = $fileList[0];
-	
+	} else  {
+		$finalZip = $qrda_file_path.$fileList[0];
+	}
+
 	header("Pragma: public");
 	header("Expires: 0");
 	header("Cache-Control: must-revalidate, post-check=0, pre-check=0");
@@ -104,16 +105,16 @@ if ( count($patients) ) {
         echo xlt("FAILURE: Couldn't create the zip");
 	}
 	foreach ( $files as $eachFile ) {
-		$filePath = $qrda_file_path . "/" . $eachFile;
+		$filePath = $qrda_file_path . $eachFile;
 		$zip->addFile($filePath,$eachFile);
 	}
 	$zip->close();
 	//Deleting the files after closing the zip
 	foreach ( $files as $eachFile ) {
-		$filePath = $qrda_file_path . "/" . $eachFile;
+		$filePath = $qrda_file_path . $eachFile;
 		unlink($filePath);
 	}
-	echo $zipFileFullPath;
+	echo $zipFile;
 } else 
-	echo xlt("FAILURE: No patients for measure") . $ruleID;
+	echo xlt("FAILURE: No patients for measure") . " " . text($ruleID);
 ?>

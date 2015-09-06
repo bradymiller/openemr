@@ -50,7 +50,7 @@
 	$preDefinedUniqIDRules['0013'] = '40280381-4600-425F-0146-1F6F722B0F17';
 	$preDefinedUniqIDRules['0024'] = '40280381-4555-E1C1-0145-85C7311720F5';
 	
-	$qrda_file_path = $GLOBALS['OE_SITE_DIR'] . "/cqm_qrda/";
+	$qrda_file_path = $GLOBALS['OE_SITE_DIR'] . "/documents/cqm_qrda/";
 	
 	function getCombinePatients($dataSheet, $reportID) {
 		foreach( $dataSheet as $singleDataSheet ) {

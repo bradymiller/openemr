@@ -203,7 +203,7 @@ else {
 	  //QRDA Category III Export
 	  if(sNested == "QRDA"){
 		var form_rule_filter = theform.form_rule_filter.value
-		var sLoc = '../../custom/export_qrda_xml.php?target_date=' + theform.form_target_date.value + '&qrda_version=3&rule_filter=cqm_2014&form_provider='+theform.form_provider.value+"&report_id=<?php echo $report_id;?>";
+		var sLoc = '../../custom/export_qrda_xml.php?target_date=' + theform.form_target_date.value + '&qrda_version=3&rule_filter=cqm_2014&form_provider='+theform.form_provider.value+"&report_id=<?php echo attr($report_id);?>";
 	  }else{
 		var sLoc = '../../custom/export_registry_xml.php?&target_date=' + theform.form_target_date.value + '&nested=' + sNested;
 	  }
@@ -214,7 +214,7 @@ else {
  //QRDA I - 2014 Download
  function downloadQRDA() {
 	top.restoreSession();
-	var reportID = '<?php echo $report_id; ?>';
+	var reportID = '<?php echo attr($report_id); ?>';
 	var provider = $("#form_provider").val();
 	sLoc = '../../custom/download_qrda.php?&report_id=' + reportID + '&provider_id=' + provider;
 	dlgopen(sLoc, '_blank', 600, 500);
@@ -361,11 +361,9 @@ else {
                       <td>
                          <input <?php echo $dis_text; ?> type='text' name='form_begin_date' id="form_begin_date" size='20' value='<?php echo htmlspecialchars( $begin_date, ENT_QUOTES); ?>'
                             onkeyup='datekeyup(this,mypcc)' onblur='dateblur(this,mypcc)' title='<?php echo htmlspecialchars( xl('yyyy-mm-dd hh:mm:ss'), ENT_QUOTES); ?>'>
-                          <?php //if (empty($report_id)) { ?>
                            <img src='../pic/show_calendar.gif' align='absbottom' width='24' height='22'
                             id='img_begin_date' border='0' alt='[?]' style='cursor:pointer'
                             title='<?php echo htmlspecialchars( xl('Click here to choose a date'), ENT_QUOTES); ?>'>
-                          <?php //} ?>
                       </td>
                    </tr>
 		<?php } ?>
@@ -381,11 +379,9 @@ else {
                         <td>
                            <input <?php echo $dis_text; ?> type='text' name='form_target_date' id="form_target_date" size='20' value='<?php echo htmlspecialchars( $target_date, ENT_QUOTES); ?>'
                                 onkeyup='datekeyup(this,mypcc)' onblur='dateblur(this,mypcc)' title='<?php echo htmlspecialchars( xl('yyyy-mm-dd hh:mm:ss'), ENT_QUOTES); ?>'>
-                           <?php //if (empty($report_id)) { ?>
                              <img src='../pic/show_calendar.gif' align='absbottom' width='24' height='22'
                                 id='img_target_date' border='0' alt='[?]' style='cursor:pointer'
                                 title='<?php echo htmlspecialchars( xl('Click here to choose a date'), ENT_QUOTES); ?>'>
-                           <?php //} ?>
                         </td>
                 </tr>
 
@@ -418,8 +414,6 @@ else {
                             <?php echo xlt('All Automated Measure Calculations (AMC)'); ?></option>
                             <option value='amc_2011' <?php if ($rule_filter == "amc_2011") echo "selected"; ?>>
                             <?php  echo xlt('2011 Automated Measure Calculations (AMC)'); ?></option>
-                            <!--<option value='amc_2014' <?php //if ($rule_filter == "amc_2014") echo "selected"; ?>>
-                            <?php //echo xlt('2014 Automated Measure Calculations (AMC)'); ?></option>-->
 							<option value='amc_2014_stage1' <?php if ($rule_filter == "amc_2014_stage1") echo "selected"; ?>>
                             <?php echo xlt('2014 Automated Measure Calculations (AMC) - Stage I'); ?></option>
 							<option value='amc_2014_stage2' <?php if ($rule_filter == "amc_2014_stage2") echo "selected"; ?>>
