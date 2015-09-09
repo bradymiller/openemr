@@ -258,7 +258,7 @@ else { //no entries
   echo "<td class='text'>";
   echo xlt('Rule Title');
   echo ":</td><td class='text'>";
-  echo $rule_title;
+  echo text($rule_title);
   echo "</td>";
   echo "</tr>";
 
