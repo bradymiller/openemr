@@ -134,7 +134,8 @@ if (isset($entryID)) {
 }
 
 if (isset($_GET['rule'])) {
-	$ruleData = sqlQuery("SELECT `developer`, `funding_source`, `release_version` " .
+  $rule_title = getListItemTitle("clinical_rules",$_GET['rule']);
+  $ruleData = sqlQuery("SELECT `developer`, `funding_source`, `release_version` " .
     "FROM `clinical_rules` " .
     "WHERE  `id`=? AND `pid`=0", array($_GET['rule']) );
   $developer = $ruleData['developer'];
@@ -155,31 +156,7 @@ if (isset($_GET['rule'])) {
 <br>
 <form action='patient_data.php' name='patient_data' method='post' onsubmit='return top.restoreSession()'>
   <table border=0 cellpadding=1 cellspacing=1>
-  <?php
-    echo "<tr>";
-	echo "<td class='bold'>";
-	echo xlt('Developer');
-	echo ":</td><td class='text'>";
-	echo $developer;
-	echo "</td>";
-    echo "</tr>";
-	
-    echo "<tr>"; 	
-	echo "<td class='bold'>";
-	echo xlt('Funding Source');
-	echo ":</td><td class='text'>";
-	echo $funding_source;
-	echo "</td>";
-	echo "</tr>";
-	
-	echo "<tr>";
-	echo "<td class='bold'>";
-    echo xlt('Release');
-    echo ":</td><td class='text' colspan='3'>";
-    echo $release;
-    echo "</td>";
-	echo "</tr>";
-	
+    <?php
     echo "<tr><td class='required'>";
     echo xlt('Date/Time');
     echo ":</td><td class='text'>";
@@ -189,7 +166,7 @@ if (isset($_GET['rule'])) {
       "title='" . xla('yyyy-mm-dd hh:mm:ss') . "' />";
     echo "<img src='../../pic/show_calendar.gif' align='absbottom' width='24' height='22'" .
       "id='img_date' border='0' alt='[?]' style='cursor:pointer'" .
-      "title='" . xla'Click here to choose a date') . "' />";
+      "title='" . xla('Click here to choose a date') . "' />";
     echo "<script language='JavaScript'>Calendar.setup({inputField:'form_date', ifFormat:'%Y-%m-%d %H:%M:%S', button:'img_date', showsTime:'true'});</script>";
     echo "</td></tr>";
 
@@ -213,7 +190,7 @@ if (isset($_GET['rule'])) {
     attr($item)  . "' />";
   if (isset($entryID)) {
     echo "<input type='hidden' name='form_entryID' value='" .
-      attr($entryID,)  . "' />";
+      attr($entryID)  . "' />";
   }
 ?>
 </form>
@@ -270,6 +247,49 @@ else { //no entries
   echo "<p>" . xlt('No previous entries.') . "</p>";
 } ?>
 </div>
+<br>
+<hr />
+<br>
+<?php
+echo "<p class='text'>" .  xlt('See below for the details of the rule that created this action') . ":</p>";
+?>
+<?php if (isset($_GET['rule'])) { ?>
+ <table border=0 cellpadding=1 cellspacing=1>
+  <?php
+  echo "<tr>";
+  echo "<td class='text'>";
+  echo xlt('Rule Title');
+  echo ":</td><td class='text'>";
+  echo $rule_title;
+  echo "</td>";
+  echo "</tr>";
+
+  echo "<tr>";
+  echo "<td class='text'>";
+  echo xlt('Rule Developer');
+  echo ":</td><td class='text'>";
+  echo text($developer);
+  echo "</td>";
+  echo "</tr>";
+
+  echo "<tr>";
+  echo "<td class='text'>";
+  echo xlt('Rule Funding Source');
+  echo ":</td><td class='text'>";
+  echo text($funding_source);
+  echo "</td>";
+  echo "</tr>";
+
+  echo "<tr>";
+  echo "<td class='text'>";
+  echo xlt('Rule Release');
+  echo ":</td><td class='text'>";
+  echo text($release);
+  echo "</td>";
+  echo "</tr>";
+  ?>
+ </table>
+<?php } ?>
 
 </body>
 </html>

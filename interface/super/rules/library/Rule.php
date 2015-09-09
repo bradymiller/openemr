@@ -25,7 +25,6 @@ class Rule {
     var $developer;
     var $funding_source;
     var $release;
-    const SQL_RULE_USER =  "select fname, lname  from users where id= ?";  
     /**
      * @var ReminderIntervals
      */
@@ -41,12 +40,9 @@ class Rule {
      */
     var $groups;
 
-    function __construct( $id='', $title='', $developer='', $funding_source='', $release='', $ruleTypes=array() ) {
+    function __construct( $id='', $title='', $ruleTypes=array() ) {
         $this->id = $id;
         $this->title = $title;
-        $this->developer = $developer;
-        $this->funding_source = $funding_source;
-        $this->release = $release;
         $this->ruleTypes = $ruleTypes;
     }
 
@@ -54,17 +50,18 @@ class Rule {
         return $this->title;
     }
 
-    function getDeveloper() {
-        return $this->developer;
+    function setDeveloper($s) {
+        $this->developer = $s;
     }
     
-    function getFunding() {
-        return $this->funding_source;
+    function setFunding($s) {
+        $this->funding_source = $s;
     }
-    
-    function getRelease() {
-        return $this->release;
+
+    function setRelease($s) {
+        $this->release = $s;
     }
+
     /**
      * @param RuleType $ruleType
      */
@@ -154,9 +151,5 @@ class Rule {
         return $labels;
     }
     
-    function getUserRule(){
-        $userResult = sqlQuery(self::SQL_RULE_USER , array($_SESSION['authUserID']));
-        return $userResult['fname']." ".$userResult['lname'];
-    }
 }
 ?>

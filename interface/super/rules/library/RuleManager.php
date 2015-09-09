@@ -133,6 +133,11 @@ class RuleManager {
         }
 
         $rule = new Rule($id, $ruleResult['title']);
+
+        $rule->setDeveloper($ruleResult['developer']);
+        $rule->setFunding($ruleResult['funding_source']);
+        $rule->setRelease($ruleResult['release_version']);
+
         $this->fillRuleTypes( $rule, $ruleResult );
         $this->fillRuleReminderIntervals( $rule );
         $this->fillRuleFilterCriteria( $rule );
@@ -440,7 +445,7 @@ class RuleManager {
             $result = sqlQuery( "select count(*)+1 AS id from clinical_rules" );
             $ruleId = "rule_" . $result['id'];
             sqlStatement( "INSERT INTO clinical_rules (id, pid, active_alert_flag, passive_alert_flag, cqm_flag, amc_flag, patient_reminder_flag, developer, funding_source, release_version ) " . 
-                    "VALUES (?,?,?,?,?,?,?) ",
+                    "VALUES (?,?,?,?,?,?,?,?,?,?) ",
                     array(
                         $ruleId,
                         0,
@@ -719,10 +724,10 @@ class RuleManager {
         }
     }
 
-    private function doRuleLabel( $exists, $listId, $optionId, $title, $developer, $funding, $release) {
+    private function doRuleLabel( $exists, $listId, $optionId, $title) {
         if ( $exists) {
             // edit
-            sqlStatement( "UPDATE list_options SET title = ?  WHERE list_id = ? AND option_id = ?", array(
+            sqlStatement( "UPDATE list_options SET title = ? WHERE list_id = ? AND option_id = ?", array(
                 $title,
                 $listId,
                 $optionId )
