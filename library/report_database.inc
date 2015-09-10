@@ -283,14 +283,12 @@ function insertItemReportTracker($report_id, $itemized_test_id, $pass, $patient_
  * @return  string/boolean              Rule title for itemization display (false if nothing found)
  */
 function collectItemizedRuleDisplayTitle($report_id, $itemized_test_id, $numerator_label='') {
-	$dispTitle = "";
-	$report_view = collectReportDatabase($report_id);
-	$type_report = $report_view['type'];
-	
-	$type_report = (($type_report == "amc") || ($type_report == "amc_2011") || ($type_report == "amc_2014") || ($type_report == "amc_2014_stage1") || ($type_report == "amc_2014_stage2") ||
-	($type_report == "cqm") || ($type_report == "cqm_2011") || ($type_report == "cqm_2014")) ? $type_report : "standard";
-	$dataSheet = json_decode($report_view['data'],TRUE);
-	foreach ($dataSheet as $row) {
+  $dispTitle = "";
+  $report_view = collectReportDatabase($report_id);
+  $type_report = $report_view['type'];
+  $type_report = (($type_report == "amc") || ($type_report == "amc_2011") || ($type_report == "amc_2014") || ($type_report == "amc_2014_stage1") || ($type_report == "amc_2014_stage2") || ($type_report == "cqm") || ($type_report == "cqm_2011") || ($type_report == "cqm_2014")) ? $type_report : "standard";
+  $dataSheet = json_decode($report_view['data'],TRUE);
+  foreach ($dataSheet as $row) {
     if (isset($row['is_main']) || isset($row['is_sub'])) {
       if (isset($row['is_main'])) {
         // Store this
@@ -326,7 +324,7 @@ function collectItemizedRuleDisplayTitle($report_id, $itemized_test_id, $numerat
               $tempCqmAmcString .= " " . xlt('AMC-2014 Stage I'). ":" . text($row['amc_code_2014']) . " ";
             }
           }
-		  if ($type_report == "amc_2014_stage2") {
+          if ($type_report == "amc_2014_stage2") {
             if (!empty($row['amc_code_2014'])) {
               $tempCqmAmcString .= " " . xlt('AMC-2014 Stage II'). ":" . text($row['amc_code_2014']) . " ";
             }
@@ -381,13 +379,13 @@ function collectItemizedPatientsCdrReport($report_id,$itemized_test_id,$pass='al
       break;
     case "exclude":
       $pass_sql=2;
-	  break;
-	case "init_patients":
+      break;
+    case "init_patients":
       $pass_sql=3;
-	  break;
-	case "exception":
+      break;
+    case "exception":
       $pass_sql=4;
-	  break;
+      break;
   }
 
   $sqlParameters = array($report_id,$itemized_test_id,$numerator_label);
@@ -396,18 +394,18 @@ function collectItemizedPatientsCdrReport($report_id,$itemized_test_id,$pass='al
     $sql_where = " WHERE `report_itemized`.`pass` != 3 AND `report_itemized`.`report_id` = ? AND `report_itemized`.`itemized_test_id` = ? AND `report_itemized`.`numerator_label` = ? ";
   }
   else if ($pass == "fail") {
-	$exlPidArr = array();
-	$exludeResult = collectItemizedPatientsCdrReport($report_id,$itemized_test_id,'exclude',$numerator_label,false,$sqllimit,$fstart);
-	foreach($exludeResult as $exlResArr){
-		$exlPidArr[] = $exlResArr['pid'];
-	}
+    $exlPidArr = array();
+    $exludeResult = collectItemizedPatientsCdrReport($report_id,$itemized_test_id,'exclude',$numerator_label,false,$sqllimit,$fstart);
+    foreach($exludeResult as $exlResArr){
+      $exlPidArr[] = $exlResArr['pid'];
+    }
 	
     $sql_where = " WHERE `report_itemized`.`report_id` = ? AND `report_itemized`.`itemized_test_id` = ? AND `report_itemized`.`numerator_label` = ? AND `report_itemized`.`pass` = ? ";
 	
-	if(count($exlPidArr) > 0){
-		$exlPids = implode(",", $exlPidArr);
-		$sql_where .= " AND patient_data.pid NOT IN(add_escape_custom($exlPids)) ";
-	}
+    if(count($exlPidArr) > 0){
+      $exlPids = implode(",", $exlPidArr);
+      $sql_where .= " AND patient_data.pid NOT IN(add_escape_custom($exlPids)) ";
+    }
     array_push($sqlParameters,$pass_sql);
   }
   else {
