@@ -396,7 +396,7 @@ $(document).ready(function(){
 <div style="text-align: center;">
 <?php echo $newlogocode;?>
 </div>
-<h1 class="heading"><?php echo xlt("Naha Health Clinic Portal"); ?></h1>
+<h1 class="heading"><?php echo xlt("King's Patient Portal"); ?></h1>
 
 <?php
  $result = getPatientData($pid);
@@ -532,6 +532,7 @@ $(document).ready(function(){
            </div>
           </div>
           <br/>
+          
          </div>
         </td>
        </tr>
@@ -554,6 +555,7 @@ expand_collapse_widget($widgetTitle, $widgetLabel, $widgetButtonLabel,
 
                     <br/>
                     <div style='margin-left:10px' class='text'><img src='images/ajax-loader.gif'/></div><br/>
+
 			</td>
 		</tr>
                 <?php echo "<tr><td width='650px'>";
@@ -568,6 +570,7 @@ expand_collapse_widget($widgetTitle, $widgetLabel, $widgetButtonLabel,
                 $fixedWidth = true;
                 expand_collapse_widget($widgetTitle, $widgetLabel, $widgetButtonLabel , $widgetButtonLink, $widgetButtonClass, $linkMethod, $bodyClass, $widgetAuth, $fixedWidth); ?>
 
+           
                         </td>
                 </tr>
               
@@ -589,6 +592,7 @@ expand_collapse_widget($widgetTitle, $widgetLabel, $widgetButtonLabel,
 ?>
                     <br/>
                     <div style='margin-left:10px' class='text'><img src='images/ajax-loader.gif'/></div><br/>
+
      </td>
     </tr>		
 
@@ -609,6 +613,7 @@ expand_collapse_widget($widgetTitle, $widgetLabel, $widgetButtonLabel,
 ?>
       <br/>
       <div style='margin-left:10px' class='text'><img src='images/ajax-loader.gif'/></div><br/>
+
      </td>
     </tr>
 	
@@ -634,28 +639,26 @@ expand_collapse_widget($widgetTitle, $widgetLabel, $widgetButtonLabel,
 	<div style='margin-left:10px' class='text'><img src='images/ajax-loader.gif'/></div><br/>
 	</td>
 	</tr>		
-
 <?php } ?>
-
-	<tr>
+    <tr>
       <td width='650px'>
 <?php
 // Messages expand collapse widget
   $widgetTitle = xl("Messages");
   $widgetLabel = "pnotes";
-  $widgetButtonLabel = xl("Edit");
+  $widgetButtonLabel = xl("Respond");
   $widgetButtonLink = "get_mail_user.php";
   $widgetButtonClass = "large_modal iframe";
   $linkMethod = "";
   $bodyClass = "summary_item large";
-//  if ($GLOBALS['portal_onsite_message_modify']) 
-//  {
-//    $widgetAuth = true;
-//  }
-//  else 
-//  {
+  if ($GLOBALS['portal_onsite_message_modify']) 
+  {
+    $widgetAuth = true;
+  }
+  else 
+  {
     $widgetAuth = false;
- // }
+  }
   $fixedWidth = true;
   expand_collapse_widget($widgetTitle, $widgetLabel, $widgetButtonLabel, $widgetButtonLink, $widgetButtonClass, $linkMethod, $bodyClass, $widgetAuth, $fixedWidth);
 ?>
@@ -664,8 +667,7 @@ expand_collapse_widget($widgetTitle, $widgetLabel, $widgetButtonLabel,
       </td>
     </tr>
     <tr>
-		<td>
-			
+      <td>
 <?php
 	// Show current and upcoming appointments.
 	 $query = "SELECT e.pc_eid, e.pc_aid, e.pc_title, e.pc_eventDate, " .
@@ -689,23 +691,19 @@ expand_collapse_widget($widgetTitle, $widgetLabel, $widgetButtonLabel,
 	$bodyClass = "summary_item small";
     if ($GLOBALS['portal_onsite_appt_modify']) 
     {
-	    $widgetAuth = true;
-        }
+      $widgetAuth = true;
+    }
     else 
     {
-            $widgetAuth = false;
-        }
+      $widgetAuth = false;
+    }
 	$fixedWidth = true;
-
 	expand_collapse_widget($widgetTitle, $widgetLabel, $widgetButtonLabel , $widgetButtonLink, $widgetButtonClass, $linkMethod, $bodyClass, $widgetAuth, $fixedWidth);
-
 			 $count = 0;
-			 
-			?>
+?>
 			<div id='stats_div' style="display:none">
             	<div style='margin-left:10px' class='text'><img src='images/ajax-loader.gif'/></div>
         	</div>
-
 		</td>
 	</tr>
    </table>
