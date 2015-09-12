@@ -156,6 +156,51 @@ INSERT INTO list_options (list_id,option_id,title,seq) VALUES ('patient_flow_boa
 INSERT INTO list_options (list_id,option_id,title,seq) VALUES ('patient_flow_board_rooms', '3', 'Room 3', 30);
 #EndIf
 
+UPDATE `clinical_rules` SET `cqm_2014_flag` = 1 WHERE `id` = 'rule_htn_bp_measure_cqm' AND `pid` = 0;
+UPDATE `clinical_rules` SET `cqm_2014_flag` = 1 WHERE `id` = 'rule_adult_wt_screen_fu_cqm' AND `pid` = 0;
+UPDATE `clinical_rules` SET `cqm_2014_flag` = 1 WHERE `id` = 'rule_wt_assess_couns_child_cqm' AND `pid` = 0;
+UPDATE `clinical_rules` SET `cqm_2014_flag` = 1 WHERE `id` = 'rule_pneumovacc_ge_65_cqm' AND `pid` = 0;
+
+#IfNotRow clinical_rules id rule_children_pharyngitis_cqm
+INSERT INTO `clinical_rules` (`id`, `pid`, `active_alert_flag`, `passive_alert_flag`, `cqm_flag`, `cqm_nqf_code`, `cqm_pqri_code`, `amc_flag`, `amc_code`, `patient_reminder_flag`, `amc_2011_flag`, `amc_2014_flag`, `amc_code_2014`, `cqm_2011_flag`, `cqm_2014_flag`) VALUES ('rule_children_pharyngitis_cqm', 0, 0, 0, 1, '0002', '', 0, '', 0, 0, 0, '', 1, 1);
+#EndIf
+
+#IfNotRow2D list_options list_id clinical_rules option_id rule_children_pharyngitis_cqm
+INSERT INTO `list_options` (`list_id`, `option_id`, `title`, `seq`, `is_default`, `option_value`, `mapping`, `notes`, `codes`, `toggle_setting_1`, `toggle_setting_2`) VALUES ('clinical_rules', 'rule_children_pharyngitis_cqm', 'Appropriate Testing for Children with Pharyngitis (CQM)', 502, 0, 0, '', '', '', 0, 0);
+#EndIf
+
+#IfNotRow clinical_rules id rule_fall_screening_cqm
+INSERT INTO `clinical_rules` (`id`, `pid`, `active_alert_flag`, `passive_alert_flag`, `cqm_flag`, `cqm_nqf_code`, `cqm_pqri_code`, `amc_flag`, `amc_code`, `patient_reminder_flag`, `amc_2011_flag`, `amc_2014_flag`, `amc_code_2014`, `cqm_2011_flag`, `cqm_2014_flag`) VALUES ('rule_fall_screening_cqm', 0, 0, 0, 1, '0101', '', 0, '', 0, 0, 0, '', 1, 1);
+#EndIf
+
+#IfNotRow2D list_options list_id clinical_rules option_id rule_fall_screening_cqm
+INSERT INTO `list_options` (`list_id`, `option_id`, `title`, `seq`, `is_default`, `option_value`, `mapping`, `notes`, `codes`, `toggle_setting_1`, `toggle_setting_2`) VALUES ('clinical_rules', 'rule_fall_screening_cqm', 'Falls: Screening, Risk-Assessment, and Plan of Care to Prevent Future Falls (CQM)', 504, 0, 0, '', '', '', 0, 0);
+#EndIf
+
+#IfNotRow clinical_rules id rule_pain_intensity_cqm
+INSERT INTO `clinical_rules` (`id`, `pid`, `active_alert_flag`, `passive_alert_flag`, `cqm_flag`, `cqm_nqf_code`, `cqm_pqri_code`, `amc_flag`, `amc_code`, `patient_reminder_flag`, `amc_2011_flag`, `amc_2014_flag`, `amc_code_2014`, `cqm_2011_flag`, `cqm_2014_flag`) VALUES ('rule_pain_intensity_cqm', 0, 0, 0, 1, '0384', '', 0, '', 0, 0, 0, '', 1, 1);
+#EndIf
+
+#IfNotRow2D list_options list_id clinical_rules option_id rule_pain_intensity_cqm
+INSERT INTO `list_options` (`list_id`, `option_id`, `title`, `seq`, `is_default`, `option_value`, `mapping`, `notes`, `codes`, `toggle_setting_1`, `toggle_setting_2`) VALUES ('clinical_rules', 'rule_pain_intensity_cqm', 'Oncology: Medical and Radiation – Pain Intensity Quantified (CQM)', 506, 0, 0, '', '', '', 0, 0);
+#EndIf
+
+#IfNotRow clinical_rules id rule_child_immun_stat_2014_cqm
+INSERT INTO `clinical_rules` (`id`, `pid`, `active_alert_flag`, `passive_alert_flag`, `cqm_flag`, `cqm_nqf_code`, `cqm_pqri_code`, `amc_flag`, `amc_code`, `patient_reminder_flag`, `amc_2011_flag`, `amc_2014_flag`, `amc_code_2014`, `cqm_2011_flag`, `cqm_2014_flag`, `amc_2014_stage1_flag`, `amc_2014_stage2_flag`) VALUES ('rule_child_immun_stat_2014_cqm', 0, 0, 0, 1, '0038', '', 0, '', 0, 0, 0, '', 0, 1, 0, 0);
+#EndIf
+
+#IfNotRow2D list_options list_id clinical_rules option_id rule_child_immun_stat_2014_cqm
+INSERT INTO `list_options` (`list_id`, `option_id`, `title`, `seq`, `is_default`, `option_value`, `mapping`, `notes`, `codes`, `toggle_setting_1`, `toggle_setting_2`) VALUES ('clinical_rules', 'rule_child_immun_stat_2014_cqm', 'Childhood immunization Status (CQM)', 250, 0, 0, '', '', '', 0, 0);
+#EndIf
+
+#IfNotRow clinical_rules id rule_tob_use_2014_cqm
+INSERT INTO `clinical_rules` (`id`, `pid`, `active_alert_flag`, `passive_alert_flag`, `cqm_flag`, `cqm_nqf_code`, `cqm_pqri_code`, `amc_flag`, `amc_code`, `patient_reminder_flag`, `amc_2011_flag`, `amc_2014_flag`, `amc_code_2014`, `cqm_2011_flag`, `cqm_2014_flag`, `amc_2014_stage1_flag`, `amc_2014_stage2_flag`) VALUES ('rule_tob_use_2014_cqm', 0, 0, 0, 1, '0028', '', 0, '', 0, 0, 0, '', 0, 1, 0, 0);
+#EndIf
+
+#IfNotRow2D list_options list_id clinical_rules option_id rule_tob_use_2014_cqm
+INSERT INTO `list_options` (`list_id`, `option_id`, `title`, `seq`, `is_default`, `option_value`, `mapping`, `notes`, `codes`, `toggle_setting_1`, `toggle_setting_2`) VALUES ('clinical_rules', 'rule_tob_use_2014_cqm', 'Preventive Care and Screening: Tobacco Use: Screening and Cessation Intervention (CQM)', 210, 0, 0, '', '', '', 0, 0);
+#EndIf
+
 #IfMissingColumn clinical_rules amc_2014_stage1_flag
 	ALTER TABLE `clinical_rules` ADD COLUMN `amc_2014_stage1_flag` tinyint(1) COMMENT '2014 Stage 1 - Automated Measure Calculation flag for (unable to customize per patient)';
 	
@@ -182,7 +227,7 @@ INSERT INTO list_options (list_id,option_id,title,seq) VALUES ('patient_flow_boa
 #IfNotRow clinical_rules id image_results_amc
 	INSERT INTO `clinical_rules` 
 	(`id`, `pid`, `active_alert_flag`, `passive_alert_flag`, `cqm_flag`, `cqm_nqf_code`, `cqm_pqri_code`, `amc_flag`, `amc_code`, `patient_reminder_flag`, `amc_2011_flag`, `amc_2014_flag`, `amc_code_2014`, `cqm_2011_flag`, `cqm_2014_flag`, `amc_2014_stage1_flag`, `amc_2014_stage2_flag`) VALUES
-	('image_results_amc', 0, 0, 0, 0, '', '', 1, '', 0, 0, 1, '170.314(g)(1)/(2)–20', NULL, NULL, 0, 1);
+	('image_results_amc', 0, 0, 0, 0, '', '', 1, '', 0, 0, 1, '170.314(g)(1)/(2)–20', 0, 0, 0, 1);
 #EndIf
 
 #IfNotRow2D list_options list_id clinical_rules option_id image_results_amc
@@ -193,7 +238,7 @@ INSERT INTO list_options (list_id,option_id,title,seq) VALUES ('patient_flow_boa
 #IfNotRow clinical_rules id family_health_history_amc
 	INSERT INTO `clinical_rules` 
 	(`id`, `pid`, `active_alert_flag`, `passive_alert_flag`, `cqm_flag`, `cqm_nqf_code`, `cqm_pqri_code`, `amc_flag`, `amc_code`, `patient_reminder_flag`, `amc_2011_flag`, `amc_2014_flag`, `amc_code_2014`, `cqm_2011_flag`, `cqm_2014_flag`, `amc_2014_stage1_flag`, `amc_2014_stage2_flag`) VALUES
-	('family_health_history_amc', 0, 0, 0, 0, '', '', 1, '', 0, 0, 1, '170.314(g)(1)/(2)–21', NULL, NULL, 0, 1);
+	('family_health_history_amc', 0, 0, 0, 0, '', '', 1, '', 0, 0, 1, '170.314(g)(1)/(2)–21', 0, 0, 0, 1);
 #EndIf
 
 #IfNotRow2D list_options list_id clinical_rules option_id family_health_history_amc
@@ -204,18 +249,18 @@ INSERT INTO list_options (list_id,option_id,title,seq) VALUES ('patient_flow_boa
 #IfNotRow clinical_rules id electronic_notes_amc
 	INSERT INTO `clinical_rules` 
 	(`id`, `pid`, `active_alert_flag`, `passive_alert_flag`, `cqm_flag`, `cqm_nqf_code`, `cqm_pqri_code`, `amc_flag`, `amc_code`, `patient_reminder_flag`, `amc_2011_flag`, `amc_2014_flag`, `amc_code_2014`, `cqm_2011_flag`, `cqm_2014_flag`, `amc_2014_stage1_flag`, `amc_2014_stage2_flag`) VALUES
-	('clinical_rules', 'electronic_notes_amc', 'Electronic Notes', 3200, 0, 0, '', '', NULL, 0, 0);
+	('electronic_notes_amc', 0, 0, 0, 0, '', '', 1, '', 0, 0, 1, '170.314(g)(1)/(2)–22', 0, 0, 0, 1);
 #EndIf
 
 #IfNotRow2D list_options list_id clinical_rules option_id electronic_notes_amc
 	INSERT INTO `list_options` (`list_id`, `option_id`, `title`, `seq`, `is_default`, `option_value`, `mapping`, `notes`, `codes`, `toggle_setting_1`, `toggle_setting_2`) VALUES
-	('electronic_notes_amc', 0, 0, 0, 0, '', '', 1, '', 0, 0, 1, '170.314(g)(1)/(2)–22', NULL, NULL, 0, 1);
+	('clinical_rules', 'electronic_notes_amc', 'Electronic Notes', 3200, 0, 0, '', '', NULL, 0, 0);
 #EndIf
 
 #IfNotRow clinical_rules id secure_messaging_amc
 	INSERT INTO `clinical_rules` 
 	(`id`, `pid`, `active_alert_flag`, `passive_alert_flag`, `cqm_flag`, `cqm_nqf_code`, `cqm_pqri_code`, `amc_flag`, `amc_code`, `patient_reminder_flag`, `amc_2011_flag`, `amc_2014_flag`, `amc_code_2014`, `cqm_2011_flag`, `cqm_2014_flag`, `amc_2014_stage1_flag`, `amc_2014_stage2_flag`) VALUES
-	('secure_messaging_amc', 0, 0, 0, 0, '', '', 1, '', 0, 0, 1, '170.314(g)(1)/(2)', NULL, NULL, 0, 1);
+	('secure_messaging_amc', 0, 0, 0, 0, '', '', 1, '', 0, 0, 1, '170.314(g)(1)/(2)', 0, 0, 0, 1);
 #EndIf
 
 #IfNotRow2D list_options list_id clinical_rules option_id secure_messaging_amc
@@ -226,7 +271,7 @@ INSERT INTO list_options (list_id,option_id,title,seq) VALUES ('patient_flow_boa
 #IfNotRow clinical_rules id view_download_transmit_amc
 	INSERT INTO `clinical_rules` 
 	(`id`, `pid`, `active_alert_flag`, `passive_alert_flag`, `cqm_flag`, `cqm_nqf_code`, `cqm_pqri_code`, `amc_flag`, `amc_code`, `patient_reminder_flag`, `amc_2011_flag`, `amc_2014_flag`, `amc_code_2014`, `cqm_2011_flag`, `cqm_2014_flag`, `amc_2014_stage1_flag`, `amc_2014_stage2_flag`) VALUES
-	('view_download_transmit_amc', 0, 0, 0, 0, '', '', 1, '', 0, 0, 1, '170.314(g)(1)/(2)–14', NULL, NULL, 1, 1);
+	('view_download_transmit_amc', 0, 0, 0, 0, '', '', 1, '', 0, 0, 1, '170.314(g)(1)/(2)–14', 0, 0, 1, 1);
 #EndIf
 
 #IfNotRow2D list_options list_id clinical_rules option_id view_download_transmit_amc
@@ -237,7 +282,7 @@ INSERT INTO list_options (list_id,option_id,title,seq) VALUES ('patient_flow_boa
 #IfNotRow clinical_rules id cpoe_radiology_amc
 	INSERT INTO `clinical_rules` 
 	(`id`, `pid`, `active_alert_flag`, `passive_alert_flag`, `cqm_flag`, `cqm_nqf_code`, `cqm_pqri_code`, `amc_flag`, `amc_code`, `patient_reminder_flag`, `amc_2011_flag`, `amc_2014_flag`, `amc_code_2014`, `cqm_2011_flag`, `cqm_2014_flag`, `amc_2014_stage1_flag`, `amc_2014_stage2_flag`) VALUES
-	('cpoe_radiology_amc', 0, 0, 0, 0, '', '', 1, '170.304(a)', 0, 0, 1, '170.314(g)(1)/(2)–7', NULL, NULL, 0, 1);
+	('cpoe_radiology_amc', 0, 0, 0, 0, '', '', 1, '170.304(a)', 0, 0, 1, '170.314(g)(1)/(2)–7', 0, 0, 0, 1);
 #EndIf
 
 #IfNotRow2D list_options list_id clinical_rules option_id cpoe_radiology_amc
@@ -248,7 +293,7 @@ INSERT INTO list_options (list_id,option_id,title,seq) VALUES ('patient_flow_boa
 #IfNotRow clinical_rules id cpoe_proc_orders_amc
 	INSERT INTO `clinical_rules` 
 	(`id`, `pid`, `active_alert_flag`, `passive_alert_flag`, `cqm_flag`, `cqm_nqf_code`, `cqm_pqri_code`, `amc_flag`, `amc_code`, `patient_reminder_flag`, `amc_2011_flag`, `amc_2014_flag`, `amc_code_2014`, `cqm_2011_flag`, `cqm_2014_flag`, `amc_2014_stage1_flag`, `amc_2014_stage2_flag`) VALUES
-	('cpoe_proc_orders_amc', 0, 0, 0, 0, '', '', 1, '170.304(a)', 0, 0, 1, '170.314(g)(1)/(2)–7', NULL, NULL, 0, 1);
+	('cpoe_proc_orders_amc', 0, 0, 0, 0, '', '', 1, '170.304(a)', 0, 0, 1, '170.314(g)(1)/(2)–7', 0, 0, 0, 1);
 #EndIf
 
 #IfNotRow2D list_options list_id clinical_rules option_id cpoe_proc_orders_amc
@@ -259,7 +304,7 @@ INSERT INTO list_options (list_id,option_id,title,seq) VALUES ('patient_flow_boa
 #IfNotRow clinical_rules id send_reminder_stage2_amc
 	INSERT INTO `clinical_rules` 
 	(`id`, `pid`, `active_alert_flag`, `passive_alert_flag`, `cqm_flag`, `cqm_nqf_code`, `cqm_pqri_code`, `amc_flag`, `amc_code`, `patient_reminder_flag`, `amc_2011_flag`, `amc_2014_flag`, `amc_code_2014`, `cqm_2011_flag`, `cqm_2014_flag`, `amc_2014_stage1_flag`, `amc_2014_stage2_flag`) VALUES
-	('send_reminder_stage2_amc', 0, 0, 0, 0, '', '', 1, '170.304(d)', 0, 0, 1, '170.314(g)(1)/(2)–13', NULL, NULL, 0, 1);
+	('send_reminder_stage2_amc', 0, 0, 0, 0, '', '', 1, '170.304(d)', 0, 0, 1, '170.314(g)(1)/(2)–13', 0, 0, 0, 1);
 #EndIf
 
 #IfNotRow2D list_options list_id clinical_rules option_id send_reminder_stage2_amc
@@ -270,7 +315,7 @@ INSERT INTO list_options (list_id,option_id,title,seq) VALUES ('patient_flow_boa
 #IfNotRow clinical_rules id cpoe_med_stage2_amc
 	INSERT INTO `clinical_rules` 
 	(`id`, `pid`, `active_alert_flag`, `passive_alert_flag`, `cqm_flag`, `cqm_nqf_code`, `cqm_pqri_code`, `amc_flag`, `amc_code`, `patient_reminder_flag`, `amc_2011_flag`, `amc_2014_flag`, `amc_code_2014`, `cqm_2011_flag`, `cqm_2014_flag`, `amc_2014_stage1_flag`, `amc_2014_stage2_flag`) VALUES
-	('cpoe_med_stage2_amc', 0, 0, 0, 0, '', '', 1, '170.304(a)', 0, 0, 1, '170.314(g)(1)/(2)–7', NULL, NULL, 1, 1);
+	('cpoe_med_stage2_amc', 0, 0, 0, 0, '', '', 1, '170.304(a)', 0, 0, 1, '170.314(g)(1)/(2)–7', 0, 0, 1, 1);
 #EndIf
 
 #IfNotRow2D list_options list_id clinical_rules option_id cpoe_med_stage2_amc
@@ -281,7 +326,7 @@ INSERT INTO list_options (list_id,option_id,title,seq) VALUES ('patient_flow_boa
 #IfNotRow clinical_rules id patient_edu_stage2_amc
 	INSERT INTO `clinical_rules` 
 	(`id`, `pid`, `active_alert_flag`, `passive_alert_flag`, `cqm_flag`, `cqm_nqf_code`, `cqm_pqri_code`, `amc_flag`, `amc_code`, `patient_reminder_flag`, `amc_2011_flag`, `amc_2014_flag`, `amc_code_2014`, `cqm_2011_flag`, `cqm_2014_flag`, `amc_2014_stage1_flag`, `amc_2014_stage2_flag`) VALUES
-	('patient_edu_stage2_amc', 0, 0, 0, 0, '', '', 1, '170.302(m)', 0, 0, 1, '170.314(g)(1)/(2)–16', NULL, NULL, 0, 1);
+	('patient_edu_stage2_amc', 0, 0, 0, 0, '', '', 1, '170.302(m)', 0, 0, 1, '170.314(g)(1)/(2)–16', 0, 0, 0, 1);
 #EndIf
 
 #IfNotRow2D list_options list_id clinical_rules option_id patient_edu_stage2_amc
@@ -292,7 +337,7 @@ INSERT INTO list_options (list_id,option_id,title,seq) VALUES ('patient_flow_boa
 #IfNotRow clinical_rules id record_vitals_1_stage1_amc
 	INSERT INTO `clinical_rules` 
 	(`id`, `pid`, `active_alert_flag`, `passive_alert_flag`, `cqm_flag`, `cqm_nqf_code`, `cqm_pqri_code`, `amc_flag`, `amc_code`, `patient_reminder_flag`, `amc_2011_flag`, `amc_2014_flag`, `amc_code_2014`, `cqm_2011_flag`, `cqm_2014_flag`, `amc_2014_stage1_flag`, `amc_2014_stage2_flag`) VALUES
-	('record_vitals_1_stage1_amc', 0, 0, 0, 0, '', '', 1, '170.302(f)', 0, 0, 1, '170.314(g)(1)/(2)–10', NULL, NULL, 0, 0);
+	('record_vitals_1_stage1_amc', 0, 0, 0, 0, '', '', 1, '170.302(f)', 0, 0, 1, '170.314(g)(1)/(2)–10', 0, 0, 0, 0);
 #EndIf
 
 #IfNotRow2D list_options list_id clinical_rules option_id record_vitals_1_stage1_amc
@@ -303,7 +348,7 @@ INSERT INTO list_options (list_id,option_id,title,seq) VALUES ('patient_flow_boa
 #IfNotRow clinical_rules id record_vitals_2_stage1_amc
 	INSERT INTO `clinical_rules` 
 	(`id`, `pid`, `active_alert_flag`, `passive_alert_flag`, `cqm_flag`, `cqm_nqf_code`, `cqm_pqri_code`, `amc_flag`, `amc_code`, `patient_reminder_flag`, `amc_2011_flag`, `amc_2014_flag`, `amc_code_2014`, `cqm_2011_flag`, `cqm_2014_flag`, `amc_2014_stage1_flag`, `amc_2014_stage2_flag`) VALUES
-	('record_vitals_2_stage1_amc', 0, 0, 0, 0, '', '', 1, '170.302(f)', 0, 0, 1, '170.314(g)(1)/(2)–10', NULL, NULL, 1, 1);
+	('record_vitals_2_stage1_amc', 0, 0, 0, 0, '', '', 1, '170.302(f)', 0, 0, 1, '170.314(g)(1)/(2)–10', 0, 0, 1, 1);
 #EndIf
 
 #IfNotRow2D list_options list_id clinical_rules option_id record_vitals_2_stage1_amc
@@ -314,7 +359,7 @@ INSERT INTO list_options (list_id,option_id,title,seq) VALUES ('patient_flow_boa
 #IfNotRow clinical_rules id record_vitals_3_stage1_amc
 	INSERT INTO `clinical_rules` 
 	(`id`, `pid`, `active_alert_flag`, `passive_alert_flag`, `cqm_flag`, `cqm_nqf_code`, `cqm_pqri_code`, `amc_flag`, `amc_code`, `patient_reminder_flag`, `amc_2011_flag`, `amc_2014_flag`, `amc_code_2014`, `cqm_2011_flag`, `cqm_2014_flag`, `amc_2014_stage1_flag`, `amc_2014_stage2_flag`) VALUES
-	('record_vitals_3_stage1_amc', 0, 0, 0, 0, '', '', 1, '170.302(f)', 0, 0, 1, '170.314(g)(1)/(2)–10', NULL, NULL, 1, 1);
+	('record_vitals_3_stage1_amc', 0, 0, 0, 0, '', '', 1, '170.302(f)', 0, 0, 1, '170.314(g)(1)/(2)–10', 0, 0, 1, 1);
 #EndIf
 
 #IfNotRow2D list_options list_id clinical_rules option_id record_vitals_3_stage1_amc
@@ -325,7 +370,7 @@ INSERT INTO list_options (list_id,option_id,title,seq) VALUES ('patient_flow_boa
 #IfNotRow clinical_rules id record_vitals_4_stage1_amc
 	INSERT INTO `clinical_rules` 
 	(`id`, `pid`, `active_alert_flag`, `passive_alert_flag`, `cqm_flag`, `cqm_nqf_code`, `cqm_pqri_code`, `amc_flag`, `amc_code`, `patient_reminder_flag`, `amc_2011_flag`, `amc_2014_flag`, `amc_code_2014`, `cqm_2011_flag`, `cqm_2014_flag`, `amc_2014_stage1_flag`, `amc_2014_stage2_flag`) VALUES
-	('record_vitals_4_stage1_amc', 0, 0, 0, 0, '', '', 1, '170.302(f)', 0, 0, 1, '170.314(g)(1)/(2)–10', NULL, NULL, 1, 1);
+	('record_vitals_4_stage1_amc', 0, 0, 0, 0, '', '', 1, '170.302(f)', 0, 0, 1, '170.314(g)(1)/(2)–10', 0, 0, 1, 1);
 #EndIf
 
 #IfNotRow2D list_options list_id clinical_rules option_id record_vitals_4_stage1_amc
@@ -336,7 +381,7 @@ INSERT INTO list_options (list_id,option_id,title,seq) VALUES ('patient_flow_boa
 #IfNotRow clinical_rules id record_vitals_stage2_amc
 	INSERT INTO `clinical_rules` 
 	(`id`, `pid`, `active_alert_flag`, `passive_alert_flag`, `cqm_flag`, `cqm_nqf_code`, `cqm_pqri_code`, `amc_flag`, `amc_code`, `patient_reminder_flag`, `amc_2011_flag`, `amc_2014_flag`, `amc_code_2014`, `cqm_2011_flag`, `cqm_2014_flag`, `amc_2014_stage1_flag`, `amc_2014_stage2_flag`) VALUES
-	('record_vitals_stage2_amc', 0, 0, 0, 0, '', '', 1, '170.302(f)', 0, 0, 1, '170.314(g)(1)/(2)–10', NULL, NULL, 0, 0);
+	('record_vitals_stage2_amc', 0, 0, 0, 0, '', '', 1, '170.302(f)', 0, 0, 1, '170.314(g)(1)/(2)–10', 0, 0, 0, 0);
 #EndIf
 
 #IfNotRow2D list_options list_id clinical_rules option_id record_vitals_stage2_amc
@@ -347,7 +392,7 @@ INSERT INTO list_options (list_id,option_id,title,seq) VALUES ('patient_flow_boa
 #IfNotRow clinical_rules id provide_sum_pat_stage2_amc
 	INSERT INTO `clinical_rules` 
 	(`id`, `pid`, `active_alert_flag`, `passive_alert_flag`, `cqm_flag`, `cqm_nqf_code`, `cqm_pqri_code`, `amc_flag`, `amc_code`, `patient_reminder_flag`, `amc_2011_flag`, `amc_2014_flag`, `amc_code_2014`, `cqm_2011_flag`, `cqm_2014_flag`, `amc_2014_stage1_flag`, `amc_2014_stage2_flag`) VALUES
-	('provide_sum_pat_stage2_amc', 0, 0, 0, 0, '', '', 1, '170.304(h)', 0, 0, 1, '170.314(g)(1)/(2)–15', NULL, NULL, 0, 1);
+	('provide_sum_pat_stage2_amc', 0, 0, 0, 0, '', '', 1, '170.304(h)', 0, 0, 1, '170.314(g)(1)/(2)–15', 0, 0, 0, 1);
 #EndIf
 
 #IfNotRow2D list_options list_id clinical_rules option_id provide_sum_pat_stage2_amc
@@ -358,7 +403,7 @@ INSERT INTO list_options (list_id,option_id,title,seq) VALUES ('patient_flow_boa
 #IfNotRow clinical_rules id vdt_stage2_amc
 	INSERT INTO `clinical_rules` 
 	(`id`, `pid`, `active_alert_flag`, `passive_alert_flag`, `cqm_flag`, `cqm_nqf_code`, `cqm_pqri_code`, `amc_flag`, `amc_code`, `patient_reminder_flag`, `amc_2011_flag`, `amc_2014_flag`, `amc_code_2014`, `cqm_2011_flag`, `cqm_2014_flag`, `amc_2014_stage1_flag`, `amc_2014_stage2_flag`) VALUES
-	('vdt_stage2_amc', 0, 0, 0, 0, '', '', 1, '', 0, 0, 1, '170.314(g)(1)/(2)–14', NULL, NULL, 1, 1);
+	('vdt_stage2_amc', 0, 0, 0, 0, '', '', 1, '', 0, 0, 1, '170.314(g)(1)/(2)–14', 0, 0, 1, 1);
 #EndIf
 
 #IfNotRow2D list_options list_id clinical_rules option_id vdt_stage2_amc
@@ -369,7 +414,7 @@ INSERT INTO list_options (list_id,option_id,title,seq) VALUES ('patient_flow_boa
 #IfNotRow clinical_rules id send_sum_stage1_amc
 	INSERT INTO `clinical_rules` 
 	(`id`, `pid`, `active_alert_flag`, `passive_alert_flag`, `cqm_flag`, `cqm_nqf_code`, `cqm_pqri_code`, `amc_flag`, `amc_code`, `patient_reminder_flag`, `amc_2011_flag`, `amc_2014_flag`, `amc_code_2014`, `cqm_2011_flag`, `cqm_2014_flag`, `amc_2014_stage1_flag`, `amc_2014_stage2_flag`) VALUES
-	('send_sum_stage1_amc', 0, 0, 0, 0, '', '', 1, '170.304(i)', 0, 0, 1, '170.314(g)(1)/(2)–18', NULL, NULL, 1, 0);
+	('send_sum_stage1_amc', 0, 0, 0, 0, '', '', 1, '170.304(i)', 0, 0, 1, '170.314(g)(1)/(2)–18', 0, 0, 1, 0);
 #EndIf
 
 #IfNotRow2D list_options list_id clinical_rules option_id send_sum_stage1_amc
@@ -380,7 +425,7 @@ INSERT INTO list_options (list_id,option_id,title,seq) VALUES ('patient_flow_boa
 #IfNotRow clinical_rules id send_sum_1_stage2_amc
 	INSERT INTO `clinical_rules` 
 	(`id`, `pid`, `active_alert_flag`, `passive_alert_flag`, `cqm_flag`, `cqm_nqf_code`, `cqm_pqri_code`, `amc_flag`, `amc_code`, `patient_reminder_flag`, `amc_2011_flag`, `amc_2014_flag`, `amc_code_2014`, `cqm_2011_flag`, `cqm_2014_flag`, `amc_2014_stage1_flag`, `amc_2014_stage2_flag`) VALUES
-	('send_sum_1_stage2_amc', 0, 0, 0, 0, '', '', 1, '170.304(i)', 0, 0, 1, '170.314(g)(1)/(2)–18', NULL, NULL, 0, 1);
+	('send_sum_1_stage2_amc', 0, 0, 0, 0, '', '', 1, '170.304(i)', 0, 0, 1, '170.314(g)(1)/(2)–18', 0, 0, 0, 1);
 #EndIf
 
 #IfNotRow2D list_options list_id clinical_rules option_id send_sum_1_stage2_amc
@@ -391,7 +436,7 @@ INSERT INTO list_options (list_id,option_id,title,seq) VALUES ('patient_flow_boa
 #IfNotRow clinical_rules id send_sum_stage2_amc
 	INSERT INTO `clinical_rules` 
 	(`id`, `pid`, `active_alert_flag`, `passive_alert_flag`, `cqm_flag`, `cqm_nqf_code`, `cqm_pqri_code`, `amc_flag`, `amc_code`, `patient_reminder_flag`, `amc_2011_flag`, `amc_2014_flag`, `amc_code_2014`, `cqm_2011_flag`, `cqm_2014_flag`, `amc_2014_stage1_flag`, `amc_2014_stage2_flag`) VALUES
-	('send_sum_stage2_amc', 0, 0, 0, 0, '', '', 1, '170.304(i)', 0, 0, 1, '170.314(g)(1)/(2)–18', NULL, NULL, 0, 1);
+	('send_sum_stage2_amc', 0, 0, 0, 0, '', '', 1, '170.304(i)', 0, 0, 1, '170.314(g)(1)/(2)–18', 0, 0, 0, 1);
 #EndIf
 
 #IfNotRow2D list_options list_id clinical_rules option_id send_sum_stage2_amc
@@ -402,7 +447,7 @@ INSERT INTO list_options (list_id,option_id,title,seq) VALUES ('patient_flow_boa
 #IfNotRow clinical_rules id e_prescribe_stage1_amc
 	INSERT INTO `clinical_rules` 
 	(`id`, `pid`, `active_alert_flag`, `passive_alert_flag`, `cqm_flag`, `cqm_nqf_code`, `cqm_pqri_code`, `amc_flag`, `amc_code`, `patient_reminder_flag`, `amc_2011_flag`, `amc_2014_flag`, `amc_code_2014`, `cqm_2011_flag`, `cqm_2014_flag`, `amc_2014_stage1_flag`, `amc_2014_stage2_flag`) VALUES
-	('e_prescribe_stage1_amc', 0, 0, 0, 0, '', '', 1, '170.304(b)', 0, 0, 1, '170.314(g)(1)/(2)–8', NULL, NULL, 1, 0);
+	('e_prescribe_stage1_amc', 0, 0, 0, 0, '', '', 1, '170.304(b)', 0, 0, 1, '170.314(g)(1)/(2)–8', 0, 0, 1, 0);
 #EndIf
 
 #IfNotRow2D list_options list_id clinical_rules option_id e_prescribe_stage1_amc
@@ -413,7 +458,7 @@ INSERT INTO list_options (list_id,option_id,title,seq) VALUES ('patient_flow_boa
 #IfNotRow clinical_rules id e_prescribe_1_stage2_amc
 	INSERT INTO `clinical_rules` 
 	(`id`, `pid`, `active_alert_flag`, `passive_alert_flag`, `cqm_flag`, `cqm_nqf_code`, `cqm_pqri_code`, `amc_flag`, `amc_code`, `patient_reminder_flag`, `amc_2011_flag`, `amc_2014_flag`, `amc_code_2014`, `cqm_2011_flag`, `cqm_2014_flag`, `amc_2014_stage1_flag`, `amc_2014_stage2_flag`) VALUES
-	('e_prescribe_1_stage2_amc', 0, 0, 0, 0, '', '', 1, '170.304(b)', 0, 0, 1, '170.314(g)(1)/(2)–8', NULL, NULL, 0, 1);
+	('e_prescribe_1_stage2_amc', 0, 0, 0, 0, '', '', 1, '170.304(b)', 0, 0, 1, '170.314(g)(1)/(2)–8', 0, 0, 0, 1);
 #EndIf
 
 #IfNotRow2D list_options list_id clinical_rules option_id e_prescribe_1_stage2_amc
@@ -424,7 +469,7 @@ INSERT INTO list_options (list_id,option_id,title,seq) VALUES ('patient_flow_boa
 #IfNotRow clinical_rules id e_prescribe_2_stage2_amc
 	INSERT INTO `clinical_rules` 
 	(`id`, `pid`, `active_alert_flag`, `passive_alert_flag`, `cqm_flag`, `cqm_nqf_code`, `cqm_pqri_code`, `amc_flag`, `amc_code`, `patient_reminder_flag`, `amc_2011_flag`, `amc_2014_flag`, `amc_code_2014`, `cqm_2011_flag`, `cqm_2014_flag`, `amc_2014_stage1_flag`, `amc_2014_stage2_flag`) VALUES
-	('e_prescribe_2_stage2_amc', 0, 0, 0, 0, '', '', 1, '170.304(b)', 0, 0, 1, '170.314(g)(1)/(2)–8', NULL, NULL, 0, 1);
+	('e_prescribe_2_stage2_amc', 0, 0, 0, 0, '', '', 1, '170.304(b)', 0, 0, 1, '170.314(g)(1)/(2)–8', 0, 0, 0, 1);
 #EndIf
 
 #IfNotRow2D list_options list_id clinical_rules option_id e_prescribe_2_stage2_amc
@@ -454,3 +499,4 @@ INSERT INTO list_options (list_id,option_id,title,seq) VALUES ('patient_flow_boa
 	INSERT INTO list_options ( list_id, option_id, title, seq, is_default ) VALUES ('order_type','patient_characteristics','Patient Characteristics',60,0);
 	INSERT INTO list_options ( list_id, option_id, title, seq, is_default ) VALUES ('order_type','imaging','Imaging',70,0);
 #EndIf
+
