@@ -559,7 +559,7 @@ else {
 					</a>
                                         <span id='status_span'></span>
                                         <div id='processing' style='margin:10px;display:none;'><img src='../pic/ajax-loader.gif'/></div>
-					<?php if ($type_report == "cqm" || $type_report == "cqm_2011" || $type_report == "cqm_2014") { ?>
+					<?php if ($type_report == "cqm") { ?>
 						<a id='xmla_button' href='#' class='css_button' onclick='return GenXml("false")'>
 							<span>
 								<?php echo htmlspecialchars( xl('Generate PQRI report (Method A) - 2011'), ENT_NOQUOTES); ?>
@@ -570,11 +570,6 @@ else {
                                                         	<?php echo htmlspecialchars( xl('Generate PQRI report (Method E) - 2011'), ENT_NOQUOTES); ?>
                                                 	</span>
                                         	</a>
-                                                <a href="#" id="xmlc_button" class='css_button' onclick='return GenXml("QRDA")'>
-                                                        <span>
-                                                                <?php echo htmlspecialchars( xl('Generate QRDA III - 2014'), ENT_NOQUOTES); ?>
-                                                        </span>
-                                                </a>
 					<?php } ?>
                                     <?php } ?>
 
@@ -588,6 +583,11 @@ else {
                                                         <a href="#" id="genQRDA" class='css_button' onclick='return downloadQRDA()'>
                                                                 <span>
                                                                         <?php echo htmlspecialchars( xl('Generate QRDA I – 2014'), ENT_NOQUOTES); ?>
+                                                                </span>
+                                                        </a>
+                                                        <a href="#" id="xmlc_button" class='css_button' onclick='return GenXml("QRDA")'>
+                                                                <span>
+                                                                        <?php echo htmlspecialchars( xl('Generate QRDA III - 2014'), ENT_NOQUOTES); ?>
                                                                 </span>
                                                         </a>
                                             <?php } ?>
