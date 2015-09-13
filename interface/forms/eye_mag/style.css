@@ -1523,3 +1523,9 @@ position: absolute;bottom:0.05in;clear:both;font-size:0.7em;text-align:left;padd
     position:absolute;
     right:4px;
 }
+.z100 {
+    z-index:100;
+}
+.z10 {
+    z-index:10;
+}

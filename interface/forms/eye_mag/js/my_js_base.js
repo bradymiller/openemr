@@ -1117,30 +1117,28 @@ function kb_NEURO(field,text,field2,appendix) {
         zone = $("#NEURO_ACT_zone").val();
         return zone;
     }
-        //if not strabismus, then color or comments etc
-        if ((field == 'RCOL')||(field =='RCOLOR')) field2 = 'ODCOLOR';
-        if ((field == 'LCOL')||(field =='LCOLOR')) field2 = 'OSCOLOR';
-        if ((field == 'RCOIN')||(field =='RCOINS')) field2 = 'ODCOINS';
-        if ((field == 'LCOIN')||(field =='LCOINS')) field2 = 'OSCOINS';
-        if (field == 'RRED') field2 = 'ODREDDESAT';
-        if (field == 'LRED') field2 = 'OSREDDESAT';
-        if (field == 'RNPC') field2 = 'ODNPC';
-        if (field == 'LNPC') field2 = 'OSNPC';
-        if (field == 'RNPA') field2 = 'ODNPA';
-        if (field == 'LNPA') field2 = 'OSNPA';
-        if (field == 'STEREO') field2 = 'STERIOPSIS';
-        if (field == 'VERTFUS') field2 = 'VERTFUSAMPS';
-        if (field == 'CAD') field2 = 'CACCDIST';
-        if (field == 'CAN') field2 = 'CACCNEAR';
-        if (field == 'DAD') field2 = 'DACCDIST';
-        if (field == 'DAN') field2 = 'DACCNEAR';
-        if ((field == 'NCOM')||(field =='NEURO_COMMENTS')) field2 = 'EXT_COMMENTS';
+    //if not strabismus, then color or comments etc
+    if ((field == 'RCOL')||(field =='RCOLOR')) field2 = 'ODCOLOR';
+    if ((field == 'LCOL')||(field =='LCOLOR')) field2 = 'OSCOLOR';
+    if ((field == 'RCOIN')||(field =='RCOINS')) field2 = 'ODCOINS';
+    if ((field == 'LCOIN')||(field =='LCOINS')) field2 = 'OSCOINS';
+    if (field == 'RRED') field2 = 'ODREDDESAT';
+    if (field == 'LRED') field2 = 'OSREDDESAT';
+    if (field == 'RNPC') field2 = 'ODNPC';
+    if (field == 'LNPC') field2 = 'OSNPC';
+    if (field == 'RNPA') field2 = 'ODNPA';
+    if (field == 'LNPA') field2 = 'OSNPA';
+    if (field == 'STEREO') field2 = 'STERIOPSIS';
+    if (field == 'VERTFUS') field2 = 'VERTFUSAMPS';
+    if (field == 'CAD') field2 = 'CACCDIST';
+    if (field == 'CAN') field2 = 'CACCNEAR';
+    if (field == 'DAD') field2 = 'DACCDIST';
+    if (field == 'DAN') field2 = 'DACCNEAR';
+    if ((field == 'NCOM')||(field =='NEURO_COMMENTS')) field2 = 'EXT_COMMENTS';
     
     if (field.match(/^(\d{1,2})$/)) {
-        alert(text);
         var data = text.match(/(\d{0,2}||ortho)(.*)/i);
         var PD = data[1];
-        alert(PD + ' = PD');
         if (PD >'') PD = PD + ' ';
         var strab = data[2].toUpperCase().replace (/I(.)/g,"$1(T)").replace(/\s*(\d)/,'\n$1');
         $('#ACT'+field+zone).val(PD+strab);

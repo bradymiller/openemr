@@ -405,7 +405,7 @@ require_once("$incdir/patient_file/encounter/new_form.php");
                 <!-- start    QP_HPI_Build -->
                 <div id="QP_HPI" name="QP_HPI" class="QP_class" style="text-align:left;font-size:0.9em;">
                   <div id="HPI_text_list" name="HPI_text_list">
-                    <span class="closeButton fa fa-close pull-right" id="BUTTON_TEXTD_HPI" name="BUTTON_TEXTD_HPI" value="1"></span>
+                    <span class="closeButton fa fa-close pull-right z100" id="BUTTON_TEXTD_HPI" name="BUTTON_TEXTD_HPI" value="1"></span>
                 
                 
                     <b>HPI Detail:</b> <br />
@@ -1591,7 +1591,7 @@ require_once("$incdir/patient_file/encounter/new_form.php");
             </span>
             <span id="PRIORS_ALL_left_text" name="PRIORS_ALL_left_text" 
                   class="borderShadow" style="padding-right:5px;">
-                <?php $output = priors_select("ALL",$id,$id,$pid);
+                <?php $output = priors_select("ALL",$id,$id,$pid); 
                 if ($output !='') {  echo $output; } else { echo "<b>"; echo xlt('First visit: No Old Records'); echo "</b>"; }
                 ?>
             &nbsp;</span> 
@@ -1760,85 +1760,85 @@ require_once("$incdir/patient_file/encounter/new_form.php");
                 </div>
                 
                 <div id="EXT_right" name="EXT_right" class="exam_section_right borderShadow text_clinical">
-                    <?php display_draw_section ("EXT",$encounter,$pid); ?>
-                    <div id="PRIORS_EXT_left_text" style="height: 2.5in;text-align:left;" name="PRIORS_EXT_left_text" class="PRIORS_class PRIORS"> 
+                  <?php display_draw_section ("EXT",$encounter,$pid); ?>
+                  <div id="PRIORS_EXT_left_text" style="height: 2.5in;text-align:left;" name="PRIORS_EXT_left_text" class="PRIORS_class PRIORS"> 
                       <i class="fa fa-spinner fa-spin"></i>
-                    </div>
-                    <div id="QP_EXT" name="QP_EXT" class="QP_class" style="text-align:left;max-height: 2.5in;">
-                                <input type="hidden" id="EXT_prefix" name="EXT_prefix" value="<?php echo attr($EXT_prefix); ?>">
-                               
-                               <span class="closeButton fa fa-close pull-right" id="BUTTON_TEXTD_EXT" name="BUTTON_TEXTD_EXT" value="1"></span>
-                                <div style="position:relative;top:0.0in;left:0.00in;margin:auto;">
-                                    <span class="eye_button eye_button_selected" id="EXT_prefix_off" name="EXT_prefix_off"  onclick="$('#EXT_prefix').val('').trigger('change');;"><?php echo xlt('Off'); ?></span>
-                                    <span class="eye_button" id="EXT_defaults" name="EXT_defaults"><?php echo xlt('Defaults'); ?></span>  
-                                    <span class="eye_button" id="EXT_prefix_no" name="EXT_prefix_no" onclick="$('#EXT_prefix').val('no').trigger('change');"> <?php echo xlt('no'); ?> </span>  
-                                    <span class="eye_button" id="EXT_prefix_trace" name="EXT_prefix_trace"  onclick="$('#EXT_prefix').val('trace').trigger('change');"> <?php echo xlt('tr'); ?> </span>  
-                                    <span class="eye_button" id="EXT_prefix_1" name="EXT_prefix_1"  onclick="$('#EXT_prefix').val('+1').trigger('change');"> <?php echo xlt('+1'); ?> </span>  
-                                    <span class="eye_button" id="EXT_prefix_2" name="EXT_prefix_2"  onclick="$('#EXT_prefix').val('+2').trigger('change');"> <?php echo xlt('+2'); ?> </span>  
-                                    <span class="eye_button" id="EXT_prefix_3" name="EXT_prefix_3"  onclick="$('#EXT_prefix').val('+3').trigger('change');"> <?php echo xlt('+3'); ?> </span>  
+                  </div>
+                  <div id="QP_EXT" name="QP_EXT" class="QP_class" style="text-align:left;max-height: 2.5in;">
+                      <input type="hidden" id="EXT_prefix" name="EXT_prefix" value="<?php echo attr($EXT_prefix); ?>">
+                       
+                      <span class="closeButton fa fa-close pull-right z100" id="BUTTON_TEXTD_EXT" name="BUTTON_TEXTD_EXT" value="1"></span>
+                      <div class="z10" style="position:relative;top:0.0in;left:0.00in;margin:auto;">
+                          <span class="eye_button eye_button_selected" id="EXT_prefix_off" name="EXT_prefix_off"  onclick="$('#EXT_prefix').val('').trigger('change');;"><?php echo xlt('Off'); ?></span>
+                          <span class="eye_button" id="EXT_defaults" name="EXT_defaults"><?php echo xlt('Defaults'); ?></span>  
+                          <span class="eye_button" id="EXT_prefix_no" name="EXT_prefix_no" onclick="$('#EXT_prefix').val('no').trigger('change');"> <?php echo xlt('no'); ?> </span>  
+                          <span class="eye_button" id="EXT_prefix_trace" name="EXT_prefix_trace"  onclick="$('#EXT_prefix').val('trace').trigger('change');"> <?php echo xlt('tr'); ?> </span>  
+                          <span class="eye_button" id="EXT_prefix_1" name="EXT_prefix_1"  onclick="$('#EXT_prefix').val('+1').trigger('change');"> <?php echo xlt('+1'); ?> </span>  
+                          <span class="eye_button" id="EXT_prefix_2" name="EXT_prefix_2"  onclick="$('#EXT_prefix').val('+2').trigger('change');"> <?php echo xlt('+2'); ?> </span>  
+                          <span class="eye_button" id="EXT_prefix_3" name="EXT_prefix_3"  onclick="$('#EXT_prefix').val('+3').trigger('change');"> <?php echo xlt('+3'); ?> </span>  
 
 
-                                    <?php echo priors_select("EXT",$id,$id,$pid); ?>
-                
-                                </div>
-                                 <div style="float:left;width:40px;text-align:left;">
-                                    <span class="eye_button" id="EXT_prefix_1mm" name="EXT_prefix_1mm"  onclick="$('#EXT_prefix').val('1mm').trigger('change');"> <?php echo xlt('1mm'); ?> </span>  <br />
-                                    <span class="eye_button" id="EXT_prefix_2mm" name="EXT_prefix_2mm"  onclick="$('#EXT_prefix').val('2mm').trigger('change');"> <?php echo xlt('2mm'); ?> </span>  <br />
-                                    <span class="eye_button" id="EXT_prefix_3mm" name="EXT_prefix_3mm"  onclick="$('#EXT_prefix').val('3mm').trigger('change');"> <?php echo xlt('3mm'); ?> </span>  <br />
-                                    <span class="eye_button" id="EXT_prefix_4mm" name="EXT_prefix_4mm"  onclick="$('#EXT_prefix').val('4mm').trigger('change');"> <?php echo xlt('4mm'); ?> </span>  <br />
-                                    <span class="eye_button" id="EXT_prefix_5mm" name="EXT_prefix_5mm"  onclick="$('#EXT_prefix').val('5mm').trigger('change');"> <?php echo xlt('5mm'); ?> </span>  <br />
-                                    <span class="eye_button" id="EXT_prefix_medial" name="EXT_prefix_medial"  onclick="$('#EXT_prefix').val('medial').trigger('change');"><?php echo xlt('med'); ?></span>   
-                                    <span class="eye_button" id="EXT_prefix_lateral" name="EXT_prefix_lateral"  onclick="$('#EXT_prefix').val('lateral').trigger('change');"><?php echo xlt('lat'); ?></span>  
-                                    <span class="eye_button" id="EXT_prefix_superior" name="EXT_prefix_superior"  onclick="$('#EXT_prefix').val('superior').trigger('change');"><?php echo xlt('sup'); ?></span>  
-                                    <span class="eye_button" id="EXT_prefix_inferior" name="EXT_prefix_inferior"  onclick="$('#EXT_prefix').val('inferior').trigger('change');"><?php echo xlt('inf'); ?></span> 
-                                    <span class="eye_button" id="EXT_prefix_anterior" name="EXT_prefix_anterior"  onclick="$('#EXT_prefix').val('anterior').trigger('change');"><?php echo xlt('ant'); ?></span>  <br /> 
-                                    <span class="eye_button" id="EXT_prefix_mid" name="EXT_prefix_mid"  onclick="$('#EXT_prefix').val('mid').trigger('change');"><?php echo xlt('mid'); ?></span>  <br />
-                                    <span class="eye_button" id="EXT_prefix_posterior" name="EXT_prefix_posterior"  onclick="$('#EXT_prefix').val('posterior').trigger('change');"><?php echo xlt('post'); ?></span>  <br />
-                                    <span class="eye_button" id="EXT_prefix_deep" name="EXT_prefix_deep"  onclick="$('#EXT_prefix').val('deep').trigger('change');"><?php echo xlt('deep'); ?></span> 
-                                </div>   
-                                     
-                                <div id="EXT_QP_block1" name="EXT_QP_block1" class="QP_block borderShadow text_clinical" >
-                                    <?
-                                    $query = "SELECT * FROM form_eye_mag_prefs where PEZONE = 'EXT' and (id=?) ORDER BY id,ZONE_ORDER,ordering ASC";
-                                    $result = sqlStatement($query,array($_SESSION['authUserID']));
-                                    $number_rows=0;
-                                    if (sqlNumRows($result) < '10') {
-                                      $query = "SELECT * FROM form_eye_mag_prefs where PEZONE = 'EXT' and (id='2048') ORDER BY id,ZONE_ORDER,ordering ASC";
-                                      $result = sqlStatement($query);
-                                    }
-                                    while ($Select_data= sqlFetchArray($result))   {
-                                        $number_rows++;             
-                                        $string = $Select_data['selection'] ;
-                                        $string = (strlen($string) > 14) ? substr($string,0,11).'...' : $string;         
+                          <?php echo priors_select("EXT",$id,$id,$pid); ?>
+      
+                      </div>
+                       <div style="float:left;width:40px;text-align:left;">
+                          <span class="eye_button" id="EXT_prefix_1mm" name="EXT_prefix_1mm"  onclick="$('#EXT_prefix').val('1mm').trigger('change');"> <?php echo xlt('1mm'); ?> </span>  <br />
+                          <span class="eye_button" id="EXT_prefix_2mm" name="EXT_prefix_2mm"  onclick="$('#EXT_prefix').val('2mm').trigger('change');"> <?php echo xlt('2mm'); ?> </span>  <br />
+                          <span class="eye_button" id="EXT_prefix_3mm" name="EXT_prefix_3mm"  onclick="$('#EXT_prefix').val('3mm').trigger('change');"> <?php echo xlt('3mm'); ?> </span>  <br />
+                          <span class="eye_button" id="EXT_prefix_4mm" name="EXT_prefix_4mm"  onclick="$('#EXT_prefix').val('4mm').trigger('change');"> <?php echo xlt('4mm'); ?> </span>  <br />
+                          <span class="eye_button" id="EXT_prefix_5mm" name="EXT_prefix_5mm"  onclick="$('#EXT_prefix').val('5mm').trigger('change');"> <?php echo xlt('5mm'); ?> </span>  <br />
+                          <span class="eye_button" id="EXT_prefix_medial" name="EXT_prefix_medial"  onclick="$('#EXT_prefix').val('medial').trigger('change');"><?php echo xlt('med'); ?></span>   
+                          <span class="eye_button" id="EXT_prefix_lateral" name="EXT_prefix_lateral"  onclick="$('#EXT_prefix').val('lateral').trigger('change');"><?php echo xlt('lat'); ?></span>  
+                          <span class="eye_button" id="EXT_prefix_superior" name="EXT_prefix_superior"  onclick="$('#EXT_prefix').val('superior').trigger('change');"><?php echo xlt('sup'); ?></span>  
+                          <span class="eye_button" id="EXT_prefix_inferior" name="EXT_prefix_inferior"  onclick="$('#EXT_prefix').val('inferior').trigger('change');"><?php echo xlt('inf'); ?></span> 
+                          <span class="eye_button" id="EXT_prefix_anterior" name="EXT_prefix_anterior"  onclick="$('#EXT_prefix').val('anterior').trigger('change');"><?php echo xlt('ant'); ?></span>  <br /> 
+                          <span class="eye_button" id="EXT_prefix_mid" name="EXT_prefix_mid"  onclick="$('#EXT_prefix').val('mid').trigger('change');"><?php echo xlt('mid'); ?></span>  <br />
+                          <span class="eye_button" id="EXT_prefix_posterior" name="EXT_prefix_posterior"  onclick="$('#EXT_prefix').val('posterior').trigger('change');"><?php echo xlt('post'); ?></span>  <br />
+                          <span class="eye_button" id="EXT_prefix_deep" name="EXT_prefix_deep"  onclick="$('#EXT_prefix').val('deep').trigger('change');"><?php echo xlt('deep'); ?></span> 
+                      </div>   
+                           
+                      <div id="EXT_QP_block1" name="EXT_QP_block1" class="QP_block borderShadow text_clinical" >
+                          <?
+                          $query = "SELECT * FROM form_eye_mag_prefs where PEZONE = 'EXT' and (id=?) ORDER BY id,ZONE_ORDER,ordering ASC";
+                          $result = sqlStatement($query,array($_SESSION['authUserID']));
+                          $number_rows=0;
+                          if (sqlNumRows($result) < '10') {
+                            $query = "SELECT * FROM form_eye_mag_prefs where PEZONE = 'EXT' and (id='2048') ORDER BY id,ZONE_ORDER,ordering ASC";
+                            $result = sqlStatement($query);
+                          }
+                          while ($Select_data= sqlFetchArray($result))   {
+                              $number_rows++;             
+                              $string = $Select_data['selection'] ;
+                              $string = (strlen($string) > 14) ? substr($string,0,11).'...' : $string;         
 
-                                        ?>
-                                        <a class="underline QP" onclick="fill_QP_field('EXT','R','<?php echo attr($Select_data['LOCATION_text']); ?>','<?php echo attr($Select_data['selection']); ?>','<?php echo attr($Select_data['FILL_ACTION']); ?>');"><?php echo xlt('R'); ?></a> | 
-                                        <a class="underline QP" onclick="fill_QP_field('EXT','L','<?php echo attr($Select_data['LOCATION_text']); ?>','<?php echo attr($Select_data['selection']); ?>','<?php echo attr($Select_data['FILL_ACTION']); ?>');"><?php echo xlt('L'); ?></a> | 
-                                        <a class="underline QP" onclick="fill_QP_field('EXT','R','<?php echo attr($Select_data['LOCATION_text']); ?>','<?php echo attr($Select_data['selection']); ?>','<?php echo attr($Select_data['FILL_ACTION']); ?>');fill_QP_field('EXT','L','<?php echo attr($Select_data['LOCATION_text']); ?>','<?php echo attr($Select_data['selection']); ?>','<?php echo attr($Select_data['FILL_ACTION']); ?>');"><?php echo xlt('B'); ?></a> </span>
-                                        &nbsp;    <?php echo text($Select_data['LOCATION']); ?>: <?php echo text($string); ?>
-                                        <br />
-                                        <?
-                                        if ($number_rows==16) {
-                                            ?>
-                                             </div>
-                                             <div id="EXT_QP_block2" name="EXT_QP_block2" class="QP_block_outer  borderShadow text_clinical" >
-                                                <?
-                                        }
-                                        if ($number_rows==24) break;
-                                    }
-                                        ?>   
-                                </div>      
-                                <div class="QP_block_outer borderShadow " style="z-index:1;text-align:center;border:1pt solid black;padding:7 10 7 10;font-weight:600;">
-                          <span onclick="$('.kb').toggleClass('nodisplay');" title="<?php echo xla('Click to display shorthand field names.'); ?>" class="ke underline">Keyboard Entry</span>&nbsp;<a onclick="goto_url('<?php echo $GLOBALS['webroot']; ?>/interface/forms/eye_mag/help.php?zone=ext');">
-                          <i title="<?php echo xla('Click for External shorthand Help.'); ?>" class="fa fa-info-circle fa-1"></i></a><br />
-                          <textarea id="EXT_keyboard" name="EXT_keyboard" style="color:#0C0C0C;size:0.8em;height: 0.48in;" tabindex='1000'></textarea>
-                          <span style="font-size:0.9em;font-weight:400;color:#0C0C0C;">Type: location.text; ENTER<br />
-                          eg. right lower lid stye laterally:<br /> <b>RLL.stye lat;</b></span>
-                          </span>
-                        </div>            
-                    </div>
-                </div>
-            </div>
+                              ?>
+                              <a class="underline QP" onclick="fill_QP_field('EXT','R','<?php echo attr($Select_data['LOCATION_text']); ?>','<?php echo attr($Select_data['selection']); ?>','<?php echo attr($Select_data['FILL_ACTION']); ?>');"><?php echo xlt('R'); ?></a> | 
+                              <a class="underline QP" onclick="fill_QP_field('EXT','L','<?php echo attr($Select_data['LOCATION_text']); ?>','<?php echo attr($Select_data['selection']); ?>','<?php echo attr($Select_data['FILL_ACTION']); ?>');"><?php echo xlt('L'); ?></a> | 
+                              <a class="underline QP" onclick="fill_QP_field('EXT','R','<?php echo attr($Select_data['LOCATION_text']); ?>','<?php echo attr($Select_data['selection']); ?>','<?php echo attr($Select_data['FILL_ACTION']); ?>');fill_QP_field('EXT','L','<?php echo attr($Select_data['LOCATION_text']); ?>','<?php echo attr($Select_data['selection']); ?>','<?php echo attr($Select_data['FILL_ACTION']); ?>');"><?php echo xlt('B'); ?></a> </span>
+                              &nbsp;    <?php echo text($Select_data['LOCATION']); ?>: <?php echo text($string); ?>
+                              <br />
+                              <?
+                              if ($number_rows==16) {
+                                  ?>
+                                   </div>
+                                   <div id="EXT_QP_block2" name="EXT_QP_block2" class="QP_block_outer  borderShadow text_clinical" >
+                                      <?
+                              }
+                              if ($number_rows==24) break;
+                          }
+                              ?>   
+                      </div>      
+                      <div class="QP_block_outer borderShadow " style="z-index:1;text-align:center;border:1pt solid black;padding:7 10 7 10;font-weight:600;">
+                        <span onclick="$('.kb').toggleClass('nodisplay');" title="<?php echo xla('Click to display shorthand field names.'); ?>" class="ke underline">Keyboard Entry</span>&nbsp;<a onclick="goto_url('<?php echo $GLOBALS['webroot']; ?>/interface/forms/eye_mag/help.php?zone=ext');">
+                        <i title="<?php echo xla('Click for External shorthand Help.'); ?>" class="fa fa-info-circle fa-1"></i></a><br />
+                        <textarea id="EXT_keyboard" name="EXT_keyboard" style="color:#0C0C0C;size:0.8em;height: 0.48in;" tabindex='1000'></textarea>
+                        <span style="font-size:0.9em;font-weight:400;color:#0C0C0C;">Type: location.text; ENTER<br />
+                        eg. right lower lid stye laterally:<br /> <b>RLL.stye lat;</b></span>
+                        </span>
+                      </div>            
+                  </div>
+              </div>
+          </div>
             <!-- end External Exam -->
 
             <!-- start Anterior Segment -->
@@ -2063,7 +2063,7 @@ require_once("$incdir/patient_file/encounter/new_form.php");
                         eg. OU cornea +2 kruckenberg spindle:<br /> <b>k.+2 ks;</b>
                         </span>
                       </div>  
-                      <span class="closeButton fa fa-close pull-right" id="BUTTON_TEXTD_ANTSEG" name="BUTTON_TEXTD_ANTSEG" value="1"></span>
+                      <span class="closeButton fa fa-close pull-right z100" id="BUTTON_TEXTD_ANTSEG" name="BUTTON_TEXTD_ANTSEG" value="1"></span>
                       
                   </div>
               </div>
@@ -2271,7 +2271,7 @@ require_once("$incdir/patient_file/encounter/new_form.php");
                       eg. OD C/D 0.5 with inferior notch:<br /> <b>RC.0.5 w/ inf notch;</b>
                       </span>
                     </div>  
-                    <span class="closeButton fa fa-close pull-right" id="BUTTON_TEXTD_RETINA" name="BUTTON_TEXTD_RETINA" value="1"></span>
+                    <span class="closeButton fa fa-close pull-right z100" id="BUTTON_TEXTD_RETINA" name="BUTTON_TEXTD_RETINA" value="1"></span>
                   </div>
                 </div>
             </div>
@@ -2968,9 +2968,9 @@ require_once("$incdir/patient_file/encounter/new_form.php");
                             <?php echo priors_select("NEURO",$id,$id,$pid); ?>
                     </div>
                     <div style="float:right;top:1.0in;right:0.0in;margin: 0 25;">
-                      <div class="borderShadow" style="width:190px;text-align:center;border:1pt solid black;padding:4 10 4 10;margin:4;font-weight:600;"><span class="underline">Laterality</span><br />
+                      <div class="borderShadow" style="width:190px;text-align:center;border:1pt solid black;padding:4 10 4 10;margin:20 4 4 4;font-weight:600;"><span class="underline">Laterality</span><br />
                         <span class="eye_button" id="NEURO_side_R" name="NEURO_side" style="padding-left:0.06in;padding-right:0.06in;"  onclick="$('#NEURO_side').val('R').trigger('change');"><?php echo xlt('Right'); ?></span>  
-                        <span class="eye_button" id="NEURO_side_L" name="NEURO_side" style="padding-left:0.06in;padding-right:0.06in;"  onclick="$('#NEURO_side').val('L').trigger('change');"><?php echo xlt('Left'); ?></span> <br />
+                        <span class="eye_button" id="NEURO_side_L" name="NEURO_side" style="padding-left:0.06in;padding-right:0.06in;"  onclick="$('#NEURO_side').val('L').trigger('change');"><?php echo xlt('Left'); ?></span> 
                         <span class="eye_button eye_button_selected" id="NEURO_side_None" name="NEURO_side"  onclick="$('#NEURO_side').val('').trigger('change');"><?php echo xlt('None'); ?></span> <br />
                       </div>
                       <div class="borderShadow" style="width:190px;text-align:center;border:1pt solid black;padding:4 10 4 10;margin:4;font-weight:600;"><span class="underline">Deviation</span><br />
@@ -3052,7 +3052,7 @@ require_once("$incdir/patient_file/encounter/new_form.php");
                         <span class="borderShadow" style="margin:4;bottom:0;right:0.01in;height:20px;" id="NEURO_RECORD" name="NEURO_RECORD"><?php echo xlt(' RECORD '); ?></span> 
                       </div>
                     </div>
-                    <span class="closeButton fa fa-close pull-right" id="BUTTON_TEXTD_NEURO" name="BUTTON_TEXTD_NEURO" value="1"></span>
+                    <span class="closeButton fa fa-close pull-right z100" id="BUTTON_TEXTD_NEURO" name="BUTTON_TEXTD_NEURO" value="1"></span>
                   </div>
                 </div>
             </div>
@@ -3082,7 +3082,7 @@ require_once("$incdir/patient_file/encounter/new_form.php");
                 <div id="PRIORS_IMPPLAN_left_text" style="height: 2.5in;text-align:left;font-size: 0.9em;" name="PRIORS_IMPPLAN_left_text" class="PRIORS_class PRIORS"><i class="fa fa-spinner fa-spin"></i>
                 </div>
                 <div id="QP_IMPPLAN" name="QP_IMPPLAN" class="QP_class" style="text-align:left;height: 2.5in;">
-                  <span class="closeButton fa fa-close pull-right" id="BUTTON_TEXTD_IMPPLAN" name="BUTTON_TEXTD_IMPPLAN" value="1"></span>
+                  <span class="closeButton fa fa-close pull-right z100" id="BUTTON_TEXTD_IMPPLAN" name="BUTTON_TEXTD_IMPPLAN" value="1"></span>
                    
                   
                   <a target="_report" href="/openemr/interface/patient_file/report/custom_report.php?printable=1&pdf=0&<?php echo $form_folder."_".$form_id."=".$encounter; ?>&">Printable Report</a><br />
