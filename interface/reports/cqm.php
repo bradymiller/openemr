@@ -329,14 +329,10 @@ else {
 
 <?php if (!empty($report_id)) { ?>
   <?php echo " - " . xlt('Date of Report') . ": " . text($date_report);
+        //prepare to disable form elements
+        $dis_text = " disabled='disabled' ";
   ?>
 <?php } ?>
-<?php
-//From Report Results Menu Click
- if ($back_link == "list") {
-	$dis_text = " disabled='disabled' ";
- }	 
-?>
 </span>
 
 <form method='post' name='theform' id='theform' action='cqm.php?type=<?php echo attr($type_report) ;?>' onsubmit='return validateForm()'>
@@ -361,9 +357,11 @@ else {
                       <td>
                          <input <?php echo $dis_text; ?> type='text' name='form_begin_date' id="form_begin_date" size='20' value='<?php echo htmlspecialchars( $begin_date, ENT_QUOTES); ?>'
                             onkeyup='datekeyup(this,mypcc)' onblur='dateblur(this,mypcc)' title='<?php echo htmlspecialchars( xl('yyyy-mm-dd hh:mm:ss'), ENT_QUOTES); ?>'>
+                          <?php if (empty($report_id)) { ?>
                            <img src='../pic/show_calendar.gif' align='absbottom' width='24' height='22'
                             id='img_begin_date' border='0' alt='[?]' style='cursor:pointer'
                             title='<?php echo htmlspecialchars( xl('Click here to choose a date'), ENT_QUOTES); ?>'>
+                          <?php } ?>
                       </td>
                    </tr>
 		<?php } ?>
@@ -379,9 +377,11 @@ else {
                         <td>
                            <input <?php echo $dis_text; ?> type='text' name='form_target_date' id="form_target_date" size='20' value='<?php echo htmlspecialchars( $target_date, ENT_QUOTES); ?>'
                                 onkeyup='datekeyup(this,mypcc)' onblur='dateblur(this,mypcc)' title='<?php echo htmlspecialchars( xl('yyyy-mm-dd hh:mm:ss'), ENT_QUOTES); ?>'>
+                           <?php if (empty($report_id)) { ?>
                              <img src='../pic/show_calendar.gif' align='absbottom' width='24' height='22'
                                 id='img_target_date' border='0' alt='[?]' style='cursor:pointer'
                                 title='<?php echo htmlspecialchars( xl('Click here to choose a date'), ENT_QUOTES); ?>'>
+                           <?php } ?>
                         </td>
                 </tr>
 
@@ -550,67 +550,54 @@ else {
 			<td scope="row">
 
 				<div style='margin-left:15px'>
-					<?php if ($back_link == "list") { ?>
-						 <a href='#' id='print_button' class='css_button' onclick="printme('<?php echo $log_print_path; ?>',document.title)">
-							<span>
-								<?php echo htmlspecialchars( xl('Print'), ENT_NOQUOTES); ?>
-							</span>
-						 </a>
-						 <?php if ($type_report == "cqm" || $type_report == "cqm_2014") { ?>
-							<a href="#" id="genQRDA" class='css_button' onclick='return downloadQRDA()'>
-								<span>
-									<?php echo htmlspecialchars( xl('Generate QRDA I – 2014'), ENT_NOQUOTES); ?>
-								</span>
-							</a>
-						<?php } ?>
-						 <a href='report_results.php' class='css_button' onclick='top.restoreSession()'>
-							<span>
-								<?php echo xlt("Return To Report Results"); ?>
-							</span>
-						 </a> 
-					<?php }else{ ?>
-						<a id='submit_button' href='#' class='css_button'  onclick='return Form_Validate()'>
-							<span>
-								<?php echo htmlspecialchars( xl('Submit'), ENT_NOQUOTES); ?>
-							</span>
-						</a> 
-						<span id='status_span'></span>
-						<div id='processing' style='margin:10px;display:none;'><img alt="Loader" title="Loader" src='../pic/ajax-loader.gif'/></div>
-						
-						<?php if (!empty($report_id)) { ?>
-							<a href='#' id='print_button' class='css_button' onclick='window.print()'>
-								<span>
-									<?php echo htmlspecialchars( xl('Print'), ENT_NOQUOTES); ?>
-								</span>
-							</a>
-						<?php }?>
-						
-						<?php if ($type_report == "cqm" || $type_report == "cqm_2011" || $type_report == "cqm_2014") { ?>
-							<a id='xmla_button' href='#' class='css_button' onclick='return GenXml("false")'>
-								<span>
-									<?php echo htmlspecialchars( xl('Generate PQRI report (Method A) - 2011'), ENT_NOQUOTES); ?>
-								</span>
-							</a>
-							<a id='xmlb_button' href='#' class='css_button' onclick='return GenXml("true")'>
-									<span>
-											<?php echo htmlspecialchars( xl('Generate PQRI report (Method E) - 2011'), ENT_NOQUOTES); ?>
-									</span>
-							</a>
 
-							<?php if (!empty($report_id)) { ?>
-							<a href="#" id="xmlc_button" class='css_button' onclick='return GenXml("QRDA")'>
-								<span>
-									<?php echo htmlspecialchars( xl('Generate QRDA III - 2014'), ENT_NOQUOTES); ?>
-								</span>
-							</a>
-							<a href="#" id="genQRDA" class='css_button' onclick='return downloadQRDA()'>
-								<span>
-									<?php echo htmlspecialchars( xl('Generate QRDA I – 2014'), ENT_NOQUOTES); ?>
-								</span>
-							</a>
-						<?php } ?>
-						<?php } ?>
-					<?php }?>
+                                    <?php if (empty($report_id)) { ?>
+					<a id='submit_button' href='#' class='css_button' onclick='runReport();'>
+					<span>
+						<?php echo htmlspecialchars( xl('Submit'), ENT_NOQUOTES); ?>
+					</span>
+					</a>
+                                        <span id='status_span'></span>
+                                        <div id='processing' style='margin:10px;display:none;'><img src='../pic/ajax-loader.gif'/></div>
+					<?php if ($type_report == "cqm" || $type_report == "cqm_2011" || $type_report == "cqm_2014") { ?>
+						<a id='xmla_button' href='#' class='css_button' onclick='return GenXml("false")'>
+							<span>
+								<?php echo htmlspecialchars( xl('Generate PQRI report (Method A) - 2011'), ENT_NOQUOTES); ?>
+							</span>
+						</a>
+                                        	<a id='xmlb_button' href='#' class='css_button' onclick='return GenXml("true")'>
+                                                	<span>
+                                                        	<?php echo htmlspecialchars( xl('Generate PQRI report (Method E) - 2011'), ENT_NOQUOTES); ?>
+                                                	</span>
+                                        	</a>
+                                                <a href="#" id="xmlc_button" class='css_button' onclick='return GenXml("QRDA")'>
+                                                        <span>
+                                                                <?php echo htmlspecialchars( xl('Generate QRDA III - 2014'), ENT_NOQUOTES); ?>
+                                                        </span>
+                                                </a>
+					<?php } ?>
+                                    <?php } ?>
+
+                                    <?php if (!empty($report_id)) { ?>
+					<a href='#' class='css_button' onclick='window.print()'>
+						<span>
+							<?php echo htmlspecialchars( xl('Print'), ENT_NOQUOTES); ?>
+						</span>
+					</a>
+                                            <?php if ($type_report == "cqm_2014") { ?>
+                                                        <a href="#" id="genQRDA" class='css_button' onclick='return downloadQRDA()'>
+                                                                <span>
+                                                                        <?php echo htmlspecialchars( xl('Generate QRDA I – 2014'), ENT_NOQUOTES); ?>
+                                                                </span>
+                                                        </a>
+                                            <?php } ?>
+
+                                            <?php if ($back_link == "list") { ?>
+                                               <a href='report_results.php' class='css_button' onclick='top.restoreSession()'><span><?php echo xlt("Return To Report Results"); ?></span></a> 
+                                            <?php } else { ?>
+                                               <a href='#' class='css_button' onclick='top.restoreSession(); $("#theform").submit();'><span><?php echo xlt("Start Another Report"); ?></span></a>
+                                            <?php } ?>
+                                    <?php } ?>
 				</div>
 			</td>
 		</tr>

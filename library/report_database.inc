@@ -286,7 +286,6 @@ function collectItemizedRuleDisplayTitle($report_id, $itemized_test_id, $numerat
   $dispTitle = "";
   $report_view = collectReportDatabase($report_id);
   $type_report = $report_view['type'];
-  $type_report = (($type_report == "amc") || ($type_report == "amc_2011") || ($type_report == "amc_2014") || ($type_report == "amc_2014_stage1") || ($type_report == "amc_2014_stage2") || ($type_report == "cqm") || ($type_report == "cqm_2011") || ($type_report == "cqm_2014")) ? $type_report : "standard";
   $dataSheet = json_decode($report_view['data'],TRUE);
   foreach ($dataSheet as $row) {
     if (isset($row['is_main']) || isset($row['is_sub'])) {

@@ -232,7 +232,7 @@ INSERT INTO `list_options` (`list_id`, `option_id`, `title`, `seq`, `is_default`
 
 #IfNotRow2D list_options list_id clinical_rules option_id image_results_amc
 	INSERT INTO `list_options` (`list_id`, `option_id`, `title`, `seq`, `is_default`, `option_value`, `mapping`, `notes`, `codes`, `toggle_setting_1`, `toggle_setting_2`) VALUES
-	('clinical_rules', 'image_results_amc', 'Image Results', 3000, 0, 0, '', '', NULL, 0, 0);
+	('clinical_rules', 'image_results_amc', 'Image Results', 3000, 0, 0, '', '', '', 0, 0);
 #EndIf
 
 #IfNotRow clinical_rules id family_health_history_amc
@@ -243,7 +243,7 @@ INSERT INTO `list_options` (`list_id`, `option_id`, `title`, `seq`, `is_default`
 
 #IfNotRow2D list_options list_id clinical_rules option_id family_health_history_amc
 	INSERT INTO `list_options` (`list_id`, `option_id`, `title`, `seq`, `is_default`, `option_value`, `mapping`, `notes`, `codes`, `toggle_setting_1`, `toggle_setting_2`) VALUES
-	('clinical_rules', 'family_health_history_amc', 'Family Health History', 3100, 0, 0, '', '', NULL, 0, 0);
+	('clinical_rules', 'family_health_history_amc', 'Family Health History', 3100, 0, 0, '', '', '', 0, 0);
 #EndIf
 
 #IfNotRow clinical_rules id electronic_notes_amc
@@ -254,7 +254,7 @@ INSERT INTO `list_options` (`list_id`, `option_id`, `title`, `seq`, `is_default`
 
 #IfNotRow2D list_options list_id clinical_rules option_id electronic_notes_amc
 	INSERT INTO `list_options` (`list_id`, `option_id`, `title`, `seq`, `is_default`, `option_value`, `mapping`, `notes`, `codes`, `toggle_setting_1`, `toggle_setting_2`) VALUES
-	('clinical_rules', 'electronic_notes_amc', 'Electronic Notes', 3200, 0, 0, '', '', NULL, 0, 0);
+	('clinical_rules', 'electronic_notes_amc', 'Electronic Notes', 3200, 0, 0, '', '', '', 0, 0);
 #EndIf
 
 #IfNotRow clinical_rules id secure_messaging_amc
@@ -265,7 +265,7 @@ INSERT INTO `list_options` (`list_id`, `option_id`, `title`, `seq`, `is_default`
 
 #IfNotRow2D list_options list_id clinical_rules option_id secure_messaging_amc
 	INSERT INTO `list_options` (`list_id`, `option_id`, `title`, `seq`, `is_default`, `option_value`, `mapping`, `notes`, `codes`, `toggle_setting_1`, `toggle_setting_2`) VALUES
-	('clinical_rules', 'secure_messaging_amc', 'Secure Electronic Messaging', 3400, 0, 0, '', '', NULL, 0, 0);
+	('clinical_rules', 'secure_messaging_amc', 'Secure Electronic Messaging', 3400, 0, 0, '', '', '', 0, 0);
 #EndIf
 
 #IfNotRow clinical_rules id view_download_transmit_amc
@@ -276,7 +276,7 @@ INSERT INTO `list_options` (`list_id`, `option_id`, `title`, `seq`, `is_default`
 
 #IfNotRow2D list_options list_id clinical_rules option_id view_download_transmit_amc
 	INSERT INTO `list_options` (`list_id`, `option_id`, `title`, `seq`, `is_default`, `option_value`, `mapping`, `notes`, `codes`, `toggle_setting_1`, `toggle_setting_2`) VALUES
-	('clinical_rules', 'view_download_transmit_amc', 'View, Download, Transmit (VDT)  (Measure B)', 3500, 0, 0, '', '', NULL, 0, 0);
+	('clinical_rules', 'view_download_transmit_amc', 'View, Download, Transmit (VDT)  (Measure B)', 3500, 0, 0, '', '', '', 0, 0);
 #EndIf
 
 #IfNotRow clinical_rules id cpoe_radiology_amc
@@ -287,7 +287,7 @@ INSERT INTO `list_options` (`list_id`, `option_id`, `title`, `seq`, `is_default`
 
 #IfNotRow2D list_options list_id clinical_rules option_id cpoe_radiology_amc
 	INSERT INTO `list_options` (`list_id`, `option_id`, `title`, `seq`, `is_default`, `option_value`, `mapping`, `notes`, `codes`, `toggle_setting_1`, `toggle_setting_2`) VALUES
-	('clinical_rules', 'cpoe_radiology_amc', 'Use CPOE for radiology orders.', 46, 0, 0, '', '', NULL, 0, 0);
+	('clinical_rules', 'cpoe_radiology_amc', 'Use CPOE for radiology orders.', 46, 0, 0, '', '', '', 0, 0);
 #EndIf
 
 #IfNotRow clinical_rules id cpoe_proc_orders_amc
@@ -298,7 +298,7 @@ INSERT INTO `list_options` (`list_id`, `option_id`, `title`, `seq`, `is_default`
 
 #IfNotRow2D list_options list_id clinical_rules option_id cpoe_proc_orders_amc
 	INSERT INTO `list_options` (`list_id`, `option_id`, `title`, `seq`, `is_default`, `option_value`, `mapping`, `notes`, `codes`, `toggle_setting_1`, `toggle_setting_2`) VALUES
-	('clinical_rules', 'cpoe_proc_orders_amc', 'Use CPOE for procedure orders.', 47, 0, 0, '', '', NULL, 0, 0);
+	('clinical_rules', 'cpoe_proc_orders_amc', 'Use CPOE for procedure orders.', 47, 0, 0, '', '', '', 0, 0);
 #EndIf
 
 #IfNotRow clinical_rules id send_reminder_stage2_amc
@@ -309,7 +309,7 @@ INSERT INTO `list_options` (`list_id`, `option_id`, `title`, `seq`, `is_default`
 
 #IfNotRow2D list_options list_id clinical_rules option_id send_reminder_stage2_amc
 	INSERT INTO `list_options` (`list_id`, `option_id`, `title`, `seq`, `is_default`, `option_value`, `mapping`, `notes`, `codes`, `toggle_setting_1`, `toggle_setting_2`) VALUES
-	('clinical_rules', 'send_reminder_stage2_amc', 'Send reminders to patients per patient preference for preventive/follow up care.', 60, 0, 0, '', '', NULL, 0, 0);
+	('clinical_rules', 'send_reminder_stage2_amc', 'Send reminders to patients per patient preference for preventive/follow up care.', 60, 0, 0, '', '', '', 0, 0);
 #EndIf
 
 #IfNotRow clinical_rules id cpoe_med_stage2_amc
@@ -320,7 +320,7 @@ INSERT INTO `list_options` (`list_id`, `option_id`, `title`, `seq`, `is_default`
 
 #IfNotRow2D list_options list_id clinical_rules option_id cpoe_med_stage2_amc
 	INSERT INTO `list_options` (`list_id`, `option_id`, `title`, `seq`, `is_default`, `option_value`, `mapping`, `notes`, `codes`, `toggle_setting_1`, `toggle_setting_2`) VALUES
-	('clinical_rules', 'cpoe_med_stage2_amc', 'Use CPOE for medication orders.(Alternative)', 47, 0, 0, '', '', NULL, 0, 0);
+	('clinical_rules', 'cpoe_med_stage2_amc', 'Use CPOE for medication orders.(Alternative)', 47, 0, 0, '', '', '', 0, 0);
 #EndIf
 
 #IfNotRow clinical_rules id patient_edu_stage2_amc
@@ -331,7 +331,7 @@ INSERT INTO `list_options` (`list_id`, `option_id`, `title`, `seq`, `is_default`
 
 #IfNotRow2D list_options list_id clinical_rules option_id patient_edu_stage2_amc
 	INSERT INTO `list_options` (`list_id`, `option_id`, `title`, `seq`, `is_default`, `option_value`, `mapping`, `notes`, `codes`, `toggle_setting_1`, `toggle_setting_2`) VALUES
-	('clinical_rules', 'patient_edu_stage2_amc', 'Use certified EHR technology to identify patient-specific education resources and provide those resources to the patient if appropriate(New).', 40, 0, 0, '', '', NULL, 0, 0);
+	('clinical_rules', 'patient_edu_stage2_amc', 'Use certified EHR technology to identify patient-specific education resources and provide those resources to the patient if appropriate(New).', 40, 0, 0, '', '', '', 0, 0);
 #EndIf
 
 #IfNotRow clinical_rules id record_vitals_1_stage1_amc
@@ -342,7 +342,7 @@ INSERT INTO `list_options` (`list_id`, `option_id`, `title`, `seq`, `is_default`
 
 #IfNotRow2D list_options list_id clinical_rules option_id record_vitals_1_stage1_amc
 	INSERT INTO `list_options` (`list_id`, `option_id`, `title`, `seq`, `is_default`, `option_value`, `mapping`, `notes`, `codes`, `toggle_setting_1`, `toggle_setting_2`) VALUES
-	('clinical_rules', 'record_vitals_1_stage1_amc', 'Record and chart changes in vital signs (SET 1).', 20, 0, 0, '', '', NULL, 0, 0);
+	('clinical_rules', 'record_vitals_1_stage1_amc', 'Record and chart changes in vital signs (SET 1).', 20, 0, 0, '', '', '', 0, 0);
 #EndIf
 
 #IfNotRow clinical_rules id record_vitals_2_stage1_amc
@@ -353,7 +353,7 @@ INSERT INTO `list_options` (`list_id`, `option_id`, `title`, `seq`, `is_default`
 
 #IfNotRow2D list_options list_id clinical_rules option_id record_vitals_2_stage1_amc
 	INSERT INTO `list_options` (`list_id`, `option_id`, `title`, `seq`, `is_default`, `option_value`, `mapping`, `notes`, `codes`, `toggle_setting_1`, `toggle_setting_2`) VALUES
-	('clinical_rules', 'record_vitals_2_stage1_amc', 'Record and chart changes in vital signs (BP out of scope).', 20, 0, 0, '', '', NULL, 0, 0);
+	('clinical_rules', 'record_vitals_2_stage1_amc', 'Record and chart changes in vital signs (BP out of scope).', 20, 0, 0, '', '', '', 0, 0);
 #EndIf
 
 #IfNotRow clinical_rules id record_vitals_3_stage1_amc
@@ -364,7 +364,7 @@ INSERT INTO `list_options` (`list_id`, `option_id`, `title`, `seq`, `is_default`
 
 #IfNotRow2D list_options list_id clinical_rules option_id record_vitals_3_stage1_amc
 	INSERT INTO `list_options` (`list_id`, `option_id`, `title`, `seq`, `is_default`, `option_value`, `mapping`, `notes`, `codes`, `toggle_setting_1`, `toggle_setting_2`) VALUES
-	('clinical_rules', 'record_vitals_3_stage1_amc', 'Record and chart changes in vital signs (Height / Weight out of scope).', 20, 0, 0, '', '', NULL, 0, 0);
+	('clinical_rules', 'record_vitals_3_stage1_amc', 'Record and chart changes in vital signs (Height / Weight out of scope).', 20, 0, 0, '', '', '', 0, 0);
 #EndIf
 
 #IfNotRow clinical_rules id record_vitals_4_stage1_amc
@@ -375,7 +375,7 @@ INSERT INTO `list_options` (`list_id`, `option_id`, `title`, `seq`, `is_default`
 
 #IfNotRow2D list_options list_id clinical_rules option_id record_vitals_4_stage1_amc
 	INSERT INTO `list_options` (`list_id`, `option_id`, `title`, `seq`, `is_default`, `option_value`, `mapping`, `notes`, `codes`, `toggle_setting_1`, `toggle_setting_2`) VALUES
-	('clinical_rules', 'record_vitals_4_stage1_amc', 'Record and chart changes in vital signs ( Height / Weight / BP with in scope ).', 20, 0, 0, '', '', NULL, 0, 0);
+	('clinical_rules', 'record_vitals_4_stage1_amc', 'Record and chart changes in vital signs ( Height / Weight / BP with in scope ).', 20, 0, 0, '', '', '', 0, 0);
 #EndIf
 
 #IfNotRow clinical_rules id record_vitals_stage2_amc
@@ -386,7 +386,7 @@ INSERT INTO `list_options` (`list_id`, `option_id`, `title`, `seq`, `is_default`
 
 #IfNotRow2D list_options list_id clinical_rules option_id record_vitals_stage2_amc
 	INSERT INTO `list_options` (`list_id`, `option_id`, `title`, `seq`, `is_default`, `option_value`, `mapping`, `notes`, `codes`, `toggle_setting_1`, `toggle_setting_2`) VALUES
-	('clinical_rules', 'record_vitals_stage2_amc', 'Record and chart changes in vital signs (New).', 20, 0, 0, '', '', NULL, 0, 0);
+	('clinical_rules', 'record_vitals_stage2_amc', 'Record and chart changes in vital signs (New).', 20, 0, 0, '', '', '', 0, 0);
 #EndIf
 
 #IfNotRow clinical_rules id provide_sum_pat_stage2_amc
@@ -397,7 +397,7 @@ INSERT INTO `list_options` (`list_id`, `option_id`, `title`, `seq`, `is_default`
 
 #IfNotRow2D list_options list_id clinical_rules option_id provide_sum_pat_stage2_amc
 	INSERT INTO `list_options` (`list_id`, `option_id`, `title`, `seq`, `is_default`, `option_value`, `mapping`, `notes`, `codes`, `toggle_setting_1`, `toggle_setting_2`) VALUES
-	('clinical_rules', 'provide_sum_pat_stage2_amc', 'Provide clinical summaries for patients for each office visit (New).', 75, 0, 0, '', '', NULL, 0, 0);
+	('clinical_rules', 'provide_sum_pat_stage2_amc', 'Provide clinical summaries for patients for each office visit (New).', 75, 0, 0, '', '', '', 0, 0);
 #EndIf
 
 #IfNotRow clinical_rules id vdt_stage2_amc
@@ -408,7 +408,7 @@ INSERT INTO `list_options` (`list_id`, `option_id`, `title`, `seq`, `is_default`
 
 #IfNotRow2D list_options list_id clinical_rules option_id vdt_stage2_amc
 	INSERT INTO `list_options` (`list_id`, `option_id`, `title`, `seq`, `is_default`, `option_value`, `mapping`, `notes`, `codes`, `toggle_setting_1`, `toggle_setting_2`) VALUES
-	('clinical_rules', 'vdt_stage2_amc', 'View, Download, Transmit (VDT) (Measure A)', 3500, 0, 0, '', '', NULL, 0, 0);
+	('clinical_rules', 'vdt_stage2_amc', 'View, Download, Transmit (VDT) (Measure A)', 3500, 0, 0, '', '', '', 0, 0);
 #EndIf
 
 #IfNotRow clinical_rules id send_sum_stage1_amc
@@ -419,7 +419,7 @@ INSERT INTO `list_options` (`list_id`, `option_id`, `title`, `seq`, `is_default`
 
 #IfNotRow2D list_options list_id clinical_rules option_id send_sum_stage1_amc
 	INSERT INTO `list_options` (`list_id`, `option_id`, `title`, `seq`, `is_default`, `option_value`, `mapping`, `notes`, `codes`, `toggle_setting_1`, `toggle_setting_2`) VALUES
-	('clinical_rules', 'send_sum_stage1_amc', 'The EP, eligible hospital or CAH who transitions their patient to another setting of care or provider of care or refers their patient to another provider of care should provide summary of care record for each transition of care or referral.', 80, 0, 0, '', '', NULL, 0, 0);
+	('clinical_rules', 'send_sum_stage1_amc', 'The EP, eligible hospital or CAH who transitions their patient to another setting of care or provider of care or refers their patient to another provider of care should provide summary of care record for each transition of care or referral.', 80, 0, 0, '', '', '', 0, 0);
 #EndIf
 
 #IfNotRow clinical_rules id send_sum_1_stage2_amc
@@ -430,7 +430,7 @@ INSERT INTO `list_options` (`list_id`, `option_id`, `title`, `seq`, `is_default`
 
 #IfNotRow2D list_options list_id clinical_rules option_id send_sum_1_stage2_amc
 	INSERT INTO `list_options` (`list_id`, `option_id`, `title`, `seq`, `is_default`, `option_value`, `mapping`, `notes`, `codes`, `toggle_setting_1`, `toggle_setting_2`) VALUES
-	('clinical_rules', 'send_sum_1_stage2_amc', 'The EP, eligible hospital or CAH who transitions their patient to another setting of care or provider of care or refers their patient to another provider of care should provide summary of care record for each transition of care or referral (Measure A).', 80, 0, 0, '', '', NULL, 0, 0);
+	('clinical_rules', 'send_sum_1_stage2_amc', 'The EP, eligible hospital or CAH who transitions their patient to another setting of care or provider of care or refers their patient to another provider of care should provide summary of care record for each transition of care or referral (Measure A).', 80, 0, 0, '', '', '', 0, 0);
 #EndIf
 
 #IfNotRow clinical_rules id send_sum_stage2_amc
@@ -441,7 +441,7 @@ INSERT INTO `list_options` (`list_id`, `option_id`, `title`, `seq`, `is_default`
 
 #IfNotRow2D list_options list_id clinical_rules option_id send_sum_stage2_amc
 	INSERT INTO `list_options` (`list_id`, `option_id`, `title`, `seq`, `is_default`, `option_value`, `mapping`, `notes`, `codes`, `toggle_setting_1`, `toggle_setting_2`) VALUES
-	('clinical_rules', 'send_sum_stage2_amc', 'The EP, eligible hospital or CAH who transitions their patient to another setting of care or provider of care or refers their patient to another provider of care should provide summary of care record for each transition of care or referral (Measure B).', 80, 0, 0, '', '', NULL, 0, 0);
+	('clinical_rules', 'send_sum_stage2_amc', 'The EP, eligible hospital or CAH who transitions their patient to another setting of care or provider of care or refers their patient to another provider of care should provide summary of care record for each transition of care or referral (Measure B).', 80, 0, 0, '', '', '', 0, 0);
 #EndIf
 
 #IfNotRow clinical_rules id e_prescribe_stage1_amc
@@ -452,7 +452,7 @@ INSERT INTO `list_options` (`list_id`, `option_id`, `title`, `seq`, `is_default`
 
 #IfNotRow2D list_options list_id clinical_rules option_id e_prescribe_stage1_amc
 	INSERT INTO `list_options` (`list_id`, `option_id`, `title`, `seq`, `is_default`, `option_value`, `mapping`, `notes`, `codes`, `toggle_setting_1`, `toggle_setting_2`) VALUES
-	('clinical_rules', 'e_prescribe_stage1_amc', 'Generate and transmit permissible prescriptions electronically (Uncontrolled Substances).', 50, 0, 0, '', '', NULL, 0, 0);
+	('clinical_rules', 'e_prescribe_stage1_amc', 'Generate and transmit permissible prescriptions electronically (Uncontrolled Substances).', 50, 0, 0, '', '', '', 0, 0);
 #EndIf
 
 #IfNotRow clinical_rules id e_prescribe_1_stage2_amc
@@ -463,7 +463,7 @@ INSERT INTO `list_options` (`list_id`, `option_id`, `title`, `seq`, `is_default`
 
 #IfNotRow2D list_options list_id clinical_rules option_id e_prescribe_1_stage2_amc
 	INSERT INTO `list_options` (`list_id`, `option_id`, `title`, `seq`, `is_default`, `option_value`, `mapping`, `notes`, `codes`, `toggle_setting_1`, `toggle_setting_2`) VALUES
-	('clinical_rules', 'e_prescribe_1_stage2_amc', 'Generate and transmit permissible prescriptions electronically (All Prescriptions).', 50, 0, 0, '', '', NULL, 0, 0);
+	('clinical_rules', 'e_prescribe_1_stage2_amc', 'Generate and transmit permissible prescriptions electronically (All Prescriptions).', 50, 0, 0, '', '', '', 0, 0);
 #EndIf
 
 #IfNotRow clinical_rules id e_prescribe_2_stage2_amc
@@ -474,7 +474,7 @@ INSERT INTO `list_options` (`list_id`, `option_id`, `title`, `seq`, `is_default`
 
 #IfNotRow2D list_options list_id clinical_rules option_id e_prescribe_2_stage2_amc
 	INSERT INTO `list_options` (`list_id`, `option_id`, `title`, `seq`, `is_default`, `option_value`, `mapping`, `notes`, `codes`, `toggle_setting_1`, `toggle_setting_2`) VALUES
-	('clinical_rules', 'e_prescribe_2_stage2_amc', 'Generate and transmit permissible prescriptions electronically (Uncontrolled substances with drug formulary).', 50, 0, 0, '', '', NULL, 0, 0);
+	('clinical_rules', 'e_prescribe_2_stage2_amc', 'Generate and transmit permissible prescriptions electronically (Uncontrolled substances with drug formulary).', 50, 0, 0, '', '', '', 0, 0);
 #EndIf
 
 #IfMissingColumn users cpoe

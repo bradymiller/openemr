@@ -568,7 +568,7 @@ if ($qoe_init_javascript)
 <?php $procedure_order_type = getListOptions('order_type' , array('option_id', 'title')); ?>
 <select name="procedure_type_names" id="procedure_type_names">
 	<?php foreach($procedure_order_type as $ordered_types){?>
-	<option value="<?php echo attr($ordered_types['title']); ?>" ><?php echo text(xl_list_label($ordered_types['title'])) ; ?></option>
+	<option value="<?php echo attr($ordered_types['option_id']); ?>" ><?php echo text(xl_list_label($ordered_types['title'])) ; ?></option>
 	<?php } ?>    
 </select> 
 <input type='button' value='<?php echo xla('Add Procedure'); ?>' onclick="addProcLine()" />
