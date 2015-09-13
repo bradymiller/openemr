@@ -199,48 +199,39 @@ if ($showit=='ext') $showit="external";
 				<h3 class="ui-accordion-header external">Introduction</h3>
 				<div id="general" style="text-align:left;">
 					<blockquote class="style2">
-						You trained.  You learned how to perform an eye exam, to help patients.  <br />
-						You developed your own style and documented all your findings.<br />
-						You used a pen and paper. <br />
-						You were efficient and provided high quality care to thousands of patients.<br />
-						Other eyedocs could decipher your hieroglyphics; regulators and compliance people could not.<br />
-						In the name of quality, they fixed us. 
-						They gave us EHRs.  
-						<br />
-						EHRs that speak at a fourth grade level.<br />
-						They disconnected our brains from our charts.  They slowed us down.<br />
-						We pine for our pen and paper, and the speed our brains are capable of working at.<br />
-						We suffer the agony of slow throughput to "check the box",<br />
-						or we incur the added costs of hiring scribes.<br/>
-						<hr />
-						What we are proposing with openEMR: Eye Exam is not radical.  It's reasonable.<br />
-						We have to give up our pens.  OK.  But we don't have to succumb entirely.<br />
-						<h2 class="bold">What if you could type your shorthand?</h2>
-						In addition to the point-click-type option, the Pull-forward from old records option, 
-						the Fill Defaults feature and the draw programs, 
-						<b>we added the Eye Shorthand technique, merging our lingua franca oculī with the keyboard</b>.<br />
+						<b>What if you could document electronically using your shorthand?</b><br/>
+						We converted the standard clinical fields and common shorthand terms into <i>Eye Shorthand, an electronic lingua franca oculī.</i><br />
+						It is not a new language - it should already be very familiar.  <br />
 						You can customize it to match <b>your brain</b>, but you may not need to.<br />
-						It should already be very familiar. It is based on the shorthand we all learned in training.<br /><hr />
+						It is based on the shorthand we all learned in training.<br />
+						Using this shorthand method, all your findings are entered in one area,
+						and OpenEMR knows how to display it.<hr />
+						
+						<b>Paper vs. EHR:</b><br />
 						You know what <b>RUL: 2mm ptosis</b> means. <br />
-						You could click on the field for the right upper lid and type in 2mm ptosis.  <br />
-						Then click on the next field, maybe even tab to it, and type in the next field.<br />
-						What about <b>Right C/D 0.6Vx0.4H with inferior notch.  Left C/D 0.5</b>?<br />
-						Find the fields to click. Two mouse clicks at least. Lots of hand movement going in.  <br />
+						With a typical EHR, you need to find and click on the field for the right upper lid and type in 2mm ptosis.  <br />
+						Then click on the next field, or maybe even tab to it, and type your findings for the next field. And on it goes.<br /><br />
+						Consider another example:  <b>Right C/D 0.6Vx0.4H with inferior notch.  Left C/D 0.5</b>?<br />
+						OK, find the correct fields to click.  Enter the appropriate text into each field.  Two mouse clicks at least.  Type. <br />
+						Lots of hand movement going on.  <br />
 						<br />
-						Does this make any sense to you:<br />
+						How can we speed up this process?<br /><br />
+						Look at this example in shorthand, based on a simple structure: <b>Field.text;Field.text;Field.text</b><br />
 
 						<div style="text-align:center;font-weight:600;margin:20;background-color:yellow;padding:30 auto;width:75%;border:1pt black solid">rcup.0.6Vx0.4H w/ inf notch;lcup.0.5</span><br />
 						</div>
-						It is the same thing in shorthand.  You can even shorten rcup to rc, lcup to c, or just "c" for both (if the data to enter is the same), and go even faster.<br />
-						<b>Field.text;field.text;Field.text;field.text</b><br />
-						It is that simple and doesn't the <b>text</b> part look familiar?<br />
+						
+						Type this shorthand text into the Keyboard Entry area in the form, and the fields are automatically filled.<br />
+						Done. No extra clicks.<br />
+
+						<hr />
 						Even slow typers will find the Eye Exam Shorthand can speed up EHR documentation time.<br />
 						It is easy to learn.<br /> 
+						The <b>Fields</b> and <b>text</b> parts look just like our handwritten shorthand!<br />
 						Type the abbreviation for a clinical field, a period/fullstop, followed by your finding, in your shorthand.<br />
-						If our shorthand doesn't include your shorthand terms, your shorthand will be displayed.<br />
-						Ask us and over time, we'll include your shorthand into this form so together we can build a better EHR for everyone.
-
-						That's Open Source and <b>it's why we do what we do, the way we do it.</b><br />
+						If your shorthand doesn't match ours, your shorthand <b>text</b> will be displayed.<br />
+						It is easy to add your shorthand if you need customization.<br />
+						Consider sharing your shorthand back to the community for future users.
 						<hr />
 						This tutorial centers around four lines of typing which 
 						document normal findings <b>and more than 40 different clinical issues</b>. 
@@ -251,11 +242,10 @@ if ($showit=='ext') $showit="external";
 						With the openEMR Shorthand, the average typist can do it <b>in less than a minute.</b>
 						<hr />
 						Go ahead and paste the lines below into a test patient's chart.  Fiddle with them. <br />
-						Read the accompanying help pages if you like.  We tried to make them useful but they look so overwhelming.<br />
-						If you are already an eyedoc, they won't be. 
-						It will all make perfect sense in short order. <br />
-						It's time to plug the EHR into your brain, and work at the speed of your brain.<br />
-						Finally.  
+						The accompanying help pages explain each line in detail.  <br />
+						If you are already an eyedoc, this is simple and intuitive. <br />
+						It's time to plug the EHR into your brain, and to start working at the speed of your brain.<br />
+						
 						<hr />
 						</blockquote>
 			<h4 class="bold">External: </h4>
@@ -275,12 +265,12 @@ if ($showit=='ext') $showit="external";
 
 				<h3 class="ui-accordion-header external">Shorthand Keyboard Entry Structure</h3>
 				<div id="general" style="text-align:left;">
-					<h4><b>Usage:</b>  location.text(.a)(;)</h4>
+					<h4><b>Usage:</b>  field.text(.a)(;)</h4>
 					<blockquote class="style2"><i>where: <br /></i>
-						<b>location</b> is the shorthand term for the clinical field.<br/>
-						<b>text</b> is the complete or shorthand data to enter into this <b>location</b>.
+						<b>Field</b> is the shorthand term for the clinical field.<br/>
+						<b>text</b> is the complete or shorthand data to enter into this <b>field</b>.
 						<br />
-						<b>location</b> and <b>text</b> are separated by a "<b>.</b>" period/fullstop.
+						<b>field</b> and <b>text</b> are separated by a "<b>.</b>" period/fullstop.
 						<br />
 						The trailing "<b>.a</b>" 
 						is optional and will <b>append</b> the <b>text</b> to the data already in the field, instead of replacing it.<br />
@@ -324,70 +314,70 @@ if ($showit=='ext') $showit="external";
 							</div>
 						</blockquote>
 					</div>
-					<h3>External: Location Codes and Abbreviations</h3>
+					<h3>External: Field Codes and Shorthand/Abbreviations</h3>
 					<div id="external_codes" style="clear:both; border:0pt solid black;text-align:left;">
 						<a name="output_external"></a>
 						<blockquote class="style2">
 							<table style="border:0pt solid black;margin:10;">
-								<tr class="style3"><th>Clinical Field</th><th>Shorthand* (location)</th><th>Example Keyboard Entry**</th><th>Example Output to Location</th></tr>
+								<tr class="style3"><th>Clinical Field</th><th>Shorthand* Field</th><th>Example Keyboard Entry**</th><th>EMR: Field text</th></tr>
 								<tr >
 									<td>Default values</td><td>D or d</td>
-									<td>d;<br />D;</td>
+									<td><b style="color:red;">d;</b><br /><b style="color:red;">D;</b></td>
 									<td>All fields with defined default values are <b>erased</b> and filled with default values.<br />Fields without defined default values are not affected. </td>
 								</tr>
 								<tr >
 									<td>Right Brow</td><td>rb or RB</td>
-									<td>rb.1cm lat ptosis<br />rb.med 2cm SCC</td>
+									<td><b style="color:red;">rb</b>.1cm lat ptosis<br /><b style="color:red;">rb</b>.med 2cm SCC</td>
 									<td>1cm lateral ptosis<br />medial 2cm SCC</td>
 								</tr>
 								<tr>
 									<td>Left Brow</td><td>rb or RB</td>
-									<td>rb.loss of lat brow follicles<br />lb.no rhytids from VIIth nerve palsy</td>
+									<td><b style="color:red;">rb</b>.loss of lat brow follicles<br /><b style="color:red;">lb</b>.no rhytids from VIIth nerve palsy</td>
 									<td>loss of lateral brow follicles<br />no rhytids from VIIth nerve palsy</td>
 								</tr>
 								<tr>
 									<td>Both Brows/Forehead</td><td>fh or FH<br />bb or BB</td>
-									<td>fh.+3 fh rhytids<br>BB.+3 glab rhytids</td>
+									<td><b style="color:red;">fh</b>.+3 fh rhytids<br><b style="color:red;">BB</b>.+3 glab rhytids</td>
 									<td>+3 forehead rhytids<br />+3 glabellar rhytids</td>
 								</tr>
 								<tr>
 									<td>Right Upper Lid</td><td>rul or RUL</td>
-									<td>RUL.1cm lat ptosis<br />rul.med 2cm SCC</td>
+									<td><b style="color:red;">RUL</b>.1cm lat ptosis<br /><b style="color:red;">rul</b>.med 2cm SCC</td>
 									<td>1cm lateral ptosis<br />medial 2cm SCC</td>
 								</tr>
 								<tr>
 									<td>Left Upper Lid</td><td>lul or LUL</td>
-									<td>LUL.1cm lat ptosis<br />lul.med 2cm SCC</td>
+									<td><b style="color:red;">LUL</b>.1cm lat ptosis<br /><b style="color:red;">lul</b>.med 2cm SCC</td>
 									<td>1cm lateral ptosis<br />medial 2cm SCC</td>
 								</tr>
 								<tr>
 									<td>Right Lower Lid</td><td>rll or RLL</td>
-									<td>rll.1cm lat ptosis<br />rll.med 2cm SCC</td>
+									<td><b style="color:red;">rll</b>.1cm lat ptosis<br /><b style="color:red;">rll</b>.med 2cm SCC</td>
 									<td>1cm lateral ptosis<br />medial 2cm SCC</td>
 								</tr>
 								<tr>
 									<td>Left Lower Lid</td><td>lll or LLL</td>
-									<td>lll.0.5cm lat ptosis<br />LLL.med 2cm SCC</td>
+									<td><b style="color:red;">lll</b>.0.5cm lat ptosis<br /><b style="color:red;">LLL</b>.med 2cm SCC</td>
 									<td>1cm lateral ptosis<br />medial 2cm SCC</td>
 								</tr>
 								<tr>
 									<td>Right Medial Canthus</td><td>rmc or RMC</td>
-									<td>rmc.1cm bcc<br />RMC.healed dcr scar</td>
+									<td><b style="color:red;">rmc</b>.1cm bcc<br /><b style="color:red;">RMC</b>.healed dcr scar</td>
 									<td>1cm BCC<br />healed DCR scar</td>
 								</tr>
 								<tr>
 									<td>Left Medial Canthus</td><td>lmc or LMC</td>
-									<td>lmc.acute dacryo, tender w/ purulent drainage<br />lmc.1.2cm x 8mm mass</td>
+									<td><b style="color:red;">lmc</b>.acute dacryo, tender w/ purulent drainage<br /><b style="color:red;">lmc</b>.1.2cm x 8mm mass</td>
 									<td>acute dacryo, tender with purulent drainage<br />1.2cm x 8mm mass</td>
 								</tr>
 								<tr>
 									<td>Right Adnexa</td><td>rad or RAD</td>
-									<td>rad.1.8x2.0cm bcc lat<br />RAD.healed DCR scar</td>
+									<td><b style="color:red;">rad</b>.1.8x2.0cm bcc lat<br /><b style="color:red;">RAD</b>.healed DCR scar</td>
 									<td>1cm BCC<br />healed DCR scar</td>
 								</tr>
 								<tr>
 									<td>Left Adnexa</td><td>lad or LAD</td>
-									<td>lad.1cm lacr cyst protruding under lid<br />LAD.1.2cm x 8mm mass</td>
+									<td><b style="color:red;">lad</b>.1cm lacr cyst protruding under lid<br /><b style="color:red;">LAD</b>.1.2cm x 8mm mass</td>
 									<td>1cm lacrimal cyst protruding under lid<br />1.2cm x 8mm mass</td>
 								</tr>
 							</table>
@@ -459,13 +449,12 @@ if ($showit=='ext') $showit="external";
 							</div>	
 						</blockquote>
 					</div>
-					<h3>Anterior Segment: Location Codes and Abbreviations</h3>
+					<h3>Anterior Segment: Field Codes and Shorthand/Abbreviations</h3>
 					<div id="antseg_codes" style="clear:both; border:0pt solid black;text-align:left;">
 						<a name="output_antseg"></a>
 						<blockquote class="style2">
 							<table style="border:0pt solid black;margin:10;padding:10;">
-								<tr style="margin:20;border-bottom:1pt solid black;background-color:#c0C0c0;padding:10px;">
-									<th style="width:1in;">Clinical Field</th><th style="width:1.3in;">Shorthand* (location)</th><th>Example Keyboard Entry**</th><th>Example Output to Location</th></tr>
+								<tr class="style3"><th>Clinical Field</th><th>Shorthand* Field</th><th>Example Keyboard Entry**</th><th>EMR: Field text</th></tr>
 								<tr >
 									<td>Default values</td><td>D or d</td>
 									<td><span class="field">d</span>;<br /><span class="field">D</span>;</td>
@@ -589,12 +578,11 @@ if ($showit=='ext') $showit="external";
 							</div>	
 						</blockquote>
 					</div>
-					<h3>Retina: Location Codes and Abbreviations</h3>
+					<h3>Retina: Field Codes and Shorthand/Abbreviations</h3>
 					<div id="retina_codes" style="clear:both; border:0pt solid black;text-align:left;">
 						<blockquote class="style2">
 							<table style="border:1pt solid black;margin:10;width:85%;">
-									<tr style="margin:20;border-bottom:1pt solid black;background-color:#c0C0c0">
-										<th style="width:1in;">Clinical Field</th><th style="width:1.5in;">Shorthand* (location)</th><th>Example Keyboard Entry**</th><th>Example Output to Location</th></tr>
+									<tr class="style3"><th>Clinical Field</th><th>Shorthand* Field</th><th>Example Keyboard Entry**</th><th>EMR: Field text</th></tr>
 									<tr >
 										<td>Default values</td><td>D or d</td>
 										<td><span class="field">d</span>;<br /><span class="field">D</span>;</td>
@@ -718,12 +706,11 @@ if ($showit=='ext') $showit="external";
 							</div>	
 						</blockquote>
 					</div>
-					<h3>Neuro: Location Codes and Abbreviations</h3>
+					<h3>Neuro: Field Codes and Shorthand/Abbreviations</h3>
 					<div id="neuro_codes" style="clear:both; border:0pt solid black;text-align:left;">
 						<blockquote class="style2">
 							<table style="border:1pt solid black;margin:10;width:85%;">
-									<tr style="margin:20;border-bottom:1pt solid black;background-color:#c0C0c0">
-										<th style="width:1in;">Clinical Field</th><th style="width:1.5in;">Shorthand* (location)</th><th>Example Keyboard Entry**</th><th>Example Output to Location</th></tr>
+									<tr class="style3"><th>Clinical Field</th><th>Shorthand* Field</th><th>Example Keyboard Entry**</th><th>EMR: Field text</th></tr>
 									<tr >
 										<td>Default values</td><td>D or d</td>
 										<td><span class="field">d</span>;<br /><span class="field">D</span>;</td>

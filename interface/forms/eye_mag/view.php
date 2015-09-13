@@ -1578,31 +1578,48 @@ require_once("$incdir/patient_file/encounter/new_form.php");
             <!-- end reporting div -->
 
           <!-- Start of the exam selection/middle menu row -->
-          <div class="section" style="text-align:center;vertical-align:top;width:100%;margin:10;" name="mid_menu" id="mid_menu">
+          <div class="sections" style="text-align:center;vertical-align:top;width:100%;margin:0;" name="mid_menu" id="mid_menu">
             <span class="anchor" id="SELECTION_ROW_anchor"></span>
 
             <!--  <span id="EXAM_settings" name="EXAM_settings" class="bordershadow" href="#"><i class="fa fa-cog"></i>&nbsp;<?php echo xlt('Settings'); ?></span> -->
-            <span id="EXAM_defaults" name="EXAM_defaults" value="Defaults" class="bordershadow"><i class="fa fa-newspaper-o"></i>&nbsp;<?php echo xlt('Defaults'); ?></span> 
-            <span id="EXAM_TEXT" name="EXAM_TEXT" value="TEXT" class="bordershadow"><i class="fa fa-hospital-o"></i>&nbsp;<?php echo xlt('Text'); ?></span>
+            <span id="EXAM_defaults" name="EXAM_defaults" value="Defaults" class="bordershadow"><i class="fa fa-newspaper-o"></i>&nbsp;<b><?php echo xlt('Defaults'); ?></b></span> 
+            <span id="EXAM_TEXT" name="EXAM_TEXT" value="TEXT" class="bordershadow"><i class="fa fa-hospital-o"></i>&nbsp;<b><?php echo xlt('Text'); ?></b></span>
             <span id="EXAM_DRAW" name="EXAM_DRAW" value="DRAW" class="bordershadow">
-              <i class="fa fa-paint-brush fa-sm"> </i>&nbsp;<?php echo xlt('Draw'); ?></span>
+              <i class="fa fa-paint-brush fa-sm"> </i>&nbsp;<b><?php echo xlt('Draw'); ?></b></span>
             <span id="EXAM_QP" name="EXAM_QP" value="QP" class="bordershadow">
-              <i class="fa fa-database fa-sm"> </i>&nbsp;<?php echo xlt('DB Picks'); ?>
+              <i class="fa fa-database fa-sm"> </i>&nbsp;<b><?php echo xlt('DB Picks'); ?></b>
             </span>
             <span id="PRIORS_ALL_left_text" name="PRIORS_ALL_left_text" 
                   class="borderShadow" style="padding-right:5px;">
                 <?php $output = priors_select("ALL",$id,$id,$pid);
-                if ($output !='') {  echo $output; } else { echo "First visit: No Old Records"; }
+                if ($output !='') {  echo $output; } else { echo "<b>"; echo xlt('First visit: No Old Records'); echo "</b>"; }
                 ?>
             &nbsp;</span> 
-            <br />
-          </div><br />
+            <span id="EXAM_ALL_keyboard_left" name="EXAM_ALL_keyboard_left" class="borderShadow" style="padding-right:5px;width:250px;">
+              <span onclick="$('.kb').toggleClass('nodisplay');" title="<?php echo xla('Click to display shorthand field names.'); ?>"><b>Keyboard Entry</b>
+              </span>
+                &nbsp;
+                <a onclick="goto_url('<?php echo $GLOBALS['webroot']; ?>/interface/forms/eye_mag/help.php?zone=ext');">
+                  <i title="<?php echo xla('Click for External shorthand Help.'); ?>" class="fa fa-info-circle fa-1"></i>
+                </a>
+            </span>
+          </div>   
+          
+          <br />
+          <div style="margin: 0 auto;text-align: center;font-size:1.0em;width:400px;" class="kb borderShadow" id="EXAM_KB" name="EXAM_KB">   
+            <span onclick="$('.kb').toggleClass('nodisplay');" title="<?php echo xla('Click to display shorthand field names.'); ?>"><b>Keyboard Entry</b>
+              </span>
+                &nbsp;
+                <a onclick="goto_url('<?php echo $GLOBALS['webroot']; ?>/interface/forms/eye_mag/help.php?zone=all');">
+                  <i title="<?php echo xla('Click for Shorthand Help.'); ?>" class="fa fa-info-circle fa-1"></i>
+                </a><textarea id="ALL_keyboard_left" name="ALL_keyboard_left" style="color:#0C0C0C;size:0.8em;height: 8em;" tabindex='1000'></textarea>
+          </div> 
           <!-- end of the exam selection row -->
 
           <!-- Start of the exam sections -->
           <div style="margin: 0 auto;width:10px;text-align: center;font-size:1.0em;" class="" id="EXAM_sections_loading" name="EXAM_sections_loading">
               <hr></hr>
-               <i class="fa fa-spinner fa-spin"></i>
+              <i class="fa fa-spinner fa-spin"></i>
           </div> 
           
           <div style="margin: 0 auto;text-align: center;font-size:1.0em;" class="nodisplay" id="EXAM_sections" name="EXAM_sections">   
@@ -1876,7 +1893,7 @@ require_once("$incdir/patient_file/encounter/new_form.php");
                                   <td><input type="text" size="1" name="OSSCHIRMER2" id="OSSCHIRMER2" value="<?php echo attr($OSSCHIRMER2); ?>">
                                   <div class="kb kb_center">LSCH2</div></td>
                               </tr>
-                              <tr>
+                              <tr style="padding-bottom:15px;">
                                   <td class="right" title="<?php echo xla('Tear Break Up Time'); ?>">
                                     <?php echo xlt('TBUT'); ?> </td>
                                   <td><input type="text" size="1" name="ODTBUT" id="ODTBUT" value="<?php echo attr($ODTBUT); ?>">
@@ -1884,9 +1901,9 @@ require_once("$incdir/patient_file/encounter/new_form.php");
                                   <td><input type="text" size="1" name="OSTBUT" id="OSTBUT" value="<?php echo attr($OSTBUT); ?>">
                                     <div class="kb kb_center">LTBUT</div></td>
                               </tr>
-                              <tr style="text-align:center;">
-                                <td colspan="3" rowspan="4" style="text-align:left;width:75px;padding:15px;font-size:1.0em;"><b style="text-align:center;width:70px;text-decoration:underline;"><?php echo xlt('Dilated with'); ?>:</b><br />
-                                  <table style="font-size:1.0em;">
+                              <tr style="text-align:center;" >
+                                <td colspan="3" rowspan="4" style="text-align:left;bottom:0px;width:75px;font-size:1.0em;"><b style="text-align:center;width:70px;text-decoration:underline;"><?php echo xlt('Dilated with'); ?>:</b><br />
+                                  <table style="font-size:0.9em;">
                                     <tr>
                                       <td>
                                             <input type="checkbox" class="dil_drug" id="CycloMydril" name="CYCLOMYDRIL" value="Cyclomydril" <?php if ($CYCLOMYDRIL == 'Cyclomydril') echo "checked='checked'"; ?> />
@@ -2141,7 +2158,7 @@ require_once("$incdir/patient_file/encounter/new_form.php");
                                         <tr>
                                             <td><textarea name="ODCUP" id="ODCUP" class="right"><?php echo text($ODCUP); ?></textarea></td>
                                             <td><div class="ident"><?php echo xlt('Cup'); ?></div>
-                                          <div class="kb kb_left">RC</div><div class="kb kb_right">LC</div></td>
+                                          <div class="kb kb_left">RCUP</div><div class="kb kb_right">LCUP</div></td>
                                             <td><textarea name="OSCUP" id="OSCUP" class=""><?php echo text($OSCUP); ?></textarea></td>
                                         </tr> 
                                         <tr>
