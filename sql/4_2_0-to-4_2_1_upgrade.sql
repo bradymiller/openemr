@@ -181,6 +181,29 @@ UPDATE `clinical_rules` SET `cqm_2014_flag` = 1 WHERE `id` = 'rule_adult_wt_scre
 UPDATE `clinical_rules` SET `cqm_2014_flag` = 1 WHERE `id` = 'rule_wt_assess_couns_child_cqm' AND `pid` = 0;
 UPDATE `clinical_rules` SET `cqm_2014_flag` = 1 WHERE `id` = 'rule_pneumovacc_ge_65_cqm' AND `pid` = 0;
 
+#IfMissingColumn clinical_rules amc_2014_stage1_flag
+        ALTER TABLE `clinical_rules` ADD COLUMN `amc_2014_stage1_flag` tinyint(1) COMMENT '2014 Stage 1 - Automated Measure Calculation flag for (unable to customize per patient)';
+
+        UPDATE `clinical_rules` SET `amc_2014_stage1_flag` = '1', `amc_code_2014` = '170.314(g)(1)/(2)–4' WHERE `clinical_rules`.`id` = 'problem_list_amc' AND `clinical_rules`.`pid` =0;
+        UPDATE `clinical_rules` SET `amc_2014_stage1_flag` = '1', `amc_code_2014` = '170.314(g)(1)/(2)–5' WHERE `clinical_rules`.`id` = 'med_list_amc' AND `clinical_rules`.`pid` =0;
+        UPDATE `clinical_rules` SET `amc_2014_stage1_flag` = '1', `amc_code_2014` = '170.314(g)(1)/(2)–6' WHERE `clinical_rules`.`id` = 'med_allergy_list_amc' AND `clinical_rules`.`pid` =0;
+        UPDATE `clinical_rules` SET `amc_2014_stage1_flag` = '1', `amc_code_2014` = '170.314(g)(1)/(2)–7' WHERE `clinical_rules`.`id` = 'cpoe_med_amc' AND `clinical_rules`.`pid` =0;
+        UPDATE `clinical_rules` SET `amc_2014_stage1_flag` = '1', `amc_code_2014` = '170.314(g)(1)/(2)–9' WHERE `clinical_rules`.`id` = 'record_dem_amc' AND `clinical_rules`.`pid` =0;
+        UPDATE `clinical_rules` SET `amc_2014_stage1_flag` = '1', `amc_code_2014` = '170.314(g)(1)/(2)–11' WHERE `clinical_rules`.`id` = 'record_smoke_amc' AND `clinical_rules`.`pid` =0;
+        UPDATE `clinical_rules` SET `amc_2014_stage1_flag` = '1', `amc_code_2014` = '170.314(g)(1)/(2)–12' WHERE `clinical_rules`.`id` = 'lab_result_amc' AND `clinical_rules`.`pid` =0;
+        UPDATE `clinical_rules` SET `amc_2014_stage1_flag` = '1', `amc_code_2014` = '170.314(g)(1)/(2)–13' WHERE `clinical_rules`.`id` = 'send_reminder_amc' AND `clinical_rules`.`pid` =0;
+        UPDATE `clinical_rules` SET `amc_2014_stage1_flag` = '1', `amc_code_2014` = '170.314(g)(1)/(2)–15' WHERE `clinical_rules`.`id` = 'provide_sum_pat_amc' AND `clinical_rules`.`pid` =0;
+        UPDATE `clinical_rules` SET `amc_2014_stage1_flag` = '1', `amc_code_2014` = '170.314(g)(1)/(2)–16' WHERE `clinical_rules`.`id` = 'patient_edu_amc' AND `clinical_rules`.`pid` =0;
+#EndIf
+
+#IfMissingColumn clinical_rules amc_2014_stage2_flag
+        ALTER TABLE `clinical_rules` ADD COLUMN `amc_2014_stage2_flag` tinyint(1) COMMENT '2014 Stage 2 - Automated Measure Calculation flag for (unable to customize per patient)';
+
+        UPDATE `clinical_rules` SET `amc_2014_stage2_flag` = '1' WHERE `clinical_rules`.`id` = 'record_smoke_amc' AND `clinical_rules`.`pid` =0;
+        UPDATE `clinical_rules` SET `amc_2014_stage2_flag` = '1' WHERE `clinical_rules`.`id` = 'lab_result_amc' AND `clinical_rules`.`pid` =0;
+        UPDATE `clinical_rules` SET `amc_2014_stage2_flag` = '1' WHERE `clinical_rules`.`id` = 'record_dem_amc' AND `clinical_rules`.`pid` =0;
+#EndIf
+
 #IfNotRow clinical_rules id rule_children_pharyngitis_cqm
 INSERT INTO `clinical_rules` (`id`, `pid`, `active_alert_flag`, `passive_alert_flag`, `cqm_flag`, `cqm_nqf_code`, `cqm_pqri_code`, `amc_flag`, `amc_code`, `patient_reminder_flag`, `amc_2011_flag`, `amc_2014_flag`, `amc_code_2014`, `cqm_2011_flag`, `cqm_2014_flag`) VALUES ('rule_children_pharyngitis_cqm', 0, 0, 0, 1, '0002', '', 0, '', 0, 0, 0, '', 1, 1);
 #EndIf
@@ -219,29 +242,6 @@ INSERT INTO `clinical_rules` (`id`, `pid`, `active_alert_flag`, `passive_alert_f
 
 #IfNotRow2D list_options list_id clinical_rules option_id rule_tob_use_2014_cqm
 INSERT INTO `list_options` (`list_id`, `option_id`, `title`, `seq`, `is_default`, `option_value`, `mapping`, `notes`, `codes`, `toggle_setting_1`, `toggle_setting_2`) VALUES ('clinical_rules', 'rule_tob_use_2014_cqm', 'Preventive Care and Screening: Tobacco Use: Screening and Cessation Intervention (CQM)', 210, 0, 0, '', '', '', 0, 0);
-#EndIf
-
-#IfMissingColumn clinical_rules amc_2014_stage1_flag
-	ALTER TABLE `clinical_rules` ADD COLUMN `amc_2014_stage1_flag` tinyint(1) COMMENT '2014 Stage 1 - Automated Measure Calculation flag for (unable to customize per patient)';
-	
-	UPDATE `clinical_rules` SET `amc_2014_stage1_flag` = '1', `amc_code_2014` = '170.314(g)(1)/(2)–4' WHERE `clinical_rules`.`id` = 'problem_list_amc' AND `clinical_rules`.`pid` =0;
-	UPDATE `clinical_rules` SET `amc_2014_stage1_flag` = '1', `amc_code_2014` = '170.314(g)(1)/(2)–5' WHERE `clinical_rules`.`id` = 'med_list_amc' AND `clinical_rules`.`pid` =0;
-	UPDATE `clinical_rules` SET `amc_2014_stage1_flag` = '1', `amc_code_2014` = '170.314(g)(1)/(2)–6' WHERE `clinical_rules`.`id` = 'med_allergy_list_amc' AND `clinical_rules`.`pid` =0;
-	UPDATE `clinical_rules` SET `amc_2014_stage1_flag` = '1', `amc_code_2014` = '170.314(g)(1)/(2)–7' WHERE `clinical_rules`.`id` = 'cpoe_med_amc' AND `clinical_rules`.`pid` =0;
-	UPDATE `clinical_rules` SET `amc_2014_stage1_flag` = '1', `amc_code_2014` = '170.314(g)(1)/(2)–9' WHERE `clinical_rules`.`id` = 'record_dem_amc' AND `clinical_rules`.`pid` =0;
-	UPDATE `clinical_rules` SET `amc_2014_stage1_flag` = '1', `amc_code_2014` = '170.314(g)(1)/(2)–11' WHERE `clinical_rules`.`id` = 'record_smoke_amc' AND `clinical_rules`.`pid` =0;
-	UPDATE `clinical_rules` SET `amc_2014_stage1_flag` = '1', `amc_code_2014` = '170.314(g)(1)/(2)–12' WHERE `clinical_rules`.`id` = 'lab_result_amc' AND `clinical_rules`.`pid` =0;
-	UPDATE `clinical_rules` SET `amc_2014_stage1_flag` = '1', `amc_code_2014` = '170.314(g)(1)/(2)–13' WHERE `clinical_rules`.`id` = 'send_reminder_amc' AND `clinical_rules`.`pid` =0;
-	UPDATE `clinical_rules` SET `amc_2014_stage1_flag` = '1', `amc_code_2014` = '170.314(g)(1)/(2)–15' WHERE `clinical_rules`.`id` = 'provide_sum_pat_amc' AND `clinical_rules`.`pid` =0;
-	UPDATE `clinical_rules` SET `amc_2014_stage1_flag` = '1', `amc_code_2014` = '170.314(g)(1)/(2)–16' WHERE `clinical_rules`.`id` = 'patient_edu_amc' AND `clinical_rules`.`pid` =0;
-#EndIf
-
-#IfMissingColumn clinical_rules amc_2014_stage2_flag
-	ALTER TABLE `clinical_rules` ADD COLUMN `amc_2014_stage2_flag` tinyint(1) COMMENT '2014 Stage 2 - Automated Measure Calculation flag for (unable to customize per patient)';
-	
-	UPDATE `clinical_rules` SET `amc_2014_stage2_flag` = '1' WHERE `clinical_rules`.`id` = 'record_smoke_amc' AND `clinical_rules`.`pid` =0;
-	UPDATE `clinical_rules` SET `amc_2014_stage2_flag` = '1' WHERE `clinical_rules`.`id` = 'lab_result_amc' AND `clinical_rules`.`pid` =0;
-	UPDATE `clinical_rules` SET `amc_2014_stage2_flag` = '1' WHERE `clinical_rules`.`id` = 'record_dem_amc' AND `clinical_rules`.`pid` =0;
 #EndIf
 
 #IfNotRow clinical_rules id image_results_amc
