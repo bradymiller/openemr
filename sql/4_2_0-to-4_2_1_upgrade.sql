@@ -162,6 +162,26 @@ INSERT INTO list_options (list_id,option_id,title,seq) VALUES ('patient_flow_boa
 INSERT INTO list_options (list_id,option_id,title,seq) VALUES ('patient_flow_board_rooms', '3', 'Room 3', 30);
 #EndIf
 
+#IfMissingColumn clinical_rules developer
+ALTER TABLE  `clinical_rules` ADD  `developer` VARCHAR(255) NOT NULL DEFAULT '' COMMENT 'Clinical Rule Developer';
+#EndIf
+
+#IfMissingColumn clinical_rules funding_source
+ALTER TABLE  `clinical_rules` ADD  `funding_source` VARCHAR(255) NOT NULL DEFAULT '' COMMENT 'Clinical Rule Funding Source';
+#EndIf
+
+#IfMissingColumn clinical_rules release_version
+ALTER TABLE  `clinical_rules` ADD  `release_version` VARCHAR(255) NOT NULL DEFAULT '' COMMENT 'Clinical Rule Release Version';
+#EndIf
+
+#IfNotRow2D list_options list_id proc_res_abnormal option_id vhigh
+INSERT INTO `list_options` (`list_id`, `option_id`, `title`, `seq`) VALUES ('proc_res_abnormal', 'vhigh', 'Above upper panic limits', 50);
+#EndIf
+
+#IfNotRow2D list_options list_id proc_res_abnormal option_id vlow
+INSERT INTO `list_options` (`list_id`, `option_id`, `title`, `seq`) VALUES ('proc_res_abnormal', 'vlow', 'Below lower panic limits', 60);
+#EndIf
+
 #IfMissingColumn list_options activity
 ALTER TABLE `list_options` ADD COLUMN `activity` TINYINT DEFAULT 1 NOT NULL;
 #EndIf
@@ -1401,16 +1421,12 @@ UPDATE `list_options` SET `notes` = '1567-7' WHERE `option_id` = 'big_cypress' A
 UPDATE `list_options` SET `notes` = '1567-7' WHERE `title` = 'Big Cypress' AND `list_id` = 'race';
 #EndIf
 
-#IfNotRow2Dx2 list_options list_id race option_id bill_moores_slough title Bill Moore's Slough
-INSERT INTO list_options (list_id, option_id,  title, seq, is_default, notes, activity) VALUES ('race','bill_moores_slough','Bill Moore's Slough','880', '0',' 1905-9', 0);
+#IfNotRow2D list_options list_id race option_id bill_moores_slough
+INSERT INTO list_options (list_id, option_id,  title, seq, is_default, notes, activity) VALUES ('race','bill_moores_slough',"Bill Moore's Slough",'880', '0',' 1905-9', 0);
 #EndIf
 
 #IfRow2D list_options list_id race option_id bill_moores_slough
 UPDATE `list_options` SET `notes` = '1905-9' WHERE `option_id` = 'bill_moores_slough' AND `list_id` = 'race';
-#EndIf
-
-#IfRow2D list_options list_id race title Bill Moore's Slough
-UPDATE `list_options` SET `notes` = '1905-9' WHERE `title` = 'Bill Moore's Slough' AND `list_id` = 'race';
 #EndIf
 
 #IfNotRow2Dx2 list_options list_id race option_id biloxi title Biloxi
@@ -2469,16 +2485,12 @@ UPDATE `list_options` SET `notes` = '1479-5' WHERE `option_id` = 'citizen_band_p
 UPDATE `list_options` SET `notes` = '1479-5' WHERE `title` = 'Citizen Band Potawatomi' AND `list_id` = 'race';
 #EndIf
 
-#IfNotRow2Dx2 list_options list_id race option_id clarks_point title Clark's Point
-INSERT INTO list_options (list_id, option_id,  title, seq, is_default, notes, activity) VALUES ('race','clarks_point','Clark's Point','1770', '0',' 1911-7', 0);
+#IfNotRow2D list_options list_id race option_id clarks_point
+INSERT INTO list_options (list_id, option_id,  title, seq, is_default, notes, activity) VALUES ('race','clarks_point',"Clark's Point",'1770', '0',' 1911-7', 0);
 #EndIf
 
 #IfRow2D list_options list_id race option_id clarks_point
 UPDATE `list_options` SET `notes` = '1911-7' WHERE `option_id` = 'clarks_point' AND `list_id` = 'race';
-#EndIf
-
-#IfRow2D list_options list_id race title Clark's Point
-UPDATE `list_options` SET `notes` = '1911-7' WHERE `title` = 'Clark's Point' AND `list_id` = 'race';
 #EndIf
 
 #IfNotRow2Dx2 list_options list_id race option_id clatsop title Clatsop
@@ -2565,16 +2577,12 @@ UPDATE `list_options` SET `notes` = '1725-1' WHERE `option_id` = 'cocopah' AND `
 UPDATE `list_options` SET `notes` = '1725-1' WHERE `title` = 'Cocopah' AND `list_id` = 'race';
 #EndIf
 
-#IfNotRow2Dx2 list_options list_id race option_id coeur_dalene title Coeur D'Alene
-INSERT INTO list_options (list_id, option_id,  title, seq, is_default, notes, activity) VALUES ('race','coeur_dalene','Coeur D'Alene','1850', '0',' 1167-6', 0);
+#IfNotRow2D list_options list_id race option_id coeur_dalene
+INSERT INTO list_options (list_id, option_id,  title, seq, is_default, notes, activity) VALUES ('race','coeur_dalene',"Coeur D'Alene",'1850', '0',' 1167-6', 0);
 #EndIf
 
 #IfRow2D list_options list_id race option_id coeur_dalene
 UPDATE `list_options` SET `notes` = '1167-6' WHERE `option_id` = 'coeur_dalene' AND `list_id` = 'race';
-#EndIf
-
-#IfRow2D list_options list_id race title Coeur D'Alene
-UPDATE `list_options` SET `notes` = '1167-6' WHERE `title` = 'Coeur D'Alene' AND `list_id` = 'race';
 #EndIf
 
 #IfNotRow2Dx2 list_options list_id race option_id coharie title Coharie
@@ -5841,16 +5849,12 @@ UPDATE `list_options` SET `notes` = '1454-8' WHERE `option_id` = 'marshantucket_
 UPDATE `list_options` SET `notes` = '1454-8' WHERE `title` = 'Marshantucket Pequot' AND `list_id` = 'race';
 #EndIf
 
-#IfNotRow2Dx2 list_options list_id race option_id marys_igloo title Mary's Igloo
-INSERT INTO list_options (list_id, option_id,  title, seq, is_default, notes, activity) VALUES ('race','marys_igloo','Mary's Igloo','4580', '0',' 1889-5', 0);
+#IfNotRow2D list_options list_id race option_id marys_igloo
+INSERT INTO list_options (list_id, option_id,  title, seq, is_default, notes, activity) VALUES ('race','marys_igloo',"Mary's Igloo",'4580', '0',' 1889-5', 0);
 #EndIf
 
 #IfRow2D list_options list_id race option_id marys_igloo
 UPDATE `list_options` SET `notes` = '1889-5' WHERE `option_id` = 'marys_igloo' AND `list_id` = 'race';
-#EndIf
-
-#IfRow2D list_options list_id race title Mary's Igloo
-UPDATE `list_options` SET `notes` = '1889-5' WHERE `title` = 'Mary's Igloo' AND `list_id` = 'race';
 #EndIf
 
 #IfNotRow2Dx2 list_options list_id race option_id mashpee_wampanoag title Mashpee Wampanoag
@@ -8277,16 +8281,12 @@ UPDATE `list_options` SET `notes` = '1547-9' WHERE `option_id` = 'reno-sparks' A
 UPDATE `list_options` SET `notes` = '1547-9' WHERE `title` = 'Reno-Sparks' AND `list_id` = 'race';
 #EndIf
 
-#IfNotRow2Dx2 list_options list_id race option_id rocky_boys_chippewa_cree title Rocky Boy's Chippewa Cree
-INSERT INTO list_options (list_id, option_id,  title, seq, is_default, notes, activity) VALUES ('race','rocky_boys_chippewa_cree','Rocky Boy's Chippewa Cree','6610', '0',' 1151-0', 0);
+#IfNotRow2D list_options list_id race option_id rocky_boys_chippewa_cree
+INSERT INTO list_options (list_id, option_id,  title, seq, is_default, notes, activity) VALUES ('race','rocky_boys_chippewa_cree',"Rocky Boy's Chippewa Cree",'6610', '0',' 1151-0', 0);
 #EndIf
 
 #IfRow2D list_options list_id race option_id rocky_boys_chippewa_cree
 UPDATE `list_options` SET `notes` = '1151-0' WHERE `option_id` = 'rocky_boys_chippewa_cree' AND `list_id` = 'race';
-#EndIf
-
-#IfRow2D list_options list_id race title Rocky Boy's Chippewa Cree
-UPDATE `list_options` SET `notes` = '1151-0' WHERE `title` = 'Rocky Boy's Chippewa Cree' AND `list_id` = 'race';
 #EndIf
 
 #IfNotRow2Dx2 list_options list_id race option_id rosebud_sioux title Rosebud Sioux
@@ -8985,16 +8985,12 @@ UPDATE `list_options` SET `notes` = '1578-4' WHERE `option_id` = 'shawnee' AND `
 UPDATE `list_options` SET `notes` = '1578-4' WHERE `title` = 'Shawnee' AND `list_id` = 'race';
 #EndIf
 
-#IfNotRow2Dx2 list_options list_id race option_id sheldons_point title Sheldon's Point
-INSERT INTO list_options (list_id, option_id,  title, seq, is_default, notes, activity) VALUES ('race','sheldons_point','Sheldon's Point','7200', '0',' 1953-9', 0);
+#IfNotRow2D list_options list_id race option_id sheldons_point
+INSERT INTO list_options (list_id, option_id,  title, seq, is_default, notes, activity) VALUES ('race','sheldons_point',"Sheldon's Point",'7200', '0',' 1953-9', 0);
 #EndIf
 
 #IfRow2D list_options list_id race option_id sheldons_point
 UPDATE `list_options` SET `notes` = '1953-9' WHERE `option_id` = 'sheldons_point' AND `list_id` = 'race';
-#EndIf
-
-#IfRow2D list_options list_id race title Sheldon's Point
-UPDATE `list_options` SET `notes` = '1953-9' WHERE `title` = 'Sheldon's Point' AND `list_id` = 'race';
 #EndIf
 
 #IfNotRow2Dx2 list_options list_id race option_id shinnecock title Shinnecock
@@ -9489,16 +9485,12 @@ UPDATE `list_options` SET `notes` = '2021-4' WHERE `option_id` = 'st_george' AND
 UPDATE `list_options` SET `notes` = '2021-4' WHERE `title` = 'St. George' AND `list_id` = 'race';
 #EndIf
 
-#IfNotRow2Dx2 list_options list_id race option_id st_marys title St. Mary's
-INSERT INTO list_options (list_id, option_id,  title, seq, is_default, notes, activity) VALUES ('race','st_marys','St. Mary's','7620', '0',' 1963-8', 0);
+#IfNotRow2D list_options list_id race option_id st_marys
+INSERT INTO list_options (list_id, option_id,  title, seq, is_default, notes, activity) VALUES ('race','st_marys',"St. Mary's",'7620', '0',' 1963-8', 0);
 #EndIf
 
 #IfRow2D list_options list_id race option_id st_marys
 UPDATE `list_options` SET `notes` = '1963-8' WHERE `option_id` = 'st_marys' AND `list_id` = 'race';
-#EndIf
-
-#IfRow2D list_options list_id race title St. Mary's
-UPDATE `list_options` SET `notes` = '1963-8' WHERE `title` = 'St. Mary's' AND `list_id` = 'race';
 #EndIf
 
 #IfNotRow2Dx2 list_options list_id race option_id st_michael title St. Michael
@@ -10173,16 +10165,12 @@ UPDATE `list_options` SET `notes` = '1956-2' WHERE `option_id` = 'togiak' AND `l
 UPDATE `list_options` SET `notes` = '1956-2' WHERE `title` = 'Togiak' AND `list_id` = 'race';
 #EndIf
 
-#IfNotRow2Dx2 list_options list_id race option_id tohono_oodham title Tohono O'Odham
-INSERT INTO list_options (list_id, option_id,  title, seq, is_default, notes, activity) VALUES ('race','tohono_oodham','Tohono O'Odham','8190', '0',' 1653-5', 0);
+#IfNotRow2D list_options list_id race option_id tohono_oodham
+INSERT INTO list_options (list_id, option_id,  title, seq, is_default, notes, activity) VALUES ('race','tohono_oodham',"Tohono O'Odham",'8190', '0',' 1653-5', 0);
 #EndIf
 
 #IfRow2D list_options list_id race option_id tohono_oodham
 UPDATE `list_options` SET `notes` = '1653-5' WHERE `option_id` = 'tohono_oodham' AND `list_id` = 'race';
-#EndIf
-
-#IfRow2D list_options list_id race title Tohono O'Odham
-UPDATE `list_options` SET `notes` = '1653-5' WHERE `title` = 'Tohono O'Odham' AND `list_id` = 'race';
 #EndIf
 
 #IfNotRow2Dx2 list_options list_id race option_id tok title Tok
@@ -11594,9 +11582,6 @@ update list_options set notes = 'W' where list_id = 'marital' and option_id = 'w
 
 #IfNotRow3D list_options list_id marital option_id separated notes L
 update list_options set notes = 'L' where list_id = 'marital' and option_id = 'separated';
-#EndIf
-
-#IfNotRow3D list_options list_id marital option_id domestic partner notes T
 update list_options set notes = 'T' where list_id = 'marital' and option_id = 'domestic partner';
 #EndIf
 

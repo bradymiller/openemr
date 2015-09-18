@@ -435,6 +435,9 @@ CREATE TABLE `clinical_rules` (
   `amc_2014_stage1_flag` tinyint(1) COMMENT '2014 Stage 1 - Automated Measure Calculation flag for (unable to customize per patient)',
   `amc_2014_stage2_flag` tinyint(1) COMMENT '2014 Stage 2 - Automated Measure Calculation flag for (unable to customize per patient)',
   `patient_reminder_flag` tinyint(1) COMMENT 'Clinical Reminder Module flag',
+  `developer` VARCHAR(255) NOT NULL DEFAULT '' COMMENT 'Clinical Rule Developer',
+  `funding_source` VARCHAR(255) NOT NULL DEFAULT '' COMMENT 'Clinical Rule Funding Source',
+  `release_version` VARCHAR(255) NOT NULL DEFAULT '' COMMENT 'Clinical Rule Release Version',
   PRIMARY KEY  (`id`,`pid`)
 ) ENGINE=MyISAM ;
 
@@ -4282,6 +4285,7 @@ INSERT INTO list_options ( list_id, option_id, title, seq ) VALUES ('Industry', 
 -- Occupation
 
 INSERT INTO `list_options` (`list_id`, `option_id`, `title`) VALUES('lists','Occupation','Occupation');
+INSERT INTO list_options ( list_id, option_id, title, seq ) VALUES ('Occupation', 'unassigned', 'Unassigned', 0);
 INSERT INTO list_options ( list_id, option_id, title, seq ) VALUES ('Occupation', 'lawyer', 'Lawyer', 10);
 INSERT INTO list_options ( list_id, option_id, title, seq ) VALUES ('Occupation', 'engineer', 'Engineer', 20);
 INSERT INTO list_options ( list_id, option_id, title, seq ) VALUES ('Occupation', 'site_worker', 'Site Worker', 30);
@@ -4458,6 +4462,7 @@ CREATE TABLE `log` (
   `crt_user` varchar(255) default NULL,
   `log_from` VARCHAR(20) DEFAULT 'open-emr',
   `menu_item_id` INT(11) DEFAULT NULL,
+  `ccda_doc_id` INT(11) DEFAULT NULL COMMENT 'CCDA document id from ccda',
   PRIMARY KEY  (`id`)
 ) ENGINE=MyISAM AUTO_INCREMENT=1 ;
 
