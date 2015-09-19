@@ -2707,11 +2707,11 @@ INSERT INTO `layout_options` (`form_id`,`field_id`,`group_name`,`title`,`seq`,`d
 INSERT INTO `layout_options` (`form_id`,`field_id`,`group_name`,`title`,`seq`,`data_type`,`uor`,`fld_length`,`max_length`,`list_id`,`titlecols`,`datacols`,`default_value`,`edit_options`,`description`,`fld_rows`) VALUES ('DEM', 'hipaa_mail', '3Choices', 'Allow Mail Message', 7, 1, 1, 0, 0, 'yesno', 1, 1, '', '', 'Allow email messages?', 0);
 INSERT INTO `layout_options` (`form_id`,`field_id`,`group_name`,`title`,`seq`,`data_type`,`uor`,`fld_length`,`max_length`,`list_id`,`titlecols`,`datacols`,`default_value`,`edit_options`,`description`,`fld_rows`) VALUES ('DEM', 'hipaa_allowsms'  , '3Choices', 'Allow SMS'  , 8, 1, 1, 0, 0, 'yesno', 1, 1, '', '', 'Allow SMS (text messages)?', 0);
 INSERT INTO `layout_options` (`form_id`,`field_id`,`group_name`,`title`,`seq`,`data_type`,`uor`,`fld_length`,`max_length`,`list_id`,`titlecols`,`datacols`,`default_value`,`edit_options`,`description`,`fld_rows`) VALUES ('DEM', 'hipaa_allowemail', '3Choices', 'Allow Email', 9, 1, 1, 0, 0, 'yesno', 1, 1, '', '', 'Allow Email?', 0);
-
 INSERT INTO `layout_options` (`form_id`,`field_id`,`group_name`,`title`,`seq`,`data_type`,`uor`,`fld_length`,`max_length`,`list_id`,`titlecols`,`datacols`,`default_value`,`edit_options`,`description`,`fld_rows`) VALUES ('DEM', 'allow_imm_reg_use', '3Choices', 'Allow Immunization Registry Use', 10, 1, 1, 0, 0, 'yesno', 1, 1, '', '', '', 0);
 INSERT INTO `layout_options` (`form_id`,`field_id`,`group_name`,`title`,`seq`,`data_type`,`uor`,`fld_length`,`max_length`,`list_id`,`titlecols`,`datacols`,`default_value`,`edit_options`,`description`,`fld_rows`) VALUES ('DEM', 'allow_imm_info_share', '3Choices', 'Allow Immunization Info Sharing', 11, 1, 1, 0, 0, 'yesno', 1, 1, '', '', '', 0);
 INSERT INTO `layout_options` (`form_id`,`field_id`,`group_name`,`title`,`seq`,`data_type`,`uor`,`fld_length`,`max_length`,`list_id`,`titlecols`,`datacols`,`default_value`,`edit_options`,`description`,`fld_rows`) VALUES ('DEM', 'allow_health_info_ex', '3Choices', 'Allow Health Information Exchange', 12, 1, 1, 0, 0, 'yesno', 1, 1, '', '', '', 0);
 INSERT INTO `layout_options` (`form_id`,`field_id`,`group_name`,`title`,`seq`,`data_type`,`uor`,`fld_length`,`max_length`,`list_id`,`titlecols`,`datacols`,`default_value`,`edit_options`,`description`,`fld_rows`) VALUES ('DEM', 'allow_patient_portal', '3Choices', 'Allow Patient Portal', 13, 1, 1, 0, 0, 'yesno', 1, 1, '', '', '', 0);
+INSERT INTO `layout_options` (`form_id`,`field_id`,`group_name`,`title`,`seq`,`data_type`,`uor`,`fld_length`,`max_length`,`list_id`,`titlecols`,`datacols`,`default_value`,`edit_options`,`description`,`fld_rows`) VALUES ('DEM', 'care_team', '3Choices', 'Care Team', 14, 11, 1, 0, 0, '', 1, 1, '', '', '', 0) ;
 INSERT INTO `layout_options` (`form_id`,`field_id`,`group_name`,`title`,`seq`,`data_type`,`uor`,`fld_length`,`max_length`,`list_id`,`titlecols`,`datacols`,`default_value`,`edit_options`,`description`,`fld_rows`) VALUES ('DEM', 'cmsportal_login', '3Choices', 'CMS Portal Login', 15, 2, 1, 30, 60, '', 1, 1, '', '', 'CMS Portal Login ID', 0);
 INSERT INTO `layout_options` (`form_id`,`field_id`,`group_name`,`title`,`seq`,`data_type`,`uor`,`fld_length`,`max_length`,`list_id`,`titlecols`,`datacols`,`default_value`,`edit_options`,`description`,`fld_rows`) VALUES ('DEM', 'occupation', '4Employer', 'Occupation', 1, 26, 1, 0, 0, 'Occupation', 1, 1, '', '', 'Occupation', 0);
 INSERT INTO `layout_options` (`form_id`,`field_id`,`group_name`,`title`,`seq`,`data_type`,`uor`,`fld_length`,`max_length`,`list_id`,`titlecols`,`datacols`,`default_value`,`edit_options`,`description`,`fld_rows`) VALUES ('DEM', 'industry', '4Employer', 'Industry', 1, 26, 1, 0, 0, 'Industry', 1, 1, '', '', 'Industry', 0);
@@ -4890,7 +4890,7 @@ CREATE TABLE `patient_data` (
   `ethnoracial` varchar(255) NOT NULL default '',
   `race` varchar(255) NOT NULL default '',
   `ethnicity` varchar(255) NOT NULL default '',
-  `religion` varchar(255) NOT NULL default '',
+  `religion` varchar(40) NOT NULL default '',
   `interpretter` varchar(255) NOT NULL default '',
   `migrantseasonal` varchar(255) NOT NULL default '',
   `family_size` varchar(255) NOT NULL default '',
@@ -4944,7 +4944,7 @@ CREATE TABLE `patient_data` (
   `soap_import_status` TINYINT(4) DEFAULT NULL COMMENT '1-Prescription Press 2-Prescription Import 3-Allergy Press 4-Allergy Import',
   `cmsportal_login` varchar(60) NOT NULL default '',
   `care_team` int(11) DEFAULT NULL,
-  `county` varchar(255) NOT NULL default '',
+  `county` varchar(40) NOT NULL default '',
   `industry` TEXT NOT NULL,
   UNIQUE KEY `pid` (`pid`),
   KEY `id` (`id`)
@@ -4962,7 +4962,7 @@ CREATE TABLE `patient_portal_menu` (
   `menu_order` SMALLINT(4) DEFAULT NULL,
   `menu_status` TINYINT(2) DEFAULT '1',
   PRIMARY KEY (`patient_portal_menu_id`)
-) ENGINE=INNODB;
+) ENGINE=INNODB AUTO_INCREMENT=14;
 
 INSERT  INTO `patient_portal_menu`(`patient_portal_menu_id`,`patient_portal_menu_group_id`,`menu_name`,`menu_order`,`menu_status`) VALUES (1,1,'Dashboard',3,1);
 INSERT  INTO `patient_portal_menu`(`patient_portal_menu_id`,`patient_portal_menu_group_id`,`menu_name`,`menu_order`,`menu_status`) VALUES (2,1,'My Profile',6,1);
@@ -5364,7 +5364,7 @@ CREATE TABLE `registry` (
   `category` varchar(255) default NULL,
   `nickname` varchar(255) default NULL,
   PRIMARY KEY  (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=16 ;
+) ENGINE=MyISAM AUTO_INCREMENT=20 ;
 
 -- 
 -- Dumping data for table `registry`
@@ -7751,7 +7751,7 @@ CREATE TABLE ccda_components (
   ccda_components_field varchar(100) DEFAULT NULL,
   ccda_components_name varchar(100) DEFAULT NULL,
   PRIMARY KEY (ccda_components_id)
-) ENGINE=InnoDB AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB AUTO_INCREMENT=10 ;
 insert into ccda_components (ccda_components_id, ccda_components_field, ccda_components_name) values('1','progress_note','Progress Notes');
 insert into ccda_components (ccda_components_id, ccda_components_field, ccda_components_name) values('2','consultation_note','Consultation Note');
 insert into ccda_components (ccda_components_id, ccda_components_field, ccda_components_name) values('3','continuity_care_document','Continuity Care Document');
@@ -7775,7 +7775,7 @@ CREATE TABLE ccda_sections (
   ccda_sections_name varchar(100) DEFAULT NULL,
   ccda_sections_req_mapping tinyint(4) NOT NULL DEFAULT '1',
   PRIMARY KEY (ccda_sections_id)
-) ENGINE=InnoDB AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB AUTO_INCREMENT=46 ;
 insert into ccda_sections (ccda_sections_id, ccda_components_id, ccda_sections_field, ccda_sections_name, ccda_sections_req_mapping) values('1','1','assessment_plan','Assessment and Plan','1');
 insert into ccda_sections (ccda_sections_id, ccda_components_id, ccda_sections_field, ccda_sections_name, ccda_sections_req_mapping) values('2','2','assessment_plan','Assessment and Plan','1');
 insert into ccda_sections (ccda_sections_id, ccda_components_id, ccda_sections_field, ccda_sections_name, ccda_sections_req_mapping) values('3','2','history_of_present_illness','History of Present Illness','1');

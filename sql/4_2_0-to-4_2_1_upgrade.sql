@@ -212,7 +212,7 @@ CREATE TABLE ccda_components (
   ccda_components_field varchar(100) DEFAULT NULL,
   ccda_components_name varchar(100) DEFAULT NULL,
   PRIMARY KEY (ccda_components_id)
-) ENGINE=InnoDB;
+) ENGINE=InnoDB AUTO_INCREMENT=10 ;
 insert into ccda_components (ccda_components_id, ccda_components_field, ccda_components_name) values('1','progress_note','Progress Notes');
 insert into ccda_components (ccda_components_id, ccda_components_field, ccda_components_name) values('2','consultation_note','Consultation Note');
 insert into ccda_components (ccda_components_id, ccda_components_field, ccda_components_name) values('3','continuity_care_document','Continuity Care Document');
@@ -232,7 +232,7 @@ CREATE TABLE ccda_sections (
   ccda_sections_name varchar(100) DEFAULT NULL,
   ccda_sections_req_mapping tinyint(4) NOT NULL DEFAULT '1',
   PRIMARY KEY (ccda_sections_id)
-) ENGINE=InnoDB;
+) ENGINE=InnoDB AUTO_INCREMENT=46;
 insert into ccda_sections (ccda_sections_id, ccda_components_id, ccda_sections_field, ccda_sections_name, ccda_sections_req_mapping) values('1','1','assessment_plan','Assessment and Plan','1');
 insert into ccda_sections (ccda_sections_id, ccda_components_id, ccda_sections_field, ccda_sections_name, ccda_sections_req_mapping) values('2','2','assessment_plan','Assessment and Plan','1');
 insert into ccda_sections (ccda_sections_id, ccda_components_id, ccda_sections_field, ccda_sections_name, ccda_sections_req_mapping) values('3','2','history_of_present_illness','History of Present Illness','1');
@@ -289,7 +289,7 @@ CREATE TABLE ccda_table_mapping (
   deleted tinyint(4) NOT NULL DEFAULT '0',
   timestamp timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (id)
-) ENGINE=InnoDB;
+) ENGINE=InnoDB AUTO_INCREMENT=1 ;
 #EndIf
 
 #IfNotTable ccda_field_mapping
@@ -298,7 +298,7 @@ CREATE TABLE ccda_field_mapping (
   table_id int(11) DEFAULT NULL,
   ccda_field varchar(100) DEFAULT NULL,
   PRIMARY KEY (id)
-) ENGINE=InnoDB;
+) ENGINE=InnoDB AUTO_INCREMENT=1 ;
 #EndIf
 
 #IfNotTable ccda
@@ -319,7 +319,7 @@ CREATE TABLE ccda (
   `emr_transfer` tinyint(4) NOT NULL DEFAULT '0',
   PRIMARY KEY (id),
   UNIQUE KEY unique_key (pid,encounter,time)
-) ENGINE=InnoDB;
+) ENGINE=InnoDB AUTO_INCREMENT=1 ;
 #EndIf
 
 #IfNotRow2D list_options list_id lists option_id religious_affiliation
@@ -11571,7 +11571,7 @@ update list_options set notes = 'T' where list_id = 'marital' and option_id = 'd
 #EndIf
 
 #IfMissingColumn users physician_type
-ALTER TABLE users ADD COLUMN physician_type VARCHAR(50);
+ALTER TABLE users ADD COLUMN physician_type VARCHAR(50) DEFAULT NULL;
 #EndIf
 
 #IfMissingColumn facility facility_code
@@ -11590,7 +11590,7 @@ ALTER TABLE documents ADD COLUMN  audit_master_id int(11) default NULL;
 SET @group_name = (SELECT group_name FROM layout_options WHERE field_id='ethnicity' AND form_id='DEM');
 SET @seq = (SELECT MAX(seq) FROM layout_options WHERE group_name=@group_name AND form_id='DEM');
 INSERT INTO `layout_options` (`form_id`, `field_id`, `group_name`, `title`, `seq`, `data_type`, `uor`, `fld_length`, `max_length`, `list_id`, `titlecols`, `datacols`, `default_value`, `edit_options`, `description`) VALUES ('DEM', 'religion', @group_name, 'Religion', @seq+1, 1, 1, 0, 0, 'religious_affiliation', 1, 3, '', '', 'Patient Religion' ) ;
-ALTER TABLE patient_data ADD COLUMN religion TEXT DEFAULT NULL;
+ALTER TABLE patient_data ADD COLUMN religion varchar(40) NOT NULL default '';
 #EndIf
 
 #IfNotRow categories name CCDA
@@ -11707,7 +11707,7 @@ CREATE TABLE `patient_portal_menu` (
   `menu_order` SMALLINT(4) DEFAULT NULL,
   `menu_status` TINYINT(2) DEFAULT '1',
   PRIMARY KEY (`patient_portal_menu_id`)
-) ENGINE=INNODB;
+) ENGINE=INNODB AUTO_INCREMENT=14;
 
 INSERT  INTO `patient_portal_menu`(`patient_portal_menu_id`,`patient_portal_menu_group_id`,`menu_name`,`menu_order`,`menu_status`) VALUES (1,1,'Dashboard',3,1);
 INSERT  INTO `patient_portal_menu`(`patient_portal_menu_id`,`patient_portal_menu_group_id`,`menu_name`,`menu_order`,`menu_status`) VALUES (2,1,'My Profile',6,1);
@@ -11756,7 +11756,7 @@ INSERT INTO list_options (list_id, option_id, title, notes, seq) VALUES ('county
 #EndIf
 
 #IfMissingColumn patient_data county
-ALTER TABLE `patient_data` ADD COLUMN `county` varchar(255) NOT NULL default '';
+ALTER TABLE `patient_data` ADD COLUMN `county` varchar(40) NOT NULL default '';
 SET @group_name = (SELECT group_name FROM layout_options WHERE field_id='country_code' AND form_id='DEM');
 SET @seq = (SELECT MAX(seq) FROM layout_options WHERE group_name=@group_name AND form_id='DEM');
 INSERT INTO `layout_options` (`form_id`, `field_id`, `group_name`, `title`, `seq`, `data_type`, `uor`, `fld_length`, `max_length`, `list_id`, `titlecols`, `datacols`, `default_value`, `edit_options`, `description`) VALUES ('DEM', 'county', @group_name, 'County', @seq+1, 26, 1, 0, 0, 'county', 1, 1, '', '', 'County' ) ;
@@ -11892,42 +11892,6 @@ INSERT INTO `layout_options` (`form_id`, `field_id`, `group_name`, `title`, `seq
 alter table patient_data add column care_team int(11) DEFAULT NULL;
 #EndIf
 
-#IfNotTable form_care_plan
-CREATE TABLE `form_care_plan` (
-  `id` bigint(20) NOT NULL,
-  `date` DATE DEFAULT NULL,
-  `pid` bigint(20) DEFAULT NULL,
-  `encounter` varchar(255) DEFAULT NULL,
-  `user` varchar(255) DEFAULT NULL,
-  `groupname` varchar(255) DEFAULT NULL,
-  `authorized` tinyint(4) DEFAULT NULL,
-  `activity` tinyint(4) DEFAULT NULL,
-  `code` varchar(255) DEFAULT NULL,
-  `codetext` text,
-  `description` text,
-  `external_id` VARCHAR(30) DEFAULT NULL
-);
-INSERT INTO `registry` VALUES ('Care Plan', 1, 'care_plan', 18, 1, 1, '2015-09-09 00:00:00', 0, 'Clinical', '');
-#EndIf
-
-#IfNotTable form_functional_cognitive_status
-CREATE TABLE `form_functional_cognitive_status` (
-  `id` bigint(20) NOT NULL,
-  `date` DATE DEFAULT NULL,
-  `pid` bigint(20) DEFAULT NULL,
-  `encounter` varchar(255) DEFAULT NULL,
-  `user` varchar(255) DEFAULT NULL,
-  `groupname` varchar(255) DEFAULT NULL,
-  `authorized` tinyint(4) DEFAULT NULL,
-  `activity` tinyint(4) DEFAULT NULL,
-  `code` varchar(255) DEFAULT NULL,
-  `codetext` text,
-  `description` text,
-  `external_id` VARCHAR(30) DEFAULT NULL
-);
-INSERT INTO `registry` VALUES ('Functional and Cognitive Status', 1, 'functional_cognitive_status', 19, 1, 1, '2015-09-09 00:00:00', 0, 'Clinical', '');
-#EndIf
-
 #IfNotTable form_observation
 CREATE TABLE `form_observation` (
   `id` bigint(20) NOT NULL,
@@ -11945,8 +11909,50 @@ CREATE TABLE `form_observation` (
   `description` varchar(255),
   `code_type` varchar(255),
   `table_code` varchar(255)
-);
-INSERT INTO `registry` VALUES ('Observation', 1, 'observation', 17, 1, 1, '2015-09-09 00:00:00', 0, 'Clinical', '');
+) ENGINE=InnoDB;
+SET @seq = (SELECT MAX(id) FROM registry);
+ALTER TABLE `registry` AUTO_INCREMENT = @seq+1;
+INSERT INTO `registry` (`name`,`state`,`directory`,`sql_run`,`unpackaged`,`date`,`priority`,`category`,`nickname`) VALUES ('Observation', 1, 'observation', 1, 1, '2015-09-09 00:00:00', 0, 'Clinical', '');
+#EndIf
+
+#IfNotTable form_care_plan
+CREATE TABLE `form_care_plan` (
+  `id` bigint(20) NOT NULL,
+  `date` DATE DEFAULT NULL,
+  `pid` bigint(20) DEFAULT NULL,
+  `encounter` varchar(255) DEFAULT NULL,
+  `user` varchar(255) DEFAULT NULL,
+  `groupname` varchar(255) DEFAULT NULL,
+  `authorized` tinyint(4) DEFAULT NULL,
+  `activity` tinyint(4) DEFAULT NULL,
+  `code` varchar(255) DEFAULT NULL,
+  `codetext` text,
+  `description` text,
+  `external_id` VARCHAR(30) DEFAULT NULL
+) ENGINE=InnoDB;
+SET @seq = (SELECT MAX(id) FROM registry);
+ALTER TABLE `registry` AUTO_INCREMENT = @seq+1;
+INSERT INTO `registry` (`name`,`state`,`directory`,`sql_run`,`unpackaged`,`date`,`priority`,`category`,`nickname`) VALUES ('Care Plan', 1, 'care_plan', 1, 1, '2015-09-09 00:00:00', 0, 'Clinical', '');
+#EndIf
+
+#IfNotTable form_functional_cognitive_status
+CREATE TABLE `form_functional_cognitive_status` (
+  `id` bigint(20) NOT NULL,
+  `date` DATE DEFAULT NULL,
+  `pid` bigint(20) DEFAULT NULL,
+  `encounter` varchar(255) DEFAULT NULL,
+  `user` varchar(255) DEFAULT NULL,
+  `groupname` varchar(255) DEFAULT NULL,
+  `authorized` tinyint(4) DEFAULT NULL,
+  `activity` tinyint(4) DEFAULT NULL,
+  `code` varchar(255) DEFAULT NULL,
+  `codetext` text,
+  `description` text,
+  `external_id` VARCHAR(30) DEFAULT NULL
+) ENGINE=InnoDB;
+SET @seq = (SELECT MAX(id) FROM registry);
+ALTER TABLE `registry` AUTO_INCREMENT = @seq+1;
+INSERT INTO `registry` (`name`,`state`,`directory`,`sql_run`,`unpackaged`,`date`,`priority`,`category`,`nickname`) VALUES ('Functional and Cognitive Status', 1, 'functional_cognitive_status', 1, 1, '2015-09-09 00:00:00', 0, 'Clinical', '');
 #EndIf
 
 UPDATE `clinical_rules` SET `cqm_2014_flag` = 1 WHERE `id` = 'rule_htn_bp_measure_cqm' AND `pid` = 0;
