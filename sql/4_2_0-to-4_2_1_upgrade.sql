@@ -11911,8 +11911,7 @@ CREATE TABLE `form_observation` (
   `table_code` varchar(255)
 ) ENGINE=InnoDB;
 SET @seq = (SELECT MAX(id) FROM registry);
-ALTER TABLE `registry` AUTO_INCREMENT = @seq+1;
-INSERT INTO `registry` (`name`,`state`,`directory`,`sql_run`,`unpackaged`,`date`,`priority`,`category`,`nickname`) VALUES ('Observation', 1, 'observation', 1, 1, '2015-09-09 00:00:00', 0, 'Clinical', '');
+INSERT INTO `registry` (`name`,`state`,`directory`,`id`,`sql_run`,`unpackaged`,`date`,`priority`,`category`,`nickname`) VALUES ('Observation', 1, 'observation', @seq+1, 1, 1, '2015-09-09 00:00:00', 0, 'Clinical', '');
 #EndIf
 
 #IfNotTable form_care_plan
@@ -11931,8 +11930,7 @@ CREATE TABLE `form_care_plan` (
   `external_id` VARCHAR(30) DEFAULT NULL
 ) ENGINE=InnoDB;
 SET @seq = (SELECT MAX(id) FROM registry);
-ALTER TABLE `registry` AUTO_INCREMENT = @seq+1;
-INSERT INTO `registry` (`name`,`state`,`directory`,`sql_run`,`unpackaged`,`date`,`priority`,`category`,`nickname`) VALUES ('Care Plan', 1, 'care_plan', 1, 1, '2015-09-09 00:00:00', 0, 'Clinical', '');
+INSERT INTO `registry` (`name`,`state`,`directory`,`id`,`sql_run`,`unpackaged`,`date`,`priority`,`category`,`nickname`) VALUES ('Care Plan', 1, 'care_plan', @seq+1, 1, 1, '2015-09-09 00:00:00', 0, 'Clinical', '');
 #EndIf
 
 #IfNotTable form_functional_cognitive_status
@@ -11951,8 +11949,7 @@ CREATE TABLE `form_functional_cognitive_status` (
   `external_id` VARCHAR(30) DEFAULT NULL
 ) ENGINE=InnoDB;
 SET @seq = (SELECT MAX(id) FROM registry);
-ALTER TABLE `registry` AUTO_INCREMENT = @seq+1;
-INSERT INTO `registry` (`name`,`state`,`directory`,`sql_run`,`unpackaged`,`date`,`priority`,`category`,`nickname`) VALUES ('Functional and Cognitive Status', 1, 'functional_cognitive_status', 1, 1, '2015-09-09 00:00:00', 0, 'Clinical', '');
+INSERT INTO `registry` (`name`,`state`,`directory`,`id`,`sql_run`,`unpackaged`,`date`,`priority`,`category`,`nickname`) VALUES ('Functional and Cognitive Status', 1, 'functional_cognitive_status', @seq+1, 1, 1, '2015-09-09 00:00:00', 0, 'Clinical', '');
 #EndIf
 
 UPDATE `clinical_rules` SET `cqm_2014_flag` = 1 WHERE `id` = 'rule_htn_bp_measure_cqm' AND `pid` = 0;
