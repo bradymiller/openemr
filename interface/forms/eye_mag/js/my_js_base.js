@@ -2372,10 +2372,19 @@ $(document).ready(function() {
                   $("[id^='BUTTON_TEXTD_']").click(function() {
                                                    var zone = this.id.match(/BUTTON_TEXTD_(.*)/)[1];
                                                    if (zone != "menu") {
-                                                   $("#"+zone+"_right").addClass('nodisplay');
-                                                   // $("#"+zone+"_COMMENTS_DIV").removeClass('QP_lengthen');
-                                                   // $("#"+zone+"_keyboard_left").removeClass('nodisplay');
-                                                   $("#PREFS_"+zone+"_RIGHT").val(1);
+                                                       if ((zone =="PMH") || (zone == "HPI")) {
+                                                       $("#PMH_right").addClass('nodisplay');
+                                                       $("#PREFS_PMH_RIGHT").val(1);
+                                                       $("#HPI_right").addClass('nodisplay');
+                                                       $("#PREFS_HPI_RIGHT").val(1);
+
+                                                   } else {
+                                                       $("#"+zone+"_right").addClass('nodisplay');
+                                                       // $("#"+zone+"_COMMENTS_DIV").removeClass('QP_lengthen');
+                                                       // $("#"+zone+"_keyboard_left").removeClass('nodisplay');
+                                                       $("#PREFS_"+zone+"_RIGHT").val(1);
+                                                   
+                                                   }
                                                    update_PREFS();
 
                                                    }
@@ -2597,15 +2606,24 @@ $(document).ready(function() {
                                                     if ((zone != 'PMH')&&(zone != 'HPI')) {
                                                 //    $(document).scrollTop( $("#"+zone+"_anchor").offset().top );
                                                     }
-                                                    if (zone == 'PMH') {
-                                                        if($('#HPI_right').css('display') == 'none') {
-                                                            $("#PRIORS_HPI_left_text").addClass('nodisplay');
-                                                            $("#Draw_HPI").addClass('nodisplay');
-                                                            show_QP_section('HPI');
-                                                            $("#PREFS_HPI_RIGHT").val('QP');
-                                                            $(document).scrollTop('400');
-                                                        }
-                                                    }
+                                                if (zone == 'PMH') {
+                                                if($('#HPI_right').css('display') == 'none') {
+                                                $("#PRIORS_HPI_left_text").addClass('nodisplay');
+                                                $("#Draw_HPI").addClass('nodisplay');
+                                                show_QP_section('HPI');
+                                                $("#PREFS_HPI_RIGHT").val('QP');
+                                                $(document).scrollTop('400');
+                                                }
+                                                }
+                                                if (zone == 'HPI') {
+                                                if($('#PMH_right').css('display') == 'none') {
+                                                $("#PRIORS_PMH_left_text").addClass('nodisplay');
+                                                $("#Draw_PMH").addClass('nodisplay');
+                                                show_QP_section('PMH');
+                                                $("#PREFS_PMH_RIGHT").val('QP');
+                                                //$(document).scrollTop('400');
+                                                }
+                                                }
                                                 
                                                 update_PREFS();
                                                 });
