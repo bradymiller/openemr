@@ -802,7 +802,7 @@ function negate_radio(section) {
 
 </head>
 
-<body  style="padding-right:0.5em;font-family: FontAwesome,serif,Arial;">
+<body  style="padding-right:0.3em;font-family: FontAwesome,serif,Arial;">
 
   <div id="page" name="page">
     <form method='POST' name='theform' id='theform'
@@ -829,21 +829,21 @@ function negate_radio(section) {
             if ($focustitles[1] == "Surgery") $focustitles[1] = "Surg";
             if ($focustitles[1] == "SocH") $focustitles[1] = "Soc";
             $HELLO[$focustitles[1]] = "<input type='radio' name='form_type' id='".xla($index)."' value='".xla($index)."' ".$checked. " onclick='top.restoreSession();newtype($index);' />
-            <span style='margin-top:2px;font-size:0.6em;font-weight:bold;'><label class='input-helper input-helper--checkbox' for='".xla($index)."'>" . xlt($focustitles[1]) . "</label></span>&nbsp;\n";
+            <span style='margin-top:2px;font-size:0.6em;font-weight:bold;'><label class='input-helper input-helper--checkbox' for='".xla($index)."'>" . xlt($focustitles[1]) . "</label></span>&nbsp;";
             ++$index;
         }
         $HELLO['ROS']="<input type='radio' name='form_type' id='8' value='8' ".$checked. " onclick='top.restoreSession();newtype(8);' />
-            <span style='margin-top:2px;font-size:0.6em;font-weight:bold;'><label class='input-helper input-helper--checkbox' for='8'>ROS</label></span>&nbsp;\n";
+            <span style='margin-top:2px;font-size:0.6em;font-weight:bold;'><label class='input-helper input-helper--checkbox' for='8'>ROS</label></span>";
   
         echo $HELLO['POH'].$HELLO['PMH'].$HELLO['Meds'].$HELLO['Surg'].$HELLO['Allergy'].$HELLO['FH'].$HELLO['Soc'].$HELLO['ROS'];
 
         ?>
-      <div class="borderShadow" style="text-align:center;margin-top:7px;width;100%;">
-      <table  border='0' width='98%'>
+      <div class="borderShadow" style="text-align:center;margin-top:7px;width;90%;">
+      <table  border='0' width='90%'>
         <tr id='row_quick_picks'>
             <td valign='top' nowrap>&nbsp;</td>
             <td valign='top'  colspan="3">
-              <select name='form_titles' size='<?php echo $GLOBALS['athletic_team'] ? 10 : 4; ?>' onchange='set_text()'>
+              <select name='form_titles' size='<?php echo $GLOBALS['athletic_team'] ? 10 : 6; ?>' onchange='set_text()'>
               </select> 
             </td>
         </tr>

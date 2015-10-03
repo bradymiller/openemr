@@ -1465,7 +1465,6 @@ function display_PRIOR_section ($zone,$orig_id,$id_to_show,$pid,$report = '0') {
                                 echo  "".xla("None") ."<br /><br />";
                                 $counter = $counter+4; 
                             }
-                        
                     ?>
                     </td>
                 </tr>
@@ -1492,10 +1491,9 @@ function display_PRIOR_section ($zone,$orig_id,$id_to_show,$pid,$report = '0') {
                             onclick=\"alter_issue('".$item['rowid']."','".$item['row_type']."','');\">".$item['title']."</span><br />";
                             $counter++;
                         }
-                        if (count($PMSFH[0]['medication']) < 1) {
+                    } else {
                             echo  "".xla("None") ."<br /><br />";
                             $counter = $counter+4; 
-                        }
                     }
                     ?>
                     </td>
@@ -1518,12 +1516,14 @@ function display_PRIOR_section ($zone,$orig_id,$id_to_show,$pid,$report = '0') {
                 <tr>
                     <td style='min-height:1.2in;min-width:1.5in;padding-left:5px;'>
                     <?php
+                    $mentions_FH='';
                     foreach ($PMSFH[0]['FH'] as $item) {
                         if ($item['display'] > '') {
                             echo "<span name='QP_PMH_".$item['rowid']."' href='#PMH_anchor' id='QP_PMH_".$item['rowid']."' 
                             onclick=\"alter_issue('0','FH','');\">".$item['short_title'].": ".$item['display']."</span><br />";
+                        
+                            $mentions_FH++;
                         }
-                        $mentions_FH++;
                     }
                     if (!$mentions_FH) {
                         ?>
@@ -1906,7 +1906,7 @@ function build_PMSFH($pid) {
 function show_PMSFH_panel($PMSFH) {
     echo '<div style="font-size:1.0em;padding:30 2 2 5;z-index:1;">';
       //nice idea to put a TEXT-DRAW-DB selector up here.. ;)
-      ?><div style="margin:top:10px;text-align:center;">
+      ?><div style="margin-top:10px;text-align:center;">
       <span class="fa fa-file-text-o" id="PANEL_TEXT" name="PANEL_TEXT" style="margin:5;"></span>
       <span class="fa fa-database" id="PANEL_QP" name="PANEL_QP" style="margin:5;"></span>
       <span class="fa fa-paint-brush" id="PANEL_DRAW" name="PANEL_DRAW" style="margin:5;"></span>
@@ -2689,7 +2689,7 @@ function document_engine($pid) {
 
 /**
  *  This function returns hooks/links for the Document Library, 
- *      Reports (to do), upload(done)and image DB(done)
+ *      Document Reports(to do), upload(done) and image DB(done)
  *      based on the category/zone
  *
  *  @param string $pid value = patient id
@@ -2796,7 +2796,7 @@ function redirector($url) {
     exit(0);}
 
 /**
- *  This is an experiment to start shifting clinical functions into a separate interface.
+ *  This is an experiment to start shifting clinical functions into a single page with an application style menu.
  */
 function menu_overhaul_top($pid,$encounter,$title="Eye Exam") {
     global $form_folder;
@@ -2991,8 +2991,6 @@ function menu_overhaul_top($pid,$encounter,$title="Eye Exam") {
 }
 /**
  *  This is currently a floating div top and near the left with patient demographics and such.
- *  It can also be modified to create a left had column full of the PMH/MEDS/POH/ALL/etc that either
- *  moves with the page or remains static.  If so, changes to the PMH data will need to show up here too...
  */
 function menu_overhaul_left($pid,$encounter) {
     global $form_folder;
@@ -3068,8 +3066,8 @@ function menu_overhaul_left($pid,$encounter) {
     $provider = $prov['fname']." ".$prov['lname'];
     ?>
             <table style="font-size:12px;">
-                <tr><td class="right"><b>PCP:</b></td><td><?php echo $provider; ?></td></tr>
-                <tr><td class="right"><b>Referred By:</b></td><td><?php echo $provider; ?></td></tr>
+                <tr><td class="right"><b>PCP:</b>&nbsp;</td><td>&nbsp;<?php echo $provider; ?></td></tr>
+                <tr><td class="right"><b>Referred By:</b>&nbsp;</td><td>&nbsp;<?php echo $provider; ?></td></tr>
             </table>
         </div>
          <br />
@@ -3125,7 +3123,7 @@ function undo() {
       *
       *  The same server side concept has been applied to the drawings already.  If the user is drawing, there will be stored incremental images of each stroke,
       *  for each section/zone, on the client side, with only the latest changes sent to server.  Scrolling back and forth pulls from the browser cache, not server.
-      *
+      *  However this was a monster across the net so a javascript client side option now is deployed.  Lightning fast too!
       */ 
 }
 
@@ -3552,7 +3550,7 @@ if (!empty($irow['type'])) {
               if ($focustitles[1] == "Problem") $focustitles[1] = "PMH";
               if ($focustitles[1] == "Surgery") $focustitles[1] = "PSurgH";
   //echo $focustitles[1]. " - ";
-              $HELLO[$focustitles[1]] = "<input type='radio' name='form_type' id='".xla($index)."' value='".xla($index)."' ".$checked. " onclick='top.restoreSession();newtype($index);' /><span style='Xpadding-bottom:2px;font-size:0.8em;font-weight:bold;'><label for='".xla($index)."' class='input-helper input-helper--checkbox'>" . xlt($focustitles[1]) . "</label></span>&nbsp;\n";
+              $HELLO[$focustitles[1]] = "<input type='radio' name='form_type' id='".xla($index)."' value='".xla($index)."' ".$checked. " onclick='top.restoreSession();newtype($index);' /><span style='margin:-2px;font-size:0.7em;font-weight:600;'><label for='".xla($index)."' class='input-helper input-helper--checkbox'>" . xlt($focustitles[1]) . "</label></span>&nbsp;\n";
                 //}
               ++$index;
           }
@@ -3566,7 +3564,7 @@ if (!empty($irow['type'])) {
             <tr id='row_titles'>
               <td valign='top' nowrap>&nbsp;</td>
               <td valign='top'>
-                <select name='form_titles' size='<?php echo $GLOBALS['athletic_team'] ? 10 : 4; ?>' onchange='set_text()'>
+                <select name='form_titles' size='<?php echo $GLOBALS['athletic_team'] ? 10 : 7; ?>' onchange='set_text()'>
                 </select> <?php echo xlt('(Select one of these, or type in your own)'); ?>
               </td>
             </tr>

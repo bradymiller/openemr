@@ -56,10 +56,11 @@ $returnurl    = $GLOBALS['concurrent_layout'] ? 'encounter_top.php' : 'patient_e
 //@extract($_SESSION); //working to remomve
 //@extract($_REQUEST); //working to remove
 $id = $_REQUEST['id'];
+if (!$id) $id = $_REQUEST['pid'];
 
 $AJAX_PREFS = $_REQUEST['AJAX_PREFS'];
-if ($encounter == "" && !$id) {
-    return "Sorry Charlie..."; //should lead to a database of errors for explanation.
+if ($encounter == "" && !$id && !$AJAX_PREFS && ($_REQUEST['mode'] != "retrieve")) {
+    echo "Sorry Charlie..."; //should lead to a database of errors for explanation.
     exit;
 }
 
@@ -195,7 +196,7 @@ if ($_REQUEST['AJAX_PREFS']) {
               ('PREFS','PANEL_RIGHT','PMSFH Panel',?,'PANEL_RIGHT','77',?,'16') 
               ";
     sqlQuery($query,array($_SESSION['authId'],$_REQUEST['PREFS_PANEL_RIGHT'])); 
-    //echo "HELLOO <br /><br /><br />".$_REQUEST['PREFS_PANEL_RIGHT'];
+   //echo "HELLOO <br /><br /><br />".$_REQUEST['PREFS_PANEL_RIGHT'];
 }
 /**
   * ADD ANY NEW PREFERENCES above, and as a hidden field in the body.  I prefer this vs Session items but that would
@@ -348,7 +349,7 @@ if (!$_REQUEST['LOCKEDBY'])  $_REQUEST['LOCKEDBY'] = rand();
  //   $update_undo = formSubmit($table_name, $fields, $form_id, $_SESSION['userauthorized']);
     return $success;
   }
-} elseif ($_GET["mode"] == "retrieve")  { 
+} elseif ($_REQUEST["mode"] == "retrieve")  { 
     $query = "SELECT * FROM patient_data where pid=?";
     $pat_data =  sqlQuery($query,array($pid));
     @extract($pat_data);

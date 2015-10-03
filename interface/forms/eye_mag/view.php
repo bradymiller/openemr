@@ -266,6 +266,7 @@ require_once("$incdir/patient_file/encounter/new_form.php");
         <input type="hidden" name="PREFS_NEURO_RIGHT" id="PREFS_NEURO_RIGHT" value="<?php echo attr($NEURO_RIGHT); ?>">
         <input type="hidden" name="PREFS_IMPPLAN_RIGHT" id="PREFS_IMPPLAN_RIGHT" value="<?php echo attr($IMPPLAN_RIGHT); ?>">
         <input type="hidden" name="PREFS_PANEL_RIGHT" id="PREFS_PANEL_RIGHT" value="<?php echo attr($PANEL_RIGHT); ?>">
+        <input type="hidden" name="PREFS_KB" id="PREFS_KB" value="<?php echo attr($KB_VIEW); ?>">
         <input type="hidden" name="ownership" id="ownership" value="<?php echo attr($ownership); ?>">
         <input type="hidden" name="PREFS_ACT_SHOW"  id="PREFS_ACT_SHOW" value="<?php echo attr($ACT_SHOW); ?>">
         <input type="hidden" name="COPY_SECTION"  id="COPY_SECTION" value="">
@@ -658,8 +659,9 @@ require_once("$incdir/patient_file/encounter/new_form.php");
               <div id="PMH_left" name="PMH_left" class="exam_section_left borderShadow">
 
                 <div id="PMH_left_text" style="height: 2.5in;text-align:left;padding-top: 15px;" class="TEXT_class">
-                  <span class="closeButton fa fa-paint-brush" id="BUTTON_DRAW_PMH" name="BUTTON_DRAW_PMH"></span>
-                  <i class="closeButton_2 fa fa-database" id="BUTTON_QP_PMH" name="BUTTON_QP_PMH"></i>
+                  <span class="closeButton_2 fa fa-paint-brush" id="BUTTON_DRAW_PMH" name="BUTTON_DRAW_PMH"></span>
+                  <i class="closeButton_3 fa fa-database" id="BUTTON_QP_PMH" name="BUTTON_QP_PMH"></i>
+                  <a class="closeButton fa fa-indent" id="right-panel-link" name="right-panel-link" href="#right-panel"></a>
 
                   <?php ($PMH_VIEW !=2) ? ($display_PMH_view = "wide_textarea") : ($display_PMH_view= "narrow_textarea");?>                                 
                   <?php ($display_PMH_view == "wide_textarea") ? ($marker ="fa-minus-square-o") : ($marker ="fa-plus-square-o");?>
@@ -676,6 +678,7 @@ require_once("$incdir/patient_file/encounter/new_form.php");
 
 
                     </div><?php //display_PRIOR_section("PMSFH",$id,$id,$pid); ?>
+                     
                   </div>
                   
                 </div>
@@ -684,7 +687,7 @@ require_once("$incdir/patient_file/encounter/new_form.php");
               <!-- end    PMH Left -->
               <!-- start  PMH Right -->
               <div id="PMH_right" name="PMH_right" class="exam_section_right borderShadow">
-                <a class="left_PMSFH_tab" id="right-panel-link" href="#right-panel">
+                <a class="nodisplay left_PMSFH_tab" id="right-panel-link" href="#right-panel">
                   <img src="/openemr/interface/forms/eye_mag/images/PMSFHx.png">
                 </a>
                 <?php display_draw_section("PMH",$encounter,$pid); ?>
@@ -693,7 +696,7 @@ require_once("$incdir/patient_file/encounter/new_form.php");
 
                 </div>
                 <!--<div class="QP_block borderShadow " style="text-align:center;min-height: 300px;padding:4 10 4 10;font-weight:600;">
-                          <span onclick="$('.kb').toggleClass('nodisplay');" title="<?php echo xla('Click to display shorthand field names.'); ?>" class="ke underline">Keyboard Entry</span>&nbsp;<a onclick="goto_url('<?php echo $GLOBALS['webroot']; ?>/interface/forms/eye_mag/help.php?zone=ext');">
+                          <span onclick="$('.kb').toggleClass('nodisplay');" title="<?php echo xla('Click to display shorthand field names.'); ?>" class="ke">Keyboard Entry</span>&nbsp;<a onclick="goto_url('<?php echo $GLOBALS['webroot']; ?>/interface/forms/eye_mag/help.php?zone=ext');">
                           <i title="<?php echo xla('Click for External shorthand Help.'); ?>" class="fa fa-info-circle fa-1"></i></a><br />
                           <textarea id="PMSFH_keyboard" name="PMSFH_keyboard" style="color:#0C0C0C;size:0.8em;height: 2.0in;width:1.5in;" tabindex='1000'>Not functioning yet</textarea>
                           <span style="font-size:0.9em;font-weight:400;color:#0C0C0C;">Type: location.text; ENTER<br />
@@ -1042,10 +1045,12 @@ require_once("$incdir/patient_file/encounter/new_form.php");
                       </div>  
                   </div>
                   <!-- end of the Pupils box -->
-
+          </div>
+            <!-- end of the CLINICAL BOX -->
                   <!-- start of slide down pupils_panel --> 
                   <?php ($DIMODPUPILSIZE != '') ? ($display_dim_pupils_panel = "display") : ($display_dim_pupils_panel = "nodisplay"); ?>
-                  <div id="dim_pupils_panel" class="vitals <?php echo attr($display_dim_pupils_panel); ?>" style="position:relative;float:left;height: 1.05in; width:2.3in;padding: 0.02in; border: 1.00pt solid #000000; ">                     
+                  <div id="dim_pupils_panel" name="dim_pupils_panel" class="vitals <?php echo attr($display_dim_pupils_panel); ?>" 
+                    style="z-index:99;position:relative;float:right;height: 1.05in; width:2.3in;padding: 0.02in; border: 1.00pt solid #000000; ">                     
                       <span class="top_left"><b id="pupils_DIM" style="width:100px;"><?php echo xlt('Pupils') ?>: <?php echo xlt('Dim'); ?></b> </span>
                       <div id="Lyr7.1" style="position: absolute; top: 0.3in; left: 0.1in; border: none;padding: auto;">
                           <table cellpadding="2" cellpadding="0" style="font-size: 0.9em;"> 
@@ -1080,8 +1085,8 @@ require_once("$incdir/patient_file/encounter/new_form.php");
                       </div>
                   </div> 
                   <!-- end of slide down pupils_panel --> 
-          </div>
-            <!-- end of the CLINICAL BOX -->
+                  
+         
 
             <!-- start of the refraction box -->
           <div style="margin: 0 auto;width:10px;text-align: center;font-size:1.0em;" class="" id="EXAM_sections_loading" 
@@ -1504,7 +1509,7 @@ require_once("$incdir/patient_file/encounter/new_form.php");
 
                             <?php ($VAX==1) ? ($display_Add = "display") : ($display_Add = "nodisplay"); ?>
                             <div id="LayerVision_VAX" class="refraction borderShadow <?php echo $display_Add; ?>">
-                                <span title="<?php echo attr('Close and make this a Preference'); ?>" class="closeButton fa  fa-close" id="Close_ADDITIONAL_VISION" name="Close_VAX"></span> 
+                                <span title="<?php echo attr('Close and make this a Preference'); ?>" class="closeButton fa  fa-close" id="Close_VAX" name="Close_VAX"></span> 
                                 <table id="Additional_VA">
                                     <th colspan="9"><?php echo xlt('Visual Acuity'); ?></th>
                                     <tr><td></td>
@@ -1596,7 +1601,7 @@ require_once("$incdir/patient_file/encounter/new_form.php");
                 ?>
             &nbsp;</span> 
             <span id="EXAM_ALL_keyboard_left" name="EXAM_ALL_keyboard_left" class="borderShadow" style="padding-right:5px;width:250px;">
-              <span onclick="$('.kb').toggleClass('nodisplay');" title="<?php echo xla('Click to display shorthand field names.'); ?>"><b>Keyboard Entry</b>
+              <span id="BAR_kb" name="BAR_kb" title="<?php echo xla('Click to display shorthand field names.'); ?>" class=""><b>Keyboard Entry</b>
               </span>
                 &nbsp;
                 <a onclick="goto_url('<?php echo $GLOBALS['webroot']; ?>/interface/forms/eye_mag/help.php?zone=ext');">
@@ -1606,13 +1611,13 @@ require_once("$incdir/patient_file/encounter/new_form.php");
           </div>   
           
           <br />
-          <div style="margin: 0 auto;text-align: center;font-size:1.0em;width:400px;" class="kb borderShadow" id="EXAM_KB" name="EXAM_KB">   
-            <span onclick="$('.kb').toggleClass('nodisplay');" title="<?php echo xla('Click to display shorthand field names.'); ?>"><b>Keyboard Entry</b>
+          <div style="margin: 0 auto;text-align: center;font-size:1.0em;width:640px;" class="kb borderShadow" id="EXAM_KB" name="EXAM_KB">   
+            <span class="BAR2_kb" title="<?php echo xla('Click to display shorthand field names.'); ?>" class="ke"><b>Keyboard Entry</b>
               </span>
                 &nbsp;
                 <a onclick="goto_url('<?php echo $GLOBALS['webroot']; ?>/interface/forms/eye_mag/help.php?zone=all');">
                   <i title="<?php echo xla('Click for Shorthand Help.'); ?>" class="fa fa-info-circle fa-1"></i>
-                </a><textarea id="ALL_keyboard_left" name="ALL_keyboard_left" style="color:#0C0C0C;size:0.8em;height: 8em;" tabindex='1000'></textarea>
+                </a><textarea id="ALL_keyboard_left" name="ALL_keyboard_left" style="color:#0C0C0C;size:0.7em;height: 8em;width:90%;" tabindex='1000'></textarea>
           </div> 
           <!-- end of the exam selection row -->
 
@@ -1746,12 +1751,12 @@ require_once("$incdir/patient_file/encounter/new_form.php");
                             </tr>
                         </table>
                     </div>  <br />
-                    <div class="QP_shorten" id="EXT_COMMENTS_DIV">
+                    <div class="QP_lengthen" id="EXT_COMMENTS_DIV">
                       <b><?php echo xlt('Comments'); ?>:</b><div class="kb kb_left">ECOM</div><br />
                       <textarea id="EXT_COMMENTS" name="EXT_COMMENTS"><?php echo text($EXT_COMMENTS); ?></textarea>
                     </div> 
-                    <div class="QP_not" id="EXT_keyboard_left" style="position: absolute;bottom:0.05in;right:0.1in;font-size:0.7em;text-align:left;padding-left:25px;">
-                      <span onclick="$('.kb').toggleClass('nodisplay');" title="<?php echo xla('Click to display shorthand field names.'); ?>"><b>Keyboard Entry</b></span>
+                    <div class="QP_not nodisplay" id="EXT_keyboard_left" style="position: absolute;bottom:0.05in;right:0.1in;font-size:0.7em;text-align:left;padding-left:25px;">
+                      <span id="EXT_kb" title="<?php echo xla('Click to display shorthand field names.'); ?>" class="ke"><b>Keyboard Entry</b></span>
                       &nbsp;<a onclick="goto_url('<?php echo $GLOBALS['webroot']; ?>/interface/forms/eye_mag/help.php?zone=ext');">
                         <i title="<?php echo xla('Click for External shorthand Help.'); ?>" class="fa fa-info-circle fa-1"></i></a><br />
                         <textarea id="EXT_keyboard_left" name="EXT_keyboard_left" style="color:#0C0C0C;size:0.8em;height: 3em;" tabindex='1000'></textarea>
@@ -1802,7 +1807,7 @@ require_once("$incdir/patient_file/encounter/new_form.php");
                           $query = "SELECT * FROM form_eye_mag_prefs where PEZONE = 'EXT' and (id=?) ORDER BY id,ZONE_ORDER,ordering ASC";
                           $result = sqlStatement($query,array($_SESSION['authUserID']));
                           $number_rows=0;
-                          if (sqlNumRows($result) < '10') {
+                          if (sqlNumRows($result) < '10') { //for new users, use default quick picks until a pref list is developed
                             $query = "SELECT * FROM form_eye_mag_prefs where PEZONE = 'EXT' and (id='2048') ORDER BY id,ZONE_ORDER,ordering ASC";
                             $result = sqlStatement($query);
                           }
@@ -1824,12 +1829,12 @@ require_once("$incdir/patient_file/encounter/new_form.php");
                                    <div id="EXT_QP_block2" name="EXT_QP_block2" class="QP_block_outer  borderShadow text_clinical" >
                                       <?
                               }
-                              if ($number_rows==24) break;
+                              if ($number_rows==32) break;
                           }
                               ?>   
                       </div>      
-                      <div class="QP_block_outer borderShadow " style="z-index:1;text-align:center;border:1pt solid black;padding:7 10 7 10;font-weight:600;">
-                        <span onclick="$('.kb').toggleClass('nodisplay');" title="<?php echo xla('Click to display shorthand field names.'); ?>" class="ke underline">Keyboard Entry</span>&nbsp;<a onclick="goto_url('<?php echo $GLOBALS['webroot']; ?>/interface/forms/eye_mag/help.php?zone=ext');">
+                      <div class="QP_block_outer borderShadow nodisplay" style="z-index:1;text-align:center;border:1pt solid black;padding:7 10 7 10;font-weight:600;">
+                        <span id="EXT1_kb" title="<?php echo xla('Click to display shorthand field names.'); ?>" class="ke">Keyboard Entry</span>&nbsp;<a onclick="goto_url('<?php echo $GLOBALS['webroot']; ?>/interface/forms/eye_mag/help.php?zone=ext');">
                         <i title="<?php echo xla('Click for External shorthand Help.'); ?>" class="fa fa-info-circle fa-1"></i></a><br />
                         <textarea id="EXT_keyboard" name="EXT_keyboard" style="color:#0C0C0C;size:0.8em;height: 0.48in;" tabindex='1000'></textarea>
                         <span style="font-size:0.9em;font-weight:400;color:#0C0C0C;">Type: location.text; ENTER<br />
@@ -1980,12 +1985,12 @@ require_once("$incdir/patient_file/encounter/new_form.php");
                                   </tr>
                               </table>
                       </div>  <br />
-                      <div class="QP_shorten" id="ANTSEG_COMMENTS_DIV"> 
+                      <div class="QP_lengthen" id="ANTSEG_COMMENTS_DIV"> 
                         <b><?php echo xlt('Comments'); ?>:</b><div class="kb kb_left">ACOM</div><br />
                           <textarea id="ANTSEG_COMMENTS" name="ANTSEG_COMMENTS"><?php echo text($ANTSEG_COMMENTS); ?></textarea>
                       </div>   
-                      <div class="QP_not" id="ANTSEG_keyboard_left" style="position: absolute;bottom:0.05in;right:0.1in;font-size:0.7em;text-align:left;padding-left:25px;">
-                      <span onclick="$('.kb').toggleClass('nodisplay');" title="<?php echo xla('Click to display shorthand field names.'); ?>"><b>Keyboard Entry</b></span>
+                      <div class="QP_not nodisplay" id="ANTSEG_keyboard_left" style="position: absolute;bottom:0.05in;right:0.1in;font-size:0.7em;text-align:left;padding-left:25px;">
+                      <span id="ANTSEG_kb" title="<?php echo xla('Click to display shorthand field names.'); ?>" class="ke"><b>Keyboard Entry</b></span>
                       &nbsp;<a onclick="goto_url('<?php echo $GLOBALS['webroot']; ?>/interface/forms/eye_mag/help.php?zone=antseg');">
                         <i title="<?php echo xla('Click for Anterior Segment shorthand Help.'); ?>" class="fa fa-info-circle fa-1"></i></a><br />
                         <textarea id="ANTSEG_keyboard_left" name="EXT_keyboard_left" style="color:#0C0C0C;size:0.8em;height: 3em;" tabindex='1000'></textarea>
@@ -1993,7 +1998,7 @@ require_once("$incdir/patient_file/encounter/new_form.php");
                   </div>  
               </div>
               
-              <div id="ANTSEG_right" class="exam_section_right borderShadow text_clinical ">
+              <div id="ANTSEG_right" NAME=="ANTSEG_right" class="exam_section_right borderShadow text_clinical ">
                   <div id="PRIORS_ANTSEG_left_text" style="height: 2.5in;text-align:left;" name="PRIORS_ANTSEG_left_text" class="PRIORS_class PRIORS">                                     
                                   <i class="fa fa-spinner fa-spin"></i>
                   </div>
@@ -2049,12 +2054,12 @@ require_once("$incdir/patient_file/encounter/new_form.php");
                               <?php if ($number_rows==16) {  ?>
                                   </div>
                                   <div class="QP_block_outer  borderShadow text_clinical" ><?php  
-                                  }  if ($number_rows == 24) break;
+                                  }  if ($number_rows == 32) break;
                               } 
                                   ?>      
                       </div>  
-                      <div class="QP_block_outer borderShadow " style="z-index:1;text-align:center;border:1pt solid black;padding:7 10 7 10;font-weight:600;">
-                        <span onclick="$('.kb').toggleClass('nodisplay');" title="<?php echo xla('Click to display shorthand field names.'); ?>" class="ke underline">Keyboard Entry</span>
+                      <div class="QP_block_outer borderShadow nodisplay" style="z-index:1;text-align:center;border:1pt solid black;padding:7 10 7 10;font-weight:600;">
+                        <span id="ANTSEG1_kb" title="<?php echo xla('Click to display shorthand field names.'); ?>" class="ke">Keyboard Entry</span>
                         &nbsp;
                         <a onclick="goto_url('<?php echo $GLOBALS['webroot']; ?>/interface/forms/eye_mag/help.php?zone=antseg');" title="<?php echo xla('Click for Ant. Seg. shorthand help.'); ?>">
                           <i class="fa fa-info-circle fa-1"></i></a><br />
@@ -2182,12 +2187,12 @@ require_once("$incdir/patient_file/encounter/new_form.php");
                                 </table>
                             </div>
                         </div>
-                        <div class="QP_shorten" id="RETINA_COMMENTS_DIV">
+                        <div class="QP_lengthen" id="RETINA_COMMENTS_DIV">
                             <b><?php echo xlt('Comments'); ?>:</b><div class="kb kb_left">RCOM</div><br />
                             <textarea id="RETINA_COMMENTS" name="RETINA_COMMENTS"><?php echo text($RETINA_COMMENTS); ?></textarea>
                         </div>  
                         <div class="QP_not" id="RETINA_keyboard_left" style="position: absolute;bottom:0.05in;right:0.1in;font-size:0.7em;text-align:left;padding-left:25px;">
-                          <span onclick="$('.kb').toggleClass('nodisplay');" title="<?php echo xla('Click to display shorthand field names.'); ?>"><b>Keyboard Entry</b></span>
+                          <span id="RETINA_kb" title="<?php echo xla('Click to display shorthand field names.'); ?>" class="ke"><b>Keyboard Entry</b></span>
                           &nbsp;<a onclick="goto_url('<?php echo $GLOBALS['webroot']; ?>/interface/forms/eye_mag/help.php?zone=retina');">
                           <i title="<?php echo xla('Click for Retina shorthand Help.'); ?>" class="fa fa-info-circle fa-1"></i></a><br />
                           <textarea id="RETINA_keyboard_left" name="RETINA_keyboard_left" style="color:#0C0C0C;size:0.8em;height: 3em;" tabindex='1000'></textarea>
@@ -2257,13 +2262,13 @@ require_once("$incdir/patient_file/encounter/new_form.php");
                             </div>
                             <div class="QP_block_outer  borderShadow text_clinical" ><?php 
                         }
-                        if ($number_rows == 25) break;
+                        if ($number_rows == 32) break;
 
                         } ?>     
                           </span>
                     </div>
-                    <div class="QP_block_outer borderShadow " style="z-index:1;text-align:center;border:1pt solid black;padding:7 10 7 10;font-weight:600;">
-                      <span onclick="$('.kb').toggleClass('nodisplay');" title="<?php echo xla('Click to display shorthand field names.'); ?>" class="ke underline">Keyboard Entry</span>&nbsp;
+                    <div class="QP_block_outer borderShadow nodisplay" style="z-index:1;text-align:center;border:1pt solid black;padding:7 10 7 10;font-weight:600;">
+                      <span id="RETINA_kb" title="<?php echo xla('Click to display shorthand field names.'); ?>" class="ke">Keyboard Entry</span>&nbsp;
                       <a onclick="goto_url('<?php echo $GLOBALS['webroot']; ?>/interface/forms/eye_mag/help.php?zone=retina');">
                       <i title="<?php echo xla('Click for Ant. Seg. shorthand Help.'); ?>" class="fa fa-info-circle fa-1"></i></a><br />
                       <textarea id="RETINA_keyboard" name="RETINA_keyboard" style="color:#0C0C0C;size:0.8em;height: 0.48in;" tabindex='1000'></textarea>
@@ -2940,12 +2945,12 @@ require_once("$incdir/patient_file/encounter/new_form.php");
                             </div>
                         </div>
                         <br />
-                        <div class="QP_shorten" id="NEURO_COMMENTS_DIV"> 
+                        <div class="QP_lengthen" id="NEURO_COMMENTS_DIV"> 
                             <b><?php echo xlt('Comments'); ?>:</b><div class="kb kb_left">NCOM</div><br />
                             <textarea id="NEURO_COMMENTS" name="NEURO_COMMENTS"><?php echo text($NEURO_COMMENTS); ?></textarea>
                         </div>
                         <div class="QP_not" id="NEURO_keyboard_left" style="position: absolute;bottom:0.05in;right:0.1in;font-size:0.7em;text-align:left;padding-left:25px;">
-                          <span onclick="$('.kb').toggleClass('nodisplay');" title="<?php echo xla('Click to display shorthand field names.'); ?>"><b>Keyboard Entry</b></span>
+                          <span id="NEURO_kb" title="<?php echo xla('Click to display shorthand field names.'); ?>" class="ke"><b>Keyboard Entry</b></span>
                           &nbsp;<a onclick="goto_url('<?php echo $GLOBALS['webroot']; ?>/interface/forms/eye_mag/help.php?zone=neuro');">
                           <i title="<?php echo xla('Click for Neuro/Physiology shorthand Help.'); ?>" class="fa fa-info-circle fa-1"></i></a><br />
                           <textarea id="NEURO_keyboard_left" name="NEURO_keyboard_left" style="color:#0C0C0C;size:0.8em;height: 3em;" tabindex='1000'></textarea>
@@ -2967,7 +2972,7 @@ require_once("$incdir/patient_file/encounter/new_form.php");
                     <div style="position:absolute;top:0.05in;right:0.241in;">
                             <?php echo priors_select("NEURO",$id,$id,$pid); ?>
                     </div>
-                    <div style="float:right;top:1.0in;right:0.0in;margin: 0 25;">
+                    <div style="float:right;top:1.0in;right:0.0in;margin: 0 25;"><br />
                       <div class="borderShadow" style="width:190px;text-align:center;border:1pt solid black;padding:4 10 4 10;margin:20 4 4 4;font-weight:600;"><span class="underline">Laterality</span><br />
                         <span class="eye_button" id="NEURO_side_R" name="NEURO_side" style="padding-left:0.06in;padding-right:0.06in;"  onclick="$('#NEURO_side').val('R').trigger('change');"><?php echo xlt('Right'); ?></span>  
                         <span class="eye_button" id="NEURO_side_L" name="NEURO_side" style="padding-left:0.06in;padding-right:0.06in;"  onclick="$('#NEURO_side').val('L').trigger('change');"><?php echo xlt('Left'); ?></span> 
@@ -2989,9 +2994,11 @@ require_once("$incdir/patient_file/encounter/new_form.php");
                         <span class="eye_button" id="NEURO_ACT_strab_hypoT_int" name="NEURO_ACT_strab"  onclick="$('#NEURO_ACT_strab').val('hypo\(T\)').trigger('change');"><?php echo xlt('hypo(T)'); ?></span> 
                         <br />
                       </div>  
-                     
-                      <div class="QP_block_outer borderShadow " style="z-index:1;text-align:center;border:1pt solid black;padding:7 10 7 10;font-weight:600;">
-                          <span onclick="$('.kb').toggleClass('nodisplay');" title="<?php echo xla('Click to display shorthand field names.'); ?>" class="ke underline">Keyboard Entry</span>&nbsp;<a onclick="goto_url('<?php echo $GLOBALS['webroot']; ?>/interface/forms/eye_mag/help.php?zone=neuro');">
+                     <div style="width:195px;text-align:center;margin:4;font-weight:600;padding:10 2 10 2;">
+                        <span class="borderShadow" style="margin:4;bottom:0;right:0.01in;height:20px;" id="NEURO_RECORD" name="NEURO_RECORD"><?php echo xlt(' RECORD '); ?></span> 
+                      </div>
+                      <div class="QP_block_outer borderShadow nodisplay" style="z-index:1;text-align:center;border:1pt solid black;padding:7 10 7 10;font-weight:600;">
+                          <span id="NEURO1_kb" title="<?php echo xla('Click to display shorthand field names.'); ?>" class="ke">Keyboard Entry</span>&nbsp;<a onclick="goto_url('<?php echo $GLOBALS['webroot']; ?>/interface/forms/eye_mag/help.php?zone=neuro');">
                           <i title="<?php echo xla('Click for Neuro/Strabismus shorthand Help.'); ?>" class="fa fa-info-circle fa-1"></i></a><br />
                           <textarea id="NEURO_keyboard" name="NEURO_keyboard" style="color:#0C0C0C;size:0.8em;height: 0.48in;" tabindex='1002'></textarea>
                           <span style="font-size:0.9em;font-weight:400;color:#0C0C0C;">Type: fieldnumber.PD strab ENTER<br />
@@ -3000,7 +3007,8 @@ require_once("$incdir/patient_file/encounter/new_form.php");
                           <b>5.Ortho;4.10et;6.10et;</b></span>
                       </div>
                     </div>
-                    <div style="position:left;top:0.0in;left:0.10in;margin: auto;">
+                    <div style="position:left;top:0in;left:0.10in;margin: auto;">
+                      &nbsp;
                       <div class="borderShadow" style="width:195px;text-align:center;border:1pt solid black;padding:4 5 4 5;margin:4;font-weight:600;"><span class="underline"><?php echo xlt('Rx/Distance'); ?></span><br />
                         <span class="eye_button <?php if ($ACT_SHOW =='SCDIST') echo "eye_button_selected"; ?>" id="NEURO_ACT_zone_SCDIST" name="NEURO_ACT_zone" style="padding-right:0.06in;" onclick="$('#NEURO_ACT_zone').val('SCDIST').trigger('change');"> <?php echo xlt('scDist'); ?> </span> 
                         <span class="eye_button <?php if ($ACT_SHOW =='CCDIST') echo "eye_button_selected"; ?>" id="NEURO_ACT_zone_CCDIST" name="NEURO_ACT_zone" style="padding-right:0.06in;" onclick="$('#NEURO_ACT_zone').val('CCDIST').trigger('change');"> <?php echo xlt('ccDist'); ?> </span> 
@@ -3027,7 +3035,7 @@ require_once("$incdir/patient_file/encounter/new_form.php");
                         <span class="eye_button" id="NEURO_field_11" name="NEURO_field"  onclick="$('#NEURO_field').val('11').trigger('change');"><?php echo xlt('11'); ?></span>  
                       </div>
                  
-                      <div class="borderShadow" style="width:195px;text-align:center;margin:4 0;font-weight:600;padding:2 2 10 2;"><span class="underline">Prism Diopters</span><br />
+                      <div class="borderShadow" style="width:195px;text-align:center;font-weight:600;padding:4 10 4 10;margin:4;"><span class="underline">Prism Diopters</span><br />
                         <span class="eye_button" id="NEURO_value_ortho" name="NEURO_value"  onclick="$('#NEURO_value').val('ortho').trigger('change');"><?php echo xlt('Ortho'); ?></span>  
                         <span class="eye_button" id="NEURO_value_1" name="NEURO_value"  onclick="$('#NEURO_value').val('1').trigger('change');"><?php echo xlt('1'); ?></span> 
                         <span class="eye_button" id="NEURO_value_2" name="NEURO_value"  onclick="$('#NEURO_value').val('2').trigger('change');"><?php echo xlt('2'); ?></span> 
@@ -3048,9 +3056,7 @@ require_once("$incdir/patient_file/encounter/new_form.php");
                         <span class="eye_button" id="NEURO_value_40" name="NEURO_value"  onclick="$('#NEURO_value').val('40').trigger('change');"><?php echo xlt('40'); ?></span> 
                         
                       </div>
-                      <div style="width:195px;text-align:center;margin:4;font-weight:600;padding:10 2 10 2;">
-                        <span class="borderShadow" style="margin:4;bottom:0;right:0.01in;height:20px;" id="NEURO_RECORD" name="NEURO_RECORD"><?php echo xlt(' RECORD '); ?></span> 
-                      </div>
+                      
                     </div>
                     <span class="closeButton fa fa-close pull-right z100" id="BUTTON_TEXTD_NEURO" name="BUTTON_TEXTD_NEURO" value="1"></span>
                   </div>

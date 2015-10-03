@@ -74,7 +74,7 @@ if ($showit=='ext') $showit="external";
 		$("[name^='accordion_']").hide();
 		$("#accordion_<?php echo $showit; ?>_group").show()
 		$("#<?php echo $showit; ?>_button").css("color","red");
-		$("[id$='_button']").click(function() {
+		$("[id$='_button'],[id$='_button2']").click(function() {
 			var zone = this.id.match(/(.*)_button/)[1];
 			$("[id$='_button']").css("color","black");
 			$("#"+zone+"_button").css("color","red");
@@ -196,71 +196,61 @@ if ($showit=='ext') $showit="external";
 		<div id="container" name="container_group" style="margin:10;text-align:left;">
 			
 			<div id="accordion_general_group" name="accordion_group" class="ui-accordion" style="text-align:left;margin:10;padding:20;">
-				<h3 class="ui-accordion-header external">Introduction</h3>
+				<h3 class="ui-accordion-header external">Introduction: Paper vs. EHR</h3>
 				<div id="general" style="text-align:left;">
 					<blockquote class="style2">
-						<b>What if you could document electronically using your shorthand?</b><br/>
-						We converted the standard clinical fields and common shorthand terms into <i>Eye Shorthand, an electronic lingua franca oculī.</i><br />
-						It is not a new language - it should already be very familiar.  <br />
-						You can customize it to match <b>your brain</b>, but you may not need to.<br />
-						It is based on the shorthand we all learned in training.<br />
-						Using this shorthand method, all your findings are entered in one area,
-						and OpenEMR knows how to display it.<hr />
+						<b>Documenting an exam on paper is faster because we develop our own shorthand.</b><br/>
+						We repurposed this shorthand into an electronic format, <i>an electronic lingua franca oculī.</i><br />
+						Using this method, all your findings are entered in one area,
+						and OpenEMR automatically knows where to store them.<hr />
 						
-						<b>Paper vs. EHR:</b><br />
-						You know what <b>RUL: 2mm ptosis</b> means. <br />
-						With a typical EHR, you need to find and click on the field for the right upper lid and type in 2mm ptosis.  <br />
-						Then click on the next field, or maybe even tab to it, and type your findings for the next field. And on it goes.<br /><br />
-						Consider another example:  <b>Right C/D 0.6Vx0.4H with inferior notch.  Left C/D 0.5</b>?<br />
-						OK, find the correct fields to click.  Enter the appropriate text into each field.  Two mouse clicks at least.  Type. <br />
-						Lots of hand movement going on.  <br />
+						The structure is simple: <b>Field.text;Field.text;Field.text</b><br />
+
 						<br />
-						How can we speed up this process?<br /><br />
-						Look at this example in shorthand, based on a simple structure: <b>Field.text;Field.text;Field.text</b><br />
-
-						<div style="text-align:center;font-weight:600;margin:20;background-color:yellow;padding:30 auto;width:75%;border:1pt black solid">rcup.0.6Vx0.4H w/ inf notch;lcup.0.5</span><br />
-						</div>
-						
-						Type this shorthand text into the Keyboard Entry area in the form, and the fields are automatically filled.<br />
+						You can click on <b>Keyboard Entry</b> anywhere in the form to display the Shorthand <b>Field</b> names.<br />
+						Type the <b>Field</b> name, then a period/fullstop, followed by your findings,
+						 and openEMR: Eye Exam is automatically filled.<br />
 						Done. No extra clicks.<br />
-
+						
 						<hr />
-						Even slow typers will find the Eye Exam Shorthand can speed up EHR documentation time.<br />
-						It is easy to learn.<br /> 
-						The <b>Fields</b> and <b>text</b> parts look just like our handwritten shorthand!<br />
-						Type the abbreviation for a clinical field, a period/fullstop, followed by your finding, in your shorthand.<br />
-						If your shorthand doesn't match ours, your shorthand <b>text</b> will be displayed.<br />
-						It is easy to add your shorthand if you need customization.<br />
-						Consider sharing your shorthand back to the community for future users.
-						<hr />
-						This tutorial centers around four lines of typing which 
+						This Shorthand tutorial shows you how to document each clinical area via the keyboard.  <br />
+						It centers around four lines of typing which 
 						document normal findings <b>and more than 40 different clinical issues</b>. 
 							<br />
 							That's a lot to document and one mighty complicated patient!<br />
 							Many more issues than we would see on a routine day with routine patients, but it could happen...  <br />
-						Documenting this many findings would take a little bit of time on paper, and a lifetime in an EHR. <br />
-						With the openEMR Shorthand, the average typist can do it <b>in less than a minute.</b>
+						Documenting this many findings would take a little bit of time on paper, and a lifetime in a typical EHR. <br />
+						The average typist can now do it <b>in less than a minute.</b>
 						<hr />
-						Go ahead and paste the lines below into a test patient's chart.  Fiddle with them. <br />
-						The accompanying help pages explain each line in detail.  <br />
-						If you are already an eyedoc, this is simple and intuitive. <br />
-						It's time to plug the EHR into your brain, and to start working at the speed of your brain.<br />
-						
-						<hr />
-						</blockquote>
-			<h4 class="bold">External: </h4>
+
+			<h4 class="bold">External: </h4> 
 					<textarea class="kb_entry">D;bll.+2 meibomitis;rll.frank ect, 7x6mm lid margin bcc lat.a;bul.2mm ptosis;rul.+3 dermato.a
 					</textarea>
+					<button id="external_button2">Details</button>
 					<br /><h4 class="bold">Anterior Segment:</h4>
 					<textarea class="kb_entry">D;bc.+2 inj;bk.med pter;rk.mod endo gut.a;bac.+1 fc, +1 pig cells
 					</textarea>
 					<br />
 					<h4 class="bold">Retina:</h4>
-					<textarea class="kb_entry">D;bd.+2 bowtie pallor;rc.0.6Vx0.4H w/ inf notch;lc.0.5;rmac.+2 BDR, +CSME;lmac.flat, tr BDR;v.+PPDR, ++venous beading;rp.ht 1 o,no vh;
+					<textarea class="kb_entry">D;bd.+2 bowtie pallor;rcup.0.6Vx0.4H w/ inf notch;lcup.0.5;rmac.+2 BDR, +CSME;lmac.flat, tr BDR;v.+PPDR, ++venous beading;rp.ht 1 o,no vh;
 					</textarea>
 					<h4 class="bold">Strabismus:</h4>
 					<textarea class="kb_entry">scDist;5.8ix 1rht;4.10ix;6.6ix;2.15xt;8.5ix;ccDist;4.5ix;5.ortho;6.ortho
 					</textarea>
+					<hr>
+					Go ahead and paste all four lines at once into a test patient's chart.  Voila, 40 clinical findings + normals, documented.  
+						<hr />
+						
+						<textarea class="kb_entry" style="height:1in;">D;bll.+2 meibomitis;rll.frank ect, 7x6mm lid margin bcc lat.a;bul.2mm ptosis;rul.+3 dermato.a
+bc.+2 inj;bk.med pter;rk.mod endo gut.a;bac.+1 fc, +1 pig cells
+bd.+2 bowtie pallor;rc.0.6Vx0.4H w/ inf notch;lc.0.5;rmac.+2 BDR, +CSME;lmac.flat, tr BDR;v.+PPDR, ++venous beading;rp.ht 1 o,no vh;
+scDist;5.8ix 1rht;4.10ix;6.6ix;2.15xt;8.5ix;ccDist;4.5ix;5.ortho;6.ortho
+					</textarea>
+
+					<br />
+						Get back to working at the speed of your brain.<br />
+						
+							</blockquote>
 				</div>				
 
 				<h3 class="ui-accordion-header external">Shorthand Keyboard Entry Structure</h3>
@@ -553,7 +543,7 @@ if ($showit=='ext') $showit="external";
 					<div id="retina_input" class="RETINA" style="text-align:left;margin:0;padding:0;">
 						<blockquote class="style2">
 							<h4 class="underline">Keyboard Entry</h4>
-							<textarea class="kb_entry">D;bd.+2 bowtie pallor;rc.0.6Vx0.4H w/ inf notch;lc.0.5;rmac.+2 BDR, +CSME;lmac.flat, tr BDR;v.+PPDR, ++venous beading;rp.ht 1 o,no vh;
+							<textarea class="kb_entry">D;bd.+2 bowtie pallor;rcup.0.6Vx0.4H w/ inf notch;lcup.0.5;rmac.+2 BDR, +CSME;lmac.flat, tr BDR;v.+PPDR, ++venous beading;rp.ht 1 o,no vh;
 							</textarea>
 							<img src="/openemr/interface/forms/eye_mag/images/sh_retina.png" alt="Shorthand Example: Anterior Segment">
 							<br />
@@ -563,7 +553,7 @@ if ($showit=='ext') $showit="external";
 					<div id="retina_output" style="text-align:left;margin:0;padding:20;">
 						<blockquote class="style2">
 							Input:<br /><br />
-							<b>D;bd.+2 bowtie pallor;rc.0.6Vx0.4H w/ inf notch;lc.0.5;rmac.+2 BDR, +CSME;lmac.flat, tr BDR;v.+PPDR, ++venous beading;rp.ht 1 o,no vh;
+							<b>D;bd.+2 bowtie pallor;rcup.0.6Vx0.4H w/ inf notch;lcup.0.5;rmac.+2 BDR, +CSME;lmac.flat, tr BDR;v.+PPDR, ++venous beading;rp.ht 1 o,no vh;
 							</b><br />
 							<br />						 
 							Output:
@@ -590,14 +580,14 @@ if ($showit=='ext') $showit="external";
 									</tr>
 									<tr >
 										<td>Disc</td>
-										<td>Right = rd<br />Left = ld<br />Both = bd or d</td>
-										<td><span class="field">rd.</span>temp pallor, PPA<br /><span class="field">c.</span>NVD at 5 o</td>
+										<td>Right = rd<br />Left = ld<br />Both = bd</td>
+										<td><span class="field">rd.</span>temp pallor, PPA<br /><span class="field">bd.</span>NVD at 5 o</td>
 										<td>"temporal pallor, PPA" (right disc only)<br />"NVD at 5 o'clock" (both right and left disc fields)</td>
 									</tr>
 									<tr>
-										<td>Cup</td><td>Right = rc<br />Left = lc<br />Both = bc or c</td>
-										<td><span class="field">rc.</span>0.5 w/ inf notch<br /><span class="field">c.</span>temp scalloping, 0.5<b style="color:green">.a</b><b style="color:green">;</b><span class="field">rk.</span>+1 str edema<b style="color:green">.a</b></td>
-										<td>"+3 SPK" (right cornea only)<br />"temporal scalloping, 0.5" (appended to both cup fields)</td>
+										<td>Cup</td><td>Right = rcup<br />Left = lcup<br />Both = bcup or cup</td>
+										<td><span class="field">rcup.</span>0.5 w/ inf notch<br /><span class="field">cup.</span>temp scalloping, 0.5<b style="color:green">.a</b><b style="color:green">;</b></td>
+										<td>"0.5 with inferior notch (right cup only)<br />"temporal scalloping, 0.5" (appended to both cup fields)</td>
 									</tr>
 									<tr>
 										<td>Macula</td><td>Right = rmac<br />Left = lmac<br />Both = bmac or mac</td>
@@ -606,12 +596,12 @@ if ($showit=='ext') $showit="external";
 									</tr>
 									<tr>
 										<td>Vessels</td><td>Right = rv<br />Left = lv<br />Both = bv or v</td>
-										<td><span class="field">RV.</span>1:2, +2 BDR<br /><span class="field">lv.</span>+CSME w/ hard exudate sup to fov (300um)<b style="color:green">;</b><span class="field">v.</span>narrow arterioles, 1:2<b style="color:green">.a;</b></td>
-										<td>"1:2, +2 BDR" (right vessels only)<br />"+CSME with hard exudate superior to fovea (300um)" (left vessel field only) AND "narrow arterioles, 1:2" (appended to both vessel fields)</td>
+										<td><span class="field">RV.</span>1:2, +2 BDR<br /><span class="field">lv.</span>+CSME w/ hard exudate sup to fov (300um)<b style="color:green">;</b><br /><span class="field">v.</span>narrow arterioles, 1:2<b style="color:green">.a;</b></td>
+										<td>"1:2, +2 BDR" (right vessels only)<br />"+CSME with hard exudate superior to fovea (300um)" (left vessel field only)<br />"narrow arterioles, 1:2" (appended to both vessel fields)</td>
 									</tr>
 									<tr>
 										<td>Periphery</td><td>Right = rp<br />Left = lp<br />Both = bp or p</td>
-										<td><span class="field">rp.</span>12 0 ht, no heme, amenable to bubble<b style="color:green">;</b><br /><b style="color:red">bp.</b>1 clock hour of lattice 2 o<b style="color:green">.a</b><b style="color:navy">;</b><span class="field">li</span>.round</td>
+										<td><span class="field">rp.</span>12 0 ht, no heme, amenable to bubble<b style="color:green">;</b><br /><b style="color:red">bp.</b>1 clock hour of lattice 2 o<b style="color:green">.a</b><b style="color:navy">;</b></td>
 										<td>"12 o'clock horseshoe tear, no heme, amenable to bubble" (right periphery field)<br />"1 clock hour of lattice 2 o'clock" (appended to both periphery fields)</td>
 									</tr>
 									<tr>

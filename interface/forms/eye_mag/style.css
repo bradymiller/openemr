@@ -487,6 +487,9 @@ body
     border-radius: 8px;
     writing-mode: tb-rl;
 }
+.QP_not {
+    display:none;
+}
 .exam_section_left {
     top:0px; 
     float:left; 
@@ -1090,6 +1093,15 @@ height: 18px;
         border:0px solid grey;
         text-decoration: none;
     }
+    .closeButton:hover a {
+    text-decoration: none;
+    color: #000000;
+}
+    .closeButton a:link {
+    outline:none;
+    color:black;
+}
+
     .closeButton_2 {
         display:inline-block;
         float:right;
@@ -1099,6 +1111,20 @@ height: 18px;
         padding-left: 10px;
       }
     .closeButton_2:hover {
+        color:grey;
+        cursor:pointer;
+        border:0px solid grey;
+        text-decoration: none;
+    }
+        .closeButton_3 {
+        display:inline-block;
+        float:right;
+        position:absolute;
+        top:8px;
+        right:52px;
+        padding-left: 10px;
+      }
+    .closeButton_3:hover {
         color:grey;
         cursor:pointer;
         border:0px solid grey;
@@ -1467,6 +1493,23 @@ a:hover, a:focus {
     text-decoration: underline;
     font-size: 1.1em;
 }
+.bottom_PMSFH_tab {
+    
+    bottom:0px;
+    right:10px;
+    position:absolute;
+    color:black;
+    text-shadow: 0 0 2px #000; /* Firefox 3.5+, Opera 9+, Safari 1+, Chrome, IE10 */
+    filter: progid:DXImageTransform.Microsoft.Glow(Color=#000000,Strength=1); /* IE<10 */
+    
+}
+.bottom_PMSFH_tab img{
+    border-radius: 8px 0 0 8px;
+    height:60px;
+    width:20px;
+
+}
+
 .left_PMSFH_tab {
     
     right:0px;
@@ -1507,6 +1550,10 @@ border: 1px solid #CCC;
 }
     
 .QP_shorten 
+{
+position: absolute;bottom:0.05in;clear:both;font-size:0.7em;text-align:left;padding-left:25px;
+}
+.QP_lengthen 
 {
 position: absolute;bottom:0.05in;clear:both;font-size:0.7em;text-align:left;padding-left:25px;
 }
