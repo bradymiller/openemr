@@ -5,13 +5,13 @@
 // upgrade file is the starting point for the next upgrade.
 $v_major = '4';
 $v_minor = '2';
-$v_patch = '1';
-$v_tag   = '-dev'; // minor revision number, should be empty for production releases
+$v_patch = '0';
+$v_tag   = ''; // minor revision number, should be empty for production releases
 
 // A real patch identifier. This is incremented when we release a patch for a
 // production release. Note the above $v_patch variable is a misnomer and actually
 // stores release version information.
-$v_realpatch = '0';
+$v_realpatch = '2';
 
 // Database version identifier, this is to be incremented whenever there
 // is a database change in the course of development.  It is used
