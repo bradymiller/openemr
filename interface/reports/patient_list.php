@@ -51,6 +51,11 @@ else {
 
 <script language="JavaScript">
  var mypcc = '<?php echo $GLOBALS['phone_country_code'] ?>';
+
+$(document).ready(function() {
+ top.printLogSetup(document.getElementById('printbutton'));
+});
+
 </script>
 <link rel='stylesheet' href='<?php echo $css_header ?>' type='text/css'>
 <style type="text/css">
@@ -162,7 +167,7 @@ else {
 					</span>
 					</a>
 					<?php if ($_POST['form_refresh']) { ?>
-					<a href='#' class='css_button' onclick='window.print()'>
+					<a href='#' id='printbutton' class='css_button'>
 						<span>
 							<?php xl('Print','e'); ?>
 						</span>
