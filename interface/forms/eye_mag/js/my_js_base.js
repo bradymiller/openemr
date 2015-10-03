@@ -1,4 +1,4 @@
-/**
+pupils/**
  * forms/eye_mag/js/my_js_base.js
  *
  * JS Functions for eye_mag form(s)
@@ -1826,7 +1826,8 @@ $(document).ready(function() {
                                              return;
                                              }
                                              });
-                  $("#Pupil_normal").change(function() {
+                  $("#PUPIL_NORMAL").change(function() {
+                                            alert('Hello');
                                             if ($(this).is(':checked')) {
                                             $("#ODPUPILSIZE1").val('3.0');
                                             $("#OSPUPILSIZE1").val('3.0');
