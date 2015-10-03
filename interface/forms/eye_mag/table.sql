@@ -109,7 +109,7 @@ CREATE TABLE IF NOT EXISTS `form_eye_mag` (
 `Narrative` mediumtext,
 `VISITTYPE` varchar(50) DEFAULT NULL,
 `CC1` longtext,
-`HPI` mediumtext,
+`HPI1` mediumtext,
 `SNOMEDCC1` longtext,
 `QUALITY1` mediumtext,
 `TIMING1` mediumtext,
