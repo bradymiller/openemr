@@ -6,10 +6,11 @@
 //
 var oemr_session_name = '<?php echo session_name(); ?>';
 var oemr_session_id   = '<?php echo session_id(); ?>';
-var oemr_dialog_close_msg = '<?php echo xl('OK to close this other popup window?'); ?>';
+var oemr_dialog_close_msg = '<?php echo 'OK to close this other popup window?'; ?>';
 //
 function restoreSession() {
-<?php if (!empty($GLOBALS['restore_sessions'])) { ?>
+<?php 
+if (!empty($GLOBALS['restore_sessions'])) { ?>
  var ca = document.cookie.split('; ');
  for (var i = 0; i < ca.length; ++i) {
   var c = ca[i].split('=');

@@ -249,7 +249,7 @@ function getLanguageDir($lang_id) {
 //----------------------------------
 
 // ----------------------------------------------------------------------------
-/**
+/*
 HEADER HTML
 
 shows some informations for pages html header 
@@ -258,12 +258,12 @@ shows some informations for pages html header
 @return void
 */
 function html_header_show() {
-    
+  //  global $srcdir;
     // Below line was commented by the UTF-8 project on 05-2009 by BM.
     //  We commented this out since we are now standardizing encoding
     //  in the globals.php file.
     // echo '<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/> '."\n";
-}
+ }
 
 
 // ----------------------------------------------------------------------------
