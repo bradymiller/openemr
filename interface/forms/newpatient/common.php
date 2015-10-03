@@ -97,6 +97,16 @@ $ires = sqlStatement("SELECT id, type, title, begdate FROM lists WHERE " .
   }
 <?php } ?>
 
+<?php if (false /* $GLOBALS['ippf_specific'] */) { // ippf decided not to do this ?>
+  if (f['issues[]'].selectedIndex < 0) {
+   if (!confirm('There is no issue selected. If this visit relates to ' +
+    'contraception or abortion, click Cancel now and then select or ' +
+    'create the appropriate issue. Otherwise you can click OK.'))
+   {
+    return;
+   }
+  }
+<?php } ?>
   top.restoreSession();
   f.submit();
  }
@@ -174,7 +184,30 @@ function cancelClicked() {
  </div>
 
 <br> <br>
-
+<?php
+/* How did we get here?
+ * If ($viewmode) then we are editing a previously created encounter } else { 
+ *
+ * USE CASES:
+ * 1.  We arrived here by clicking on an event in a provider's calendar => use calendar info
+ * 2.  We are already in a patient's chart and we need to create a new encounter => use defaults and today's date
+ *      eg.  phone call came in or tech visit or provider visit, etc
+ *      This patient should have a default provider.  They are "someone's" patient.
+ *      As a last resort, if we can't find a provider, use the practice's default provider.
+ *
+ * 1. Calendar work-flows:
+ *    The normal work-flow is for the secretary to "arrive" a patient in the calendar on the actual day of the visit.
+ *    If the patient is not "arrived" or they are "arrived" but the appointment date != today's date, 
+ *    the encounter is NOT auto-created.  That's how we ended up here.
+ *    Identify the calendar event with the variable $sched_visit.
+ *      
+ */  
+if (!$viewmode) {
+    $query = "SELECT pc_aid FROM openemr_postcalendar_events WHERE pc_eventDate = ? and pc_pid =?";
+    $sched_visit = sqlStatement ($query, array($_SESSION['lastcaldate'],$pid) );
+    $result = sqlFetchArray($sched_visit);
+  }
+ ?>
 <table width='96%'>
 
  <tr>
@@ -272,7 +305,94 @@ if ($fres) {
  }
 ?>
     </tr>
+<?php //providerID stuff to figureout ?>
+ <tr>
+  <td nowrap>
+   <b><?php echo xlt('Provider'); ?>:</b>
+  </td>
+  <td nowrap>
 
+<?php
+ // Get the providers list which we will work off of.
+$ures = sqlStatement("SELECT id, username, fname, lname FROM users WHERE " .
+  "authorized != 0 AND active = 1 ORDER BY lname, fname");
+
+
+      // this is a new event so smartly choose a default provider 
+    /*****************************************************************
+      if ($userid) {
+        // Provider already given to us as a GET parameter.
+        $defaultProvider = $userid;
+      }
+        else {
+        // default to the currently logged-in user
+        $defaultProvider = $_SESSION['authUserID'];
+        // or, if we have chosen a provider in the calendar, default to them
+        // choose the first one if multiple have been selected
+        if (count($_SESSION['pc_username']) >= 1) {
+          // get the numeric ID of the first provider in the array
+          $pc_username = $_SESSION['pc_username'];
+          $firstProvider = sqlFetchArray(sqlStatement("select id from users where username='".$pc_username[0]."'"));
+          $defaultProvider = $firstProvider['id'];
+        }
+      }
+    }
+
+    echo "<select name='form_provider' style='width:100%' />";
+    while ($urow = sqlFetchArray($ures)) {
+        echo "    <option value='" . $urow['id'] . "'";
+        if ($urow['id'] == $defaultProvider) echo " selected";
+        echo ">" . $urow['lname'];
+        if ($urow['fname']) echo ", " . $urow['fname'];
+        echo "</option>\n";
+    }
+    echo "</select>";
+    *****************************************************************/
+  if ($viewmode && ($result['provider_id'] > '0')) {
+        // Provider already given to us from a previously created encounter.
+        $defaultProvider = $result['provider_ID'];
+  } else {
+    // This is a new encounter
+    // default to the currently logged-in user
+    $defaultProvider = $_SESSION['authUserID'];
+    // If currently logged-in user is not a provider, it won't work
+    // From the calendar code:
+    // Not sure how this fits in but keep it since someone uses it...
+    /*
+      // or, if we have chosen a provider in the calendar, default to them
+      // choose the first one if multiple have been selected
+      if (count($_SESSION['pc_username']) >= 1) {
+        // get the numeric ID of the first provider in the array
+        $pc_username = $_SESSION['pc_username'];
+        $firstProvider = sqlFetchArray(sqlStatement("select id from users where username=?", array($pc_username[0]) ));
+        $defaultProvider = $firstProvider['id'];
+      }
+    */
+    // if we clicked on a provider's schedule to add the event, use THAT.
+    // get provider from existing event involving this patient on the session['lastcaldate'] used
+    $query = "SELECT pc_aid FROM openemr_postcalendar_events WHERE pc_eventDate = ? and pc_pid =?";
+    $qprov = sqlStatement ($query, array($_SESSION['lastcaldate'],$pid) );
+    if (count($qprov) > '0') { 
+      //there id a visit for this patient on lastcaldate
+      $provider = sqlFetchArray($qprov);
+      $defaultProvider = $provider['pc_aid'];
+      $lastcaldate = $_SESSION['lastcaldate'];
+      $result['date'] = $_SESSION['lastcaldate'];
+    }
+  }
+
+  echo "<select name='form_provider' style='width:100%' />";
+  while ($urow = sqlFetchArray($ures)) {
+    echo "    <option value='" . attr($urow['id']) . "'";
+    if ($urow['id'] == $defaultProvider) echo " selected";
+    echo ">" . text($urow['lname']);
+    if ($urow['fname']) echo ", " . text($urow['fname']);
+    echo "</option>\n";
+    echo "</select>";
+  }
+    /****************************************************************/
+?>
+</td></tr>
     <tr<?php if (!$GLOBALS['gbl_visit_referral_source']) echo " style='visibility:hidden;'"; ?>>
      <td class='bold' nowrap><?php echo xlt('Referral Source'); ?>:</td>
      <td class='text'>
@@ -286,7 +406,7 @@ if ($fres) {
      <td class='bold' nowrap><?php echo xlt('Date of Service:'); ?></td>
      <td class='text' nowrap>
       <input type='text' size='10' name='form_date' id='form_date' <?php echo $disabled ?>
-       value='<?php echo $viewmode ? substr($result['date'], 0, 10) : date('Y-m-d'); ?>'
+       value='<?php echo ($viewmode || $lastcaldate) ? substr($result['date'], 0, 10) : date('Y-m-d'); ?>'
        title='<?php echo xla('yyyy-mm-dd Date of service'); ?>'
        onkeyup='datekeyup(this,mypcc)' onblur='dateblur(this,mypcc)' />
         <img src='../../pic/show_calendar.gif' align='absbottom' width='24' height='22'
@@ -382,41 +502,38 @@ while ($irow = sqlFetchArray($ires)) {
 </body>
 
 <script language="javascript">
-/* required for popup calendar */
-Calendar.setup({inputField:"form_date", ifFormat:"%Y-%m-%d", button:"img_form_date"});
-Calendar.setup({inputField:"form_onset_date", ifFormat:"%Y-%m-%d", button:"img_form_onset_date"});
-<?php
-if (!$viewmode) { ?>
- function duplicateVisit(enc, datestr) {
-    if (!confirm('<?php echo xl("A visit already exists for this patient today. Click Cancel to open it, or OK to proceed with creating a new one.") ?>')) {
-            // User pressed the cancel button, so re-direct to today's encounter
-            top.restoreSession();
-            parent.left_nav.setEncounter(datestr, enc, window.name);
-            parent.left_nav.setRadio(window.name, 'enc');
-            parent.left_nav.loadFrame('enc2', window.name, 'patient_file/encounter/encounter_top.php?set_encounter=' + enc);
-            return;
-        }
+  /* required for popup calendar */
+  Calendar.setup({inputField:"form_date", ifFormat:"%Y-%m-%d", button:"img_form_date"});
+  Calendar.setup({inputField:"form_onset_date", ifFormat:"%Y-%m-%d", button:"img_form_onset_date"});
+  <?php
+  if (!$viewmode) { ?>
+    function duplicateVisit(enc, datestr) {
+      if (!confirm('<?php echo xl("A visit already exists for this patient today. Click Cancel to open it, or OK to proceed with creating a new one.") ?>')) {
+        // User pressed the cancel button, so re-direct to today's encounter
+        top.restoreSession();
+        parent.left_nav.setEncounter(datestr, enc, window.name);
+        parent.left_nav.setRadio(window.name, 'enc');
+        parent.left_nav.loadFrame('enc2', window.name, 'patient_file/encounter/encounter_top.php?set_encounter=' + enc);
+        return;
+      }
         // otherwise just continue normally
     }    
-<?php
-
-  // Search for an encounter from today
-  $erow = sqlQuery("SELECT fe.encounter, fe.date " .
-    "FROM form_encounter AS fe, forms AS f WHERE " .
-    "fe.pid = ? " . 
-    " AND fe.date >= ? " . 
-    " AND fe.date <= ? " .
-    " AND " .
-    "f.formdir = 'newpatient' AND f.form_id = fe.id AND f.deleted = 0 " .
-    "ORDER BY fe.encounter DESC LIMIT 1",array($pid,date('Y-m-d 00:00:00'),date('Y-m-d 23:59:59')));
-
-  if (!empty($erow['encounter'])) {
-    // If there is an encounter from today then present the duplicate visit dialog
-    echo "duplicateVisit('" . $erow['encounter'] . "', '" .
-      oeFormatShortDate(substr($erow['date'], 0, 10)) . "');\n";
+    <?php
+    // Search for an encounter from today
+    $erow = sqlQuery("SELECT fe.encounter, fe.date " .
+      "FROM form_encounter AS fe, forms AS f WHERE " .
+      "fe.pid = ? " . 
+      " AND fe.date >= ? " . 
+      " AND fe.date <= ? " .
+      " AND " .
+      "f.formdir = 'newpatient' AND f.form_id = fe.id AND f.deleted = 0 " .
+      "ORDER BY fe.encounter DESC LIMIT 1",array($pid,date('Y-m-d 00:00:00'),date('Y-m-d 23:59:59')));
+    if (!empty($erow['encounter'])) {
+      // If there is an encounter from today then present the duplicate visit dialog
+      echo "duplicateVisit('" . $erow['encounter'] . "', '" .
+        oeFormatShortDate(substr($erow['date'], 0, 10)) . "');\n";
+    }
   }
-}
-?>
+  ?>
 </script>
-
 </html>

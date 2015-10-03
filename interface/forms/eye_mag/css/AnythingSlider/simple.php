@@ -1,42 +1,57 @@
 <?php
 
-    //get pid/form_id/encounter and show the series of draws for that encounter
-    //if they don't exist, show the base image
+/** 
+ * forms/eye_mag/css/AnythingSlider/simple.php 
+ * 
+ * Adaptation of AnythingSlider's simple.php to fit Eye Exam form
+ * 
+ * Copyright (C) 2016 Raymond Magauran <magauran@MedFetch.com> 
+ * 
+ * LICENSE: This program is free software; you can redistribute it and/or 
+ * modify it under the terms of the GNU General Public License 
+ * as published by the Free Software Foundation; either version 3 
+ * of the License, or (at your option) any later version. 
+ * This program is distributed in the hope that it will be useful, 
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of 
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the 
+ * GNU General Public License for more details. 
+ * You should have received a copy of the GNU General Public License 
+ * along with this program. If not, see <http://opensource.org/licenses/gpl-license.php>;. 
+ * 
+ * @package OpenEMR 
+ * @author Ray Magauran <magauran@MedFetch.com> 
+ * @link http://www.open-emr.org 
+ *   
+ */
+     
     $fake_register_globals=false;
     $sanitize_all_escapes=true;
-	//error_reporting(E_ALL & ~E_NOTICE);
     include_once("../../../../globals.php");
     include_once("$srcdir/acl.inc");
     include_once("$srcdir/lists.inc");
     include_once("$srcdir/api.inc");
     include_once("$srcdir/sql.inc");
     require_once("$srcdir/formatting.inc.php");
-        //	require_once("$srcdir/restoreSession.php");
-        // 	print_r($_REQUEST);
-    $form_name = "eye_mag";
-    $form_folder = "eye_mag";
-    
-    include_once($GLOBALS['webserver_root']."/interface/forms/".$form_folder."/php/".$form_folder."_functions.php");
-    @extract($_REQUEST);
-    @extract($_SESSION);
-	// Get users preferences, for this user ,
-	// If a fresh install or new user, get the default user preferences
-	$query  = "SELECT * FROM form_eye_mag_prefs where PEZONE='PREFS' AND (id=? or id=2048)ORDER BY id,ZONE_ORDER,ordering";
-	$result = sqlStatement($query,array($_SESSION['authUserID']));
-	while ($prefs= sqlFetchArray($result))   {
-	    @extract($prefs);
-	    $$LOCATION = $VALUE;
-	}
+	require_once("$srcdir/forms.inc");
 
-    // get pat_data and user_data
-    $query = "SELECT * FROM patient_data where pid='$pid'";
-    $pat_data =  sqlQuery($query);
-    @extract($pat_data);
-    
-    $query = "SELECT * FROM users where id = '".$_SESSION['authUserID']."'";
-    $prov_data =  sqlQuery($query);
-    $providerID = $prov_data['fname']." ".$prov_data['lname'];
-    
+    $form_name = "Eye Form";
+    $form_folder = "eye_mag";
+    include_once($GLOBALS['webserver_root']."/interface/forms/".$form_folder."/php/".$form_folder."_functions.php");
+	
+	$pid = $_SESSION['pid'];
+	$display = $_REQUEST['display'];
+	$category_id = $_REQUEST['category_id'];
+	$encounter = $_REQUEST['encounter'];
+	$category_name = $_REQUEST['category_name'];
+	
+    $query = "SELECT * FROM patient_data where pid=?";
+    $pat_data =  sqlQuery($query,array($pid));
+ 	
+    $providerID  =  getProviderIdOfEncounter($encounter);
+	$providerNAME = getProviderName($providerID);
+	$query = "SELECT * FROM users where id = ?";
+	$prov_data =  sqlQuery($query,array($providerID));
+
     $query="select form_encounter.date as encounter_date, form_eye_mag.* from form_eye_mag ,forms,form_encounter
     where 
     form_encounter.encounter =? and 
@@ -44,328 +59,482 @@
     form_eye_mag.id=forms.form_id and
     forms.deleted != '1' and 
     form_eye_mag.pid=? ";        
-    //	echo $query."<br />";
     $encounter_data =sqlQuery($query,array($encounter,$pid));
-    @extract($encounter_data);
-    $dated = new DateTime($encounter_date);
-    $visit_date = $dated->format('m/d/Y'); 
-    //var_dump($encounter_data);
-    //echo "<pr>encounter with id = ".$encounter." with ".$id."<br />"; 
-    //var_dump($encounter_data);
-    //$GLOBALS['webserver_root']."/interface/forms/
- //   echo "pid = ".$pid."<br />encounter = ".$encounter."<br />category_name = ".$category_name."<br />";
-	
- list($documents) = document_engine($pid);
+    $dated = new DateTime($encounter_data['encounter_date']);
+    $dated = $dated->format('Y/m/d');
+	$visit_date = oeFormatShortDate($dated);
+
+ 	list($documents) = document_engine($pid);
               
-?>
-<!DOCTYPE html>
+?><!DOCTYPE html>
 <html>
+	<head>
+		<meta charset="utf-8" />
 
-<head>
-	<meta charset="utf-8" />
+		<title>Document Library</title>
+		<link rel="shortcut icon" href="demos/images/favicon.ico" type="image/x-icon">
+		<link rel="apple-touch-icon" href="demos/images/apple-touch-icon.png">
 
-	<title>Document Library</title>
-	<link rel="shortcut icon" href="demos/images/favicon.ico" type="image/x-icon">
-	<link rel="apple-touch-icon" href="demos/images/apple-touch-icon.png">
-
-	
-	<!-- Demo stuff -->
-	<link rel="stylesheet" href="demos/css/page.css">
-
-	<!-- Anything Slider -->
-	<link rel="stylesheet" href="css/anythingslider.css">
-	<script src="js/jquery.anythingslider.js"></script>
-
-<!-- jQuery library -->
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
-
-<!-- Latest compiled JavaScript -->
-<script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>  
-<!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
-    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
-    <!--[if lt IE 9]>
-        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
-        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
-    <![endif]-->
-
-	<!-- AnythingSlider optional extensions
-	<script src="js/jquery.anythingslider.fx.js"></script> 
-	 <script src="js/jquery.anythingslider.video.js"></script>
-
-<!-- Anything Slider optional plugins ->
- <script src="js/jquery.easing.1.2.js"></script>
- -->
-<!-- Anything Slider -->
-<link href="css/anythingslider.css" rel="stylesheet">
-<script src="js/jquery.anythingslider.min.js"></script>
-
-<link rel="stylesheet" href="css/theme-metallic.css">
-	<link rel="stylesheet" href="css/theme-minimalist-round.css">
-	<link rel="stylesheet" href="css/theme-minimalist-square.css">
-	<link rel="stylesheet" href="css/theme-construction.css">
-	<link rel="stylesheet" href="css/theme-cs-portfolio.css">
+	   <!-- jQuery library -->
+	    <script src="<?php echo $GLOBALS['webroot'] ?>/library/js/jquery.min.js"></script>
+	    <!-- Latest compiled JavaScript -->
+	    <script src="<?php echo $GLOBALS['webroot'] ?>/library/js/bootstrap.min.js"></script>  
+	      <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+	      <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+	      <!--[if lt IE 9]>
+	          <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+	          <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+	      <![endif]-->
+	    <script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
+		<!-- Anything Slider -->
+		<link rel="stylesheet" href="css/anythingslider.css">
+		<script src="js/jquery.anythingslider.js"></script>
 
 
- <!-- ColorBox -->
- <link href="demos/colorbox/colorbox.css" rel="stylesheet">
-	 <script src="demos/colorbox/jquery.colorbox-min.js"></script>
-	 
-	 <style>
-	 #slider { width: 700px; height: 390px; }
-	 /* New in version 1.7+ */
-	 #slider {
-	 	width: 1200px;
-	 	height: 600px;
-	 	list-style: none;
-	 }
-	 /* CSS to expand the image to fit inside colorbox */
-	 #cboxPhoto { width: 100%; height: 100%; margin: 0 !important; }
-	 /* Change metallic theme defaults to show thumbnails */
-	 div.anythingControls {
-	 	bottom: 25px; /* thumbnail images are larger than the original bullets; move it up */
-	 }
-	 .anythingSlider-metallic .thumbNav a {
-	 	background-image: url();
-	 	height: 30px;
-	 	width: 30px;
-	 	border: #000 1px solid;
-	 	border-radius: 2px;
-	 	-moz-border-radius: 2px;
-	 	-webkit-border-radius: 2px;
-	 	text-indent: 0;
-	 }
-	 .anythingSlider-metallic .thumbNav a span {
-	 	visibility: visible; /* span changed to visibility hidden in v1.7.20 */
-	 }
-	 /* border around link (image) to show current panel */
-	 .anythingSlider-metallic .thumbNav a:hover,
-	 .anythingSlider-metallic .thumbNav a.cur {
-	 	border-color: #fff;
-	 }
-	 /* reposition the start/stop button */
-	 .anythingSlider-metallic .start-stop {
-	 	margin-top: 15px;
-	 	}</style>
 
- 	<!-- AnythingSlider initialization -->
- 	<script>
-		// DOM Ready
-		$(function(){
-			$('#slider').anythingSlider({
-				// Appearance
-				theme               : "metallic", // Theme name
-				mode                : "horizontal",   // Set mode to "horizontal", "vertical" or "fade" (only first letter needed); replaces vertical option
-				expand              : false,     // If true, the entire slider will expand to fit the parent element
-				resizeContents      : false,      // If true, solitary images/objects in the panel will expand to fit the viewport
-				showMultiple        : false,     // Set this value to a number and it will show that many slides at once
-				easing              : "swing",   // Anything other than "linear" or "swing" requires the easing plugin or jQuery UI
+		<!-- AnythingSlider optional extensions -->
+		<script src="js/jquery.anythingslider.fx.js"></script> 
+		 <script src="js/jquery.anythingslider.video.js"></script>
 
-				buildArrows         : true,      // If true, builds the forwards and backwards buttons
-				buildNavigation     : true,      // If true, builds a list of anchor links to link to each panel
-				buildStartStop      : false,      // If true, builds the start/stop button
+		<!-- Anything Slider optional plugins -->
+		 <script src="js/jquery.easing.1.2.js"></script>
+		 
+		<!-- Anything Slider -->
+		<link href="css/anythingslider.css" rel="stylesheet">
+		<script src="js/jquery.anythingslider.min.js"></script>
 
-				appendForwardTo     : null,      // Append forward arrow to a HTML element (jQuery Object, selector or HTMLNode), if not null
-				appendBackTo        : null,      // Append back arrow to a HTML element (jQuery Object, selector or HTMLNode), if not null
-				appendControlsTo    : null,      // Append controls (navigation + start-stop) to a HTML element (jQuery Object, selector or HTMLNode), if not null
-				appendNavigationTo  : null,      // Append navigation buttons to a HTML element (jQuery Object, selector or HTMLNode), if not null
-				appendStartStopTo   : null,      // Append start-stop button to a HTML element (jQuery Object, selector or HTMLNode), if not null
+		<link rel="stylesheet" href="css/theme-metallic.css">
+		<link rel="stylesheet" href="css/theme-minimalist-round.css">
+		<link rel="stylesheet" href="css/theme-minimalist-square.css">
+		<link rel="stylesheet" href="css/theme-construction.css">
+		<link rel="stylesheet" href="css/theme-cs-portfolio.css">
 
-				toggleArrows        : true,     // If true, side navigation arrows will slide out on hovering & hide @ other times
-				toggleControls      : true,     // if true, slide in controls (navigation + play/stop button) on hover and slide change, hide @ other times
 
-				startText           : "Start",   // Start button text
-				stopText            : "Stop",    // Stop button text
-				forwardText         : "&raquo;", // Link text used to move the slider forward (hidden by CSS, replaced with arrow image)
-				backText            : "&laquo;", // Link text used to move the slider back (hidden by CSS, replace with arrow image)
-				tooltipClass        : "tooltip", // Class added to navigation & start/stop button (text copied to title if it is hidden by a negative text indent)
+	 	<!-- ColorBox -->
+	 	<link href="demos/colorbox/colorbox.css" rel="stylesheet">
+		<script src="demos/colorbox/jquery.colorbox-min.js"></script>
+		 
+		<style>
+			 #slider { width: 700px; height: 390px; }
+			 /* New in version 1.7+ */
+			 #slider {
+			 	width: 1200px;
+			 	height: 600px;
+			 	list-style: none;
+			 }
+			 /* CSS to expand the image to fit inside colorbox */
+			 #cboxPhoto { width: 100%; height: 100%; margin: 0 !important; }
+			 /* Change metallic theme defaults to show thumbnails */
+			 div.anythingControls {
+			 	bottom: 25px; /* thumbnail images are larger than the original bullets; move it up */
+			 }
+			 .anythingSlider-metallic .thumbNav a {
+			 	background-image: url();
+			 	height: 30px;
+			 	width: 30px;
+			 	border: #000 1px solid;
+			 	border-radius: 2px;
+			 	-moz-border-radius: 2px;
+			 	-webkit-border-radius: 2px;
+			 	text-indent: 0;
+			 }
+			 .anythingSlider-metallic .thumbNav a span {
+			 	visibility: visible; /* span changed to visibility hidden in v1.7.20 */
+			 }
+			 /* border around link (image) to show current panel */
+			 .anythingSlider-metallic .thumbNav a:hover,
+			 .anythingSlider-metallic .thumbNav a.cur {
+			 	border-color: #fff;
+			 }
+			 /* reposition the start/stop button */
+			 .anythingSlider-metallic .start-stop {
+			 	margin-top: 15px;
+			 }
+			 .git {
+			 	background-color: #DEC2C4;
+			 	}
+		</style>
 
-				// Function
-				enableArrows        : true,      // if false, arrows will be visible, but not clickable.
-				enableNavigation    : true,      // if false, navigation links will still be visible, but not clickable.
-				enableStartStop     : true,      // if false, the play/stop button will still be visible, but not clickable. Previously "enablePlay"
-				enableKeyboard      : true,      // if false, keyboard arrow keys will not work for this slider.
+	 	<!-- AnythingSlider initialization -->
+	 	<script>
+			// DOM Ready
+			$(function(){
+				$('#slider').anythingSlider({
+					// Appearance
+					theme               : "metallic", // Theme name
+					mode                : "horizontal",   // Set mode to "horizontal", "vertical" or "fade" (only first letter needed); replaces vertical option
+					expand              : false,     // If true, the entire slider will expand to fit the parent element
+					resizeContents      : true,      // If true, solitary images/objects in the panel will expand to fit the viewport
+					showMultiple        : false,     // Set this value to a number and it will show that many slides at once
+					easing              : "swing",   // Anything other than "linear" or "swing" requires the easing plugin or jQuery UI
 
-				// Navigation
-				startPanel          : 1,         // This sets the initial panel
-				changeBy            : 1,         // Amount to go forward or back when changing panels.
-				hashTags            : true,      // Should links change the hashtag in the URL?
-				infiniteSlides      : false,      // if false, the slider will not wrap & not clone any panels
-				//navigationFormatter : 1,      // Details at the top of the file on this use (advanced use)
-				navigationSize      : 10,     // Set this to the maximum number of visible navigation tabs; false to disable
-    			navigationFormatter : function(i, panel){
-      									return panel.find('h2').text();
-    									},
-				// Slideshow options
-				autoPlay            : false,     // If true, the slideshow will start running; replaces "startStopped" option
-				autoPlayLocked      : false,     // If true, user changing slides will not stop the slideshow
-				autoPlayDelayed     : false,     // If true, starting a slideshow will delay advancing slides; if false, the slider will immediately advance to the next slide when slideshow starts
-				pauseOnHover        : true,      // If true & the slideshow is active, the slideshow will pause on hover
-				stopAtEnd           : false,     // If true & the slideshow is active, the slideshow will stop on the last page. This also stops the rewind effect when infiniteSlides is false.
-				playRtl             : false,     // If true, the slideshow will move right-to-left
+					buildArrows         : true,      // If true, builds the forwards and backwards buttons
+					buildNavigation     : true,      // If true, builds a list of anchor links to link to each panel
+					buildStartStop      : false,      // If true, builds the start/stop button
 
-				// Times
-				delay               : 3000,      // How long between slideshow transitions in AutoPlay mode (in milliseconds)
-				resumeDelay         : 15000,     // Resume slideshow after user interaction, only if autoplayLocked is true (in milliseconds).
-				animationTime       : 600,       // How long the slideshow transition takes (in milliseconds)
-				delayBeforeAnimate  : 0,         // How long to pause slide animation before going to the desired slide (used if you want your "out" FX to show).
+					appendForwardTo     : null,      // Append forward arrow to a HTML element (jQuery Object, selector or HTMLNode), if not null
+					appendBackTo        : null,      // Append back arrow to a HTML element (jQuery Object, selector or HTMLNode), if not null
+					appendControlsTo    : null,      // Append controls (navigation + start-stop) to a HTML element (jQuery Object, selector or HTMLNode), if not null
+					appendNavigationTo  : null,      // Append navigation buttons to a HTML element (jQuery Object, selector or HTMLNode), if not null
+					appendStartStopTo   : null,      // Append start-stop button to a HTML element (jQuery Object, selector or HTMLNode), if not null
 
-				// Callbacks
-				onBeforeInitialize  : function(e, slider) {}, // Callback before the plugin initializes
-				onInitialized       : function(e, slider) {}, // Callback when the plugin finished initializing
-				onShowStart         : function(e, slider) {}, // Callback on slideshow start
-				onShowStop          : function(e, slider) {}, // Callback after slideshow stops
-				onShowPause         : function(e, slider) {}, // Callback when slideshow pauses
-				onShowUnpause       : function(e, slider) {}, // Callback when slideshow unpauses - may not trigger properly if user clicks on any controls
-				onSlideInit         : function(e, slider) {}, // Callback when slide initiates, before control animation
-				onSlideBegin        : function(e, slider) {}, // Callback before slide animates
-				onSlideComplete     : function(slider) {},    // Callback when slide completes; this is the only callback without an event "e" parameter
+					toggleArrows        : true,     // If true, side navigation arrows will slide out on hovering & hide @ other times
+					toggleControls      : true,     // if true, slide in controls (navigation + play/stop button) on hover and slide change, hide @ other times
 
-				// Interactivity
-				clickForwardArrow   : "click",         // Event used to activate forward arrow functionality (e.g. add jQuery mobile's "swiperight")
-				clickBackArrow      : "click",         // Event used to activate back arrow functionality (e.g. add jQuery mobile's "swipeleft")
-				clickControls       : "click focusin", // Events used to activate navigation control functionality
-				clickSlideshow      : "click",         // Event used to activate slideshow play/stop button
-				allowRapidChange    : true,           // If true, allow rapid changing of the active pane, instead of ignoring activity during animation
+					startText           : "Start",   // Start button text
+					stopText            : "Stop",    // Stop button text
+					forwardText         : "&raquo;", // Link text used to move the slider forward (hidden by CSS, replaced with arrow image)
+					backText            : "&laquo;", // Link text used to move the slider back (hidden by CSS, replace with arrow image)
+					tooltipClass        : "tooltip", // Class added to navigation & start/stop button (text copied to title if it is hidden by a negative text indent)
 
-				// Video
-				resumeOnVideoEnd    : true,      // If true & the slideshow is active & a supported video is playing, it will pause the autoplay until the video is complete
-				resumeOnVisible     : true,      // If true the video will resume playing (if previously paused, except for YouTube iframe - known issue); if false, the video remains paused.
-				addWmodeToObject    : "opaque",  // If your slider has an embedded object, the script will automatically add a wmode parameter with this setting
-				isVideoPlaying      : function(base){ return false; } // return true if video is playing or false if not - used by video extension
+					// Function
+					enableArrows        : true,      // if false, arrows will be visible, but not clickable.
+					enableNavigation    : true,      // if false, navigation links will still be visible, but not clickable.
+					enableStartStop     : true,      // if false, the play/stop button will still be visible, but not clickable. Previously "enablePlay"
+					enableKeyboard      : true,      // if false, keyboard arrow keys will not work for this slider.
+
+					// Navigation
+					startPanel          : 1,         // This sets the initial panel
+					changeBy            : 1,         // Amount to go forward or back when changing panels.
+					hashTags            : true,      // Should links change the hashtag in the URL?
+					infiniteSlides      : false,      // if false, the slider will not wrap & not clone any panels
+					//navigationFormatter : 1,      // Details at the top of the file on this use (advanced use)
+					navigationSize      : 10,     // Set this to the maximum number of visible navigation tabs; false to disable
+	    			navigationFormatter : function(i, panel){
+	      									return panel.find('h2').text();
+	    									},
+					// Slideshow options
+					autoPlay            : false,     // If true, the slideshow will start running; replaces "startStopped" option
+					autoPlayLocked      : false,     // If true, user changing slides will not stop the slideshow
+					autoPlayDelayed     : false,     // If true, starting a slideshow will delay advancing slides; if false, the slider will immediately advance to the next slide when slideshow starts
+					pauseOnHover        : true,      // If true & the slideshow is active, the slideshow will pause on hover
+					stopAtEnd           : false,     // If true & the slideshow is active, the slideshow will stop on the last page. This also stops the rewind effect when infiniteSlides is false.
+					playRtl             : false,     // If true, the slideshow will move right-to-left
+
+					// Times
+					delay               : 3000,      // How long between slideshow transitions in AutoPlay mode (in milliseconds)
+					resumeDelay         : 15000,     // Resume slideshow after user interaction, only if autoplayLocked is true (in milliseconds).
+					animationTime       : 600,       // How long the slideshow transition takes (in milliseconds)
+					delayBeforeAnimate  : 0,         // How long to pause slide animation before going to the desired slide (used if you want your "out" FX to show).
+
+					// Callbacks
+					onBeforeInitialize  : function(e, slider) {}, // Callback before the plugin initializes
+					onInitialized       : function(e, slider) {}, // Callback when the plugin finished initializing
+					onShowStart         : function(e, slider) {}, // Callback on slideshow start
+					onShowStop          : function(e, slider) {}, // Callback after slideshow stops
+					onShowPause         : function(e, slider) {}, // Callback when slideshow pauses
+					onShowUnpause       : function(e, slider) {}, // Callback when slideshow unpauses - may not trigger properly if user clicks on any controls
+					onSlideInit         : function(e, slider) {}, // Callback when slide initiates, before control animation
+					onSlideBegin        : function(e, slider) {}, // Callback before slide animates
+					onSlideComplete     : function(slider) {},    // Callback when slide completes; this is the only callback without an event "e" parameter
+
+					// Interactivity
+					clickForwardArrow   : "click",         // Event used to activate forward arrow functionality (e.g. add jQuery mobile's "swiperight")
+					clickBackArrow      : "click",         // Event used to activate back arrow functionality (e.g. add jQuery mobile's "swipeleft")
+					clickControls       : "click focusin", // Events used to activate navigation control functionality
+					clickSlideshow      : "click",         // Event used to activate slideshow play/stop button
+					allowRapidChange    : true,           // If true, allow rapid changing of the active pane, instead of ignoring activity during animation
+
+					// Video
+					resumeOnVideoEnd    : true,      // If true & the slideshow is active & a supported video is playing, it will pause the autoplay until the video is complete
+					resumeOnVisible     : true,      // If true the video will resume playing (if previously paused, except for YouTube iframe - known issue); if false, the video remains paused.
+					addWmodeToObject    : "opaque",  // If your slider has an embedded object, the script will automatically add a wmode parameter with this setting
+					isVideoPlaying      : function(base){ return false; } // return true if video is playing or false if not - used by video extension
+				});
 			});
-		});
-	</script>
+		</script>
 
-	<link rel="stylesheet" href="http://yui.yahooapis.com/pure/0.5.0/pure-min.css">
-	<link rel="stylesheet" href="../../../../forms/<?php echo $form_folder; ?>/style.css" type="text/css">    
- 	<link rel="stylesheet" href="<?php echo $GLOBALS['webroot'] ?>/library/css/font-awesome-4.2.0/css/font-awesome.min.css">
- <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
+	    <script language="JavaScript">    
+	    	<?php require_once("$srcdir/restoreSession.php"); ?>
+	    </script>
+	      
+		<!-- Add Font stuff for the look and feel.  -->
+		<link rel="stylesheet" href="<?php echo $css_header;?>" type="text/css">
+		<link rel="stylesheet" href="<?php echo $GLOBALS['webroot'] ?>/library/css/pure-min.css">
+		<link rel="stylesheet" href="<?php echo $GLOBALS['webroot'] ?>/library/css/bootstrap-3-2-0.min.css">
+		<link rel="stylesheet" href="<?php echo $GLOBALS['webroot'] ?>/interface/forms/<?php echo $form_folder; ?>/css/bootstrap-responsive.min.css">
+		<link rel="stylesheet" href="<?php echo $GLOBALS['webroot'] ?>/interface/forms/<?php echo $form_folder; ?>/style.css" type="text/css">    
+		<link rel="stylesheet" href="<?php echo $GLOBALS['css_header']; ?>" type="text/css">
+		<link rel="stylesheet" href="<?php echo $GLOBALS['webroot'] ?>/library/css/font-awesome-4.2.0/css/font-awesome.css">
 
-</head>
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<meta name="description" content="openEMR: Eye Exam">
+		<meta name="author" content="openEMR: Ophthalmology">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
 
-<body id="simple">
-	<?php
-    if ($display=="fullscreen") { 
-      // trial fullscreen will lead to tablet versions and bootstrap menu overhaul
-      // this function is in php/eye_mag_functions.php
-      $output = menu_overhaul_top($pid,$encounter);
-     // echo $output;
-    }
-    ?>
-	<!-- Start Patient Identifiers -->
-	<div class="ACT_TEXT borderShadow" style="margin:0px 0px 5px 0px;padding:10px;">		
-		<table cellspacing="2" style="margin:0px 0px 5px 0px;padding:10px;" >
-			<tr>
-				<td colspan="2" rowspan="2">
-					<?php 
-					//if the patient has a photograph, use it else use generic avitar thing.
-					if ($documents['docs_in_name']['Patient Photograph'][0]['id']) {
-						?>
-						<object><embed src="/openemr/controller.php?document&amp;retrieve&amp;patient_id=<?php echo $pid; ?>&amp;document_id=<?php echo $documents['docs_in_name']['Patient Photograph'][0]['id']; ?>&amp;as_file=false" frameborder="0"
-						 type="<?php 
-						 echo $documents['docs_in_name']['Patient Photograph'][0]['mimetype']; 
-						 ?>" allowscriptaccess="always" allowfullscreen="false" width="80"></embed></object>
-						<?php 
-					} else {
-						?>
-						<object><embed src="../../../../forms/<?=$form_folder?>/images/anon.gif" frameborder="0"
-						 type="image/gif" width="80"></embed></object>
-						<?php
-					}
-					?>
-				</td>
+
+
+
+		<link rel="stylesheet" href="<?php echo $GLOBALS['webroot'] ?>/interface/forms/<?php echo $form_folder; ?>/style.css" type="text/css">    
+		<link rel="stylesheet" href="<?php echo $GLOBALS['webroot'] ?>/library/css/font-awesome-4.2.0/css/font-awesome.min.css">
+		<style>
+			 /* New in version 1.7+ */
+			 #slider {
+			 	width: 1000px;
+			 	height: 600px;
+			 	list-style: none;
+			 }
+			 /* CSS to expand the image to fit inside colorbox */
+			 #cboxPhoto { width: 100%; height: 100%; margin: 0 !important; }
+			 /* Change metallic theme defaults to show thumbnails */
+			 div.anythingControls {
+			 	bottom: 25px; /* thumbnail images are larger than the original bullets; move it up */
+			 }
+			 .anythingSlider-metallic .thumbNav a {
+			 	background-image: url();
+			 	height: 30px;
+			 	width: 30px;
+			 	border: #000 1px solid;
+			 	border-radius: 2px;
+			 	-moz-border-radius: 2px;
+			 	-webkit-border-radius: 2px;
+			 	text-indent: 0;
+			 }
+			 .anythingSlider-metallic .thumbNav a span {
+			 	visibility: visible; /* span changed to visibility hidden in v1.7.20 */
+			 }
+			 /* border around link (image) to show current panel */
+			 .anythingSlider-metallic .thumbNav a:hover,
+			 .anythingSlider-metallic .thumbNav a.cur {
+			 	border-color: #fff;
+			 }
+			 /* reposition the start/stop button */
+			 .anythingSlider-metallic .start-stop {
+			 	margin-top: 15px;
+			 }
+			 .git {
+			 	}
+		</style>
+	</head>
+	<body id="simple">
+
+    <!-- Navigation -->
+    <nav class="navbar-fixed-top navbar-custom navbar-bright navbar-inner" role="banner" role="navigation" style="margin-bottom: 0;z-index:1999999;font-size: 1.4em;">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="container-fluid">
+            <div class="navbar-header brand" style="color:black;">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#oer-navbar-collapse-1">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                &nbsp;<img src="/openemr/sites/default/images/login_logo.gif" class="little_image">
+                Eye Exam
+            </div>
+            <div class="navbar-collapse collapse" id="oer-navbar-collapse-1">
+                <ul class="navbar-nav">
+                    <li class="dropdown">
+                        <a class="dropdown-toggle" data-toggle="dropdown" id="menu_dropdown_file" role="button" aria-expanded="true">File </b></a>
+                        <ul class="dropdown-menu" role="menu">
+                            <li id="menu_PREFERENCES" name="menu_PREFERENCES" ><a id="BUTTON_PREFERENCES_menu" target="RTop" href="/openemr/interface/super/edit_globals.php">
+                            <i class="fa fa-angle-double-up" title="Opens in Top frame"></i>
+                            Preferences</a></li>
+                            <li class="divider"></li>
+                            <li id="menu_HPI" name="menu_HPI" ><a href="#" onclick='window.close();'>Quit</a></li>
+                        </ul>
+                    </li>
+                  
+                    <li class="dropdown">
+                        <a class="dropdown-toggle" data-toggle="dropdown" id="menu_dropdown_view" role="button" aria-expanded="true">Images</b></a>
+                        <ul class="dropdown-menu" role="menu">
+                            <?php
+			 				$i='0';
+					      	foreach ($documents['zones'] as $zone) {
+					      		if ($zone[0]['value'] == "DRAW") continue; //for now DRAW is under OTHER...
+						      	//menu friendly names:
+						      	if ($zone[0]['value'] == "EXT") $name = "External";
+						      	if ($zone[0]['value'] == "ANTSEG") $name = "Anterior Segment";
+						      	if ($zone[0]['value'] == "POSTSEG") $name = "Posterior Segment";
+						      	if ($zone[0]['value'] == "NEURO") $name = "Neuro-physiology";
+						      	
+						      	$class = "git";
+						      	if ($category_id == $zone[0]['id']) { $appends = "<i class='fa fa-arrow-down'></i>"; }
+						      	if (count($documents['docs_in_zone'][$zone[0][value]]) >'0') {
+					    	  		if ($zone[0][value] == $category_name) {
+					      				$class='play'; 
+					      			} else {
+					      				$class = "git";
+					      			}
+					      			$count = count($documents['docs_in_zone'][$zone[0][value]]);
+					      				if ($count!=1) {$s ="s";} else {$s='';}
+					      			$response[$zone[0][value]] = '<a title="'.$count.' Document'. $s.'" 
+										class="'.$class.' " 
+										href="simple.php?display=i&encounter='.$encounter.'&category_name='.$zone[0][value].'">'.
+										$name.'</a>
+										'.$append;
+										$menu[$zone[0][value]] = '<li><a title="'.$count.' Document'. $s.'" 
+										class="'.$class.' " 
+										href="simple.php?display=i&encounter='.$encounter.'&category_name='.$zone[0][value].'">'.
+										$name.' <span class="menu_icon">+'.$count.'</span></a></li>';
+					    	  	} else {
+					      			$class="current";
+					      			$response[$zone[0][value]] =  '<a title="No Documents" 
+							  				class="'.$class.' borderShadow"
+											disabled >'.$name.'</a>
+										';
+									$menu[$zone[0][value]] = '<li><a title="'.$count.' Document'. $s.'" 
+										class="'.$class.'" 
+										href="simple.php?display=i&encounter='.$encounter.'&category_name='.$zone[0][value].'">'.
+										$name.'</a></li>';
+					      		}
+							}
+							echo $menu['EXT'].$menu['ANTSEG'].$menu['POSTSEG'].$menu['NEURO'];
+				    	
+							if ($category_name == "OTHER") {$class='play'; } else { $class = "git"; }
+					    	echo '<li><a title="Other Documents"  
+										class="'.$class.'"  style="'.$style.'"
+										href="simple.php?display=i&encounter='.$encounter.'&category_name=OTHER">
+										OTHER<span class="menu_icon">+</span></a></li>
+										';
+						
+							?>
+						</ul>
+					</li>
+
+                    <li class="dropdown">
+                        <a class="dropdown-toggle"  class="disabled" role="button" id="menu_dropdown_patients" data-toggle="dropdown"><?php echo xlt("Patients"); ?> </a>
+                        <ul class="dropdown-menu" role="menu" aria-labelledby="menu1">
+                          <li role="presentation"><a role="menuitem" tabindex="-1" target="RTop" href="/openemr/interface/main/finder/dynamic_finder.php">
+                            <i class="fa fa-angle-double-up" title="<?php echo xla('Opens in Top frame'); ?>"></i>
+                            <?php echo xlt("Patients"); ?></a></li>
+                          <li role="presentation"><a tabindex="-1" target="RTop" href="/openemr/interface/new/new.php">
+                            <i class="fa fa-angle-double-up" title="<?php echo xla('Opens in Top frame'); ?>"></i>
+                            <?php echo xlt("New/Search"); ?></a> </li>
+                          <li role="presentation"><a role="menuitem" tabindex="-1" target="RTop" href="/openemr/interface/patient_file/summary/demographics.php">
+                            <i class="fa fa-angle-double-up" title="<?php echo xla('Opens in Top frame'); ?>"></i>
+                            <?php echo xlt("Summary"); ?></a></li>
+                          <!--    <li role="presentation" class="divider"></li>
+                          <li role="presentation"><a role="menuitem" tabindex="-1" href="#"><?php echo xlt("Create Visit"); ?></a></span></li>
+                          <li class="active"><a role="menuitem" id="BUTTON_DRAW_menu" tabindex="-1" href="/openemr/interface/patient_file/encounter/forms.php">  <?php echo xlt("Current"); ?></a></li>
+                          <li role="presentation"><a role="menuitem" tabindex="-1" href="/openemr/interface/patient_file/history/encounters.php"><?php echo xlt("Visit History"); ?></a></li>
+                          --> 
+                          <li role="presentation" class="divider"></li>
+                          <li role="presentation"><a role="menuitem" tabindex="-1" target="RTop" href="/openemr/interface/patient_file/transaction/record_request.php">
+                            <i class="fa fa-angle-double-up" title="<?php echo xla('Opens in Top frame'); ?>"></i>
+                            <?php echo xlt("Record Request"); ?></a></li>
+                          <li role="presentation" class="divider"></li>
+                          <li role="presentation"><a role="menuitem" tabindex="-1" target="RTop" href="/openemr/interface/patient_file/ccr_import.php">
+                            <i class="fa fa-angle-double-up" title="<?php echo xla('Opens in Top frame'); ?>"></i>
+                            <?php echo xlt("Upload Item"); ?></a></li>
+                          <li role="presentation" ><a role="menuitem" tabindex="-1" target="RTop" href="/openemr/interface/patient_file/ccr_pending_approval.php">
+                            <i class="fa fa-angle-double-up" title="<?php echo xla('Opens in Top frame'); ?>"></i>
+                            <?php echo xlt("Pending Approval"); ?></a></li>
+                        </ul>
+                    </li>
+                    <!--
+                    <li class="dropdown">
+                        <a class="dropdown-toggle" role="button" id="menu_dropdown_clinical" data-toggle="dropdown"><?php echo xlt("Encounter"); ?></a>
+                        <?php
+                        /*
+                         *  Here we need to incorporate the menu from openEMR too.  What Forms are active for this installation?
+                         *  openEMR uses Encounter Summary - Administrative - Clinical.  Think about the menu as a new entity with
+                         *  this + new functionaity.  It is OK to keep or consider changing any NAMES when creating the menu.  I assume
+                         *  a consensus will develop. 
+                        */
+                        ?>
+                        <ul class="dropdown-menu" role="menu" aria-labelledby="menu1">
+                            <li role="presentation" class="disabled"><a role="menuitem" tabindex="-1" href="#"><?php echo xlt("Eye Exam"); ?></a></li>
+                            <li role="presentation" class="disabled"><a role="menuitem" tabindex="-1" href="#"><?php echo xlt("Documents"); ?></a></li>
+                            <li role="presentation" class="disabled"><a role="menuitem" tabindex="-1" href="#"><?php echo xlt("Imaging"); ?></a></li>
+                            <li role="presentation" class="divider"></li>
+                            <li role="presentation" class="disabled"><a role="menuitem" tabindex="-1" href="#IOP_CHART"><?php echo xlt("IOP Chart"); ?></a></li>
+                        </ul>
+                    </li>
+                    -->
+                    
+                   <!-- let's import the original openEMR menu_bar here.  Needs to add restoreSession stuff? -->
+                    <?php
+                        $reg = Menu_myGetRegistered();
+                        if (!empty($reg)) {
+                            $StringEcho= '<li class="dropdown">';
+                            if ( $encounterLocked === false || !(isset($encounterLocked))) {
+                                foreach ($reg as $entry) {
+                                    $new_category = trim($entry['category']);
+                                    $new_nickname = trim($entry['nickname']);
+                                    if ($new_category == '') {$new_category = htmlspecialchars(xl('Miscellaneous'),ENT_QUOTES);}
+                                    if ($new_nickname != '') {$nickname = $new_nickname;}
+                                    else {$nickname = $entry['name'];}
+                                    if ($old_category != $new_category) { //new category, new menu section
+                                        $new_category_ = $new_category;
+                                        $new_category_ = str_replace(' ','_',$new_category_);
+                                        if ($old_category != '') {
+                                            $StringEcho.= "
+                                                </ul>
+                                            </li>
+                                            <li class='dropdown'>
+                                            ";
+                                        }
+                                      $StringEcho.= '
+                                      <a class="dropdown-toggle" data-toggle="dropdown" 
+                                        id="menu_dropdown_'.$new_category_.'" role="button" 
+                                        aria-expanded="false">'.$new_category.' </a>
+                                        <ul class="dropdown-menu" role="menu">
+                                        ';
+                                      $old_category = $new_category;
+                                    } 
+                                    $StringEcho.= "<li>
+                                    <a target='RBot' href='".$GLOBALS['webroot']."/interface/patient_file/encounter/load_form.php?formname=" .urlencode($entry['directory'])."'>
+                                    <i class='fa fa-angle-double-down' title='". xla('Opens in Bottom frame')."'></i>". 
+                                    xl_form_title($nickname) . "</a></li>";
+                              }
+                          }
+                          $StringEcho.= '
+                            </ul>
+                          </li>
+                          ';
+                        } else { $StringEcho .= xlt("nada here que pasa?"); }
+                        echo $StringEcho;
+                    ?>
+                    <li class="dropdown">
+                        <a class="dropdown-toggle" data-toggle="dropdown" 
+                           id="menu_dropdown_library" role="button" 
+                           aria-expanded="true"><?php echo xlt("Library"); ?> </a>
+                        <ul class="dropdown-menu" role="menu">
+                            <li role="presentation"><a role="menuitem" tabindex="-1" target="RTop"  
+                            href="/openemr/interface/main/calendar/index.php?module=PostCalendar&viewtype=day&func=view&framewidth=1020">
+                            <i class="fa fa-angle-double-up" title="<?php echo xla('Opens in Top frame'); ?>"></i>&nbsp;<?php echo xlt("Calendar"); ?><span class="menu_icon"><i class="fa fa-calendar"></i>  </span></a></li>
+                            <li role="presentation" class="divider"></li>
+                            <li role="presentation"><a target="RTop" role="menuitem" tabindex="-1" 
+                                href="/openemr/controller.php?document&list&patient_id=<?php echo xla($pid); ?>">
+                                <i class="fa fa-angle-double-up" title="<?php echo xla('Opens in Top frame'); ?>"></i>
+                                <?php echo xlt("Documents"); ?></a></li>
+                          
+                                <li><?php echo   $episode .= '<a href="#" onclick="top.restoreSession();return dopopup(\'/openemr/interface/forms/'.$form_folder.'/css/AnythingSlider/simple.php?display=i&category_id='.$documents['zones'][$category_value][$j]['id'].'&encounter='.$encounter.'&category_name='.urlencode(xla($category_value)).'\')">
+                            Imaging<span class="menu_icon"><img src="/openemr/interface/forms/'.$form_folder.'/images/jpg.png" class="little_image" />'; ?></span></a></li>
+                            <li role="presentation" class="divider"></li>
+                            <li id="menu_IOP_graph" name="menu_IOP_graph" ><a><?php echo xlt("IOP Graph"); ?></a></li>
+                        </ul>
+                    </li>
+                    <li class="dropdown">
+                        <a class="dropdown-toggle" data-toggle="dropdown" 
+                           id="menu_dropdown_help" role="button" 
+                           aria-expanded="true"><?php echo xlt("Help"); ?> </a>
+                        <ul class="dropdown-menu" role="menu" aria-labelledby="menu1">
+                            <li role="presentation"><a role="menuitem" tabindex="-1" target="_blank" href="/openemr/interface/forms/eye_mag/help.php">
+                                <i class="fa fa-help"></i>  <?php echo xlt("Shorthand Help"); ?><span class="menu_icon"><i title="<?php echo xla('Click for Shorthand Help.'); ?>" class="fa fa-info-circle fa-1"></i></span></a>
+                            </li>
+                        </ul>
+                    </li>
+			    
+                </ul>
+            </div>
+        </div>
+    </nav>
+	<br /><br />
+
+	<!-- Start Imaging Identifiers -->
+	<div class="borderShadow" style="margin:0px 0px 5px 0px;padding:10px;">		
+		<div style="position:absolute;margin:0 5px 10px 0; top:0.0in;text-align:center;width:95%;font-size:0.75em;;">
 			
-				<td>
-					<?php
-						echo $fname." ".$lname."<br />";
-						?>
-						ID: <?php echo $pid; ?>
-				</td>
-			</tr>
-		</table>
-	
-		<div style="position:absolute;margin:0 5px 10px 0; top:0.0in;text-align:right;width:75%;right:0.5in;">
-			
 
-			<!-- End Patient Identifiers -->
+			<!-- End Imaging Identifiers -->
 
 			<!-- Links to other demo pages & docs -->
-			<div id="nav" style="position:absolute;top:0.0in;text-align:left;">
+			<div id="nav" style="position:absolute;top:0.0in;text-align:center;">	
 				<?php 
-				//use this to build off for the document server
-				//for each section in imaging, make a link here
-				//<a href="expand.html">OCT</a>
-				//<a href="../../forms/'.$form_folder.'/css/AnythingSlider/simple.php?display=i&category_id='.$cat_row[id].'&id='.$form_id.'&encounter='.$encounter.'&category_name='.urlencode(xla($category_value)).'" onclick="top.restoreSession;">
-		        //        <img src="../../forms/'.$form_folder.'/images/jpg.png" class="little_image">
-		        //echo "count Imaging = ".count($imaging)."<br />";
-		        
-		        	/* For now the Drawings are under "other"
-		    	if ($category_name == "DRAW") {$class='play'; } else { $class = "git"; }
-		    	echo '<a title="Encounter Drawings"  
-							class="'.$class.' borderShadow"  style="'.$style.'"
-							href="simple.php?display=i&encounter='.$encounter.'&category_name=DRAW">
-							DRAW</a>
-							';
-
-				*/
-			
-		      	$i='0';
-		      	foreach ($documents['zones'] as $zone) {
-		      		if ($zone[0]['value'] == "DRAW") continue; //for now DRAW is under OTHER...
-			      	
-			      	$class = "git";
-			      	if ($category_id == $zone[0]['id']) { $appends = "<i class='fa fa-arrow-down'></i>"; }
-			      	if (count($documents['docs_in_zone'][$zone[0][value]]) >'0') {
-		    	  		if ($zone[0][value] == $category_name) {
-		      				$class='play'; 
-		      			} else {
-		      				$class = "git";
-		      			}
-		      			$count = count($documents['docs_in_zone'][$zone[0][value]]);
-		      				if ($count!=1) {$s ="s";} else {$s='';}
-		      			$response[$zone[0][value]] = '<a title="'.$count.' Document'. $s.'" 
-							class="'.$class.'  borderShadow" 
-							href="simple.php?display=i&encounter='.$encounter.'&category_name='.$zone[0][value].'">'.
-							$zone[0][value].'</a>
-							'.$append;
-		    	  	} else {
-		      			$class="current";
-		      			$response[$zone[0][value]] =  '<a title="No Documents" 
-				  				class="'.$class.' borderShadow"
-								disabled >'.$zone[0][value].'</a>
-							';
-		      		}
-				}
-				echo $response['EXT'].$response['ANTSEG'].$response['POSTSEG'].$response['NEURO'];
-		    	/*
-		    	if ($category_name == "DRAW") {$class='play'; } else { $class = "git"; }
-		    	echo '<a title="Encounter Drawings"  
-							class="'.$class.' borderShadow"  style="'.$style.'"
-							href="simple.php?display=i&encounter='.$encounter.'&category_name=DRAW">
-							DRAW</a>
-							';
-				*/
-				if ($category_name == "OTHER") {$class='play'; } else { $class = "git"; }
-			    echo '<a title="Other Documents"  
-								class="'.$class.' borderShadow"  style="'.$style.'"
-								href="simple.php?display=i&encounter='.$encounter.'&category_name=OTHER">
-								OTHER</a>
-								';
-				
-				?>
-			    <a class="git borderShadow" title="Return to Eye Exam" href="../../../../../interface/patient_file/encounter/view_form.php?formname=eye_mag&id=<?php echo $id; ?>">EXAM</a>
-				<!--
-				<a class="play" href="http://jsfiddle.net/Mottie/ycUB6/">Playground</a>
-				<a class="git" href="https://github.com/CSS-Tricks/AnythingSlider/wiki">Documentation</a>
-				<a class="git" href="https://github.com/CSS-Tricks/AnythingSlider/zipball/master">Download</a>
-				<a class="issue" href="https://github.com/CSS-Tricks/AnythingSlider/issues">Issues</a><br><br>
-				-->
-				
-				<?php 
-
-				echo "<br />";
-				//<div style='position:absolute;top:0.1in;'><pre>";
-				//echo ""; var_dump($documents['docs_in_name']);echo "</div>";
 				foreach ($documents['zones'][$category_name] as $zone) {
 					$class = "git";
 		    		$append ='';
@@ -385,14 +554,14 @@
 						if ($count =='0') {
 							$class = 'current';
 							$disabled = "disabled='disabled'";
-							echo ' <a '.$disabled.' title="'.count($documents['docs_in_name'][$zone['name']]).' Document'.$s.'" class="'.$class.'" >
-								<span>'.$zone['name'].'</span></a> 
+							echo ' <a '.$disabled.' title="'.count($documents['docs_in_name'][$zone['name']]).' Document'.$s.'" class="" >
+								<span class="borderShadow '.$class.'">'.$zone['name'].'</span></a> 
 							'.$append;	
 						} else {
 
 							echo ' <a '.$disabled.' title="'.count($documents['docs_in_name'][$zone['name']]).' Document'.$s.'" class="'.$class.'" 
 								href="simple.php?display=i&category_id='.$zone['id'].'&encounter='.$encounter.'&category_name='.$category_name.'">
-								<span>'.$zone['name'].'</span></a> 
+								<span  class="borderShadow">'.$zone['name'].'</span></a> 
 								'.$append;	
 						}
 					}
@@ -402,46 +571,48 @@
 		</div>
 		<!-- End Links -->
 	</div> 
-			<br />
+	<br />
 	<!-- Simple AnythingSlider -->
 	<ul id="slider">
-<?php
+		<?php
 
-$i='0';
-if ($category_id) {
-	$counter = count($documents['docs_in_cat_id'][$category_id]) -10;
-	if ($counter <0) $counter ='0';
-	for ($i=$counter;$i < count($documents['docs_in_cat_id'][$category_id]); $i++) {
-		echo '
-		<object><embed src="/openemr/controller.php?document&amp;retrieve&amp;patient_id='.$pid.'&amp;document_id='.$documents['docs_in_cat_id'][$category_id][$i][id].'&amp;as_file=false" frameborder="0"
-		 type="'.$documents['docs_in_cat_id'][$category_id][$i]['mimetype'].'" allowscriptaccess="always" allowfullscreen="true" width="800px" height="600px"></embed></object>
-		 ';
-	}
-} else {
-	$counter = count($documents['docs_in_zone'][$category_id]) -10;
-	if ($counter <0) $counter ='0';
-	for ($i=$counter;$i < count($documents['docs_in_zone'][$category_name]); $i++) {
-		echo '
-		<object><embed src="/openemr/controller.php?document&amp;retrieve&amp;patient_id='.$pid.'&amp;document_id='.$documents['docs_in_zone'][$category_name][$i][id].'&amp;as_file=false" frameborder="0"
-		 type="'.$documents['docs_in_zone'][$category_name][$i]['mimetype'].'" allowscriptaccess="always" allowfullscreen="true" width="800px" height="600px"></embed></object>
-		 ';
-	}
-}
-	
-//}
-?>
-		
+		$i='0';
+		if ($category_id) {
+		$counter = count($documents['docs_in_cat_id'][$category_id]) -10;
+		if ($counter <0) $counter ='0';
+		for ($i=$counter;$i < count($documents['docs_in_cat_id'][$category_id]); $i++) {
+			echo '
+			<object><embed src="/openemr/controller.php?document&amp;retrieve&amp;patient_id='.$pid.'&amp;document_id='.$documents['docs_in_cat_id'][$category_id][$i][id].'&amp;as_file=false" frameborder="0"
+			 type="'.$documents['docs_in_cat_id'][$category_id][$i]['mimetype'].'" allowscriptaccess="always" allowfullscreen="true" width="800px" height="600px"></embed></object>
+			 ';
+		}
+		} else {
+		$counter = count($documents['docs_in_zone'][$category_id]) -10;
+		if ($counter <0) $counter ='0';
+		for ($i=$counter;$i < count($documents['docs_in_zone'][$category_name]); $i++) {
+			echo '
+			<object><embed src="/openemr/controller.php?document&amp;retrieve&amp;patient_id='.$pid.'&amp;document_id='.$documents['docs_in_zone'][$category_name][$i][id].'&amp;as_file=false" frameborder="0"
+			 type="'.$documents['docs_in_zone'][$category_name][$i]['mimetype'].'" allowscriptaccess="always" allowfullscreen="true" width="800px" height="600px"></embed></object>
+			 ';
+		}
+		}
+		?>		
 	</ul>
 
 	<!-- END AnythingSlider -->
-<?php
+	<center>
+		<?php
+
+  		$output = menu_overhaul_left($pid,$encounter);
+    	echo $output;
+		?>
+	</center>
+	<?php
     if ($display=="fullscreen") { 
-      // trial fullscreen will lead to tablet versions and bootstrap menu overhaul
-      // this function is in php/eye_mag_functions.php
+       // this function is in php/".$form_name."_functions.php
       $output = menu_overhaul_bottom($pid,$encounter);
-     // echo $output;
+      echo $output;
     }
     ?>
-</body>
-
+	</body>
 </html>
