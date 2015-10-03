@@ -113,6 +113,8 @@ function getDocListByEncID($encounter,$raw_encounter_date,$pid){
 			}
 			$docTitle = ( $note ) ? $note : xla("View document");
 
+      if ($documentrow['name'] == 'Drawings') continue;
+      
 			$docHref = $GLOBALS['webroot']."/controller.php?document&view&patient_id=".attr($pid)."&doc_id=".attr($documentrow['id']);
 			echo "<div class='text docrow' id='" . attr($documentrow['id'])."' title='". $docTitle . "'>\n";
 			echo "<a href='$docHref' onclick='top.restoreSession()' >". xlt('Document') . ": " . text(basename($documentrow['url'])) . ' (' . text(xl_document_category($documentrow['name'])) . ')' . "</a>";
@@ -395,6 +397,7 @@ if (!$billing_view) {
     $query .= "AND d.list_id = ? ";
     $queryarr[] = $issue;
   }
+  $query .= "AND c.name != 'Drawings' ";
   $query .= "ORDER BY d.docdate DESC, d.id DESC";
   $dres = sqlStatement($query, $queryarr);
   $drow = sqlFetchArray($dres);
