@@ -377,13 +377,13 @@ $(document).ready(function(){
 
 <body class="body_top">
 
-<div id="wrapper" class="leftwrapper" style="width: 700px;">
-<h1 class="heading"><?php echo xlt("Patient Portal"); ?></h1>
+<div id="wrapper" class="lefttop" style="width: 700px;">
+<h2 class="heading"><?php echo xlt("Patient Portal"); ?></h2>
 
 <?php
  $result = getPatientData($pid);
 ?>
-<?php echo xlt('Welcomes'); ?> <b><?php echo text($result['fname']." ".$result['lname']); ?></b>
+<?php echo xlt('Welcome'); ?> <b><?php echo text($result['fname']." ".$result['lname']); ?></b>
 
 <div style='margin-top:10px'> <!-- start main content div -->
  <table border="0" cellspacing="0" cellpadding="0" width="100%">
@@ -705,5 +705,6 @@ expand_collapse_widget($widgetTitle, $widgetLabel, $widgetButtonLabel,
 
 <input type="button" style="text-align: right;" value="<?php echo xla('Change Password'); ?>" onclick="window.location = '<?php echo $landingpage."&password_update=1";?>'"/>
 
+</div>
 </body>
 </html>

@@ -2,12 +2,11 @@
 /*
  * Download documents from OpenEMR to the patient portal in a zip file(get_patient_documents.php)
  *
-* This program is used to download patient documents in a zip file in the Patient Portal.
+ * This program is used to download patient documents in a zip file in the Patient Portal.
  * The original author did not pursue this but I thought it would be a good addition to 
  * the patient portal 
  * 
  * Copyright (C) 2015 Terry Hill <terry@lillysystems.com> 
- * 
  * Copyright (C) 2012 Giorgos Vasilakos <giorg.vasilakos@gmail.com>
  *
  * LICENSE: This program is free software; you can redistribute it and/or 
@@ -25,8 +24,6 @@
  * @author Terry Hill <terry@lilysystems.com> 
  * @author Giorgos Vasilakos <giorg.vasilakos@gmail.com>
  * @link http://www.open-emr.org 
- *
- * Please help the overall project by sending changes you make to the authors and to the OpenEMR community.
  * 
  */
     
@@ -36,7 +33,7 @@
     use C_Document;
 	
 	// get the temporary folder
-    $tmp = $GLOBALS['temporary_files_dir'];
+	$tmp = $GLOBALS['temporary_files_dir'];
 	// get all the documents of the patient
 	$sql = "SELECT url, id, mimetype FROM `documents` WHERE `foreign_id` = ?";
 	$fres = sqlStatement($sql, array($pid));
@@ -68,28 +65,27 @@
 		}
 
 		// copy the document
-        $documentId = $file['id'];
-        $obj = new \C_Document();
-        $document = $obj->retrieve_action("", $documentId, true, true, true);
-        if($document){
+		$documentId = $file['id'];
+		$obj = new \C_Document();
+		$document = $obj->retrieve_action("", $documentId, true, true, true);
+		if ($document) {
 			$pos = strpos(substr($file['url'], -5), '.');
 			// check if has an extension or find it from the mimetype
-			if ($pos === false) 
+			if ($pos === false) {
 				$file['url'] = $file['url'].get_extension($file['mimetype']);
+			}
 			$dest = $tmp."/".$pid."/".$path."/".convert_safe_file_dir_name(basename($file['url']));
-          if(file_exists($dest} {
-            $x = 1;
-            do {
-            $dest = ."/".$pid."/".$path."/". $x ."_".convert_safe_file_dir_name(basename($file['url']));
-            $x++;
-            } while (file_exists($dest);
-          {
-          else }
-            file_put_contents($dest,$document);
-          {
-        }
+			if (file_exists($dest)) {
+				$x = 1;
+				do {
+					$dest = $tmp."/".$pid."/".$path."/". $x ."_".convert_safe_file_dir_name(basename($file['url']));
+					$x++;
+				} while (file_exists($dest));
+			}
+			file_put_contents($dest,$document);
+		}
 		else {
-				echo xlt("Can't find file!")."<br />";
+			echo xlt("Can't find file!")."<br />";
 		}
 	}
 	

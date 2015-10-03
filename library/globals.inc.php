@@ -1664,10 +1664,10 @@ $GLOBALS_METADATA = array(
     ),
 
     'portal_onsite_document_download' => array(
-      xl('Enable Patient Portal Document Download'),
+      xl('Enable Onsite Patient Portal Document Download'),
       'bool',                           // data type
       '1',
-      xl('Enables the ability to download documents in the Patient Portal by the user.')
+      xl('Enables the ability to download documents in the Onsite Patient Portal by the user.')
     ),
     
     'portal_offsite_enable' => array(
