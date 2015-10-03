@@ -8,6 +8,27 @@
 include_once("../globals.php");
 include_once("$srcdir/registry.inc");
 include_once("$srcdir/sql.inc");
+
+//we need to do/undo a few things for the eye form
+$form = getRegistryEntry($id);
+if (($form['name'] == "Eye Exam") && ($_GET['method'] =="disable")) {
+	//Delete the Eye categories
+	remove_EYE_document_categories();
+	//we need to remove the eye codes from the fee sheet.
+	$query = "DELETE from `fee_sheet_options` where `fs_category` = '9Eye'";
+	sqlQuery($query);
+}
+if (($form['name'] == "Eye Exam") && ($_GET['method'] =="enable")) {
+	//Add the Eye categories
+	add_EYE_document_categories();
+	//Add the eye codes to the fee sheet.
+	$query = "INSERT INTO `fee_sheet_options` (`fs_category`, `fs_option`, `fs_codes`) VALUES
+							('9Eye', '1New Intermediate', 'CPT4|92002|'),
+							('9Eye', '2New Comprehensive', 'CPT4|92004|'),
+							('9Eye', '3Established Intermediate', 'CPT4|92012|'),
+							('9Eye', '4Established Comprehensive', 'CPT4|92014|')";
+	sqlQuery($query);
+}
 if ($_GET['method'] == "enable"){
 	updateRegistered ( $_GET['id'], "state=1" );
 }
@@ -28,6 +49,88 @@ $bigdata = getRegistered("%") or $bigdata = false;
 
 $formtarget = $GLOBALS['concurrent_layout'] ? "" : " target='Main'";
 
+function add_EYE_document_categories() {
+    // The Eye Form creates two subcategories under 'Medical Record': 'Eye - Imaging' and 'Encounters' if they are not present.  
+    // If Eye-Imaging is not here, then this function is run.
+    // If Imaging_ID == 1, the use has created an "Eye - Imaging" Category already there is a conflict, so move along.
+    $query = "select id from categories where name = 'Eye - Imaging'";
+    $result = sqlStatement($query);
+    $ID = sqlFetchArray($result);
+    $Imaging_ID = $ID['id'];
+    if ($Imaging_ID < '1') {
+        // The categories belong under Medical Record
+        // In the base install as of today (03/17/16) this Medical Record category = 3, but it may not be true later...
+        // So get it for this installation...
+        $query = "select id from categories where name = 'Medical Record'";
+        $result = sqlStatement($query);
+        $ID = sqlFetchArray($result);
+        $medical_record = $ID['id'];
+       
+        sqlQuery("INSERT INTO categories (select (select MAX(id) from categories) + 1, 'Eye - Imaging', '', ". $medical_record ." , rght, rght + 1 from categories where name = 'Categories')");
+        sqlQuery("UPDATE categories SET rght = rght + 2 WHERE name = 'Categories'");
+        sqlQuery("UPDATE categories SET rght = rght + 2 WHERE name = 'Medical Record'");
+        sqlQuery("INSERT INTO categories (select (select MAX(id) from categories) + 1, 'Communication', '', '".$medical_record."', rght, rght + 1 from categories where name = 'Categories')");
+        sqlQuery("UPDATE categories SET rght = rght + 2 WHERE name = 'Categories'");
+        sqlQuery("UPDATE categories SET rght = rght + 2 WHERE name = 'Medical Record'");
+        sqlQuery("INSERT INTO categories (select (select MAX(id) from categories) + 1, 'Encounters', '', '".$medical_record."', rght, rght + 1 from categories where name = 'Categories')");
+        sqlQuery("UPDATE categories SET rght = rght + 2 WHERE name = 'Categories'");
+        sqlQuery("UPDATE categories SET rght = rght + 2 WHERE name = 'Medical Record'");
+        
+        // Now find out what Document->Medical Record->Eye - Imaging's 'id' is,
+        // So we can add the categories which fall under Imaging.
+        $query = "select id from categories where name = 'Eye - Imaging' and parent=?";
+        $result = sqlStatement($query,array($medical_record));
+        $ID = sqlFetchArray($result);
+        $imaging = $ID['id'];
+
+        sqlQuery("INSERT INTO categories select (select MAX(id) from categories) + 1,'External Photos','EXT','".$imaging."',rght, rght + 1 from categories where name = 'Imaging' and parent='".$medical_record."'");
+        sqlQuery("UPDATE categories SET rght = rght + 2 WHERE name = 'Categories'");
+        sqlQuery("UPDATE categories SET rght = rght + 2 WHERE name = 'Medical Record'");
+        sqlQuery("UPDATE categories SET rght = rght + 2 WHERE name = 'Imaging'");
+        sqlQuery("INSERT INTO categories select (select MAX(id) from categories) + 1,'AntSeg Photos','ANTSEG','".$imaging."',rght, rght + 1 from categories where name = 'Imaging' and parent='".$medical_record."'");
+        sqlQuery("UPDATE categories SET rght = rght + 2 WHERE name = 'Categories'");
+        sqlQuery("UPDATE categories SET rght = rght + 2 WHERE name = 'Medical Record'");
+        sqlQuery("UPDATE categories SET rght = rght + 2 WHERE name = 'Imaging'");
+        sqlQuery("INSERT INTO categories select (select MAX(id) from categories) + 1,'US/Biometry','POSTSEG','".$imaging."',rght, rght + 1 from categories where name = 'Imaging' and parent='".$medical_record."'");
+        sqlQuery("UPDATE categories SET rght = rght + 2 WHERE name = 'Categories'");
+        sqlQuery("UPDATE categories SET rght = rght + 2 WHERE name = 'Medical Record'");
+        sqlQuery("UPDATE categories SET rght = rght + 2 WHERE name = 'Imaging'");
+        sqlQuery("INSERT INTO categories select (select MAX(id) from categories) + 1,'Drawings','DRAW','".$imaging."',rght, rght + 1 from categories where name = 'Imaging' and parent='".$medical_record."'");
+        sqlQuery("UPDATE categories SET rght = rght + 2 WHERE name = 'Categories'");
+        sqlQuery("UPDATE categories SET rght = rght + 2 WHERE name = 'Medical Record'");
+        sqlQuery("UPDATE categories SET rght = rght + 2 WHERE name = 'Imaging'");
+        sqlQuery("INSERT INTO categories select (select MAX(id) from categories) + 1,'VF','NEURO','".$imaging."',rght, rght + 1 from categories where name = 'Imaging' and parent='".$medical_record."'");
+        sqlQuery("UPDATE categories SET rght = rght + 2 WHERE name = 'Categories'");
+        sqlQuery("UPDATE categories SET rght = rght + 2 WHERE name = 'Medical Record'");
+        sqlQuery("UPDATE categories SET rght = rght + 2 WHERE name = 'Imaging'");
+        sqlQuery("INSERT INTO categories select (select MAX(id) from categories) + 1,'Radiology','NEURO','".$imaging."',rght, rght + 1 from categories where name = 'Imaging' and parent='".$medical_record."'");
+        sqlQuery("UPDATE categories SET rght = rght + 2 WHERE name = 'Categories'");
+        sqlQuery("UPDATE categories SET rght = rght + 2 WHERE name = 'Medical Record'");
+        sqlQuery("UPDATE categories SET rght = rght + 2 WHERE name = 'Imaging'");
+        sqlQuery("INSERT INTO categories select (select MAX(id) from categories) + 1,'FA/ICG','POSTSEG','".$imaging."',rght, rght + 1 from categories where name = 'Imaging' and parent='".$medical_record."'");
+        sqlQuery("UPDATE categories SET rght = rght + 2 WHERE name = 'Categories'");
+        sqlQuery("UPDATE categories SET rght = rght + 2 WHERE name = 'Medical Record'");
+        sqlQuery("UPDATE categories SET rght = rght + 2 WHERE name = 'Imaging'");
+        sqlQuery("INSERT INTO categories select (select MAX(id) from categories) + 1,'OCT','POSTSEG','".$imaging."',rght, rght + 1 from categories where name = 'Imaging' and parent='".$medical_record."'");
+        sqlQuery("UPDATE categories SET rght = rght + 2 WHERE name = 'Categories'");
+        sqlQuery("UPDATE categories SET rght = rght + 2 WHERE name = 'Medical Record'");
+        sqlQuery("UPDATE categories SET rght = rght + 2 WHERE name = 'Imaging'");
+        sqlQuery("INSERT INTO categories select (select MAX(id) from categories) + 1,'Optic Disc','POSTSEG','".$imaging."',rght, rght + 1 from categories where name = 'Imaging' and parent='".$medical_record."'");
+        sqlQuery("UPDATE categories SET rght = rght + 2 WHERE name = 'Categories'");
+        sqlQuery("UPDATE categories SET rght = rght + 2 WHERE name = 'Medical Record'");
+        sqlQuery("UPDATE categories SET rght = rght + 2 WHERE name = 'Imaging'");
+        sqlQuery("INSERT INTO categories select (select MAX(id) from categories) + 1,'Fundus','POSTSEG','".$imaging."',rght, rght + 1 from categories where name = 'Imaging' and parent='".$medical_record."'");
+        sqlQuery("UPDATE categories SET rght = rght + 2 WHERE name = 'Categories'");
+        sqlQuery("UPDATE categories SET rght = rght + 2 WHERE name = 'Medical Record'");
+        sqlQuery("UPDATE categories SET rght = rght + 2 WHERE name = 'Imaging'");
+        sqlQuery("UPDATE categories_seq SET id = (select MAX(id) from categories)");
+    }   
+}
+
+function remove_EYE_document_categories() {
+	//do we really want to do this or should we make the end user do it manually?
+	return;
+}
 //START OUT OUR PAGE....
 ?>
 <html>

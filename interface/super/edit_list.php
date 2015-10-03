@@ -2,7 +2,7 @@
 /**
  * Administration Lists Module.
  *
- * Copyright (C) 2007-2015 Rod Roark <rod@sunsetsystems.com>
+ * Copyright (C) 2007-2014 Rod Roark <rod@sunsetsystems.com>
  *
  * LICENSE: This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -303,15 +303,30 @@ function writeOptionLine($option_id, $title, $seq, $default, $value, $mapping=''
        htmlspecialchars($seq, ENT_QUOTES) . "' size='4' maxlength='10' class='optin' />";
   echo "</td>\n";
 
-  echo "  <td align='center' class='optcell'>";
-  echo "<input type='checkbox' name='opt[$opt_line_no][default]' value='1' " .
-    "onclick='defClicked($opt_line_no)' class='optin'$checked />";
-  echo "</td>\n";
-
-  echo "  <td align='center' class='optcell'>";
-  echo "<input type='checkbox' name='opt[$opt_line_no][activity]' value='1' " .
-    " class='optin'$checked_active />";
-  echo "</td>\n";
+  if (!preg_match('/^Eye\_QP/',$list_id)) {
+    echo "  <td align='center' class='optcell'>";
+    echo "<input type='checkbox' name='opt[$opt_line_no][default]' value='1' " .
+      "onclick='defClicked($opt_line_no)' class='optin'$checked />";
+    echo "</td>\n";
+    echo "  <td align='center' class='optcell'>";
+    echo "<input type='checkbox' name='opt[$opt_line_no][activity]' value='1' " .
+      " class='optin'$checked_active />";
+    echo "</td>\n";
+  } else {
+    echo "  <td align='center' class='optcell'>";
+    echo "<select name='opt[$opt_line_no][activity]' class='optin'>";
+    foreach (array(
+      0 => xl('Add'),
+      1 => xl('Replace'),
+      2 => xl('Append'),
+    ) as $key => $desc) {
+      echo "<option value='$key'";
+      if ($key == $active) echo " selected";
+      echo ">" . text($desc) . "</option>";
+    }
+    echo "</select>";
+    echo "</td>\n";
+  }
 
   // Tax rates, contraceptive methods and LBF names have an additional attribute.
   //
@@ -410,17 +425,28 @@ function writeOptionLine($option_id, $title, $seq, $default, $value, $mapping=''
       "onclick='defClicked($opt_line_no)' class='optin'$checked_tog2 />";
     echo "</td>\n";
   }
+  if (preg_match('/^Eye\_QP/',$list_id)) {
+    echo "  <td align='center' class='optcell'>";
+    echo "<input type='text' name='opt[$opt_line_no][mapping]' value='" .
+        attr($mapping) . "' size='12' maxlength='15' class='optin' />";
+    echo "</td>\n";
+    echo "  <td align='center' class='optcell'>";
+    echo "<input type='text' name='opt[$opt_line_no][subtype]' value='" .
+        attr($subtype) . "' size='12' maxlength='15' class='optin' />";
+    echo "</td>\n";
+  }
+ 
   echo "  <td align='center' class='optcell'>";
   echo "<input type='text' name='opt[$opt_line_no][codes]' title='" .
       xla('Clinical Term Code(s)') ."' value='" .
       htmlspecialchars($codes, ENT_QUOTES) . "' onclick='select_clin_term_code(this)' size='25' maxlength='255' class='optin' />";
   echo "</td>\n";
-
   if (preg_match('/_issue_list$/',$list_id)) {
     echo "  <td align='center' class='optcell'>";
     echo generate_select_list("opt[$opt_line_no][subtype]", 'issue_subtypes', $subtype, 'Subtype',' ', 'optin');
     echo "</td>\n";
   }
+
   echo " </tr>\n";
 }
 
@@ -904,6 +930,16 @@ while ($row = sqlFetchArray($res)) {
   } ?>
   <td><b><?php echo xlt('Style'); ?></b></td>
   <td><b><?php echo xlt('Force Show'); ?></b></td>
+<?php } else if (preg_match('/^Eye\_QP/',$list_id)) {
+  ?>
+  <td><b><?php echo xlt('UniqueID'); ?></b></td>
+  <td><b><?php echo xlt('QP Text'); ?></b></td>
+  <td><b><?php echo xlt('Order'); ?></b></td>
+  <td><b><?php echo xlt('Add').",<br />".xlt('Replace')." ".xlt('or')."<br />".xlt('Append'); ?></b></td>
+  <td><b><?php echo xlt('Display Text'); ?></b></td>
+  <td><b><?php echo xlt('LOCATION'); ?></b></td>
+  <td><b><?php echo xlt('Laterality'); ?></b></td>
+  <td><b><?php echo xlt('Code'); ?></b></td>
 <?php } else { ?>
   <td title=<?php xl('Click to edit','e','\'','\''); ?>><b><?php  xl('ID','e'); ?></b></td>
   <td><b><?php xl('Title'  ,'e'); ?></b></td>	
@@ -914,7 +950,7 @@ while ($row = sqlFetchArray($res)) {
   <td><b><?php xl('Order'  ,'e'); ?></b></td>
   <td><b><?php xl('Default','e'); ?></b></td>
   <td><b><?php xl('Active','e'); ?></b></td>
- <?php if ($list_id == 'taxrate') { ?>
+<?php if ($list_id == 'taxrate') { ?>
   <td><b><?php xl('Rate'   ,'e'); ?></b></td>
 <?php } else if ($list_id == 'contrameth') { ?>
   <td><b><?php xl('Effectiveness','e'); ?></b></td>

@@ -41,6 +41,7 @@ $billing_facility = (isset($_POST['billing_facility']))     ? $_POST['billing_fa
 $reason           = (isset($_POST['reason']))               ? $_POST['reason'] : '';
 $mode             = (isset($_POST['mode']))                 ? $_POST['mode'] : '';
 $referral_source  = (isset($_POST['form_referral_source'])) ? $_POST['form_referral_source'] : '';
+$provider_id      = (isset($_POST['form_provider']))        ? $_POST['form_provider'] : '';
 
 $facilityresult = sqlQuery("select name FROM facility WHERE id = ?", array($facility_id));
 $facility = $facilityresult['name'];
@@ -54,7 +55,9 @@ $nexturl = $normalurl;
 
 if ($mode == 'new')
 {
-  $provider_id = $userauthorized ? $_SESSION['authUserID'] : 0;
+  if ($provider_id =='') {
+    $provider_id = $userauthorized ? $_SESSION['authUserID'] : 0;
+  }
   $encounter = generate_id();
   addForm($encounter, "New Patient Encounter",
     sqlInsert("INSERT INTO form_encounter SET " .
@@ -91,7 +94,8 @@ else if ($mode == 'update')
     "facility_id = '" . add_escape_custom($facility_id) . "', " .
     "billing_facility = '" . add_escape_custom($billing_facility) . "', " .
     "sensitivity = '" . add_escape_custom($sensitivity) . "', " .
-    "referral_source = '" . add_escape_custom($referral_source) . "' " .
+    "referral_source = '" . add_escape_custom($referral_source) . "', " .
+    "provider_id = '" . add_escape_custom($provider_id) . "' " .
     "WHERE id = '" . add_escape_custom($id) . "'");
 }
 else {

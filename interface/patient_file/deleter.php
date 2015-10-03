@@ -64,6 +64,22 @@ require_once dirname(__FILE__) . '/../../library/classes/CouchDB.class.php';
    $query = "DELETE FROM $table WHERE $where";
    echo text($query) . "<br>\n";
    sqlStatement($query);
+//close this pop-up?
+//update the issues without a full page reload?
+   echo "
+  <html><body><script language='JavaScript'>\n";
+  if ($info_msg) echo " alert('$info_msg');\n";
+
+  echo " var myboss = opener ? opener : parent;\n";
+  echo " if (myboss.refreshIssue) myboss.refreshIssue($issue,'$tmp_title');\n";
+  echo " else if (myboss.reloadIssues) myboss.reloadIssues();\n";
+  echo " else myboss.location.reload();\n";
+  echo " if (parent.$ && parent.$.fancybox) parent.$.fancybox.close();\n";
+  echo " else window.close();\n";
+
+  echo "</script></body></html>\n";
+  exit();// echo "<script>window.close();</script>"; 
+   // exit;
   }
  }
 
