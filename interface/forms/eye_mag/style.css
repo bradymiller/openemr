@@ -100,7 +100,10 @@ text_clinical th {
 }
 
 
-
+.loading {
+    margin: 0 auto;width:180px;text-align: center;font-size:1.0em;
+    height:180px;
+}
 
 textarea.ACT { 
     border: none; 

@@ -282,7 +282,7 @@ require_once("$incdir/patient_file/encounter/new_form.php");
     
           <!-- start    HPI Zone -->
             <!-- start    HPI spinner -->
-          <div style="margin: 0 auto;width:10px;text-align: center;font-size:1.0em;" class="" id="HPI_sections_loading" 
+          <div class="loading" id="HPI_sections_loading" 
               name="HPI_sections_loading">
                <i class="fa fa-spinner fa-spin"></i>
           </div> 
@@ -726,7 +726,7 @@ require_once("$incdir/patient_file/encounter/new_form.php");
           <br />
           
             <!-- start of the clinical BOX -->
-          <div style="margin: 0 auto;width:10px;text-align: center;font-size:1.0em;" class="" id="LayerTechnical_sections_loading" 
+          <div class="loading" id="LayerTechnical_sections_loading" 
                 name="LayerTechnical_sections_loading">
                  <i class="fa fa-spinner fa-spin"></i>
           </div> 
@@ -1086,10 +1086,10 @@ require_once("$incdir/patient_file/encounter/new_form.php");
                   </div> 
                   <!-- end of slide down pupils_panel --> 
                   
-         
+         &nbsp;
 
             <!-- start of the refraction box -->
-          <div style="margin: 0 auto;width:10px;text-align: center;font-size:1.0em;" class="" id="EXAM_sections_loading" 
+          <div class="loading" id="EXAM_sections_loading" 
             name="REFRACTION_sections_loading">
              <i class="fa fa-spinner fa-spin"></i>
           </div> 
@@ -1442,7 +1442,7 @@ require_once("$incdir/patient_file/encounter/new_form.php");
 
                             <?php ($ADDITIONAL==1) ? ($display_Add = "display") : ($display_Add = "nodisplay"); ?>
                             <div id="LayerVision_ADDITIONAL" class="refraction borderShadow <?php echo $display_Add; ?>">
-                                <span title="<?php echo attr("Dispense Rx"); ?>" title="<?php echo attr('Close and make this a Preference'); ?>" class="closeButton fa  fa-close" id="Close_ADDITIONAL" name="Close_ADDITIONAL"></span>
+                                <span title="<?php echo xla("Dispense Rx"); ?>" title="<?php echo xla('Close and make this a Preference'); ?>" class="closeButton fa  fa-close" id="Close_ADDITIONAL" name="Close_ADDITIONAL"></span>
 
                                 <table id="Additional">
                                     <th colspan=9><?php echo xlt('Additional Data Points'); ?></th>
@@ -1456,20 +1456,20 @@ require_once("$incdir/patient_file/encounter/new_form.php");
                                         <td><?php echo xlt('Axis'); ?></td>
                                       </tr>
                                     <tr><td><b><?php echo xlt('OD'); ?>:</b></td>
-                                        <td><input type=text id="PHODVA" name="PHODVA" value="<?php echo attr($PHODVA); ?>"></td>
-                                        <td><input type=text id="PAMODVA" name="PAMODVA" value="<?php echo attr($PAMODVA); ?>"></td>
-                                        <td><input type=text id="LIODVA" name="LIODVA"  title="test" value="<?php echo attr($LIODVA); ?>"></td>
-                                        <td><input type=text id="GLAREODVA" name="GLAREODVA" value="<?php echo attr($GLAREODVA); ?>"></td>
+                                        <td><input type=text id="PHODVA" name="PHODVA" title="<?php echo xla('Pinhole Vision'); ?>" value="<?php echo attr($PHODVA); ?>"></td>
+                                        <td><input type=text id="PAMODVA" name="PAMODVA" title="<?php echo xla('Potential Acuity Meter'); ?>" value="<?php echo attr($PAMODVA); ?>"></td>
+                                        <td><input type=text id="LIODVA" name="LIODVA"  title="<?php echo xla('Laser Interferometry'); ?>" value="<?php echo attr($LIODVA); ?>"></td>
+                                        <td><input type=text id="GLAREODVA" name="GLAREODVA" title="<?php echo xla('Brightness Acuity Testing'); ?>" value="<?php echo attr($GLAREODVA); ?>"></td>
                                         <td><input type=text id="ODK1" name="ODK1" value="<?php echo attr($ODK1); ?>"></td>
                                         <td><input type=text id="ODK2" name="ODK2" value="<?php echo attr($ODK2); ?>"></td>
                                         <td><input type=text id="ODK2AXIS" name="ODK2AXIS" value="<?php echo attr($ODK2AXIS); ?>"></td>
                                     </tr>
                                     <tr>
                                         <td><b><?php echo xlt('OS'); ?>:</b></td>
-                                        <td><input type=text id="PHOSVA" name="PHOSVA" value="<?php echo attr($PHOSVA); ?>"></td>
-                                        <td><input type=text id="PAMOSVA" name="PAMOSVA" value="<?php echo attr($PAMOSVA); ?>"></td>
-                                        <td><input type=text id="LIOSVA" name="LIOSVA" value="<?php echo attr($LIOSVA); ?>"></td>
-                                        <td><input type=text id="GLAREOSVA" name="GLAREOSVA" value="<?php echo attr($GLAREOSVA); ?>"></td>
+                                        <td><input type=text id="PHOSVA" name="PHOSVA" title="<?php echo xla('Pinhole Vision'); ?>" value="<?php echo attr($PHOSVA); ?>"></td>
+                                        <td><input type=text id="PAMOSVA" name="PAMOSVA" title="<?php echo xla('Potential Acuity Meter'); ?>" value="<?php echo attr($PAMOSVA); ?>"></td>
+                                        <td><input type=text id="LIOSVA" name="LIOSVA" title="<?php echo xla('Laser Interferometry'); ?>" value="<?php echo attr($LIOSVA); ?>"></td>
+                                        <td><input type=text id="GLAREOSVA" name="GLAREOSVA" title="<?php echo xla('Brightness Acuity Testing'); ?>" value="<?php echo attr($GLAREOSVA); ?>"></td>
                                         <td><input type=text id="OSK1" name="OSK1" value="<?php echo attr($OSK1); ?>"></td>
                                         <td><input type=text id="OSK2" name="OSK2" value="<?php echo attr($OSK2); ?>"></td>
                                         <td><input type=text id="OSK2AXIS" name="OSK2AXIS" value="<?php echo attr($OSK2AXIS); ?>"></td>
@@ -1548,26 +1548,26 @@ require_once("$incdir/patient_file/encounter/new_form.php");
                                         <td><?php echo xlt('ARNear'); ?></td>
                                         <td><?php echo xlt('MRNear'); ?></td>
                                         <td><?php echo xlt('PAM'); ?></td>
-                                        <td><?php echo xlt('Glare'); ?></td>
+                                        <td><?php echo xlt('BAT'); ?></td>
                                         <td><?php echo xlt('Contrast'); ?></td>
                                     </tr>
                                      <tr><td><b><?php echo xlt('OD'); ?>:</b></td>
-                                        <td><input type=text id="SCNEARODVA" name="SCNEARODVA" value="<?php echo attr($SCNEARODVA); ?>"></td>
-                                        <td><input type=text id="WNEARODVA_copy_brd" name="WNEARODVA_copy_brd" value="<?php echo attr($WNEARODVA); ?>"></td>
-                                        <td><input type=text id="ARNEARODVA_copy_brd" name="ARNEARODVA_copy_brd" value="<?php echo attr($ARNEARODVA); ?>"></td>
-                                        <td><input type=text id="MRNEARODVA_copy_brd" name="MRNEARODVA_copy_brd" value="<?php echo attr($MRNEARODVA); ?>"></td>
-                                        <td><input type=text id="PAMODVA_copy_brd" name="PAMODVA_copy_brd" value="<?php echo attr($PAMODVA); ?>"></td>
-                                        <td><input type=text id="GLAREODVA_copy_brd" name="GLAREODVA_copy_brd" value="<?php echo attr($GLAREODVA); ?>"></td>
-                                        <td><input type=text id="CONTRASTODVA_copy_brd" name="CONTRASTODVA_copy_brd" value="<?php echo attr($CONTRASTODVA); ?>"></td>
+                                        <td><input type=text id="SCNEARODVA" title="<?php echo xla('Near Acuity without Correction'); ?>" name="SCNEARODVA" value="<?php echo attr($SCNEARODVA); ?>"></td>
+                                        <td><input type=text id="WNEARODVA_copy_brd" title="<?php echo xla('Near Acuity with Correction'); ?>" name="WNEARODVA_copy_brd" value="<?php echo attr($WNEARODVA); ?>"></td>
+                                        <td><input type=text id="ARNEARODVA_copy_brd" title="<?php echo xla('Near Acuity AutoRefraction'); ?>" name="ARNEARODVA_copy_brd" value="<?php echo attr($ARNEARODVA); ?>"></td>
+                                        <td><input type=text id="MRNEARODVA_copy_brd" title="<?php echo xla('Near Acuity Manifest Refraction'); ?>" name="MRNEARODVA_copy_brd" value="<?php echo attr($MRNEARODVA); ?>"></td>
+                                        <td><input type=text id="PAMODVA_copy_brd" title="<?php echo xla('Potential Acuity Meter'); ?>" name="PAMODVA_copy_brd" value="<?php echo attr($PAMODVA); ?>"></td>
+                                        <td><input type=text id="GLAREODVA_copy_brd" title="<?php echo xla('Brightness Acuity Testing'); ?>" name="GLAREODVA_copy_brd" value="<?php echo attr($GLAREODVA); ?>"></td>
+                                        <td><input type=text id="CONTRASTODVA_copy_brd" title="<?php echo xla('Contrast Acuity Testing'); ?>" name="CONTRASTODVA_copy_brd" value="<?php echo attr($CONTRASTODVA); ?>"></td>
                                     </tr>
                                     <tr><td><b><?php echo xlt('OS'); ?>:</b></td>
-                                        <td><input type=text id="SCNEAROSVA" name="SCNEAROSVA" value="<?php echo attr($SCNEAROSVA); ?>"></td>
-                                        <td><input type=text id="WNEAROSVA_copy_brd" name="WNEAROSVA_copy_brd" value="<?php echo attr($WNEAROSVA); ?>"></td>
-                                        <td><input type=text id="ARNEAROSVA_copy" name="ARNEAROSVA_copy" value="<?php echo attr($ARNEAROSVA); ?>"></td>
-                                        <td><input type=text id="MRNEAROSVA_copy" name="MRNEAROSVA_copy" value="<?php echo attr($MRNEAROSVA); ?>"></td>
-                                        <td><input type=text id="PAMOSVA_copy_brd" name="PAMOSVA_copy_brd" value="<?php echo attr($PAMOSVA); ?>"></td>
-                                        <td><input type=text id="GLAREOSVA_copy_brd" name="GLAREOSVA_copy_brd" value="<?php echo attr($GLAREOSVA); ?>"></td>
-                                        <td><input type=text id="CONTRASTOSVA" name="CONTRASTOSVA" value="<?php echo attr($CONTRASTOSVA); ?>"></td>
+                                        <td><input type=text id="SCNEAROSVA" title="<?php echo xla('Near Acuity without Correction'); ?>" name="SCNEAROSVA" value="<?php echo attr($SCNEAROSVA); ?>"></td>
+                                        <td><input type=text id="WNEAROSVA_copy_brd" title="<?php echo xla('Near Acuity with Correction'); ?>" name="WNEAROSVA_copy_brd" value="<?php echo attr($WNEAROSVA); ?>"></td>
+                                        <td><input type=text id="ARNEAROSVA_copy" title="<?php echo xla('Near Acuity AutoRefraction'); ?>" name="ARNEAROSVA_copy" value="<?php echo attr($ARNEAROSVA); ?>"></td>
+                                        <td><input type=text id="MRNEAROSVA_copy" title="<?php echo xla('Near Acuity Manifest Refraction'); ?>" name="MRNEAROSVA_copy" value="<?php echo attr($MRNEAROSVA); ?>"></td>
+                                        <td><input type=text id="PAMOSVA_copy_brd" title="<?php echo xla('Potential Acuity Meter'); ?>" name="PAMOSVA_copy_brd" value="<?php echo attr($PAMOSVA); ?>"></td>
+                                        <td><input type=text id="GLAREOSVA_copy_brd" title="<?php echo xla('Brightness Acuity Testing'); ?>" name="GLAREOSVA_copy_brd" value="<?php echo attr($GLAREOSVA); ?>"></td>
+                                        <td><input type=text id="CONTRASTOSVA" title="<?php echo xla('Contrast Acuity Testing'); ?>" name="CONTRASTOSVA" value="<?php echo attr($CONTRASTOSVA); ?>"></td>
                                     </tr>
                                 </table>
                             </div>
@@ -1622,7 +1622,7 @@ require_once("$incdir/patient_file/encounter/new_form.php");
           <!-- end of the exam selection row -->
 
           <!-- Start of the exam sections -->
-          <div style="margin: 0 auto;width:10px;text-align: center;font-size:1.0em;" class="" id="EXAM_sections_loading" name="EXAM_sections_loading">
+          <div class="loading" id="EXAM_sections_loading" name="EXAM_sections_loading">
               <hr></hr>
               <i class="fa fa-spinner fa-spin"></i>
           </div> 
