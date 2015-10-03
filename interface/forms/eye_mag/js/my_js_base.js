@@ -107,7 +107,7 @@ function submit_form() {
                                'form_id'    : $("#form_id").val()
                                 }
                                }).done(function(d) {
-                                       console.log(d);
+                                       //console.log(d);
                                        }
                                        )
                    }
@@ -201,7 +201,7 @@ function finalize() {
            type 		: 'POST',
            url          : url,
            data 		: formData }).done(function(o) {
-                                        console.log(o);
+                                           //console.log(o);
                                            $("#tellme").html(o);
                                            });
 }
@@ -409,7 +409,7 @@ function show_PRIORS() {
     $("#RETINA_right").addClass('canvas');
     $("#NEURO_right").addClass('canvas');
     $(".PRIORS_class").removeClass('nodisplay');
-    $(document).scrollTop( $("#clinical_anchor").offset().top );
+    $(document).scrollTop( $("#EXT_anchor").offset().top -50);
     if ($("#PREFS_CLINICAL").val() !='1') {
             // we want to show text_only which are found on left half
         $("#PREFS_CLINICAL").val('1');
@@ -1135,7 +1135,7 @@ $(document).ready(function() {
                   }
                   $("[id$='_kb']").click(function() {
                                          $('.kb').toggleClass('nodisplay');
-                                         if ($("#PREFS_KB").value !='0') {
+                                         if ($("#PREFS_KB").value > 0) {
                                          $("#PREFS_KB").val('0');
                                          } else {
                                          $("#PREFS_KB").val('1');
@@ -1156,7 +1156,8 @@ $(document).ready(function() {
                                                                    // triggered by the enter key
                                                                    // fieldnumbers can be entered individually, followed by "RETURN/ENTER" each time OR
                                                                    // separated by semicolons, then hit enter.  Semi-colons speed it up.
-                                                                   if (e.which == 13|| e.keyCode == 13) {  //if its not the enter key, ignore it.
+                                                                    //if its not the enter or TAB key, ignore it.
+                                                                   if (e.which == 13|| e.keyCode == 13||e.which == 9|| e.keyCode == 9) {
                                                                    e.preventDefault();
                                                                    var exam = this.id.match(/(.*)_keyboard/)[1];
                                                                    var data_all = $(this).val();
@@ -1170,7 +1171,7 @@ $(document).ready(function() {
                                                                    case 'ALL':
                                                                    for (index=0; index < data_seg.length; ++index) {
                                                                        if (data_seg[index] =='') continue;
-                                                                           if ((index =='0') && (data_seg[index].match(/^D/i))) {
+                                                                   if ((index =='0') && (data_seg[index].match(/^D($|;)/i))) {
                                                                            $("#EXT_defaults").trigger("click");
                                                                            $("#ANTSEG_defaults").trigger("click");
                                                                            $("#RETINA_defaults").trigger("click");
@@ -1179,7 +1180,7 @@ $(document).ready(function() {
                                                                        }
                                                                        data_seg[index] = data_seg[index].replace(/^[\s]*/,'');
                                                                        var data = data_seg[index].match(/^(\w*)\.?(.*)/);
-                                                                       (data[2].match(/\.a$/))?(data[1] = data[2].replace(/\.a$/,'')):(appendix = "nope");
+                                                                       (data[2].match(/\.a$/))?(data[2] = data[2].replace(/\.a$/,'')):(appendix = "nope");
                                                                    
                                                                        var field = data[1].toUpperCase();
                                                                        var text = data[2];
@@ -1934,7 +1935,6 @@ $(document).ready(function() {
                                            $("#NEURO_field_"+ newValue).addClass("eye_button_selected");
                                            $('.ACT').each(function(i){
                                                           var color = $(this).css('background-color');
-                                                          //alert ($(this).title);
                                                           if ((color == 'rgb(255, 255, 153)')) {// =='blue' <- IE hack
                                                           $(this).css("background-color","red");
                                                           }
@@ -1978,7 +1978,6 @@ $(document).ready(function() {
                                            var number = $("#NEURO_field").val();
                                            var zone = $("#NEURO_ACT_zone").val();
                                            var strab = $("#NEURO_value").val() + ' '+ $("#NEURO_side").val() + $("#NEURO_ACT_strab").val();
-                                           //alert(number + ' ' +zone +' '+strab);
                                            
                                            $("#ACT"+number+zone).val(strab).css("background-color","#F0F8FF");
                                            
@@ -2322,7 +2321,7 @@ $(document).ready(function() {
                                                                              update_PREFS();
                                                                              }
                                                                              show_DRAW();
-                                                                             $(document).scrollTop( $("#clinical_anchor").offset().top );
+                                                                             $(document).scrollTop( $("#EXT_anchor").offset().top -50);
                                                                              });
                     $("#EXAM_QP,#PANEL_QP").click(function() {
                                       if ($("#PREFS_CLINICAL").value !='0') {
@@ -2337,7 +2336,7 @@ $(document).ready(function() {
                                       update_PREFS();
                                       }
                                       show_QP();
-                                      $(document).scrollTop( $("#clinical_anchor").offset().top );
+                                      $(document).scrollTop( $("#EXT_anchor").offset().top -50 );
                                       });
                   
                   $("#EXAM_TEXT,#PANEL_TEXT").click(function() {
@@ -2357,7 +2356,7 @@ $(document).ready(function() {
                                         $("#EXAM_QP").removeClass('button_selected');
                                         $("#EXAM_TEXT").addClass('button_selected');
                                         // document.getElementById("LayerTechnical_sections").scrollIntoView();
-                                        $(document).scrollTop( $("#clinical_anchor").offset().top );
+                                        $(document).scrollTop( $("#EXT_anchor").offset().top -50);
                                         });
                   $("[id^='BUTTON_TEXT_']").click(function() {
                                                   var zone = this.id.match(/BUTTON_TEXT_(.*)/)[1];
@@ -2377,6 +2376,9 @@ $(document).ready(function() {
                                                        $("#PREFS_PMH_RIGHT").val(1);
                                                        $("#HPI_right").addClass('nodisplay');
                                                        $("#PREFS_HPI_RIGHT").val(1);
+                                                   if (zone == "PMH") {
+                                                   $(document).scrollTop( $("#"+zone+"_anchor").offset().top - 25);
+                                                   }
 
                                                    } else {
                                                        $("#"+zone+"_right").addClass('nodisplay');
@@ -2566,8 +2568,7 @@ $(document).ready(function() {
                                                          hash_tag = '<i class="fa fa-minus rotate-left"></i>';
                                                          }
                                                          for (index =1; index <= valhere; ++index) {
-                                                         //alert(keyhere+" -- "+valhere);
-                                                         $("#"+keyhere+"_"+index).html(hash_tag);
+                                                            $("#"+keyhere+"_"+index).html(hash_tag);
                                                          }
                                                          }
                                                          });
@@ -2648,9 +2649,9 @@ $(document).ready(function() {
                                                    data 	: formData // our data object
                                                    }).done(function(o) {
                                                                                                                       //nice to flash a "saved" widget in menu bar if fullscreen or elsewhere if not
-                                                           console.log(o);
+                                                           //  console.log(o);
                                                            //if (o == 'locked') {
-                                                           alert("OK.  Now you can edit it!");
+                                                           //  alert("OK.  Now you can edit it!");
                                                            // if yes we send a request to unlock and relock it for us, which may not require the page to refresh...
                                                            //}
                                                           
@@ -2658,15 +2659,6 @@ $(document).ready(function() {
                                                            });
                                              });
                                              
-                  //  window.addEventListener("beforeunload", function () {
-                  //                       alert('in EventListener');
-                  //                          $("#finalize").val('1');
-                  //                      goodBye;
-                  //                       submit_form();
-                                           //   } //else {
-                                          //ok to exit page
-                                          //}
-                  //                      });
                   window.onunload = finalize;
                   window.onbeforeunload = finalize;
                   // set default to ccDist.  Change as desired.
@@ -2675,22 +2667,6 @@ $(document).ready(function() {
                   $("[name$='_sections']").removeClass('nodisplay');
                   
                   $('#left-panel').css("right","0px");
-                  /* $('#sidebar').affix({
-                   offset: {
-                   top: 245
-                   }
-                   });
-                   
-                   var $body   = $(document.body);
-                   var navHeight = $('.navbar').outerHeight(true) + 100;
-                   */
-                  /*  $body.scrollspy({
-                   target: '#leftCol',
-                   offset: navHeight
-                   });
-                   */
-                  
-                  
                   
                   });
 

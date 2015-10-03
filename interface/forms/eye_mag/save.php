@@ -162,40 +162,46 @@ if ($_REQUEST['AJAX_PREFS']) {
 
     $query = "REPLACE INTO form_eye_mag_prefs (PEZONE,LOCATION,LOCATION_text,id,selection,ZONE_ORDER,VALUE,ordering) 
               VALUES 
-              ('PREFS','PMH_RIGHT','PMH DRAW',?,'PMH_RIGHT','71',?,'16') 
+              ('PREFS','PMH_RIGHT','PMH DRAW',?,'PMH_RIGHT','71',?,'17') 
               ";
     sqlQuery($query,array($_SESSION['authId'],$_REQUEST['PREFS_PMH_RIGHT'])); 
     $query = "REPLACE INTO form_eye_mag_prefs (PEZONE,LOCATION,LOCATION_text,id,selection,ZONE_ORDER,VALUE,ordering) 
               VALUES 
-              ('PREFS','EXT_RIGHT','EXT DRAW',?,'EXT_RIGHT','72',?,'16') 
+              ('PREFS','EXT_RIGHT','EXT DRAW',?,'EXT_RIGHT','72',?,'18') 
               ";
     sqlQuery($query,array($_SESSION['authId'],$_REQUEST['PREFS_EXT_RIGHT'])); 
     $query = "REPLACE INTO form_eye_mag_prefs (PEZONE,LOCATION,LOCATION_text,id,selection,ZONE_ORDER,VALUE,ordering) 
               VALUES 
-              ('PREFS','ANTSEG_RIGHT','ANTSEG DRAW',?,'ANTSEG_RIGHT','73',?,'16') 
+              ('PREFS','ANTSEG_RIGHT','ANTSEG DRAW',?,'ANTSEG_RIGHT','73',?,'19') 
               ";
     $result = sqlQuery($query,array($_SESSION['authId'],$_REQUEST['PREFS_ANTSEG_RIGHT'])); 
 
     $query = "REPLACE INTO form_eye_mag_prefs (PEZONE,LOCATION,LOCATION_text,id,selection,ZONE_ORDER,VALUE,ordering) 
               VALUES 
-              ('PREFS','RETINA_RIGHT','RETINA DRAW',?,'RETINA_RIGHT','74',?,'16') 
+              ('PREFS','RETINA_RIGHT','RETINA DRAW',?,'RETINA_RIGHT','74',?,'20') 
               ";
     sqlQuery($query,array($_SESSION['authId'],$_REQUEST['PREFS_RETINA_RIGHT'])); 
     $query = "REPLACE INTO form_eye_mag_prefs (PEZONE,LOCATION,LOCATION_text,id,selection,ZONE_ORDER,VALUE,ordering) 
               VALUES 
-              ('PREFS','NEURO_RIGHT','NEURO DRAW',?,'NEURO_RIGHT','75',?,'16') 
+              ('PREFS','NEURO_RIGHT','NEURO DRAW',?,'NEURO_RIGHT','75',?,'21') 
               ";
     sqlQuery($query,array($_SESSION['authId'],$_REQUEST['PREFS_NEURO_RIGHT'])); 
     $query = "REPLACE INTO form_eye_mag_prefs (PEZONE,LOCATION,LOCATION_text,id,selection,ZONE_ORDER,VALUE,ordering) 
               VALUES 
-              ('PREFS','IMPPLAN_RIGHT','IMPPLAN DRAW',?,'IMPPLAN_RIGHT','76',?,'16') 
+              ('PREFS','IMPPLAN_RIGHT','IMPPLAN DRAW',?,'IMPPLAN_RIGHT','76',?,'22') 
               ";
     sqlQuery($query,array($_SESSION['authId'],$_REQUEST['PREFS_IMPPLAN_RIGHT'])); 
     $query = "REPLACE INTO form_eye_mag_prefs (PEZONE,LOCATION,LOCATION_text,id,selection,ZONE_ORDER,VALUE,ordering) 
               VALUES   
-              ('PREFS','PANEL_RIGHT','PMSFH Panel',?,'PANEL_RIGHT','77',?,'16') 
+              ('PREFS','PANEL_RIGHT','PMSFH Panel',?,'PANEL_RIGHT','77',?,'23') 
               ";
     sqlQuery($query,array($_SESSION['authId'],$_REQUEST['PREFS_PANEL_RIGHT'])); 
+    $query = "REPLACE INTO form_eye_mag_prefs (PEZONE,LOCATION,LOCATION_text,id,selection,ZONE_ORDER,VALUE,ordering) 
+              VALUES   
+              ('PREFS','KB_VIEW','KeyBoard View',?,'KB_VIEW','78',?,'24') 
+              ";
+    sqlQuery($query,array($_SESSION['authId'],$_REQUEST['PREFS_KB'])); 
+
    //echo "HELLOO <br /><br /><br />".$_REQUEST['PREFS_PANEL_RIGHT'];
 }
 /**
