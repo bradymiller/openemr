@@ -1,9 +1,28 @@
 <?php
+/**
+ * THIS MODULE REPLACES cptcm_codes.php, hcpcs_codes.php AND icd9cm_codes.php.
+ * 
+ * Copyright (C) 2015 Terry Hill <terry@lillysystems.com>
+ *
+ * LICENSE: This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version.
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see <http://opensource.org/licenses/gpl-license.php>;.
+ *
+ * @package OpenEMR
+ * @author  Terry Hill <terry@lillysystems.com>
+ * @link    http://www.open-emr.org
+ */
 
-////////////////////////////////////////////////////////////////////////////////
-// THIS MODULE REPLACES cptcm_codes.php, hcpcs_codes.php AND icd9cm_codes.php.
-////////////////////////////////////////////////////////////////////////////////
-
+$sanitize_all_escapes=true;
+$fake_register_globals=false;
+ 
 include_once("../../globals.php");
 include_once("../../../custom/code_types.inc.php");
 include_once("$srcdir/sql.inc");
@@ -34,14 +53,14 @@ $code_type = $_GET['type'];
 
 <td valign=top>
 
-<form name="search_form" id="search_form" method="post" action="search_code.php?type=<?php echo $code_type ?>">
+<form name="search_form" id="search_form" method="post" action="search_code.php?type=<?php echo attr($code_type) ?>">
 <input type="hidden" name="mode" value="search">
 
-<span class="title"><?php echo $code_type ?> <?php xl('Codes','e'); ?></span><br>
+<span class="title"><?php echo attr($code_type) ?> <?php echo xlt('Codes'); ?></span><br>
 
 <input type="textbox" id="text" name="text" size=15>
 
-<input type='submit' id="submitbtn" name="submitbtn" value='<?php xl('Search','e'); ?>'>
+<input type='submit' id="submitbtn" name="submitbtn" value='<?php echo xlt('Search'); ?>'>
 <div id="searchspinner" style="display: inline; visibility:hidden;"><img src="<?php echo $GLOBALS['webroot'] ?>/interface/pic/ajax-loader.gif"></div>
 
 </form>
@@ -49,41 +68,55 @@ $code_type = $_GET['type'];
 <?php
 if (isset($_POST["mode"]) && $_POST["mode"] == "search" && $_POST["text"] == "") {
     echo "<div id='resultsummary' style='background-color:lightgreen;'>";
-    echo "Enter search criteria above</div>";
+    echo xlt('Enter search criteria above') . "</div>";
 }
 
 if (isset($_POST["mode"]) && $_POST["mode"] == "search" && $_POST["text"] != "") {
-  // $sql = "SELECT * FROM codes WHERE (code_text LIKE '%" . $_POST["text"] .
-  //   "%' OR code LIKE '%" . $_POST["text"] . "%') AND code_type = '" .
-  //   $code_types[$code_type]['id'] . "' ORDER BY code LIMIT " . ($M + 1);
+    
+# This code was added to handle the external Data files
+  $procedurecodetype = sqlQuery("SELECT " .
+  "ct_proc, ct_key FROM code_types " .
+  "WHERE ct_key = ? LIMIT 1", array($code_type));
+  $procedure_type = $procedurecodetype['ct_proc'];
 
-  // The above is obsolete now, fees come from the prices table:
+# looking to see if the code_type is a procedure  
+If($procedure_type == '0') {
+  $search = $_POST['text'];
+  $filter_key = $code_type;
+  $res = main_code_set_search($filter_key,$search,NULL,NULL,false,NULL,false,NULL,NULL,$filter_elements);
+}
+else
+{
+  $sqlBindArray = array();
+  # left this to takecare of the non external data files
   $sql = "SELECT codes.*, prices.pr_price FROM codes " .
     "LEFT OUTER JOIN patient_data ON patient_data.pid = '$pid' " .
     "LEFT OUTER JOIN prices ON prices.pr_id = codes.id AND " .
     "prices.pr_selector = '' AND " .
     "prices.pr_level = patient_data.pricelevel " .
-    "WHERE (code_text LIKE '%" . $_POST["text"] . "%' OR " .
-    "code LIKE '%" . $_POST["text"] . "%') AND " .
-    "code_type = '" . $code_types[$code_type]['id'] . "' " .
+    "WHERE (code_text LIKE ? OR " .
+    "code LIKE ? ) AND " .
+    "code_type = ? " .
     "ORDER BY code ".
-    " LIMIT " . ($M + 1).
-    "";
-
-	if ($res = sqlStatement($sql) ) {
+    " LIMIT  ? ";
+    $look_text = '%' . $_POST["text"] . '%';
+    array_push($sqlBindArray,$look_text, $look_text, $code_types[$code_type]['id'], ($M + 1));
+    $res = sqlStatement($sql, $sqlBindArray);
+}
+ 
 		for($iter=0; $row=sqlFetchArray($res); $iter++)
 		{
 			$result[$iter] = $row;
 		}
         echo "<div id='resultsummary' style='background-color:lightgreen;'>";
         if (count($result) > $M) {
-            echo "Showing the first ".$M." results";
+            echo xlt('Showing the first ') .text($M).xlt(' results');
         }
         else if (count($result) == 0) {
-            echo "No results found";
+            echo xlt('No results found');
         }
         else {
-            echo "Showing all ".count($result)." results";
+            echo xlt('Showing all ').attr(count($result)).xlt(' results');
         }
         echo "</div>";
 ?>
@@ -102,22 +135,21 @@ if ($result) {
    
         echo "<div class='oneresult' style='padding: 3px 0px 3px 0px;'>";
         echo "<a target='".xl('Diagnosis')."' href='diagnosis.php?mode=add" .
-            "&type="     . urlencode($code_type) .
-            "&code="     . urlencode($iter{"code"}) .
-            "&modifier=" . urlencode($iter{"modifier"}) .
-            "&units="    . urlencode($iter{"units"}) .
-            // "&fee="      . urlencode($iter{"fee"}) .
-            "&fee="      . urlencode($iter['pr_price']) .
-            "&text="     . urlencode($iter{"code_text"}) .
+            "&type="     . attr(urlencode($code_type)) .
+            "&code="     . attr(urlencode($iter{"code"})) .
+            "&modifier=" . attr(urlencode($iter{"modifier"})) .
+            "&units="    . attr(urlencode($iter{"units"})) .
+            "&fee="      . attr(urlencode($iter['pr_price'])) .
+            "&text="     . attr(urlencode($iter{"code_text"})) .
             "' onclick='top.restoreSession()'>";
-        echo ucwords("<b>" . strtoupper($iter{"code"}) . "&nbsp;" . $iter['modifier'] .
-            "</b>" . " " . strtolower($iter{"code_text"}));
+        echo "<b>" . attr($iter{"code"}) . "&nbsp;" . attr($iter['modifier']) .
+            "</b>" . " " . attr($iter{"code_text"});
         echo "</a><br>\n";
         echo "</div>";
     
         $count++;
         $total++;
-        
+
         if ($total == $M) {
             echo "</span><span class=alert>".xl('Some codes were not displayed.')."</span>\n";
             break;
@@ -128,7 +160,7 @@ if ($result) {
 </td></tr></table>
 </div>
 <?php
-	}
+
 }
 ?>
 
@@ -147,7 +179,6 @@ $(document).ready(function(){
     $("#text").focus();
     $(".oneresult").mouseover(function() { $(this).toggleClass("highlight"); });
     $(".oneresult").mouseout(function() { $(this).toggleClass("highlight"); });
-    //$(".oneresult").click(function() { SelectPatient(this); });
     $("#search_form").submit(function() { SubmitForm(this); });
 });
 
