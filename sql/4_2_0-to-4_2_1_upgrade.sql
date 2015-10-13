@@ -11588,8 +11588,9 @@ ALTER TABLE documents ADD COLUMN  audit_master_id int(11) default NULL;
 
 #IfMissingColumn patient_data religion
 SET @group_name = (SELECT group_name FROM layout_options WHERE field_id='ethnicity' AND form_id='DEM');
+SET @backup_group_name = (SELECT group_name FROM layout_options WHERE field_id='DOB' AND form_id='DEM');
 SET @seq = (SELECT MAX(seq) FROM layout_options WHERE group_name=@group_name AND form_id='DEM');
-INSERT INTO `layout_options` (`form_id`, `field_id`, `group_name`, `title`, `seq`, `data_type`, `uor`, `fld_length`, `max_length`, `list_id`, `titlecols`, `datacols`, `default_value`, `edit_options`, `description`) VALUES ('DEM', 'religion', @group_name, 'Religion', @seq+1, 1, 1, 0, 0, 'religious_affiliation', 1, 3, '', '', 'Patient Religion' ) ;
+INSERT INTO `layout_options` (`form_id`, `field_id`, `group_name`, `title`, `seq`, `data_type`, `uor`, `fld_length`, `max_length`, `list_id`, `titlecols`, `datacols`, `default_value`, `edit_options`, `description`) VALUES ('DEM', 'religion', IFNULL(@group_name,@backup_group_name), 'Religion', IFNULL(@seq,10)+1, 1, 1, 0, 0, 'religious_affiliation', 1, 3, '', '', 'Patient Religion' ) ;
 ALTER TABLE patient_data ADD COLUMN religion varchar(40) NOT NULL default '';
 #EndIf
 
