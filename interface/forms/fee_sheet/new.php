@@ -126,10 +126,6 @@ function echoLine($lino, $codetype, $code, $modifier, $ndc_info='',
   global $code_types, $ndc_applies, $ndc_uom_choices, $justinit, $pid;
   global $contraception, $usbillstyle, $hasCharges;
 
-  if ($provider_id == 0) {
-    $provider_id = 0 + findProvider();
-  }
-
   if ($codetype == 'COPAY') {
     if (!$code_text) $code_text = 'Cash';
     if ($fee > 0) $fee = 0 - $fee;
