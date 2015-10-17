@@ -105,7 +105,7 @@ function contraceptionClass($code_type, $code) {
 # finds the provider in the encounter file or patient file
 function findProvider() {
   global $encounter, $pid;
-  $find_provider = sqlQuery("SELECT provider_id, supervisor_id FROM form_encounter " .
+  $find_provider = sqlQuery("SELECT provider_id FROM form_encounter " .
 		"WHERE pid = ? AND encounter = ? " .
 		"ORDER BY id DESC LIMIT 1", array($pid,$encounter) );
   $providerid = $find_provider['provider_id'];
@@ -126,7 +126,9 @@ function echoLine($lino, $codetype, $code, $modifier, $ndc_info='',
   global $code_types, $ndc_applies, $ndc_uom_choices, $justinit, $pid;
   global $contraception, $usbillstyle, $hasCharges;
 
- $provider_id=findProvider();
+  if ($provider_id == 0) {
+    $provider_id = 0 + findProvider();
+  }
 
   if ($codetype == 'COPAY') {
     if (!$code_text) $code_text = 'Cash';
@@ -1227,10 +1229,10 @@ if ($_POST['newcodes']) {
   }
 }
 
-$tmp = sqlQuery("SELECT provider_id, supervisor_id FROM form_encounter " .
+$tmp = sqlQuery("SELECT supervisor_id FROM form_encounter " .
   "WHERE pid = ? AND encounter = ? " .
   "ORDER BY id DESC LIMIT 1", array($pid,$encounter) );
-$encounter_provid =findProvider();
+$encounter_provid = 0 + findProvider();
 $encounter_supid  = 0 + $tmp['supervisor_id'];
 ?>
 </table>
