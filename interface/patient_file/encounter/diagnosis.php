@@ -1,8 +1,26 @@
 <?php
-// This program is free software; you can redistribute it and/or
-// modify it under the terms of the GNU General Public License
-// as published by the Free Software Foundation; either version 2
-// of the License, or (at your option) any later version.
+/**
+ * 
+ * Copyright (C) 2015 Terry Hill <terry@lillysystems.com>
+ *
+ * LICENSE: This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version.
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see <http://opensource.org/licenses/gpl-license.php>;.
+ *
+ * @package OpenEMR
+ * @author  Terry Hill <terry@lillysystems.com>
+ * @link    http://www.open-emr.org
+ */
+
+$sanitize_all_escapes=true;
+$fake_register_globals=false;
 
 require_once("../../globals.php");
 require_once("$srcdir/billing.inc");
@@ -41,9 +59,9 @@ if (isset($mode)) {
 		// Get the provider ID from the new encounter form if possible, otherwise
 		// it's the logged-in user.
 		$tmp = sqlQuery("SELECT users.id FROM forms, users WHERE " .
-			"forms.pid = '$pid' AND forms.encounter = '$encounter' AND " .
+			"forms.pid = ? AND forms.encounter = ? AND " .
 			"forms.formdir='newpatient' AND users.username = forms.user AND " .
-			"users.authorized = 1");
+			"users.authorized = 1", array($pid, $encounter));
 		$provid = $tmp['id'] ? $tmp['id'] : $_SESSION["authUserID"];
 
 		if (strtolower($type) == "copay") {
@@ -60,8 +78,8 @@ if (isset($mode)) {
       // If HCPCS, get and save default NDC data.
       if (strtolower($type) == "hcpcs") {
         $tmp = sqlQuery("SELECT ndc_info FROM billing WHERE " .
-          "code_type = 'HCPCS' AND code = '$code' AND ndc_info LIKE 'N4%' " .
-          "ORDER BY date DESC LIMIT 1");
+          "code_type = 'HCPCS' AND code = ? AND ndc_info LIKE 'N4%' " .
+          "ORDER BY date DESC LIMIT 1", array($code));
         if (!empty($tmp)) $ndc_info = $tmp['ndc_info'];
       }
       addBilling($encounter, $type, $code, strip_escape_custom($text), $pid, $userauthorized,
@@ -72,6 +90,7 @@ if (isset($mode)) {
 		$diags = $_POST['code']['diag'];
 		$procs = $_POST['code']['proc'];
 		$sql = array();
+        $sqlBindArray = array();
 		if (!empty($procs) && !empty($diags)) {
 			$sql = array();
 			foreach ($procs as $proc) {
@@ -79,13 +98,14 @@ if (isset($mode)) {
 				foreach ($diags as $diag) {
 					$justify_string .= $diag . ":"; 
 				}
-				$sql[] = "UPDATE billing set justify = concat(justify,'" . mysql_real_escape_string($justify_string)  ."') where encounter = '" . mysql_real_escape_string($_POST['encounter_id']) . "' and pid = '" . mysql_real_escape_string($_POST['patient_id']) . "' and code = '" . mysql_real_escape_string($proc) . "'";
+				$sql[] = "UPDATE billing set justify = concat(justify,?) where encounter = ? and pid = ? and code = ?";
+                array_push($sqlBindArray,$justify_string,$_POST['encounter_id'],$_POST['patient_id'],$proc );
 			}
 		
 		}
 		if (!empty($sql)) {
 			foreach ($sql as $q) {
-				$results = sqlQ($q);
+				$results = sqlStatement($q,$sqlBindArray);
 			}
 		}
 
@@ -98,10 +118,10 @@ if (isset($mode)) {
         $ndc_info = 'N4' . trim($ndc['ndcnum']) . '   ' . $ndc['ndcuom'] .
           trim($ndc['ndcqty']);
       }
-      sqlStatement("UPDATE billing SET ndc_info = '$ndc_info' WHERE " .
-        "encounter = '" . mysql_real_escape_string($_POST['encounter_id']) . "' AND " .
-        "pid = '" . mysql_real_escape_string($_POST['patient_id']) . "' AND " .
-        "code = '" . mysql_real_escape_string($ndc['code']) . "'");
+      sqlStatement("UPDATE billing SET ndc_info = ? WHERE " .
+        "encounter = ? AND " .
+        "pid = ? AND " .
+        "code = ?", array($ndc_info, $_POST['encounter_id'], $_POST['patient_id'], $ndc['code']));
     }
 
   }
@@ -139,16 +159,16 @@ function validate(f) {
     }
    }
    if (!ndcok) {
-    alert('<?php xl('Format incorrect for NDC','e') ?> "' + ndc +
-     '", <?php xl('should be like nnnnn-nnnn-nn','e') ?>');
+    alert('<?php echo xls('Format incorrect for NDC') ?> "' + ndc +
+     '", <?php echo xls('should be like nnnnn-nnnn-nn') ?>');
     if (f[pfx+'[ndcnum]'].focus) f[pfx+'[ndcnum]'].focus();
     return false;
    }
    // Check for valid quantity.
    var qty = f[pfx+'[ndcqty]'].value - 0;
    if (isNaN(qty) || qty <= 0) {
-    alert('<?php xl('Quantity for NDC','e') ?> "' + ndc +
-     '" <?php xl('is not valid (decimal fractions are OK).','e') ?>');
+    alert('<?php echo xls('Quantity for NDC') ?> "' + ndc +
+     '" <?php echo xls('is not valid (decimal fractions are OK).') ?>');
     if (f[pfx+'[ndcqty]'].focus) f[pfx+'[ndcqty]'].focus();
     return false;
    }
@@ -168,7 +188,7 @@ function validate(f) {
  $thisauth = acl_check('encounters', 'coding_a');
  if (!$thisauth) {
   $erow = sqlQuery("SELECT user FROM forms WHERE " .
-   "encounter = '$encounter' AND formdir = 'newpatient' LIMIT 1");
+   "encounter = ? AND formdir = 'newpatient' LIMIT 1", array($encounter));
   if ($erow['user'] == $_SESSION['authUser'])
    $thisauth = acl_check('encounters', 'coding');
  }
@@ -195,8 +215,8 @@ function validate(f) {
 <dl>
 <dt>
 <a href="diagnosis_full.php" target="<?php echo $target; ?>" onclick="top.restoreSession()">
-<span class=title><?php echo ($GLOBALS['phone_country_code'] == '1') ? xl('Billing') : xl('Coding'); ?></span>
-<font class=more><?php echo $tmore;?></font></a>
+<span class=title><?php echo ($GLOBALS['phone_country_code'] == '1') ? xlt('Billing') : xlt('Coding'); ?></span>
+<font class=more><?php echo attr($tmore);?></font></a>
 
 <?php
 if( !empty( $_GET["back"] ) || !empty( $_POST["back"] ) ){
@@ -206,13 +226,13 @@ if( !empty( $_GET["back"] ) || !empty( $_POST["back"] ) ){
 ?>
 <?php if (!$GLOBALS['weight_loss_clinic']) { ?>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-<input type="submit" name="justify" value="<?php xl('Justify/Save','e');?>">
+<input type="submit" name="justify" value="<?php echo xlt('Justify/Save');?>">
 <?php } ?>
 </dt>
 </dl>
 
 <a href="cash_receipt.php?" class='link_submit' target='new' onclick='top.restoreSession()'>
-[<?php xl('Receipt','e'); ?>]
+[<?php echo xlt('Receipt'); ?>]
 </a>
 <table border="0">
 <?php
@@ -221,35 +241,35 @@ if ($result = getBillingByEncounter($pid,$encounter,"*") ) {
 	$total = 0.0;
   $ndclino = 0;
 	foreach ($result as $iter) {
-		if ($iter["code_type"] == "ICD9") {
+		if ($iter["code_type"] == "ICD9" || $iter["code_type"] == "ICD10") {
 				$html = "<tr>";
 				$html .= "<td valign=\"middle\">" .
 					'<input  style="width: 11px;height: 11px;" name="code[diag][' .
-					$iter["code"] . ']" type="checkbox" value="' . $iter[code] . '">' .
-					"</td><td><div><a target='$target' class='small' " .
+					attr($iter["code"]) . ']" type="checkbox" value="' . attr($iter[code]) . '">' .
+					"</td><td><div><a target='" . attr($target) ."' class='small' " .
           "href='diagnosis_full.php' onclick='top.restoreSession()'><b>" .
-					$iter{"code"} . "</b> " . $iter{"code_text"} .
+					attr($iter{"code"}) . "</b> " . attr($iter{"code_text"}) .
 					"</a></div></td></tr>\n";
 				$billing_html[$iter["code_type"]] .= $html;
 				$counter++;
 		}
 		elseif ($iter["code_type"] == "COPAY") {
 			$billing_html[$iter["code_type"]] .=
-				"<tr><td></td><td><a target='$target' class='small' " .
+				"<tr><td></td><td><a target='". attr($target)."' class='small' " .
         "href='diagnosis_full.php' onclick='top.restoreSession()'><b>" .
-				oeFormatMoney($iter['code']) . "</b> " .
-				ucwords(strtolower($iter['code_text'])) .
+				attr(oeFormatMoney($iter['code'])) . "</b> " .
+				attr($iter['code_text']) .
 				' ' . xl('payment entered on') . ' ' .
-				oeFormatShortDate(substr($iter['date'], 0, 10)) . substr($iter['date'], 10, 6) . "</a></td></tr>\n";
+				attr(oeFormatShortDate(substr($iter['date'], 0, 10))) . attr(substr($iter['date'], 10, 6)) . "</a></td></tr>\n";
 		}
 		else {
 			$billing_html[$iter["code_type"]] .=
 				"<tr><td>" . '<input  style="width: 11px;height: 11px;" name="code[proc][' .
-				$iter["code"] . ']" type="checkbox" value="' . $iter[code] . '">' .
-				"</td><td><a target='$target' class='small' " .
+				attr($iter["code"]) . ']" type="checkbox" value="' . attr($iter[code]) . '">' .
+				"</td><td><a target='".attr($target)."' class='small' " .
         "href='diagnosis_full.php' onclick='top.restoreSession()'><b>" .
-				$iter{"code"} . ' ' . $iter['modifier'] . "</b> " .
-				ucwords(strtolower($iter{"code_text"})) . ' ' . oeFormatMoney($iter['fee']) .
+				attr($iter{"code"}) . ' ' . attr($iter['modifier']) . "</b> " .
+				attr($iter{"code_text"}) . ' ' . attr(oeFormatMoney($iter['fee'])) .
 				"</a><span class=\"small\">";
 			$total += $iter['fee'];
 			$js = split(":",$iter['justify']);
@@ -276,17 +296,17 @@ if ($result = getBillingByEncounter($pid,$encounter,"*") ) {
         }
         $billing_html[$iter["code_type"]] .=
           "<tr><td>&nbsp;</td><td class='small'>NDC:&nbsp;\n" .
-          "<input type='hidden' name='ndc[$ndclino][code]' value='" . $iter[code] . "'>" .
-          "<input type='text' name='ndc[$ndclino][ndcnum]' value='$ndcnum' " .
+          "<input type='hidden' name='ndc[$ndclino][code]' value='" . attr($iter[code]) . "'>" .
+          "<input type='text' name='ndc[$ndclino][ndcnum]' value='". attr($ndcnum) ."' " .
           "size='11' style='background-color:transparent'>" .
           " &nbsp;Qty:&nbsp;" .
-          "<input type='text' name='ndc[$ndclino][ndcqty]' value='$ndcqty' " .
+          "<input type='text' name='ndc[$ndclino][ndcqty]' value='". attr($ndcqty) ."' " .
           "size='3' style='background-color:transparent;text-align:right'> " .
           "<select name='ndc[$ndclino][ndcuom]' style='background-color:transparent'>";
         foreach ($ndc_uom_choices as $key => $value) {
-          $billing_html[$iter["code_type"]] .= "<option value='$key'";
+          $billing_html[$iter["code_type"]] .= "<option value='".attr($key)."'";
           if ($key == $ndcuom) $billing_html[$iter["code_type"]] .= " selected";
-          $billing_html[$iter["code_type"]] .= ">$value</option>";
+          $billing_html[$iter["code_type"]] .= ">'".attr($value)."'</option>";
         }
         $billing_html[$iter["code_type"]] .= "</select></td></tr>\n";
       }
@@ -294,7 +314,7 @@ if ($result = getBillingByEncounter($pid,$encounter,"*") ) {
 		}
 	}
 
-	$billing_html["CPT4"] .= "<tr><td>" . xl('total') . ":</td><td>" . oeFormatMoney($total) . "</td></tr>\n";
+	$billing_html["CPT4"] .= "<tr><td>" . xl('total') . ":</td><td>" . text(oeFormatMoney($total)) . "</td></tr>\n";
 	foreach ($billing_html as $key => $val) {
 		print "<tr><td>$key</td><td><table>$val</table><td></tr><tr><td height=\"5\"></td></tr>\n";
 	}
@@ -303,8 +323,8 @@ if ($result = getBillingByEncounter($pid,$encounter,"*") ) {
 </tr></table>
 </td>
 </tr>
-<input type="hidden" name="encounter_id" value="<?php echo  $encounter?>">
-<input type="hidden" name="patient_id" value="<?php echo $pid?>">
+<input type="hidden" name="encounter_id" value="<?php echo  attr($encounter)?>">
+<input type="hidden" name="patient_id" value="<?php echo attr($pid)?>">
 </form>
 </table>
 

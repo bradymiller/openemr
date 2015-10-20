@@ -2,7 +2,6 @@
 /**
  * THIS MODULE REPLACES cptcm_codes.php, hcpcs_codes.php AND icd9cm_codes.php.
  * 
- * Copyright (C) This had no previous developer listed
  * Copyright (C) 2015 Terry Hill <terry@lillysystems.com>
  *
  * LICENSE: This program is free software; you can redistribute it and/or
@@ -69,7 +68,7 @@ $code_type = $_GET['type'];
 <?php
 if (isset($_POST["mode"]) && $_POST["mode"] == "search" && $_POST["text"] == "") {
     echo "<div id='resultsummary' style='background-color:lightgreen;'>";
-    echo "Enter search criteria above</div>";
+    echo xlt('Enter search criteria above') . "</div>";
 }
 
 if (isset($_POST["mode"]) && $_POST["mode"] == "search" && $_POST["text"] != "") {
@@ -84,23 +83,25 @@ if (isset($_POST["mode"]) && $_POST["mode"] == "search" && $_POST["text"] != "")
 If($procedure_type == '0') {
   $search = $_POST['text'];
   $filter_key = $code_type;
-  $res = main_code_set_search($filter_key,$search,NULL,NULL,false,NULL,false,$fstart,($fend - $fstart),$filter_elements);
+  $res = main_code_set_search($filter_key,$search,NULL,NULL,false,NULL,false,NULL,NULL,$filter_elements);
 }
 else
 {
+  $sqlBindArray = array();
   # left this to takecare of the non external data files
   $sql = "SELECT codes.*, prices.pr_price FROM codes " .
     "LEFT OUTER JOIN patient_data ON patient_data.pid = '$pid' " .
     "LEFT OUTER JOIN prices ON prices.pr_id = codes.id AND " .
     "prices.pr_selector = '' AND " .
     "prices.pr_level = patient_data.pricelevel " .
-    "WHERE (code_text LIKE '%" . $_POST["text"] . "%' OR " .
-    "code LIKE '%" . $_POST["text"] . "%') AND " .
-    "code_type = '" . $code_types[$code_type]['id'] . "' " .
+    "WHERE (code_text LIKE ? OR " .
+    "code LIKE ? ) AND " .
+    "code_type = ? " .
     "ORDER BY code ".
-    " LIMIT " . ($M + 1).
-    "";
-    $res = sqlStatement($sql);
+    " LIMIT  ? ";
+    $look_text = '%' . $_POST["text"] . '%';
+    array_push($sqlBindArray,$look_text, $look_text, $code_types[$code_type]['id'], ($M + 1));
+    $res = sqlStatement($sql, $sqlBindArray);
 }
  
 		for($iter=0; $row=sqlFetchArray($res); $iter++)
@@ -134,16 +135,15 @@ if ($result) {
    
         echo "<div class='oneresult' style='padding: 3px 0px 3px 0px;'>";
         echo "<a target='".xl('Diagnosis')."' href='diagnosis.php?mode=add" .
-            "&type="     . attr($code_type) .
-            "&code="     . attr($iter{"code"}) .
-            "&modifier=" . attr($iter{"modifier"}) .
-            "&units="    . attr($iter{"units"}) .
-            //"&fee="      . urlencode($iter{"fee"}) .
-            "&fee="      . attr($iter['pr_price']) .
-            "&text="     . attr($iter{"code_text"}) .
+            "&type="     . attr(urlencode($code_type)) .
+            "&code="     . attr(urlencode($iter{"code"})) .
+            "&modifier=" . attr(urlencode($iter{"modifier"})) .
+            "&units="    . attr(urlencode($iter{"units"})) .
+            "&fee="      . attr(urlencode($iter['pr_price'])) .
+            "&text="     . attr(urlencode($iter{"code_text"})) .
             "' onclick='top.restoreSession()'>";
-        echo ucwords("<b>" . strtoupper($iter{"code"}) . "&nbsp;" . $iter['modifier'] .
-            "</b>" . " " . strtolower($iter{"code_text"}));
+        echo "<b>" . attr($iter{"code"}) . "&nbsp;" . attr($iter['modifier']) .
+            "</b>" . " " . attr($iter{"code_text"});
         echo "</a><br>\n";
         echo "</div>";
     
@@ -179,7 +179,6 @@ $(document).ready(function(){
     $("#text").focus();
     $(".oneresult").mouseover(function() { $(this).toggleClass("highlight"); });
     $(".oneresult").mouseout(function() { $(this).toggleClass("highlight"); });
-    //$(".oneresult").click(function() { SelectPatient(this); });
     $("#search_form").submit(function() { SubmitForm(this); });
 });
 
