@@ -904,7 +904,14 @@ if ($GLOBALS['sell_non_drug_products']) {
   }
 }
 
-$search_type = $default_search_type;
+if(array_key_exists($GLOBALS['default_search_code_type'], $code_types)){
+	$search_type = $GLOBALS['default_search_code_type'];
+}else
+{
+	reset($code_types);
+	$search_type = key($code_types);
+}
+
 if ($_POST['search_type']) $search_type = $_POST['search_type'];
 
 $ndc_applies = true; // Assume all payers require NDC info.
@@ -969,7 +976,7 @@ echo " </tr>\n";
 <?php
   foreach ($nofs_code_types as $key => $value) {
     echo "   <option value='" . attr($key) . "'";
-    if ($key == $default_search_type) echo " selected";
+    if ($key == $search_type) echo " selected";
     echo " />" . xlt($value['label']) . "</option>";
   }
 ?>

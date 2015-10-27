@@ -735,6 +735,13 @@ $GLOBALS_METADATA = array(
 		xl('Enable amendments feature')
 	),
     
+    'default_search_code_type' => array(
+      xl('Default Search Code Type'),
+      'all_code_types',                           // data type
+      'ICD10',                 // default
+      xl('The default code type to search for in the Fee Sheet.')
+    ),
+
    ),   
     // Report Tab
     //
@@ -1694,7 +1701,6 @@ $GLOBALS_METADATA = array(
       '/mnt/scan_docs',                 // default
       xl('Location where scans are stored.')
     ),
-
   ),
 
   // Portal Tab
