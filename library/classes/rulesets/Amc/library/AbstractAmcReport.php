@@ -259,6 +259,7 @@ abstract class AbstractAmcReport implements RsReportIF
                 break;
 			
 			case "med_orders":
+                        //Note the cpoe_flag and functionality does not exist in OpenEMR official codebase.
 				 $sql = "SELECT cpoe_flag as cpoe_stat " .
                        "FROM `prescriptions` " .
                        "WHERE `patient_id` = ? " .
@@ -286,6 +287,8 @@ abstract class AbstractAmcReport implements RsReportIF
                 break;
 				
 			case "pres_non_substance":
+                        //Note the cpoe_flag, eTransmit, and formulary functionality does not exist in OpenEMR official codebase.
+                        //Note that this was to be used in the AMC_304b rules (but is currently not being used yet, though).
 				$sql = "SELECT formulary, cpoe_flag as transmit_stat, eTransmit " .
                        "FROM `prescriptions` " .
                        "WHERE controlledsubstance = 'no' " .
@@ -295,6 +298,8 @@ abstract class AbstractAmcReport implements RsReportIF
                 break;
 			
 			case "encounters_office_vist":
+                        // This is blatantly incorrect. Should not be using the calendar. Why not just use encounters counter???
+                        // Is used in AMC_304h_STG2.php rule. Plan to migrate that to encounters counter and then remove this. 
                 $sql = "SELECT * " .
                        "FROM `form_encounter` fe " .
 					   "INNER JOIN openemr_postcalendar_categories opc ON fe.pc_catid = opc.pc_catid ".

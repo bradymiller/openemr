@@ -30,6 +30,7 @@ class AMC_314g_1_2_21 extends AbstractAmcReport
 
     public function getObjectToCount()
     {
+        // Is this the right counter???
         return "encounters";
     }
  
