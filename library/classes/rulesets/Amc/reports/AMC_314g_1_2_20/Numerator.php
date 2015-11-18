@@ -22,6 +22,8 @@
  */
 
 class AMC_314g_1_2_20_Numerator implements AmcFilterIF{
+
+    // Try to remove the $patArr stuff. Ensure the labs counter is correct.
     public $patArr = array();
 	public function getTitle(){
         return "AMC_314g_1_2_20 Numerator";
@@ -30,6 +32,7 @@ class AMC_314g_1_2_20_Numerator implements AmcFilterIF{
     public function test( AmcPatient $patient, $beginDate, $endDate ){
 		if(!in_array($patient->id, $this->patArr)){
 			$this->patArr[] = $patient->id;
+                        // These mechanism seems really odd. Will need to research this a bit.
 			$docLabQry = "SELECT count(*) as cnt FROM documents d ".
 						 "INNER JOIN categories_to_documents cd ON d.id = cd.document_id ".
 						 "INNER JOIN categories dlc ON cd.category_id = dlc.id AND dlc.name = 'Lab Report' ".

@@ -23,6 +23,7 @@
 
 class AMC_314g_1_2_20_Denominator implements AmcFilterIF
 {
+    // Remove the $patArr stuff.
 	public $patArr = array();
     public function getTitle()
     {

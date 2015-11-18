@@ -22,6 +22,7 @@
  */
 class AMC_314g_1_2_22_Denominator implements AmcFilterIF
 {
+    // Get rid of the $patArr stuff. Is this correct counter being used here???
 	public $patArr = array();
     public function getTitle()
     {
