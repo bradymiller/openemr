@@ -296,18 +296,6 @@ abstract class AbstractAmcReport implements RsReportIF
                        "AND `date_added` BETWEEN ? AND ?";
                 array_push($sqlBindArray, $patient->id, $begin, $end);
                 break;
-			
-			case "encounters_office_vist":
-                        // This is blatantly incorrect. Should not be using the calendar. Why not just use encounters counter???
-                        // Is used in AMC_304h_STG2.php rule. Plan to migrate that to encounters counter and then remove this. 
-                $sql = "SELECT * " .
-                       "FROM `form_encounter` fe " .
-					   "INNER JOIN openemr_postcalendar_categories opc ON fe.pc_catid = opc.pc_catid ".
-                       "WHERE opc.pc_catname = 'Office Visit' ".
-					   "AND`pid` = ? " .
-                       "AND `date` >= ? AND `date` <= ?";
-                array_push($sqlBindArray, $patient->id, $begin, $end);
-                break;
         }
 
         $rez = sqlStatement($sql, $sqlBindArray);

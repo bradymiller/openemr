@@ -30,8 +30,7 @@ class AMC_304h_STG2 extends AbstractAmcReport
 
     public function getObjectToCount()
     {
-        // Need to migrate this to encounters counter
-        return "encounters_office_vist";
+        return "encounters";
     }
  
     public function createDenominator() 
