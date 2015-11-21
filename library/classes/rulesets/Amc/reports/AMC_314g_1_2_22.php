@@ -30,8 +30,7 @@ class AMC_314g_1_2_22 extends AbstractAmcReport
 
     public function getObjectToCount()
     {
-        // Is this the correct counter???
-        return "encounters";
+        return "patients";
     }
  
     public function createDenominator() 

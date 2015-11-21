@@ -22,8 +22,6 @@
  */
 class AMC_314g_1_2_22_Denominator implements AmcFilterIF
 {
-    // Get rid of the $patArr stuff. Is this correct counter being used here???
-	public $patArr = array();
     public function getTitle()
     {
         return "AMC_314g_1_2_22 Denominator";
@@ -31,11 +29,14 @@ class AMC_314g_1_2_22_Denominator implements AmcFilterIF
     
     public function test( AmcPatient $patient, $beginDate, $endDate ) 
     {
-		if(!in_array($patient->id, $this->patArr)){
-			$this->patArr[] = $patient->id;
-			return true;
-		}
-		else
-			return false;
+        // Seen by the EP 
+        //  (basically needs an encounter within the report dates)
+        $options = array( Encounter::OPTION_ENCOUNTER_COUNT => 1 );
+        if (Helper::checkAnyEncounter($patient, $beginDate, $endDate, $options)) {
+            return true;
+        }
+        else {
+            return false;
+        }
     }
 }
