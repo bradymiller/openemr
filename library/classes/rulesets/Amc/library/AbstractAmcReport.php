@@ -216,6 +216,14 @@ abstract class AbstractAmcReport implements RsReportIF
                        "AND `date` >= ? AND `date` <= ?";
                 array_push($sqlBindArray, $patient->id, $begin, $end);
                 break;
+            case "encounters_office_visit"
+                $sql = "SELECT * " .
+                       "FROM `form_encounter` LEFT JOIN `enc_category_map` ON (form_encounter.pc_catid = enc_category_map.main_cat_id) " .
+                       "WHERE enc_category_map.rule_enc_id = 'enc_off_vis' "
+                       "AND `pid` = ? " .
+                       "AND `date` >= ? AND `date` <= ?";
+                array_push($sqlBindArray, $patient->id, $begin, $end);
+                break;
             case "prescriptions":
                 $sql = "SELECT * " .
                        "FROM `prescriptions` " .
