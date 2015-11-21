@@ -1,11 +1,27 @@
 <?php
-// Copyright (C) 2011 Ken Chapple <ken@mi-squared.com>
-//
-// This program is free software; you can redistribute it and/or
-// modify it under the terms of the GNU General Public License
-// as published by the Free Software Foundation; either version 2
-// of the License, or (at your option) any later version.
-//
+/**
+ * AbstractAmcReport class
+ *
+ * Copyright (C) 2011 Ken Chapple <ken@mi-squared.com>
+ * Copyright (C) 2015 Brady Miller <brady@sparmy.com>
+ *
+ * LICENSE: This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 3
+ * of the License, or (at your option) any later version.
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see <http://opensource.org/licenses/gpl-license.php>;.
+ *
+ * @package OpenEMR
+ * @author  Ken Chapple <ken@mi-squared.com>
+ * @author  Brady Miller <brady@sparmy.com>
+ * @link    http://www.open-emr.org
+ */
+
 require_once( 'AmcFilterIF.php' );
 require_once( dirname(__FILE__)."/../../../../clinical_rules.php" );
 require_once( dirname(__FILE__)."/../../../../amc.php" );
@@ -267,7 +283,9 @@ abstract class AbstractAmcReport implements RsReportIF
                 break;
 			
 			case "med_orders":
-                        //Note the cpoe_flag and functionality does not exist in OpenEMR official codebase.
+                        // AMC MU2 TODO :
+                        //  Note the cpoe_flag and functionality does not exist in OpenEMR official codebase.
+                        //
 				 $sql = "SELECT cpoe_flag as cpoe_stat " .
                        "FROM `prescriptions` " .
                        "WHERE `patient_id` = ? " .
@@ -295,8 +313,10 @@ abstract class AbstractAmcReport implements RsReportIF
                 break;
 				
 			case "pres_non_substance":
-                        //Note the cpoe_flag, eTransmit, and formulary functionality does not exist in OpenEMR official codebase.
-                        //Note that this was to be used in the AMC_304b rules (but is currently not being used yet, though).
+                        // AMC MU2 TODO :
+                        //  Note the cpoe_flag, eTransmit, and formulary functionality does not exist in OpenEMR official codebase.
+                        //  Note that this was to be used in the AMC_304b rules (but is currently not being used yet, though).
+                        //
 				$sql = "SELECT formulary, cpoe_flag as transmit_stat, eTransmit " .
                        "FROM `prescriptions` " .
                        "WHERE controlledsubstance = 'no' " .

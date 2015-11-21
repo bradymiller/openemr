@@ -31,6 +31,7 @@ class AMC_314g_1_2_14_STG2_Numerator implements AmcFilterIF
     public function test( AmcPatient $patient, $beginDate, $endDate ) 
     {
                 //
+                // AMC MU2 TODO :
                 // This needs to be converted to the Z&H solution.
                 //
 		$portalQry = "SELECT count(*) as cnt FROM `patient_access_onsite` WHERE pid=?";

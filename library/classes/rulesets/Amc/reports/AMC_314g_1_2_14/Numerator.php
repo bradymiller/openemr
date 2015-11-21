@@ -33,6 +33,7 @@ class AMC_314g_1_2_14_Numerator implements AmcFilterIF
 		//The number of patients in the denominator who have timely (within 4 business days after the information is available to the EP) on-line access to their health information. 
 		//Patient Portal has access to done V/D/T
                 //
+                // AMC MU2 TODO :
                 // This needs to be converted to the Z&H solution.
                 //
 		$portalQry = "SELECT count(*) as cnt FROM patient_data pd ".

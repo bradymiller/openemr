@@ -33,6 +33,7 @@ class AMC_302m_STG2_Numerator implements AmcFilterIF
 
         // Check for any patient specific education instances.
         // 
+        // AMC MU2 TODO :
         // Need to look into this measure, since as I recall it is measuring the patient education
         // stuff that Rod added for MU2.
         //

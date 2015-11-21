@@ -32,6 +32,7 @@ class AMC_314g_1_2_19_Numerator implements AmcFilterIF
     {
 		//Secure electronic message received by EP using secure electronic messaging function of CEHRT
                 //
+                // AMC MU2 TODO :
                 // Set this to use the feature the offsite patient portal where patient messaging is stored in the pnotes sql table
                 //
 		$smQry = "SELECT  IF(sm.from_type = 2, sm.from_id, (SELECT pgd.pid from patient_guardian_details pgd where pgd.id = sm.from_id)) as pat_id FROM secure_messages sm ".
