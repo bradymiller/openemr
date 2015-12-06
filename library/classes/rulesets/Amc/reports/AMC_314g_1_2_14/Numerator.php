@@ -34,6 +34,7 @@ class AMC_314g_1_2_14_Numerator implements AmcFilterIF
                 // the denominator who have viewed online, downloaded, or transmitted to a
                 // third party the patient's health information.
                 // 
+                // Still TODO
                 // AMC MU2 TODO :
                 // This needs to be converted to the Z&H offsite portal solution.
                 //

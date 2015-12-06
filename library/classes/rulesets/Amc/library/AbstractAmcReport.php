@@ -283,6 +283,7 @@ abstract class AbstractAmcReport implements RsReportIF
                 break;
 			
 			case "med_orders":
+                        // Still TODO
                         // AMC MU2 TODO :
                         //  Note the cpoe_flag and functionality does not exist in OpenEMR official codebase.
                         //
@@ -303,6 +304,7 @@ abstract class AbstractAmcReport implements RsReportIF
                 break;
 				
 			case "pres_non_substance":
+                        // Still TODO
                         // AMC MU2 TODO :
                         //  Note the cpoe_flag, eTransmit, and formulary functionality does not exist in OpenEMR official codebase.
                         //  Note that this was to be used in the AMC_304b rules (but is currently not being used yet, though).
