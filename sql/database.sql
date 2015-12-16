@@ -1975,6 +1975,9 @@ INSERT INTO `geo_country_reference` VALUES (236, 'Yugoslavia', 'YU', 'YUG');
 INSERT INTO `geo_country_reference` VALUES (237, 'Zaire', 'ZR', 'ZAR');
 INSERT INTO `geo_country_reference` VALUES (238, 'Zambia', 'ZM', 'ZMB');
 INSERT INTO `geo_country_reference` VALUES (239, 'Zimbabwe', 'ZW', 'ZWE');
+INSERT INTO `geo_country_reference` VALUES (240, 'Curacao', 'CW', 'CUW');
+INSERT INTO `geo_country_reference` VALUES (241, 'BES Boniare Saba  Sint Eustatius', 'BQ', 'BES');
+INSERT INTO `geo_country_reference` VALUES (239, 'Sint Maarten-NL', 'SX', 'SXM');
 
 -- --------------------------------------------------------
 
@@ -3123,6 +3126,43 @@ INSERT INTO list_options ( list_id, option_id, title, seq, is_default ) VALUES (
 INSERT INTO list_options ( list_id, option_id, title, seq, is_default ) VALUES ('boolean', '0', 'No', 1, 0);
 INSERT INTO list_options ( list_id, option_id, title, seq, is_default ) VALUES ('boolean', '1', 'Yes', 2, 0);
 INSERT INTO list_options ( list_id, option_id, title, seq, is_default ) VALUES ('country', 'USA', 'USA', 1, 0);
+INSERT INTO list_options ( list_id, option_id, title, seq, is_default ) VALUES ('country', 'AFG', 'Afghanistan',2, 0);
+INSERT INTO list_options ( list_id, option_id, title, seq, is_default ) VALUES ('country', 'ALB', 'Albania', 3, 0);
+INSERT INTO list_options ( list_id, option_id, title, seq, is_default ) VALUES ('country', 'DZA', 'Algeria', 4, 0);
+INSERT INTO list_options ( list_id, option_id, title, seq, is_default ) VALUES ('country', 'ASM', 'American Samoa',  5, 0);
+INSERT INTO list_options ( list_id, option_id, title, seq, is_default ) VALUES ('country', 'AND', 'Andorra',  6, 0);
+INSERT INTO list_options ( list_id, option_id, title, seq, is_default ) VALUES ('country', 'AGO', 'Angola',  7, 0);
+INSERT INTO list_options ( list_id, option_id, title, seq, is_default ) VALUES ('country', 'AIA', 'Anguilla',  8,0);
+INSERT INTO list_options ( list_id, option_id, title, seq, is_default ) VALUES ('country', 'ATA', 'Antarctica',  9, 0);
+INSERT INTO list_options ( list_id, option_id, title, seq, is_default ) VALUES ('country', 'ATG', 'Antigua and Barbuda',  10,0);
+INSERT INTO list_options ( list_id, option_id, title, seq, is_default ) VALUES ('country', 'ARG', 'Argentina',  11,0);
+INSERT INTO list_options ( list_id, option_id, title, seq, is_default ) VALUES ('country', 'ARM', 'Armenia',  12,0);
+INSERT INTO list_options ( list_id, option_id, title, seq, is_default ) VALUES ('country', 'ABW', 'Aruba',  13, 0);
+INSERT INTO list_options ( list_id, option_id, title, seq, is_default ) VALUES ('country', 'AUS', 'Australia', 14, 0);
+INSERT INTO list_options ( list_id, option_id, title, seq, is_default ) VALUES ('country', 'AUT', 'Austria', 15, 0);
+INSERT INTO list_options ( list_id, option_id, title, seq, is_default ) VALUES ('country', 'AZE', 'Azerbaijan',  16, 0);
+INSERT INTO list_options ( list_id, option_id, title, seq, is_default ) VALUES ('country', 'BHS', 'Bahamas', 17, 0);
+INSERT INTO list_options ( list_id, option_id, title, seq, is_default ) VALUES ('country', 'BHR', 'Bahrain', 18, 0);
+INSERT INTO list_options ( list_id, option_id, title, seq, is_default ) VALUES ('country', 'BGD', 'Bangladesh',  19, 0);
+INSERT INTO list_options ( list_id, option_id, title, seq, is_default ) VALUES ('country', 'BRB', 'Barbados',  20, 0);
+INSERT INTO list_options ( list_id, option_id, title, seq, is_default ) VALUES ('country', 'BLR', 'Belarus',  21, 0);
+INSERT INTO list_options ( list_id, option_id, title, seq, is_default ) VALUES ('country', 'BEL', 'Belgium',  22, 0);
+INSERT INTO list_options ( list_id, option_id, title, seq, is_default ) VALUES ('country', 'BLZ', 'Belize', 23, 0);
+INSERT INTO list_options ( list_id, option_id, title, seq, is_default ) VALUES ('country', 'BEN', 'Benin',  24, 0);
+INSERT INTO list_options ( list_id, option_id, title, seq, is_default ) VALUES ('country', 'BMU', 'Bermuda',  25, 0);
+INSERT INTO list_options ( list_id, option_id, title, seq, is_default ) VALUES ('country', 'BTN', 'Bhutan',  26, 0);
+INSERT INTO list_options ( list_id, option_id, title, seq, is_default ) VALUES ('country', 'BOL', 'Bolivia',  27, 0);
+INSERT INTO list_options ( list_id, option_id, title, seq, is_default ) VALUES ('country', 'BIH', 'Bosnia and Herzegowina',  28, 0);
+INSERT INTO list_options ( list_id, option_id, title, seq, is_default ) VALUES ('country', 'BWA', 'Botswana',  29, 0);
+INSERT INTO list_options ( list_id, option_id, title, seq, is_default ) VALUES ('country', 'BVT', 'Bouvet Island',  30, 0);
+INSERT INTO list_options ( list_id, option_id, title, seq, is_default ) VALUES ('country', 'BRA', 'Brazil',  31, 0);
+INSERT INTO list_options ( list_id, option_id, title, seq, is_default ) VALUES ('country', 'IOT', 'British Indian Ocean Territory',  32, 0);
+INSERT INTO list_options ( list_id, option_id, title, seq, is_default ) VALUES ('country', 'BRN', 'Brunei Darussalam',  33, 0);
+INSERT INTO list_options ( list_id, option_id, title, seq, is_default ) VALUES ('country', 'BGR', 'Bulgaria',  34, 0);
+INSERT INTO list_options ( list_id, option_id, title, seq, is_default ) VALUES ('country', 'BFA', 'Burkina Faso',  35, 0);
+INSERT INTO list_options ( list_id, option_id, title, seq, is_default ) VALUES ('country', 'BDI', 'Burundi', 36, 0);
+INSERT INTO list_options ( list_id, option_id, title, seq, is_default ) VALUES ('country', 'KHM', 'Cambodia', 37, 0);
+
 
 INSERT INTO list_options ( list_id, option_id, title, seq, is_default ) VALUES ('state','AL','Alabama'             , 1,0);
 INSERT INTO list_options ( list_id, option_id, title, seq, is_default ) VALUES ('state','AK','Alaska'              , 2,0);
