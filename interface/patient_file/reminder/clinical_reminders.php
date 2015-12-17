@@ -62,7 +62,7 @@ $patient_id = ($_GET['patient_id']) ? $_GET['patient_id'] : "";
 <?php
   // collect the pertinent plans and rules
   $plans_default = resolve_plans_sql('','0',TRUE);
-  $rules_default = resolve_rules_sql('','0',TRUE);
+  $rules_default = resolve_rules_sql('','0',TRUE,'',$_SESSION['authUser']);
 ?>
 
 <ul class="tabNav">
@@ -74,13 +74,13 @@ $patient_id = ($_GET['patient_id']) ? $_GET['patient_id'] : "";
 <div class="tabContainer">
   <div class="tab current text" style="height:auto;width:97%;">
     <?php
-      clinical_summary_widget($pid,"reminders-all");
+      clinical_summary_widget($pid,"reminders-all",'','default',$_SESSION['authUser']);
     ?>
   </div>
 
   <div class="tab text" style="height:auto;width:97%;">
     <?php
-      clinical_summary_widget($pid,"reminders-all",'',"plans");
+      clinical_summary_widget($pid,"reminders-all",'',"plans",$_SESSION['authUser']);
     ?>
   </div>
 

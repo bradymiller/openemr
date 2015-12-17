@@ -12549,3 +12549,6 @@ CREATE TABLE `clinical_rules_log` (
 ) ENGINE=MyISAM AUTO_INCREMENT=1 ;
 #EndIf
 
+#IfMissingColumn clinical_rules access_control
+ALTER TABLE `clinical_rules` ADD `access_control` VARCHAR(255) NOT NULL DEFAULT 'patients:med' COMMENT 'ACO link for access control';
+#EndIf

@@ -63,7 +63,7 @@ if (!acl_check('patients', 'med')) {
 </table>
 <br><br>
 
-<?php echo active_alert_summary($pid,"reminders-due"); ?>
+<?php echo active_alert_summary($pid,"reminders-due",'','default',$_SESSION['authUser']); ?>
 
 </body>
 </html>

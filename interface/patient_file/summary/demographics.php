@@ -48,9 +48,9 @@ $fake_register_globals=false;
  }
 
   $active_reminders = false;
-  if ((!isset($_SESSION['alert_notify_pid']) || ($_SESSION['alert_notify_pid'] != $pid)) && isset($_GET['set_pid']) && acl_check('patients', 'med') && $GLOBALS['enable_cdr'] && $GLOBALS['enable_cdr_crp']) {
+  if ((!isset($_SESSION['alert_notify_pid']) || ($_SESSION['alert_notify_pid'] != $pid)) && isset($_GET['set_pid']) && $GLOBALS['enable_cdr'] && $GLOBALS['enable_cdr_crp']) {
     // showing a new patient, so check for active reminders
-    $active_reminders = active_alert_summary($pid,"reminders-due");
+    $active_reminders = active_alert_summary($pid,"reminders-due",'','default',$_SESSION['authUser']);
   }
 
 function print_as_money($money) {
