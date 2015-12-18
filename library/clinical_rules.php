@@ -1407,7 +1407,7 @@ function set_rule_activity_patient($rule,$type,$setting,$patient_id) {
 
   // Update patient specific row
   $query = "UPDATE `clinical_rules` SET `" . add_escape_custom($type) . "_flag`= ?, `access_control` = ? WHERE id = ? AND pid = ?";
-  sqlStatementCdrEngine($query, array($setting,$patient_rule_original['access_control']),$rule,$patient_id) );
+  sqlStatementCdrEngine($query, array($setting,$patient_rule_original['access_control'],$rule,$patient_id) );
 
 }
 

@@ -47,13 +47,6 @@ $(document).ready(function(){
 // Set the session flag to show that notification was last done with this patient
 $_SESSION['alert_notify_pid'] = $pid;
 
-// Ensure user is authorized
-if (!acl_check('patients', 'med')) {
-  echo "<p>(" . htmlspecialchars( xl('Not authorized'), ENT_NOQUOTES) . ")</p>\n";
-  echo "</body>\n</html>\n";
-  exit();
-}
-
 ?>
 <table cellspacing='0' cellpadding='0' border='0'>
 <tr>

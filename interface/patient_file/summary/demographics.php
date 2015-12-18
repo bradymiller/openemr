@@ -1341,7 +1341,9 @@ expand_collapse_widget($widgetTitle, $widgetLabel, $widgetButtonLabel,
         $events = sortAppointments($events);
         //////
 
-     if ( (acl_check('patients', 'med')) && ($GLOBALS['enable_cdr'] && $GLOBALS['enable_cdr_crw']) ) {
+     // Show Clinical Reminders for any user that has rules that are permitted.
+     $clin_rem_check = resolve_rules_sql('','0',TRUE,'',$_SESSION['authUser']); 
+     if ( (!empty($clin_rem_check)) && ($GLOBALS['enable_cdr'] && $GLOBALS['enable_cdr_crw']) ) {
         // clinical summary expand collapse widget
         $widgetTitle = xl("Clinical Reminders");
         $widgetLabel = "clinical_reminders";
