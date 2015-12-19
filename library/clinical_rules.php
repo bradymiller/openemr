@@ -1393,7 +1393,7 @@ function set_rule_activity_patient($rule,$type,$setting,$patient_id) {
 
   //Collect main rule to allow setting of the access_control
   $original_query = "SELECT * FROM `clinical_rules` WHERE `id` = ? AND `pid` = 0";
-  $patient_rule_original = sqlQueryCdrEngine($query, array($rule) );
+  $patient_rule_original = sqlQueryCdrEngine($original_query, array($rule) );
 
   // Collect patient specific rule, if already exists.
   $query = "SELECT * FROM `clinical_rules` WHERE `id` = ? AND `pid` = ?";
