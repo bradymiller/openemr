@@ -51,7 +51,7 @@ require_once("$phpgacl_location/gacl_api.class.php");
                 <th width="40px">&nbsp;</th>
                 <th width="10px"><?php echo out( xl('Patient Reminder') ); ?></th>
                 <th width="40px">&nbsp;</th>
-                <th width="100px"><?php echo out( xl('Access Control') ); ?></th>
+                <th width="100px"><?php echo out( xl('Access Control') ); ?> <span title='<?php echo out( xl('User is required to have this access control for Active Alerts and Passive Alerts') ); ?>'>?</span></th>
                 <th></th>
         </tr>
         <?php $index = -1; ?>
