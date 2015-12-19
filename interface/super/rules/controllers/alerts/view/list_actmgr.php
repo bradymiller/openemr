@@ -85,7 +85,6 @@ require_once("$phpgacl_location/gacl_api.class.php");
                         foreach ($list_aco_objects as $key => $value) {
                           asort($list_aco_objects[$key]);
                         }
-                        error_log(print_r($list_aco_objects,TRUE));
                         echo "<select name='access_control[" . $index . "]'>";
                         foreach ($list_aco_objects as $section => $array_acos) {
                           $aco_section_data = $gacl_temp->get_section_data($section, 'ACO');
