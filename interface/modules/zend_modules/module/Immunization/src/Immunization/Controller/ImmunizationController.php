@@ -157,8 +157,23 @@ class ImmunizationController extends AbstractActionController
         $data       = $request->getPost();
         if(isset($data['hl7button'])){
             $form_code        =   isset($data['codes']) ? $data['codes'] : Array();
+
+            // This line below is not working! Hard-coded it to 7 days prior for now to continue testing
+            // and will discuss with ZH.
             $from_date       =   $request->getPost('from_date', null) ? $this->CommonPlugin()->date_format($request->getPost('from_date', null), 'yyyy-mm-dd', $GLOBALS['date_display_format']) : date('Y-m-d',strtotime(date('Ymd')) - (86400*7));
+            error_log("hl7_from:",$from_date);
+            error_log($request->getPost('from_date', null));
+            error_log(date('Y-m-d',strtotime(date('Ymd')) - (86400*7)));
+            $from_date = date('Y-m-d',strtotime(date('Ymd')) - (86400*7));
+
+            // This line below is not working! Hard-coded it to today for now to continue testing
+            // and will discuss with ZH.
             $to_date         =   $request->getPost('to_date', null) ? $this->CommonPlugin()->date_format($request->getPost('to_date', null), 'yyyy-mm-dd', $GLOBALS['date_display_format']) : date('Y-m-d');
+            error_log("hl7_to:",$to_date);
+            error_log($request->getPost('to_date', null));
+            error_log(date('Y-m-d'));
+            $to_date = date('Y-m-d');
+
             $form_get_hl7     =   'true'; 
             //pagination
             $results          =   $request->getPost('form_results', 100);
