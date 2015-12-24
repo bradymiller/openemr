@@ -50,6 +50,9 @@ $_SESSION['alert_notify_pid'] = $pid;
 ?>
 <table cellspacing='0' cellpadding='0' border='0'>
 <tr>
+
+<?php // Will always show allergy and medication/prescription conflicts here ?>
+
 <td><span class="title"><?php echo htmlspecialchars ( xl("Active Alerts/Reminders"),ENT_NOQUOTES); ?></span>&nbsp;&nbsp;&nbsp;</td>
 <td><a href="#" id="close" class="css_button large_button"><span class='css_button_span large_button_span'><?php echo htmlspecialchars( xl('Close'), ENT_NOQUOTES);?></span></a></td>
 </tr>

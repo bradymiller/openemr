@@ -1322,7 +1322,28 @@ $GLOBALS_METADATA = array(
       '1',                               // default
       xl('Enable Clinical Decisions Rules (CDR)')
     ),
-    
+
+    'enable_allergy_check' => array(
+      xl('Enable Allergy Check'),
+      'bool',                           // data type
+      '1',                               // default
+      xl('Enable Allergy Check Against Medications and Prescriptions')
+    ),
+
+    'enable_alert_log' => array(
+      xl('Enable Alert Log'),
+      'bool',                           // data type
+      '1',                               // default
+      xl('Enable Alert Logging')
+    ),
+
+    'enable_cdr_new_crp' => array(
+      xl('Enable Clinical New Reminder(s) Popup'),
+      'bool',                           // data type
+      '1',                               // default
+      xl('Enable Clinical New Reminder(s) Popup')
+    ),
+
     'enable_cdr_crw' => array(
       xl('Enable Clinical Reminder Widget'),
       'bool',                           // data type
@@ -1335,13 +1356,6 @@ $GLOBALS_METADATA = array(
       'bool',                           // data type
       '1',                               // default
       xl('Enable Clinical Reminder Popup')
-    ),
-
-    'enable_cdr_new_crp' => array(
-      xl('Enable Clinical New Reminder(s) Popup'),
-      'bool',                           // data type
-      '1',                               // default
-      xl('Enable Clinical New Reminder(s) Popup')
     ),
 
     'enable_cdr_prw' => array(

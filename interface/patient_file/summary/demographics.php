@@ -48,9 +48,27 @@ $fake_register_globals=false;
  }
 
   $active_reminders = false;
-  if ((!isset($_SESSION['alert_notify_pid']) || ($_SESSION['alert_notify_pid'] != $pid)) && isset($_GET['set_pid']) && $GLOBALS['enable_cdr'] && $GLOBALS['enable_cdr_crp']) {
-    // showing a new patient, so check for active reminders
-    $active_reminders = active_alert_summary($pid,"reminders-due",'','default',$_SESSION['authUser'],TRUE);
+  $all_allergy_alerts = false;
+  if ($GLOBALS['enable_cdr']) {
+    //CDR Engine stuff
+    if ($GLOBALS['enable_allergy_check'] && $GLOBALS['enable_alert_log']) {
+      //Check for new allergies conflicts and throw popup if any exist
+      $new_allergy_alerts = allergy_conflict($pid,'new',$_SESSION['authUser']);
+      if (!empty($new_allergy_alerts)) {
+        echo "<script type='text/javascript'>alert('".xls("WARNING - FOLLOWING MEDICATIONS HAVE ALLERGIES").":\n";
+        foreach ($new_allergy_alerts as $new_allergy_alert) {
+          echo addslashes($new_allergy_alert). "\n";
+        }
+        echo "')</script>";
+      }
+    }
+    if ((!isset($_SESSION['alert_notify_pid']) || ($_SESSION['alert_notify_pid'] != $pid)) && isset($_GET['set_pid']) && $GLOBALS['enable_cdr_crp']) {
+      // showing a new patient, so check for active reminders and allergy conflicts, which use below in active reminder popup
+      $active_reminders = active_alert_summary($pid,"reminders-due",'','default',$_SESSION['authUser'],TRUE);
+      if ($GLOBALS['enable_allergy_check']) {
+        $all_allergy_alerts = allergy_conflict($pid,'all',$_SESSION['authUser'],TRUE);
+      }
+    }
   }
 
 function print_as_money($money) {
@@ -403,7 +421,7 @@ $(document).ready(function(){
             'centerOnScroll' : false
   });
 
-  <?php if ($active_reminders) { ?>
+  <?php if ($active_reminders || $all_allergy_alerts) { ?>
     // show the active reminder modal
     $("#reminder_popup_link").fancybox({
       'overlayOpacity' : 0.0,
