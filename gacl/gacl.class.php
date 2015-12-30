@@ -71,7 +71,7 @@ class gacl {
 	var $_db_table_prefix = 'gacl_';
 
 	/** @var string The database type, based on available ADODB connectors - mysql, postgres7, sybase, oci8po See here for more: http://php.weblogs.com/adodb_manual#driverguide */
-	var $_db_type = 'mysql';
+	var $_db_type = 'mysqli';
 
 	/** @var string The database server */
 	var $_db_host = '';
