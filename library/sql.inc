@@ -622,9 +622,11 @@ function get_db() {
  * Used when converted to mysqli to centralize special circumstances.
  * @param string $database
  */
-function generic_sql_select_db($database)
+function generic_sql_select_db($database, $link = null)
 {
-  mysql_select_db($database);
+  if (is_null($link))
+    $link = $GLOBALS['dbh'];
+  mysqli_select_db($link, $database);
 }
 
 /**
@@ -641,7 +643,7 @@ function generic_sql_affected_rows()
  * Generic mysql insert id function
  * Used when converted to mysqli to centralize special circumstances.
  *
- */
+				 */
 function generic_sql_insert_id()
 {
   return mysql_insert_id($GLOBALS['dbh']);
