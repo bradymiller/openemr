@@ -40,7 +40,7 @@ function echo_normal($text) {
  */
 echo 'Testing database connection...<br/>'."\n";
 
-if (is_resource($db->_connectionID)) {
+if (is_object($db->_connectionID)) {
 	echo_success('Connected to &quot;<b>'.$db_type.'</b>&quot; database on &quot;<b>'.$db_host.'</b>&quot;.');
 } else {
 	echo_failed('<b>ERROR</b> connecting to database,<br/>

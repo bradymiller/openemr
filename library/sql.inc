@@ -142,7 +142,8 @@ $database = NewADOConnection("mysqli_log"); // Use the subclassed driver which l
 // work and is suspicious for a bug in PHP of that OS; Setting this clientFlags fixes this bug
 // and appears to not cause problems in other operating systems.
 $database->clientFlags = 128;
-$database->PConnect($host.":".$port, $login, $pass, $dbase);
+$database->port = $port;
+$database->PConnect($host, $login, $pass, $dbase);
 $GLOBALS['adodb']['db'] = $database;
 $GLOBALS['dbh'] = $database->_connectionID;
 
