@@ -62,22 +62,6 @@ class ADODB_mysqli_log extends ADODB_mysqli
         }
 
         /**
-        *  ADODB _insertid function wrapper to ensure proper auditing in OpenEMR.
-        *
-        *  Need to override this method to prevent infinite recursion with execute
-        *  when trying to retrieve the last insert id.
-        *
-        * @return boolean    returns false if error
-        */
-        function _insertid()
-        {
-            $rs=$this->ExecuteNoLog("SELECT LAST_INSERT_ID()");
-            $ret=reset($rs->fields);
-            $rs->close();
-            return $ret;
-        }
-
-        /**
         * ADODB Execute function wrapper to skip auditing in OpenEMR.
         *
         * Bypasses the OpenEMR auditing engine.
@@ -110,8 +94,6 @@ class ADODB_mysqli_log extends ADODB_mysqli
                 // post-nuke sets hasGenID to false
                 if (!$this->hasGenID) return false;
 
-                $savelog = $this->_logsql;
-                $this->_logsql = false;
                 $getnext = sprintf($this->_genIDSQL,$seqname);
                 $holdtransOK = $this->_transOK; // save the current status
                 $rs = @$this->ExecuteNoLog($getnext);
@@ -130,7 +112,6 @@ class ADODB_mysqli_log extends ADODB_mysqli
                 } else
                         $this->genID = 0;
 
-                $this->_logsql = $savelog;
                 return $this->genID;
         }
 }
