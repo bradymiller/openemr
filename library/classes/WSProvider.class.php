@@ -9,7 +9,7 @@ class WSProvider extends WSWrapper{
 	var $info;
 	var $_db;
 
-	function WSProvider($user_id) {
+	function __construct($user_id) {
 		if (!is_numeric($user_id))
 			return;
 
