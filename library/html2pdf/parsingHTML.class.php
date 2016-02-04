@@ -3,7 +3,7 @@
  * Logiciel : HTML2PDF - classe ParsingHTML
  *
  * Convertisseur HTML => PDF
- * Distribué sous la licence LGPL. 
+ * Distribué sous la licence LGPL.
  *
  * @author		Laurent MINGUET <webmaster@html2pdf.fr>
  * @version		3.31
@@ -29,6 +29,7 @@ class parsingHTML
 		$this->html		= '';
 		$this->code		= array();
 		$this->setEncoding($encoding);
+		$this->HTML2PDF = new HTML2PDF();
 	}
 	
 	function setEncoding($encoding)
@@ -94,9 +95,9 @@ class parsingHTML
 						if ($res['close'])
 						{
 							if (count($parents)<1)
-								HTML2PDF::makeError(3, __FILE__, __LINE__, $res['name'], $this->getHtmlErrorCode($res['html_pos']));
+								$this->HTML2PDF->makeError(3, __FILE__, __LINE__, $res['name'], $this->getHtmlErrorCode($res['html_pos']));
 							else if ($parents[count($parents)-1]!=$res['name'])
-								HTML2PDF::makeError(4, __FILE__, __LINE__, $parents, $this->getHtmlErrorCode($res['html_pos']));
+								$this->HTML2PDF->makeError(4, __FILE__, __LINE__, $parents, $this->getHtmlErrorCode($res['html_pos']));
 							else
 								unset($parents[count($parents)-1]);
 						}
@@ -184,7 +185,7 @@ class parsingHTML
 					unset($todos[$k]);
 			}
 		}
-		if (count($parents)) HTML2PDF::makeError(5, __FILE__, __LINE__, $parents);
+		if (count($parents)) $this->HTML2PDF->makeError(5, __FILE__, __LINE__, $parents);
 
 		// liste des actions sauvée
 		$this->code = array_values($todos);
