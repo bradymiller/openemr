@@ -219,7 +219,7 @@ class smtp_class
 			|| !extension_loaded("openssl"))
 				return("establishing SSL connections requires the OpenSSL extension enabled");
 		}
-		if(ereg('^[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}$',$domain))
+		if(preg_match('/^[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}$/',$domain))
 			$ip=$domain;
 		else
 		{
@@ -724,7 +724,7 @@ class smtp_class
 		&& function_exists("preg_replace"))
 			$output=preg_replace(array("/\n\n|\r\r/","/(^|[^\r])\n/","/\r([^\n]|\$)/D","/(^|\n)\\./"),array("\r\n\r\n","\\1\r\n","\r\n\\1","\\1.."),$data);
 		else
-			$output=ereg_replace("(^|\n)\\.","\\1..",ereg_replace("\r([^\n]|\$)","\r\n\\1",ereg_replace("(^|[^\r])\n","\\1\r\n",ereg_replace("\n\n|\r\r","\r\n\r\n",$data))));
+			$output=preg_replace("/(^|\n)\\./","\\1..",preg_replace("/\r([^\n]|\$/)","\r\n\\1",preg_replace("/(^|[^\r])\\n/","\\1\r\n",preg_replace("/\n\n|\r\r/","\r\n\r\n",$data))));
 	}
 
 	Function SendData($data)

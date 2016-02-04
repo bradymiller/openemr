@@ -977,7 +977,7 @@ class C_Document extends Controller {
         $path = dirname($fname);
         $file = basename($fname);
 
-        $fparts = split("\.",$file);
+        $fparts = explode("\.",$file);
 
         if (count($fparts) > 1) {
             if (is_numeric($fparts[count($fparts) -2]) && (count($fparts) > 2)) {

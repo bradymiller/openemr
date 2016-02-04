@@ -325,7 +325,7 @@ class Userforms extends UserAudit{
 		$total = 0.00;
 		$copays = 0.00;
 		foreach ($ar['newpatient'] as $be) {
-		    $ta = split(":",$be);
+		    $ta = explode(":",$be);
 		    $billing = getPatientBillingEncounter($pid,$ta[1]);
 		    $billings[] = $billing;
 		    foreach ($billing as $b) {

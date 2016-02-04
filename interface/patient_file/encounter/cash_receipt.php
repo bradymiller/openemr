@@ -164,7 +164,7 @@ $encounter . "' and pid='$pid'"))
      $total = 0.00;
      $copays = 0.00;
      foreach ($ar['newpatient'] as $be) {
-      $ta = split(":",$be);
+      $ta = explode(":",$be);
       $billing = getPatientBillingEncounter($pid,$ta[1]);
       $billings[] = $billing;
       foreach ($billing as $b) {
@@ -363,7 +363,7 @@ if ($result = getBillingByEncounter($pid,$encounter,"*") ) {
 				."</td><td>" . oeFormatMoney($iter['fee']) . "</td></tr>\n";
 			$billing_html[$iter["code_type"]] .= $html;
 			$total += $iter['fee'];
-			$js = split(":",$iter['justify']);
+			$js = explode(":",$iter['justify']);
 			$counter = 0;
 			foreach ($js as $j) {
 				if(!empty($j)) {
