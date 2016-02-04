@@ -60,7 +60,7 @@ class UserAudit extends UserMail{
   public function delete_if_new_patient($var)
        {
 	      $data_credentials=$var[0];
-	if(UserService::valid($data_credentials)=='oemruser'){
+	if($this->UserService->valid($data_credentials)=='oemruser'){
 		$audit_master_id = $var['audit_master_id'];
 		 $qry = "select * from audit_master WHERE id=? and approval_status=1 and type=1";
 		 $result=sqlStatement($qry,array($audit_master_id));
@@ -108,7 +108,7 @@ class UserAudit extends UserMail{
   public function update_audit_master($var)
        {
 	      $data_credentials=$var[0];
-	      if(UserService::valid($data_credentials)){
+	      if($this->UserService->valid($data_credentials)){
 	       $audit_master_id=$var['audit_master_id'];
 	       $approval_status=$var['approval_status'];
 	       $comments=$var['comments'];
@@ -131,7 +131,7 @@ class UserAudit extends UserMail{
 	      $data_credentials=$var[0];
 				$last_insert_ids = array();
 				$validtables = array("patient_data","employer_data","insurance_data","history_data","openemr_postcalendar_events","ar_session","documents_legal_master","documents_legal_detail","patient_access_offsite");
-        if(UserService::valid($data_credentials)){
+        if($this->UserService->valid($data_credentials)){
 	      $audit_master_id = $var['audit_master_id'];
 	      $res = sqlStatement("SELECT DISTINCT ad.table_name,am.id,am.pid FROM audit_master as am,audit_details as ad WHERE am.id=ad.audit_master_id and am.approval_status in ('1','4') and am.id=? ORDER BY ad.id",array($audit_master_id));
 	      $tablecnt = sqlNumRows($res);
@@ -363,7 +363,7 @@ class UserAudit extends UserMail{
        {
          global $pid;
 	 $data_credentials = $var[0];
-	 if(UserService::valid($data_credentials))
+	 if($this->UserService->valid($data_credentials))
 	      {
 		     $audit_master_id_to_delete=$var['audit_master_id_to_delete'];
 		     $approval_status=$var['approval_status'];
@@ -379,7 +379,7 @@ class UserAudit extends UserMail{
 		     $qry = "DELETE from audit_details WHERE audit_master_id=?";
 		     sqlStatement($qry,array($audit_master_id_to_delete));
 		     }
-				 if((UserService::valid($data_credentials) == 'newpatient' || UserService::valid($data_credentials) == 'newpatienttoapprove') && $approval_status == 1){
+				 if(($this->UserService->valid($data_credentials) == 'newpatient' || $this->UserService->valid($data_credentials) == 'newpatienttoapprove') && $approval_status == 1){
 					$pid = 0;
 				 }
 		     $master_query="INSERT INTO audit_master SET
@@ -428,7 +428,7 @@ class UserAudit extends UserMail{
        {
         global $pid;
 	$data_credentials=$var[0];
-	if(UserService::valid($data_credentials))
+	if($this->UserService->valid($data_credentials))
 		 {
 		     $approval_status=$var['approval_status'];
 		     $type=$var['type'];
