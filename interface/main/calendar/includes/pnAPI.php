@@ -1249,7 +1249,7 @@ if (count($HTTP_GET_VARS) > 0) {
                         (preg_match("/<[^>]*img*\"?[^>]*>/i", $secvalue)) ||
                         (preg_match("/<[^>]*document.*\"?[^>]*>/i", $secvalue)) ||
                         (preg_match("/<[^>]*cookie*\"?[^>]*>/i", $secvalue)) ||
-                        (preg_match("/\"/", $secvalue))) {
+                        (preg_match("/\"/i", $secvalue))) {
                         //pnMailHackAttempt(__FILE__,__LINE__,'pnSecurity Alert','Intrusion detection.');
                         //Header("Location: index.php");
                 }
