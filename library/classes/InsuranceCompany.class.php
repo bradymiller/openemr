@@ -37,6 +37,7 @@ define ("FREEB_TYPE_MUTUALLY_DEFINED",26);
 
 require_once("PhoneNumber.class.php");
 require_once("Address.class.php");
+require_once("X12Partner.class.php");
 
 
 require_once("ORDataObject.class.php");
