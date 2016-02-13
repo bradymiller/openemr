@@ -34,7 +34,6 @@ if (!defined('__CLASS_MYPDF__'))
 			parent::__construct($sens, $unit, $format);
 			$this->AliasNbPages();
 			$this->SetMyFooter();
-			$this->HTML2PDF = new HTML2PDF();
 		}
 		
 		function SetMyFooter($page = null, $date = null, $heure = null, $form = null)
@@ -50,11 +49,11 @@ if (!defined('__CLASS_MYPDF__'))
 		function Footer()
 		{ 
 			$txt = '';
-			if ($this->footer_param['form'])	$txt = ($this->HTML2PDF->textGET('pdf05'));
-			if ($this->footer_param['date'] && $this->footer_param['heure'])	$txt.= ($txt ? ' - ' : '').($this->HTML2PDF->textGET('pdf03'));
-			if ($this->footer_param['date'] && !$this->footer_param['heure'])	$txt.= ($txt ? ' - ' : '').($this->HTML2PDF->textGET('pdf01'));
-			if (!$this->footer_param['date'] && $this->footer_param['heure'])	$txt.= ($txt ? ' - ' : '').($this->HTML2PDF->textGET('pdf02'));
-			if ($this->footer_param['page'])	$txt.= ($txt ? ' - ' : '').($this->HTML2PDF->textGET('pdf04'));
+			if ($this->footer_param['form'])	$txt = (HTML2PDF::textGET('pdf05'));
+			if ($this->footer_param['date'] && $this->footer_param['heure'])	$txt.= ($txt ? ' - ' : '').(HTML2PDF::textGET('pdf03'));
+			if ($this->footer_param['date'] && !$this->footer_param['heure'])	$txt.= ($txt ? ' - ' : '').(HTML2PDF::textGET('pdf01'));
+			if (!$this->footer_param['date'] && $this->footer_param['heure'])	$txt.= ($txt ? ' - ' : '').(HTML2PDF::textGET('pdf02'));
+			if ($this->footer_param['page'])	$txt.= ($txt ? ' - ' : '').(HTML2PDF::textGET('pdf04'));
 			
 			if (strlen($txt)>0)
 			{
