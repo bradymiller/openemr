@@ -79,7 +79,9 @@ if ($mode == "simple") {
 
 <body class='body_top'>
 <div>
-  <span class='title'><?php echo htmlspecialchars( xl('Patient Reminders'), ENT_NOQUOTES); ?></span>
+  <p class='title-background'>
+	<b><?php echo htmlspecialchars( xl('Patient Reminders'), ENT_NOQUOTES); ?></b>
+  </p>
 </div>
 <?php if ($mode == "simple") { ?> 
   <div style='float:left;margin-right:10px'>
@@ -218,7 +220,7 @@ else {
                 <?php } ?>
               </div>
             </td>
-            <td align=right class='text'><?php echo $prevlink." ".$end." of ".$total." ".$nextlink; ?></td>
+            <td align=right class='text pager'><?php echo "<span>".$prevlink."</span>"."  "."<span>".$end." of ".$total."</span><span>".$nextlink."</span>"; ?></td>
           </tr>
         </table>
       </td>

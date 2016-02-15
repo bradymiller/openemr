@@ -281,7 +281,7 @@ function writeOptionLine($option_id, $title, $seq, $default, $value, $mapping=''
   $checked_tog2 = $tog2 ? " checked" : "";
   $checked_active = $active ? " checked" : "";
 
-  echo " <tr bgcolor='$bgcolor'>\n";
+  echo " <tr>\n";
 
   echo "  <td align='center' class='optcell'>";
   echo "<input type='text' name='opt[$opt_line_no][id]' value='" .
@@ -796,7 +796,7 @@ function mysubmit() {
 <form method='post' name='theform' id='theform' action='edit_list.php'>
 <input type="hidden" name="formaction" id="formaction">
 
-<p><b><?php xl('Edit list','e'); ?>:</b>&nbsp;
+<p class="title-background"><b><?php xl('Edit list','e'); ?>:</b>&nbsp;
 <select name='list_id' id="list_id">
 <?php
 
@@ -836,7 +836,7 @@ while ($row = sqlFetchArray($res)) {
 
 <center>
 
-<table cellpadding='2' cellspacing='0'>
+<table cellpadding='2' cellspacing='0' class="table table-responsive table-striped table-bordered">
  <tr class='head'>
 <?php if ($list_id == 'feesheet') { ?>
   <td><b><?php xl('Group'    ,'e'); ?></b></td>

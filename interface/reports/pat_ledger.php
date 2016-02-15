@@ -357,9 +357,11 @@ function sel_patient() {
   win.printLogSetup(document.getElementById('printbutton'));
  });
 </script>
-
 </head>
 <body class="body_top">
+<?php include('../patient_file/pills.php'); ?>
+</p>
+    
 <?php if($type_form == '0') { ?>
 <span class='title' id='title'><?php echo xlt('Report'); ?> - <?php echo xlt('Patient Ledger by Date'); ?></span>
 <?php }else{ ?>

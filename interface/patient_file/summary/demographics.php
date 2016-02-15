@@ -445,7 +445,7 @@ function setMyPatient() {
   return;
  }
 <?php if (isset($_GET['set_pid'])) { ?>
- parent.left_nav.setPatient(<?php echo "'" . htmlspecialchars(($result['fname']) . " " . ($result['lname']),ENT_QUOTES) .
+ parent.left_nav.setPatient(<?php echo "'" . htmlspecialchars(($result['fname']) . " " . ($result['lname']), ENT_QUOTES) .
    "'," . htmlspecialchars($pid,ENT_QUOTES) . ",'" . htmlspecialchars(($result['pubpid']),ENT_QUOTES) .
    "','', ' " . htmlspecialchars(xl('DOB') . ": " . oeFormatShortDate($result['DOB_YMD']) . " " . xl('Age') . ": " . getPatientAgeDisplay($result['DOB_YMD']), ENT_QUOTES) . "'"; ?>);
  var EncounterDateArray = new Array;
@@ -499,7 +499,9 @@ $(window).load(function() {
 </head>
 
 <body class="body_top">
-
+<p>
+    <?php include('../pills.php'); ?>
+</p>
 <a href='../reminder/active_reminder_popup.php' id='reminder_popup_link' style='visibility: false;' class='iframe' onclick='top.restoreSession()'></a>
 
 <?php
@@ -586,75 +588,11 @@ if ($GLOBALS['patient_id_category_name']) {
 }
 
 ?>
-<table cellspacing='0' cellpadding='0' border='0'>
- <tr>
-  <td class="small" colspan='4'>
-<a href="../history/history.php" onclick='top.restoreSession()'>
-<?php echo htmlspecialchars(xl('History'),ENT_NOQUOTES); ?></a>
-|
-<?php //note that we have temporarily removed report screen from the modal view ?>
-<a href="../report/patient_report.php" onclick='top.restoreSession()'>
-<?php echo htmlspecialchars(xl('Report'),ENT_NOQUOTES); ?></a>
-|
-<?php //note that we have temporarily removed document screen from the modal view ?>
-<a href="../../../controller.php?document&list&patient_id=<?php echo $pid;?>" onclick='top.restoreSession()'>
-<?php echo htmlspecialchars(xl('Documents'),ENT_NOQUOTES); ?></a>
-|
-<a href="../transaction/transactions.php" class='iframe large_modal' onclick='top.restoreSession()'>
-<?php echo htmlspecialchars(xl('Transactions'),ENT_NOQUOTES); ?></a>
-|
-<a href="stats_full.php?active=all" onclick='top.restoreSession()'>
-<?php echo htmlspecialchars(xl('Issues'),ENT_NOQUOTES); ?></a>
-|
-<a href="../../reports/pat_ledger.php?form=1&patient_id=<?php echo attr($pid);?>" onclick='top.restoreSession()'>
-<?php echo xlt('Ledger'); ?></a>
-|
-<a href="../../reports/external_data.php" onclick='top.restoreSession()'>
-<?php echo xlt('External Data'); ?></a>
 
-<!-- DISPLAYING HOOKS STARTS HERE -->
-<?php
-	$module_query = sqlStatement("SELECT msh.*,ms.menu_name,ms.path,m.mod_ui_name,m.type FROM modules_hooks_settings AS msh
-					LEFT OUTER JOIN modules_settings AS ms ON obj_name=enabled_hooks AND ms.mod_id=msh.mod_id
-					LEFT OUTER JOIN modules AS m ON m.mod_id=ms.mod_id 
-					WHERE fld_type=3 AND mod_active=1 AND sql_run=1 AND attached_to='demographics' ORDER BY mod_id");
-	$DivId = 'mod_installer';
-	if (sqlNumRows($module_query)) {
-		$jid 	= 0;
-		$modid 	= '';
-		while ($modulerow = sqlFetchArray($module_query)) {
-			$DivId 		= 'mod_'.$modulerow['mod_id'];
-			$new_category 	= $modulerow['mod_ui_name'];
-			$modulePath 	= "";
-			$added      	= "";
-			if($modulerow['type'] == 0) {
-				$modulePath 	= $GLOBALS['customModDir'];
-				$added		= "";
-			}
-			else{ 	
-				$added		= "index";
-				$modulePath 	= $GLOBALS['zendModDir'];
-			}
-			$relative_link 	= "../../modules/".$modulePath."/".$modulerow['path'];
-			$nickname 	= $modulerow['menu_name'] ? $modulerow['menu_name'] : 'Noname';
-			$jid++;
-			$modid = $modulerow['mod_id'];			
-			?>
-			|
-			<a href="<?php echo $relative_link; ?>" onclick='top.restoreSession()'>
-			<?php echo htmlspecialchars($nickname,ENT_NOQUOTES); ?></a>
-		<?php	
-		}
-	}
-	?>
-<!-- DISPLAYING HOOKS ENDS HERE -->
 
-  </td>
- </tr>
- 
-</table> <!-- end header -->
-
-<div style='margin-top:10px'> <!-- start main content div -->
+<!--------------------------------------------------------------------- end header ------------------------------------------------------------------>
+    
+<div style='margin-top:10px' class="patient-home"> <!-- start main content div -->
  <table border="0" cellspacing="0" cellpadding="0" width="100%">
   <tr>
    <td align="left" valign="top">
@@ -733,21 +671,21 @@ expand_collapse_widget($widgetTitle, $widgetLabel, $widgetButtonLabel,
       </tr>
       <tr>
        <td>
-<?php
-// Demographics expand collapse widget
-$widgetTitle = xl("Demographics");
-$widgetLabel = "demographics";
-$widgetButtonLabel = xl("Edit");
-$widgetButtonLink = "demographics_full.php";
-$widgetButtonClass = "";
-$linkMethod = "html";
-$bodyClass = "";
-$widgetAuth = acl_check('patients', 'demo', '', 'write');
-$fixedWidth = true;
-expand_collapse_widget($widgetTitle, $widgetLabel, $widgetButtonLabel,
-  $widgetButtonLink, $widgetButtonClass, $linkMethod, $bodyClass,
-  $widgetAuth, $fixedWidth);
-?>
+            <?php
+                // Demographics expand collapse widget
+                $widgetTitle = xl("Demographics");
+                $widgetLabel = "demographics";
+                $widgetButtonLabel = xl("Edit");
+                $widgetButtonLink = "demographics_full.php";
+                $widgetButtonClass = "";
+                $linkMethod = "html";
+                $bodyClass = "";
+                $widgetAuth = acl_check('patients', 'demo', '', 'write');
+                $fixedWidth = true;
+                expand_collapse_widget($widgetTitle, $widgetLabel, $widgetButtonLabel,
+                $widgetButtonLink, $widgetButtonClass, $linkMethod, $bodyClass,
+                $widgetAuth, $fixedWidth);
+            ?>
          <div id="DEM" >
           <ul class="tabNav">
            <?php display_layout_tabs('DEM', $result, $result2); ?>

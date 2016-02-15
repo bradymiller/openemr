@@ -35,8 +35,8 @@ if (!isset($phpgacl_location)) {
  $(document).ready(function(){	
   
   //Show membership section by default
-  $("#membership_show").click();
-  membership_show();
+//  $("#membership_show").click();
+//  membership_show();
   //Show membership section by default
 				
   $("a.link_submit").livequery("click", function(){	
@@ -194,11 +194,19 @@ if (!isset($phpgacl_location)) {
   });
   	    
   function membership_show() {		
-   if (!$("#membership_show").attr("checked")) {
+   
+   if( $("#membership").is(':visible')){
+      $("#membership").hide('slow');
+      $('#membership_show').parent().parent().removeClass('arrow-down');
+      $('#membership_show').children(':checkbox').attr('checked', false);
+      return;
+   }
+
+    $('#membership_show').parent().parent().addClass('arrow-down');
+    $('#membership_show').children(':checkbox').attr('checked', true);
     $("#membership_error").empty();
     $("#membership").hide("slow");
-    return;
-   }
+    
    //Send ajax request
    $.ajax({
     type: "POST",
@@ -238,15 +246,24 @@ if (!isset($phpgacl_location)) {
   }
 		
   function acl_show() {
-   if (!$("#acl_show").attr("checked")) {	
+    if( $("#acl").is(':visible')) {
+      $("#acl").hide('slow');
+      $('#acl_show').parent().parent().removeClass('arrow-down');
+      $('#acl_show').children(':checkbox').attr('checked', false);
+      return;
+    }
+
+    $('#acl_show').parent().parent().addClass('arrow-down');
+    $('#acl_show').children(':checkbox').attr('checked', true);
+
     $("#acl_error").empty();
     $("#none_acl_returns").hide();
     $("#none_acl_list").hide();
     $("#acl").hide("slow");
     $("#div_acl_add_form").hide("slow");
     $("#div_acl_remove_form").hide("slow");
-    return;
-   }	
+    
+   
    //Send ajax request
    $.ajax({
     type: "POST",
@@ -510,30 +527,42 @@ if (!isset($phpgacl_location)) {
 </head>
 
 <body class="body_top">
- <span class='title'><?php xl('Access Control List Administration','e'); ?></span>&nbsp;
+ <p class='title-background'><b><?php xl('Access Control List Administration','e'); ?><b>&nbsp;
  <?php if ($phpgacl_location) {
   echo "<a href='../../gacl/admin/acl_admin.php' onclick='top.restoreSession()'><span class='back'>(" . xl('Advanced') . ")</span></a>";
  } ?>
+ </p>
  <br><br>	
  <div id='membership_edit'>
-  <span class=bold><input type='checkbox' id='membership_show'><?php xl('User Memberships','e'); ?></span>
+  <div class="parent">
+        <div class="accordionToggle">
+            <span id='membership_show'><input type="checkbox"><?php xl('User Memberships','e'); ?></span>
+        </div>
+  </div>
+   
+     
   <span class='loading' style='display: none;'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<?php xl('LOADING','e'); ?>...</span>
   <div id='membership_error'>
   </div>
   <div class=section id='membership' style='display: none;'>
   </div>
  </div>
+    
  <div id='acl_edit'>
-  <span class=bold><input type='checkbox' id='acl_show'><?php xl('Groups and Access Controls','e'); ?></span>
-  <a class='link_submit' href='no_javascript' id='none_acl_returns' title=<?php xl('Add New Group','e','\'','\''); ?> style='display: none;'>(<?php xl('Add New Group','e'); ?>)</a>
-  <a class='link_submit' href='no_javascript' id='none_acl_list' title=<?php xl('Remove Group','e','\'','\''); ?> style='display: none;'>(<?php xl('Remove Group','e'); ?>)</a>  
-  <span class='loading' style='display: none;'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<?php xl('LOADING','e'); ?>...</span>
+  <div class="parent">
+     <div class="accordionToggle">
+          <span id='acl_show'><input type="checkbox"><?php xl('Groups and Access Controls','e'); ?></span>
+          <a class='link_submit' href='no_javascript' id='none_acl_returns' title=<?php xl('Add New Group','e','\'','\''); ?> style='display: none;'>(<?php xl('Add New Group','e'); ?>)</a>
+          <a class='link_submit' href='no_javascript' id='none_acl_list' title=<?php xl('Remove Group','e','\'','\''); ?> style='display: none;'>(<?php xl('Remove Group','e'); ?>)</a>  
+          <span class='loading' style='display: none;'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<?php xl('LOADING','e'); ?>...</span>
+     </div>
+  </div>
   <div id='acl_error'>
   </div>
   <div id='div_acl_add_form' style='display: none;'>
    <form class="section" id="acl_add_form" action="no_javascript" method="post">
     <span class='bold'><?php xl('New Group Information','e'); ?></span><span class='loading' style='display: none;'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<?php xl('LOADING','e'); ?>...</span>
-    <table>
+    <table  class="table table-striped table-bordered">
      <tr>
       <td>
        <span class='text'><?php xl('Title','e'); ?>:</span>
@@ -575,7 +604,7 @@ if (!isset($phpgacl_location)) {
   <div id='div_acl_remove_form' style='display: none;'>
    <form class="section" id="acl_remove_form" action="no_javascript" method="post">
     <span class='bold'><?php xl('Remove Group Form','e'); ?></span><span class='loading' style='display: none;'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<?php xl('LOADING','e'); ?>...</span>
-    <table>
+    <table  class="table table-striped table-bordered">
      <tr>
       <td align="right">
        <span class='text'><?php xl('Group','e'); ?>:</span>

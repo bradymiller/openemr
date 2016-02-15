@@ -54,10 +54,11 @@ require_once("$srcdir/formatting.inc.php");
 <script type="text/javascript" src="<?php echo $GLOBALS['webroot']; ?>/library/js/jquery.js"></script>
 </head>
 
-<body class="body_top">
+<body class="body_top bottom-panel" id="messages-body">
 
-<span class="title"><?php echo xlt('Message and Reminder Center'); ?></span>
+<span class="title-bigger"><?php echo xlt('Message and Reminder Center'); ?></span>
 <br /><br />
+<div class="panel">    
 <span class="title"><?php echo xlt('Reminders'); ?></span>
 
 <?php       
@@ -108,28 +109,35 @@ else {
 ?>
 <br>
 <table><tr><td><span class="title"><?php echo htmlspecialchars( xl('Messages'), ENT_NOQUOTES); ?></span> <a class='more' href=<?php echo $lnkvar; ?></a></td></tr></table>
+
+
+</div>
 <?php
 //show the activity links
-if (empty($task) || $task=="add" || $task=="delete") { ?>
-  <?php if ($active == "all") { ?>
-    <span><?php echo xlt('Show All'); ?></span>
-  <?php } else { ?>
-    <a href="messages.php" class="link" onclick="top.restoreSession()"><span><?php echo xlt('Show All'); ?></span></a>
-  <?php } ?>
-  |
-  <?php if ($active == '1') { ?>
-    <span><?php echo xlt('Show Active'); ?></span>
-  <?php } else { ?>
-    <a href="messages.php?form_active=1" class="link" onclick="top.restoreSession()"><span><?php echo xlt('Show Active'); ?></span></a>
-  <?php } ?>
-  |
-  <?php if ($active == '0') { ?>
-    <span><?php echo xlt('Show Inactive'); ?></span>
-  <?php } else { ?>
-    <a href="messages.php?form_inactive=1" class="link" onclick="top.restoreSession()"><span><?php echo xlt('Show Inactive'); ?></span></a>
-  <?php } ?>
-<?php } ?>
+if (empty($task) || $task=="add" || $task=="delete") {
 
+    $show_all = '<li><a href="messages.php" onclick="top.restoreSession()"><span>';
+    $show_active = '<li><a href="messages.php?form_active=1"  onclick="top.restoreSession()"><span>';
+    $show_inactive = '<li><a href="messages.php?form_inactive=1"  onclick="top.restoreSession()"><span>';
+
+    if ($active == "all") {
+        $show_all = '<li class="active"><a ><span>';
+    }
+    if ($active == '1') {
+        $show_active = '<li class="active"><a ><span>';
+    }
+    if ($active == '0') {
+        $show_inactive = '<li class="active"><a ><span>';
+    }
+
+?>
+
+    <ul class="tabNav">
+        <?php echo $show_all . xlt('Show All') ?></span></a></li>
+        <?php echo $show_active . xlt('Show Active') ?></span></a></li>
+        <?php echo $show_inactive . xlt('Show Inactive') ?></span></a></li>
+    </ul>
+<?php } ?>
 <?php
 switch($task) {
     case "add" :
@@ -216,7 +224,7 @@ echo "
 <input type=hidden name=task id=task value=add>";
 ?>
 <div id="pnotes"><center>
-<table border='0' cellspacing='8'>
+<table border='0' cellspacing='8' class="table table-striped table-bordered">
  <tr>
   <td class='text'>
    <b><?php echo htmlspecialchars( xl('Type'), ENT_NOQUOTES); ?>:</b>
@@ -242,12 +250,12 @@ echo "
    if ($patientname == '') {
        $patientname = xl('Click to select');
    } ?>
-   <input type='text' size='10' name='form_patient' style='width:150px;<?php
+   <input class="form-control input-block" type='text' size='10' name='form_patient' style='width:150px;<?php
       echo ($task=="addnew"?"cursor:pointer;cursor:hand;":"") ?>' value='<?php
       echo htmlspecialchars($patientname, ENT_QUOTES); ?>' <?php
       echo (($task=="addnew" || $result['pid']==0) ? "onclick='sel_patient()' readonly":"disabled") ?> title='<?php
       echo ($task=="addnew"?(htmlspecialchars( xl('Click to select patient'), ENT_QUOTES)):"") ?>'  />
-   <input type='hidden' name='reply_to' id='reply_to' value='<?php echo htmlspecialchars( $reply_to, ENT_QUOTES) ?>' />
+   <input class="form-control input-block" type='hidden' name='reply_to' id='reply_to' value='<?php echo htmlspecialchars( $reply_to, ENT_QUOTES) ?>' />
    &nbsp; &nbsp;
    <b><?php echo htmlspecialchars( xl('Status'), ENT_NOQUOTES); ?>:</b>
     <?php
@@ -262,8 +270,8 @@ echo "
    <b><?php echo htmlspecialchars( xl('To'), ENT_QUOTES); ?>:</b>
    <input type='textbox' name='assigned_to_text' id='assigned_to_text' size='40' readonly='readonly'
     value='<?php echo htmlspecialchars(xl("Select Users From The Dropdown List"), ENT_QUOTES)?>' >
-   <input type='hidden' name='assigned_to' id='assigned_to' >
-   <select name='users' id='users' onchange='addtolist(this);' >
+   <input type='hidden' name='assigned_to' id='assigned_to'  class="form-control">
+   <select class="form-control" name='users' id='users' onchange='addtolist(this);' >
 <?php
   echo "<option value='" . htmlspecialchars( '--', ENT_QUOTES) . "'";
   echo ">" . htmlspecialchars( xl('Select User'), ENT_NOQUOTES);
@@ -343,7 +351,7 @@ if ($noteid) {
 }
 
 ?>
-   <textarea name='note' id='note' rows='8' style="width: 660px; "><?php echo htmlspecialchars( $note, ENT_NOQUOTES) ?></textarea>
+   <textarea class="form-control" name='note' id='note' rows='8' style="width: 660px; "><?php echo htmlspecialchars( $note, ENT_NOQUOTES) ?></textarea>
   </td>
  </tr>
 </table>
@@ -496,10 +504,10 @@ else {
     }
     // Display the Messages table header.
     echo "
-    <table width=100%><tr><td><table border=0 cellpadding=1 cellspacing=0 width=90%  style=\"border-left: 1px #000000 solid; border-right: 1px #000000 solid; border-top: 1px #000000 solid;\">
+    <table width=100% id='MessageList'><tr><td><table border=0 cellpadding=1 cellspacing=0 width=90%  style=\"border-left: 1px #000000 solid; border-right: 1px #000000 solid; border-top: 1px #000000 solid;\">
     <form name=MessageList action=\"messages.php?showall=".attr($showall)."&sortby=".attr($sortby)."&sortorder=".attr($sortorder)."&begin=".attr($begin)."&$activity_string_html\" method=post>
     <input type=hidden name=task value=delete>
-        <tr height=\"24\" style=\"background:lightgrey\">
+        <tr height=\"24\" class=\"tableHead-bg\" style=\"background:lightgrey\">
             <td align=\"center\" width=\"25\" style=\"border-bottom: 1px #000000 solid; border-right: 1px #000000 solid;\"><input type=checkbox id=\"checkAll\" onclick=\"selectAll()\"></td>
             <td width=\"20%\" style=\"border-bottom: 1px #000000 solid; border-right: 1px #000000 solid;\" class=bold>&nbsp;<b>" .
               htmlspecialchars( xl('From'), ENT_NOQUOTES) . "</b> $sortlink[0]</td>
@@ -553,10 +561,10 @@ else {
     </form></table>
     <table border=0 cellpadding=5 cellspacing=0 width=90%>
         <tr>
-            <td class=\"text\"><a href=\"messages.php?showall=".attr($showall)."&sortby=".attr($sortby)."&sortorder=".attr($sortorder)."&begin=".attr($begin)."&task=addnew&$activity_string_html\" onclick=\"top.restoreSession()\">" .
+            <td class=\"text\"><span class=\"css_button_link\"><a href=\"messages.php?showall=".attr($showall)."&sortby=".attr($sortby)."&sortorder=".attr($sortorder)."&begin=".attr($begin)."&task=addnew&$activity_string_html\" onclick=\"top.restoreSession()\">" .
               htmlspecialchars( xl('Add New'), ENT_NOQUOTES) . "</a> &nbsp; <a href=\"javascript:confirmDeleteSelected()\" onclick=\"top.restoreSession()\">" .
-              htmlspecialchars( xl('Delete'), ENT_NOQUOTES) . "</a></td>
-            <td align=right class=\"text\">$prevlink &nbsp; $end of $total &nbsp; $nextlink</td>
+              htmlspecialchars( xl('Delete'), ENT_NOQUOTES) . "</a></span></td>
+            <td align=right class=\"text pager\"><span>$prevlink</span> &nbsp; <span>$end of $total</span> &nbsp; <span>$nextlink</span></td>
         </tr>
     </table></td></tr></table><br>";
 ?>

@@ -149,6 +149,7 @@ if ($GLOBALS['concurrent_layout']) {
     border='0' framespacing='0' />
   </frameset>
 <?php if (empty($GLOBALS['athletic_team'])) { ?>
+     <div class="main-section">
   <frameset rows='60%,*' id='fsright' bordercolor='#999999' frameborder='1'>
 <?php } else { ?>
   <frameset rows='100%,*' id='fsright' bordercolor='#999999' frameborder='1'>
@@ -157,6 +158,7 @@ if ($GLOBALS['concurrent_layout']) {
    <frame src='messages/messages.php?form_active=1' name='RBot' scrolling='auto' />
   </frameset>
  </frameset>
+</div>         
 </frameset>
 
 <?php } else { // use tall nav area ?>
@@ -185,7 +187,7 @@ if ($GLOBALS['concurrent_layout']) {
 <?php } else { // start old layout ?>
 
 </head>
-<frameset rows="<?php echo attr($GLOBALS[navBarHeight]).",".attr($GLOBALS[titleBarHeight]) ?>,*"
+<frameset rows="<?php echo attr($GLOBALS['navBarHeight']).",".attr($GLOBALS['titleBarHeight']) ?>,*"
   cols="*" frameborder="no" border="0" framespacing="0"
   onunload="imclosing()">
   <frame src="main_navigation.php" name="Navigation" scrolling="no" noresize frameborder="no">

@@ -70,7 +70,7 @@ function eventTypeChange(eventname)
 </script>
 </head>
 <body class="body_top">
-<font class="title"><?php  xl('Logs Viewer','e'); ?></font>
+<p class="title-background"><b><?php  xl('Logs Viewer','e'); ?></b></p>
 <br>
 <?php 
 $err_message=0;
@@ -127,7 +127,7 @@ $sortby = formData('sortby','G') ;
 ?>
 <input type="hidden" name="sortby" id="sortby" value="<?php echo $sortby; ?>">
 <input type=hidden name=csum value="">
-<table>
+<table class="table table-bordered table-striped">
 <tr><td>
 <span class="text"><?php  xl('Start Date','e'); ?>: </span>
 </td><td>
@@ -251,7 +251,7 @@ $check_sum = formData('check_sum','G');
 </td>
 <td>
 <input type=hidden name="event" value=<?php echo $event ; ?>>
-<a href="javascript:document.theform.submit();" class='link_submit'>[<?php  xl('Refresh','e'); ?>]</a>
+<a href="javascript:document.theform.submit();" class='link_submit'><?php  xl('Refresh','e'); ?></a>
 </td>
 </tr>
 </table>

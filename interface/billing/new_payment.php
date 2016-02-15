@@ -317,7 +317,7 @@ document.onclick=HideTheAjaxDivs;
 </style>
 <link rel="stylesheet" href="<?php echo $css_header; ?>" type="text/css">
 </head>
-<body class="body_top" onLoad="OnloadAction()"  >
+<body class="body_top batchPaymentTab" onLoad="OnloadAction()"  >
 <form name='new_payment' method='post'  action="new_payment.php"  onsubmit='
 <?php
  if($payment_id*1==0)
@@ -336,7 +336,7 @@ return false;
 ' style="display:inline" >
 <table width="100%" border="0"  cellspacing="0" cellpadding="0">
   <tr>
-    <td colspan="3" align="left"><b><?php echo htmlspecialchars( xl('Payments'), ENT_QUOTES) ?></b></td>
+    <td colspan="3" align="left"><p class="title-background"><b><?php echo htmlspecialchars( xl('Payments'), ENT_QUOTES) ?></b></p></td>
   </tr>
   <tr height="15">
     <td colspan="3" align="left" ></td>
@@ -347,7 +347,8 @@ return false;
 		 <li class='current'><a href='new_payment.php'><?php echo htmlspecialchars( xl('New Payment'), ENT_QUOTES) ?></a></li>
 		 <li><a href='search_payments.php'><?php echo htmlspecialchars( xl('Search Payment'), ENT_QUOTES) ?></a></li>
 		 <li><a href='era_payments.php'><?php echo htmlspecialchars( xl('ERA Posting'), ENT_QUOTES) ?></a></li>
-		</ul>	</td>
+		</ul>	
+    </td>
   </tr>
   <tr>
     <td colspan="3" align="left" >

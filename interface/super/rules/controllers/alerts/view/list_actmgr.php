@@ -28,9 +28,11 @@ require_once("$phpgacl_location/gacl_api.class.php");
 
 <table class="header">
   <tr>
-        <td class="title"><?php echo out( xl('Clinical Decision Rules Alert Manager') ); ?></td>
+        <td class="title-background"><b><?php echo out( xl('Clinical Decision Rules Alert Manager') ); ?></b></td>
         
-  </tr>
+
+<table class="header">
+  
   <tr>
         <td>
         	<a href="javascript:document.cdralertmgr.submit();" class="css_button" onclick="top.restoreSession()"><span><?php echo out( xl('Save') ); ?></span></a><a href="javascript:document.cdralertmgr.reset();" class="css_button" onclick="top.restoreSession()"><span><?php echo out( xl('Reset') ); ?></span></a>
@@ -41,7 +43,7 @@ require_once("$phpgacl_location/gacl_api.class.php");
 &nbsp;
 
 <form name="cdralertmgr" method="post" action="index.php?action=alerts!submitactmgr" onsubmit="return top.restoreSession()">
-<table cellpadding="1" cellspacing="0" class="showborder">
+<table cellpadding="1" cellspacing="0" class="showborder table table-bordered table-striped">
         <tr class="showborder_head">
                 <th width="250px"><?php echo out( xl('Title') ); ?></th>
                 <th width="40px">&nbsp;</th>

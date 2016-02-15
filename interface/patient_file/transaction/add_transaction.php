@@ -289,10 +289,16 @@ div.tab {
 
 </head>
 <body class="body_top" onload="<?php echo $body_onload_code; ?>" >
+
+<p>&nbsp;</p>    
+<p>
+    <?php include('../pills.php'); ?>
+</p>    
+    
 <form name='new_transaction' method='post' action='add_transaction.php?transid=<?php echo htmlspecialchars( $transid, ENT_QUOTES); ?>' onsubmit='return validate(this)'>
 <input type='hidden' name='mode' value='add'>
 
-	<table>
+	<table class="table table-striped" style="max-width: 550px">
 	    <tr>
             <td>
                 <b><?php echo htmlspecialchars( xl('Add/Edit Patient Transaction'), ENT_NOQUOTES); ?></b>&nbsp;</td><td>
@@ -308,7 +314,7 @@ div.tab {
         </tr>
 	</table>
 
-	<table class="text">
+	<table class="text table table-striped" style="max-width: 550px">
 	    <tr><td>
         <?php echo htmlspecialchars( xl('Transaction Type'), ENT_NOQUOTES); ?>:&nbsp;</td><td>
 	<?php echo generate_select_list('title','transactions',$form_id,'','','','titleChanged()'); ?>
@@ -438,7 +444,7 @@ while ($frow = sqlFetchArray($fres)) {
     $group_seq_esc = htmlspecialchars( $group_seq, ENT_QUOTES);
     if($group_seq == 1)	echo "<div class='tab current' id='div_$group_seq_esc'>";
     else echo "<div class='tab' id='div_$group_seq_esc'>";
-    echo " <table border='0' cellpadding='0'>\n";
+    echo " <table border='0' cellpadding='0' class='table table-bordered table-striped'>\n";
     $display_style = 'none';
   }
 

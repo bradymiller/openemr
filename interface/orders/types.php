@@ -236,10 +236,10 @@ function recolor() {
 
 </head>
 
-<body class="body_nav">
-<center>
+<body class="body_nav confirguration">
 
-<h3 style='margin-top:0'><?php xl('Types of Orders and Results','e') ?></h3>
+
+<p class="title-background"><b><?php xl('Types of Orders and Results','e') ?></b></p>
 
 <form method='post' name='theform' action='types.php?popup=<?php echo $popup ?>&order=<?php
 echo $order;
@@ -247,13 +247,13 @@ if (isset($_GET['formid' ])) echo '&formid='  . $_GET['formid'];
 if (isset($_GET['formseq'])) echo '&formseq=' . $_GET['formseq'];
 ?>'>
 
-<table width='100%' cellspacing='0' cellpadding='0' border='0'>
+<table width='100%' cellspacing='0' cellpadding='0' border='0' class="table table-bordered table-striped">
  <tr class='head'>
-  <th class='col1' align='left'>&nbsp;&nbsp;<?php xl('Name','e') ?></th>
-  <th class='col2' align='left'><?php xl('Order','e') ?></th>
-  <th class='col3' align='left'><?php xl('Code','e') ?></th>
-  <th class='col4' align='left'><?php xl('Description','e') ?></th>
-  <th class='col5' align='left'>&nbsp;</th>
+  <th style="width:29%" class='col1' align='left'>&nbsp;&nbsp;<?php xl('Name','e') ?></th>
+  <th style="width:22%"  class='col2' align='left'><?php xl('Order','e') ?></th>
+  <th style="width:19%" class='col3' align='left'><?php xl('Code','e') ?></th>
+  <th class='col4' colspan="2" align='left'><?php xl('Description','e') ?></th>
+  
  </tr>
 </table>
 
@@ -272,7 +272,7 @@ if (isset($_GET['formseq'])) echo '&formseq=' . $_GET['formseq'];
 
 </form>
 
-</center>
+
 
 </body>
 </html>

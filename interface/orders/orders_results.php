@@ -289,10 +289,11 @@ function validate(f) {
 </head>
 
 <body class="body_top">
+<p class="title-background"><b><?php echo xlt("Batch Results"); ?></b></p>
 <form method='post' action='orders_results.php?batch=<?php echo $form_batch; ?>&review=<?php echo $form_review; ?>'
  onsubmit='return validate(this)'>
 
-<table>
+<table class="table table-striped table-bordered batchResults">
  <tr>
   <td class='text'>
 <?php
@@ -349,7 +350,7 @@ if ($form_batch) {
 
 <?php if (!$form_batch || ($form_proc_type > 0 && $form_from_date)) { ?>
 
-<table width='100%' cellpadding='1' cellspacing='2'>
+<table width='100%' cellpadding='1' cellspacing='2' class="table table-striped table-bordered">
 
  <tr class='head'>
   <td colspan='2'><?php echo $form_batch ? xl('Patient') : xl('Order'); ?></td>

@@ -70,7 +70,7 @@ function userSelect() {
 <body class="body_top">
 
 <?php
-echo "<span class='title'>" . xlt('Chart Tracker') . "</span>\n";
+echo "<p class='title-background'><b>" . xlt('Chart Tracker') . "</b></p>\n";
 ?>
 
 <center>
@@ -110,7 +110,7 @@ if ($form_newid) {
 }
 ?>
 
-<table>
+<table class="table table-striped table-bordered">
 
 <?php
 if (!empty($row)) {

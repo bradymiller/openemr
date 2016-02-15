@@ -245,7 +245,7 @@ function sel_procedure() {
 
 <body class="body_top">
 
-<span class='title'><?php xl('Report','e'); ?> - <?php xl('Receipts Summary','e'); ?></span>
+    <p class='title-background'><b><?php xl('Report','e'); ?> - <?php xl('Receipts Summary','e'); ?></b></p>
 
 <form method='post' action='receipts_by_method_report.php' id='theform'>
 
@@ -255,7 +255,7 @@ function sel_procedure() {
 
 <table>
  <tr>
-  <td width='630px'>
+  <td width='630px' class="custom-width">
 	<div style='float:left'>
 
 	<table class='text'>

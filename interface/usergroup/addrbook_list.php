@@ -93,9 +93,11 @@ $res = sqlStatement($query,$sqlBindArray);
 <body class="body_top">
 
 <div id="addressbook_list">
+
+<p class="title-background"><b><?php echo xlt('Address Book'); ?></b></p>
 <form method='post' action='addrbook_list.php' onsubmit='return top.restoreSession()'>
 
-<table>
+<table class="table table-responsive table-bordered">
  <tr class='search'> <!-- bgcolor='#ddddff' -->
   <td>
    <?php echo xlt('Organization')?>:
@@ -124,7 +126,7 @@ $res = sqlStatement($query,$sqlBindArray);
 </tr>
 </table>
 
-<table>
+<table class="table table-bordered table-responsive">
  <tr class='head'>
   <td title='<?php echo xla('Click to view or edit'); ?>'><?php echo xlt('Organization'); ?></td>
   <td><?php echo xlt('Name'); ?></td>

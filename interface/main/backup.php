@@ -130,11 +130,14 @@ if ($form_step == 104) {
 </head>
 
 <body class="body_top">
+<p class="title-background">
+	<b><?php echo xlt("Backup"); ?></b>
+</p>
 <center>
 &nbsp;<br />
 <form method='post' action='backup.php' enctype='multipart/form-data'>
 
-<table<?php if ($form_step != 101) echo " style='width:50em'"; ?>>
+<table<?php if ($form_step != 101) echo " style='width:50em'"; ?> class="table table-responsive table-striped table-bordered table-fullwidth">
  <tr>
   <td>
 
@@ -146,7 +149,7 @@ $file_to_compress = '';  // if named, this iteration's file will be gzipped afte
 $eventlog=0;  // Eventlog Flag
 
 if ($form_step == 0) {
-  echo "<table>\n";
+  echo "<table class=\"table table-responsive table-striped table-bordered\">\n";
   echo " <tr>\n";
   echo "  <td><input type='submit' name='form_create' value='$BTN_TEXT_CREATE' /></td>\n";
   echo "  <td>" . xl('Create and download a full backup') . "</td>\n";

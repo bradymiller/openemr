@@ -32,7 +32,9 @@ $(document).ready(function(){
 
 </head>
 <body class="body_top">
-
+<p>
+    <?php include('../pills.php'); ?>    
+</p>
 <?php
  if (acl_check('patients','med')) {
   $tmp = getPatientData($pid, "squad");
@@ -63,7 +65,7 @@ $(document).ready(function(){
 <?php echo htmlspecialchars(xl('for'),ENT_NOQUOTES);?>&nbsp;<span class="title"><a href="../summary/demographics.php" onclick="top.restoreSession()"><?php echo htmlspecialchars(getPatientName($pid),ENT_NOQUOTES) ?></a></span>
 </div>
 <div>
-    <a href="history_full.php" <?php if (!$GLOBALS['concurrent_layout']) echo "target='Main'"; ?>
+    <a href="history_full.php?history" <?php if (!$GLOBALS['concurrent_layout']) echo "target='Main'"; ?>
      class="css_button"
      onclick="top.restoreSession()">
     <span><?php echo htmlspecialchars(xl("Edit"),ENT_NOQUOTES);?></span>
@@ -76,7 +78,7 @@ $(document).ready(function(){
 <?php } ?>
 
 <div style='float:none; margin-top: 10px; margin-right:20px'>
-    <table>
+    <table class="table table-striped table-bordered">
     <tr>
         <td>
             <!-- Demographics -->

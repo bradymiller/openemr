@@ -106,12 +106,12 @@ if (!empty($_POST['bn_upload'])) {
 <form method='post' action='manage_document_templates.php' enctype='multipart/form-data'
  onsubmit='return top.restoreSession()'>
 
-<center>
 
-<h2><?php echo xlt('Document Template Management'); ?></h2>
+
+    <p class="title-background"><b><?php echo xlt('Document Template Management'); ?></b></p>
 
 <p>
-<table border='1' width='95%'>
+<table border='1' width='95%' class="table table-striped table-bordered">
 
  <tr bgcolor='#dddddd' class='dehead'>
   <td align='center'><?php echo xlt('Upload a Template'); ?></td>
@@ -133,7 +133,7 @@ if (!empty($_POST['bn_upload'])) {
 </p>
 
 <p>
-<table border='1' width='95%'>
+<table border='1' width='95%' class="table table-striped table-bordered">
 
  <tr bgcolor='#dddddd' class='dehead'>
   <td align='center'><?php echo xlt('Download or Delete a Template'); ?></td>
@@ -170,7 +170,7 @@ if (!empty($_POST['bn_upload'])) {
 </table>
 </p>
 
-</center>
+
 
 </form>
 </body>

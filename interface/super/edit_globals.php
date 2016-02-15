@@ -302,7 +302,7 @@ input     { font-size:10pt; }
 </script>
 </head>
 
-<body class="body_top">
+<body class="body_top globalsTabs">
 
 <?php if ($_GET['mode'] == "user") { ?>
   <form method='post' name='theform' id='theform' action='edit_globals.php?mode=user' onsubmit='return top.restoreSession()'>
@@ -311,9 +311,9 @@ input     { font-size:10pt; }
 <?php } ?>
 
 <?php if ($_GET['mode'] == "user") { ?>
-  <p><b><?php xl('Edit User Settings','e'); ?></b>
+  <p class="title-background"><b><?php xl('Edit User Settings','e'); ?></b>
 <?php } else { ?>
-  <p><b><?php xl('Edit Global Settings','e'); ?></b>
+  <p class="title-background"><b><?php xl('Edit Global Settings','e'); ?></b>
 <?php } ?>
 
 <ul class="tabNav">
@@ -338,7 +338,7 @@ foreach ($GLOBALS_METADATA as $grpname => $grparr) {
   echo " <div class='tab" . ($i ? "" : " current") .
     "' style='height:auto;width:97%;'>\n";
 
-  echo " <table>";
+  echo " <table class=\"table table-striped table-bordered\">";
 
   if ($_GET['mode'] == "user") {
    echo "<tr>";

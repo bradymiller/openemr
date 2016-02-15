@@ -360,8 +360,8 @@ document.onclick=TakeActionOnHide;
 </head>
 <body class="body_top" onLoad="TestExpandCollapse()">
 
-<p style='margin-top:5px;margin-bottom:5px;margin-left:5px'>
-
+<p class="title-background">
+<b>
 <?php if ($GLOBALS['concurrent_layout']) { ?>
 <font class='title'><?php echo xlt('Billing Manager') ?></font>
 <?php } else if ($userauthorized) { ?>
@@ -369,7 +369,7 @@ document.onclick=TakeActionOnHide;
 <?php } else { ?>
 <a href="../main/onotes/office_comments.php" target='Main' onclick='top.restoreSession()'><font class=title><?php echo xlt('Billing Manager') ?></font><font class=more><?php echo $tback; ?></font></a>
 <?php } ?>
-
+</b>
 </p>
 
 <form name='the_form' method='post' action='billing_report.php' onsubmit='return top.restoreSession()' style="display:inline">
@@ -464,7 +464,7 @@ if(!isset($_REQUEST['mode']))//default case
  
  }
 ?>
-<table width='100%' border="0" cellspacing="0" cellpadding="0">
+<table width='100%' border="0" cellspacing="0" cellpadding="0" class="table table-striped table-bordered tableBilling">
  <tr>
       <td width="25%">&nbsp;</td>
       <td width="50%">
@@ -480,27 +480,25 @@ if(!isset($_REQUEST['mode']))//default case
       <table width="100%" border="0" cellspacing="0" cellpadding="0">
           <tr>
             <td width="15%">&nbsp;</td>
-            <td width="85%"><span class='text'><a onClick="javascript:return SubmitTheScreen();" href="#" class=link_submit>[<?php echo xlt('Update List') ?>]</a>
+            <td width="85%"><span class='text'><a onClick="javascript:return SubmitTheScreen();" href="#" class="link_submit"><?php echo xlt('[Update List]') ?></a>
    or
-   <a onClick="javascript:return SubmitTheScreenExportOFX();" href="#"  class='link_submit'><?php echo '[' . xlt('Export OFX') .']' ?></a></span>               </td>
+   <a onClick="javascript:return SubmitTheScreenExportOFX();" href="#"  class='link_submit'><?php echo  xlt('[Export OFX]')  ?></a></span>               </td>
           </tr>
           <tr>
             <td>&nbsp;</td>
-            <td><a onClick="javascript:return SubmitTheScreenPrint();" href="#" 
-    class='link_submit'  ><?php echo '['. xlt('View Printable Report').']' ?></a></td>
+            <td><a onClick="javascript:return SubmitTheScreenPrint();" href="#" class='link_submit'  ><?php echo xlt ('[View Printable Report]') ?></a></td>
           </tr>
 		  
 	 <?php if ($daysheet) { ?> 
 		  <tr>
             <td>&nbsp;</td>
-            <td><a onClick="javascript:return SubmitTheEndDayPrint();" href="#" 
-    class='link_submit'  ><?php echo '['.xlt('End Of Day Report').']' ?></a>
-	<?php if ($daysheet_total) { ?> 
+            <td><a onClick="javascript:return SubmitTheEndDayPrint();" href="#" class='link_submit'>
+                    <?php echo xlt('[End Of Day Report]') ?></a> <?php if ($daysheet_total) { ?>
 	<span class=text><?php echo xlt('Totals'); ?> </span>
 	<input type=checkbox  name="end_of_day_totals_only" value="1" <?php if ($obj['end_of_day_totals_only'] === '1') echo "checked";?>>
 	<?php } ?>
 	<?php if ($provider_run) { ?> 
-	<span class=text><?php echo xlt('Provider'); ?> </span>
+	<span class=text><?php echo xlt('[Provider]'); ?> </span>
 	<input type=checkbox  name="end_of_day_provider_only" value="1" <?php if ($obj['end_of_day_provider_only'] === '1') echo "checked";?>>
 	<?php } ?>
 	</td>
@@ -514,13 +512,13 @@ if(!isset($_REQUEST['mode']))//default case
               $acct_config = $GLOBALS['oer_config']['ws_accounting'];
               if($acct_config['enabled']) {
                 if($acct_config['enabled'] !== 2) {
-                  print '<span class=text><a href="javascript:void window.open(\'' . $acct_config['url_path'] . '\')">' . '['. xlt("SQL-Ledger") .']' . '</a> &nbsp; </span>';
+                  print '<span class=text><a class="css_button_small" href="javascript:void window.open(\'' . $acct_config['url_path'] . '\')">' . '['. xlt("SQL-Ledger") .']' . '</a> &nbsp; </span>';
                 }
                 if (acl_check('acct', 'rep')) {
-                  print '<span class=text><a href="javascript:void window.open(\'sl_receipts_report.php\')" onclick="top.restoreSession()">' . '['. xlt('Reports') .']'. '</a> &nbsp; </span>';
+                  print '<span class=text><a class="link_submit" href="javascript:void window.open(\'sl_receipts_report.php\')" onclick="top.restoreSession()">' .  xlt('[Reports]') . '</a> &nbsp; </span>';
                 }
                 if (acl_check('acct', 'eob')) {
-                  print '<span class=text><a href="javascript:void window.open(\'sl_eob_search.php\')" onclick="top.restoreSession()">' . '['.xlt('EOBs') .']' . '</a></span>';
+                  print '<span class=text><a class="link_submit" href="javascript:void window.open(\'sl_eob_search.php\')" onclick="top.restoreSession()">' . xlt('[EOBs]')  . '</a></span>';
                 }
               }
             ?>
@@ -532,17 +530,17 @@ if(!isset($_REQUEST['mode']))//default case
             <?php if (! file_exists($EXPORT_INC)) { ?>
                <!--
                <a href="javascript:top.restoreSession();document.the_form.mode.value='process';document.the_form.submit()" class="link_submit"
-                title="Process all queued bills to create electronic data (and print if requested)"><?php echo '['. xlt('Start Batch Processing') .']' ?></a>
+                title="Process all queued bills to create electronic data (and print if requested)"><?php echo  xlt('Start Batch Processing') ?></a>
                &nbsp;
                -->
                <a href='customize_log.php' onclick='top.restoreSession()' target='_blank' class='link_submit'
-                title='<?php xla('See messages from the last set of generated claims'); ?>'><?php echo '['. xlt('View Log') .']'?></a>
+                title='<?php xla('See messages from the last set of generated claims'); ?>'><?php echo  xlt('[View Log') ?></a>
             <?php } ?>
             </td>
           </tr>
           <tr>
             <td>&nbsp;</td>
-            <td><a href="javascript:select_all()" class="link_submit"><?php  echo '['. xlt('Select All') .']'?></a></td>
+            <td><a href="javascript:select_all()" class="link_submit"><?php  echo  xlt('[Select All]') ?></a></td>
           </tr>
       </table>
 
@@ -559,7 +557,7 @@ if(!isset($_REQUEST['mode']))//default case
 </table>
 </form>
 <form name='update_form' method='post' action='billing_process.php' onsubmit='return top.restoreSession()' style="display:inline">
-<center>
+<center class="billingButton">
 <span class='text' style="display:inline">
 <?php if (file_exists($EXPORT_INC)) { ?>
 <input type="submit" class="subbtn" name="bn_external" value="Export Billing" title="<?php echo xla('Export to external billing system') ?>">
@@ -832,7 +830,7 @@ if(is_array($ret))
         "','" . addslashes($ptname) . "'," . $iter['enc_encounter'] .
         ",'" . oeFormatShortDate($raw_encounter_date) . "',' " . 
         xl('DOB') . ": " . oeFormatShortDate($name['DOB_YMD']) . " " . xl('Age') . ": " . getPatientAge($name['DOB_YMD']) . "');
-                 top.window.parent.left_nav.setPatientEncounter(EncounterIdArray[" . $iter['enc_pid'] . "],EncounterDateArray[" . $iter['enc_pid'] . 
+                 top.window.setPatientEncounter(EncounterIdArray[" . $iter['enc_pid'] . "],EncounterDateArray[" . $iter['enc_pid'] . 
                  "], CalendarCategoryArray[" . $iter['enc_pid'] . "])\">[" .
         xlt('To Enctr') . " " . text(oeFormatShortDate($raw_encounter_date)) . "]</a>";
         
@@ -843,7 +841,7 @@ if(is_array($ret))
         "','" . addslashes($ptname) . "'," . $iter['enc_encounter'] .
         ",'" . oeFormatShortDate($raw_encounter_date) . "',' " . 
         xl('DOB') . ": " . oeFormatShortDate($name['DOB_YMD']) . " " . xl('Age') . ": " . getPatientAge($name['DOB_YMD']) . "');
-                 top.window.parent.left_nav.setPatientEncounter(EncounterIdArray[" . $iter['enc_pid'] . "],EncounterDateArray[" . $iter['enc_pid'] . 
+                 top.window.setPatientEncounter(EncounterIdArray[" . $iter['enc_pid'] . "],EncounterDateArray[" . $iter['enc_pid'] . 
                  "], CalendarCategoryArray[" . $iter['enc_pid'] . "])\">[" . xlt('To Dems') . "]</a>";
         $divnos=$divnos+1;
       $lhtml .= "&nbsp;&nbsp;&nbsp;<a  onclick='divtoggle(\"spanid_$divnos\",\"divid_$divnos\");' class='small' id='aid_$divnos' href=\"JavaScript:void(0);".

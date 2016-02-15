@@ -39,10 +39,10 @@ require_once(dirname(__FILE__) . "/../globals.php");
 <title><?php echo xlt('Import');?></title>
 <link rel="stylesheet" href="<?php echo $css_header; ?>" type="text/css">
 </head>
-<body class="body_top" >
-<center>
-<p><b><?php echo xlt("Steps for uploading CCR XML");?></b></p>
-<table style="width:85%;font-size:14px;" >
+<body class="body_top uploadCcrDoc">
+
+<p class="title-background"><b><?php echo xlt("Steps for uploading CCR XML");?></b></p>
+<table style="width:85%;font-size:14px;" class="table table-bordered table-striped">
   <tr>
     <td>1.</td>
     <td><?php echo xlt('To upload CCR document of already existing patient use Patient Summary Screen->Documents. For CCR document of a new patient use Miscellanous->New Documents screen').'.'; ?></td>
@@ -60,7 +60,7 @@ require_once(dirname(__FILE__) . "/../globals.php");
     <td><?php echo xlt('Approve the patient from Patient/Client->Import->Pending Approval').'.'; ?></td>
   </tr>
 </table>
-</center>
+
 </form>
 </body>
 </html>

@@ -123,13 +123,16 @@ function msfFileChanged() {
 </head>
 
 <body class="body_top">
+<p class="title-background">
+	<b><?php echo xlt('Edit Files') ?></b>
+</p>
 <form method='post' action='manage_site_files.php' enctype='multipart/form-data'
  onsubmit='return top.restoreSession()'>
 
 <center>
 
 <p>
-<table border='1' width='95%'>
+<table border='1' width='95%' class="table table-striped table-bordered">
 
  <tr bgcolor='#dddddd' class='dehead'>
   <td colspan='2' align='center'><?php echo htmlspecialchars(xl('Edit File in') . " $OE_SITE_DIR"); ?></td>

@@ -69,7 +69,7 @@ function sel_patient(ename, epid) {
 
 <body class="body_top">
 
-<center><h2><?php echo xlt('Merge Patients') ?></h2></center>
+<p class="title-background"><b><?php echo xlt('Merge Patients') ?></b></p>
 
 <?php
 
@@ -199,7 +199,7 @@ if (!empty($_POST['form_submit'])) {
 
 <form method='post' action='merge_patients.php'>
 <center>
-<table style='width:90%'>
+<table style='width:90%' class="table table-striped table-bordered mergePatients-table">
  <tr>
   <td>
    <?php echo xlt('Target Patient') ?>

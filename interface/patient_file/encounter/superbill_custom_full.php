@@ -330,7 +330,9 @@ foreach ($code_types as $key => $value) {
 
 </head>
 <body class="body_top" >
-
+<p class="title-background">
+    <b><?php echo xlt('Code'); ?></b>
+</p>
 <?php if ($GLOBALS['concurrent_layout']) {
 } else { ?>
 <a href='patient_encounter.php?codefrom=superbill' target='Main'>
@@ -345,7 +347,7 @@ foreach ($code_types as $key => $value) {
 <br>
 
 <center>
-<table border='0' cellpadding='0' cellspacing='0'>
+<table border='0' cellpadding='0' cellspacing='0' class="table table-bordered table-striped table-responsive">
 
  <tr>
   <td colspan="3"> <?php echo xlt('Not all fields are required for all codes or code types.'); ?><br><br></td>
@@ -507,18 +509,18 @@ if ($taxline) {
    <input type="hidden" name="code_type_name_external" value="<?php echo attr($code_type_name_external) ?>">
    <input type="hidden" name="code_external" value="<?php echo attr($code_external) ?>">
    <?php if ($mode == "modify") { ?>
-     <a href='javascript:submitModifyComplete();' class='link'>[<?php echo xlt('Update'); ?>]</a>
+     <a href='javascript:submitModifyComplete();' class='link btn btn-small btn-green'>[<?php echo xlt('Update'); ?>]</a>
    <?php } else { ?>
-     <a href='javascript:submitUpdate();' class='link'>[<?php echo xlt('Update'); ?>]</a>
+     <a href='javascript:submitUpdate();' class='link btn btn-small btn-green'><?php echo xlt('Update'); ?></a>
      &nbsp;&nbsp;
-     <a href='javascript:submitAdd();' class='link'>[<?php echo xlt('Add as New'); ?>]</a>
+     <a  href='javascript:submitAdd();' class='link btn btn-small btn-green'><?php echo xlt('Add as New'); ?></a>
    <?php } ?>
   </td>
  </tr>
 
 </table>
 <br>
-<table border='0' cellpadding='5' cellspacing='0' width='96%'>
+<table border='0' cellpadding='5' cellspacing='0' width='96%' class="table table-bordered table-striped table-responsive">
  <tr>
 
   <td class='text'>
@@ -543,7 +545,7 @@ foreach ($code_types as $key => $value) {
    <input type='hidden' name='fstart' value='<?php echo attr($fstart) ?>'>
   </td>
 
-  <td class='text' align='right'>
+  <td class='text pager' align='right'>
 <?php if ($fstart) { ?>
    <a href="javascript:submitList(-<?php echo attr($pagesize) ?>)">
     &lt;&lt;
@@ -562,7 +564,7 @@ foreach ($code_types as $key => $value) {
 
 </form>
 
-<table border='0' cellpadding='5' cellspacing='0' width='96%'>
+<table border='0' cellpadding='5' cellspacing='0' width='96%' class="table table-bordered table-striped table-responsive">
  <tr>
   <td><span class='bold'><?php echo xlt('Code'); ?></span></td>
   <td><span class='bold'><?php echo xlt('Mod'); ?></span></td>

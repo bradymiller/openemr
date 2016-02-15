@@ -36,7 +36,7 @@ $formtarget = $GLOBALS['concurrent_layout'] ? "" : " target='Main'";
 <link rel="stylesheet" href="<?php echo $css_header;?>" type="text/css">
 </head>
 <body class="body_top">
-<span class="title"><?php xl('Forms Administration','e');?></span>
+<p class="title-background"><b><?php xl('Forms Administration','e');?></b></p>
 <br><br>
 <?php
 	foreach($_POST as $key=>$val) {
@@ -67,7 +67,7 @@ if ($err)
 <form method=POST action ='./forms_admin.php'<?php echo $formtarget; ?>>
 <i><?php xl('click here to update priority, category and nickname settings','e'); ?></i>
 <input type=submit name=update value='<?php xl('update','e'); ?>'><br> 
-<table border=0 cellpadding=1 cellspacing=2 width="500">
+<table border=0 cellpadding=1 cellspacing=2 width="500" class="formsAdministration-table">
 	<tr>
 		<td> </td>
 		<td> </td>
@@ -96,7 +96,7 @@ foreach($bigdata as $registry)
 			if ($registry['sql_run'] == 0)
 				echo "<td bgcolor='$color' width='10%'><span class='text'>".xl('registered')."</span>";
 			elseif ($registry['state'] == "0")
-				echo "<td bgcolor='#FFCCCC' width='10%'><a class=link_submit href='./forms_admin.php?id={$registry['id']}&method=enable'$formtarget>".xl('disabled')."</a>";
+				echo "<td bgcolor='#F5D9D9' width='10%'><a class=link_submit href='./forms_admin.php?id={$registry['id']}&method=enable'$formtarget>".xl('disabled')."</a>";
 			else
 				echo "<td bgcolor='#CCFFCC' width='10%'><a class=link_submit href='./forms_admin.php?id={$registry['id']}&method=disable'$formtarget>".xl('enabled')."</a>";
 		?></td>
@@ -136,7 +136,7 @@ foreach($bigdata as $registry)
 
 <?php  //UNREGISTERED SECTION ?>
 <span class=bold><?php xl('Unregistered','e');?></span><br>
-<table border=0 cellpadding=1 cellspacing=2 width="500">
+<table border=0 cellpadding=1 cellspacing=2 width="500" class="unregisteredForm-table">
 <?php
 $dpath = "$srcdir/../interface/forms/";
 $dp = opendir($dpath);

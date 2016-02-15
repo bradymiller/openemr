@@ -654,7 +654,7 @@ function writeFieldLine($linedata) {
       "style='position:absolute;width:750px;border:1px solid black;" .
       "padding:2px;background-color:#cccccc;visibility:hidden;" .
       "z-index:1000;left:-1000px;top:0px;font-size:9pt;'>\n" .
-      "<table width='100%'>\n" .
+      "<table width='100%' class='table table-bordered'>\n" .
       " <tr>\n" .
       "  <th colspan='3' align='left' class='bold'>\"" . text($linedata['field_id']) . "\" " .
       xlt('will be hidden if') . ":</th>\n" .
@@ -946,7 +946,7 @@ function cidChanged(lino, seq) {
 <input type="hidden" name="selectedfields" id="selectedfields" value="">
 <input type="hidden" id="targetgroup" name="targetgroup" value="">
 
-<p><b><?php xl('Edit layout','e'); ?>:</b>&nbsp;
+<p class="title-background"><b><?php xl('Edit layout','e'); ?>:</b>&nbsp;
 <select name='layout_id' id='layout_id'>
  <option value=''>-- <?php echo xl('Select') ?> --</option>
 <?php
@@ -995,7 +995,7 @@ while ($row = sqlFetchArray($res)) {
     $firstgroup = false;
 ?>
 
-<table>
+<table class="table table-responsive table-bordered">
 <thead>
  <tr class='head'>
   <th><?php xl('Order','e'); ?></th>
@@ -1045,7 +1045,7 @@ while ($row = sqlFetchArray($res)) {
 <input type='button' name='deletefields' id='deletefields' value='<?php xl('Delete','e'); ?>' style="font-size:90%" disabled="disabled" />
 <input type='button' name='movefields' id='movefields' value='<?php xl('Move to...','e'); ?>' style="font-size:90%" disabled="disabled" />
 </span>
-<p>
+<p class="button-submit-div">
 <input type='button' name='save' id='save' value='<?php xl('Save Changes','e'); ?>' />
 </p>
 <?php } ?>
@@ -1066,7 +1066,8 @@ while ($row = sqlFetchArray($res)) {
 <span class='bold'>
 <?php xl('Group Name','e'); ?>:	<input type="textbox" size="20" maxlength="30" name="newgroupname" id="newgroupname">
 <br>
-<table style="border-collapse: collapse; margin-top: 5px;">
+<div class="table-responsive">
+<table style="border-collapse: collapse; margin-top: 5px;" class="table table-striped table-bordered">
 <thead>
  <tr class='head'>
   <th><?php xl('Order','e'); ?></th>
@@ -1140,6 +1141,7 @@ foreach ($datatypes as $key=>$value) {
 </tr>
 </tbody>
 </table>
+    </div>    
 <br>
 <input type="button" class="savenewgroup" value=<?php xl('Save New Group','e','\'','\''); ?>>
 <input type="button" class="cancelnewgroup" value=<?php xl('Cancel','e','\'','\''); ?>>
@@ -1149,7 +1151,8 @@ foreach ($datatypes as $key=>$value) {
 <!-- template DIV that appears when user chooses to add a new field to a group -->
 <div id="fielddetail" class="fielddetail" style="display: none; visibility: hidden">
 <input type="hidden" name="newfieldgroupid" id="newfieldgroupid" value="">
-<table style="border-collapse: collapse;">
+<div class="table-responsive">
+<table style="border-collapse: collapse;" class="table table-striped table-responsive">
  <thead>
   <tr class='head'>
    <th><?php xl('Order','e'); ?></th>
@@ -1229,8 +1232,8 @@ foreach ($datatypes as $key=>$value) {
   </tr>
  </tbody>
 </table>
+</div>    
 </div>
-
 </body>
 
 <script language="javascript">

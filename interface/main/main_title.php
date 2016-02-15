@@ -57,12 +57,16 @@ function toencounter(rawdata) {
 function showhideMenu() {
 	var m = parent.document.getElementById("fsbody");
 	var targetWidth = '0,*';
+	var showMenuLink = document.getElementById("showMenuLink");
+
 	if (m.cols == targetWidth) {
-		m.cols = '<?php echo $GLOBALS['gbl_nav_area_width'] ?>,*';
-		document.getElementById("showMenuLink").innerHTML = '<?php echo htmlspecialchars( xl('Hide Menu'), ENT_QUOTES); ?>';
+		m.cols = '<?php echo $GLOBALS['gbl_nav_area_width'] ?>,*'
+		showMenuLink.innerHTML = '<?php echo htmlspecialchars( xl('Hide Menu'), ENT_QUOTES); ?>';
+		showMenuLink.setAttribute('class', '');
 	} else {
 		m.cols = targetWidth;
-		document.getElementById("showMenuLink").innerHTML = '<?php echo htmlspecialchars( xl('Show Menu'), ENT_QUOTES); ?>';
+		showMenuLink.innerHTML = '<?php echo htmlspecialchars( xl('Show Menu'), ENT_QUOTES); ?>';
+		showMenuLink.setAttribute('class', 'active');
 	}
 }
 </script>
@@ -74,13 +78,14 @@ $res = sqlQuery("select * from users where username='".$_SESSION{"authUser"}."'"
 
 <table cellspacing="0" cellpadding="0" width="100%" height="100%">
 <tr>
-<td align="left">
+<td align="left" class="top-primary-nav">
 <?php if ($GLOBALS['concurrent_layout']) { ?>
 	<table cellspacing="0" cellpadding="1" style="margin:0px 0px 0px 3px;">
 
 <?php if (acl_check('patients','demo','',array('write','addonly') )) { ?>
 <tr><td style="vertical-align:text-bottom;">
-		<a href='' class="css_button_small" style="margin:0px;vertical-align:top;" id='new0' onClick=" return top.window.parent.left_nav.loadFrame2('new0','RTop','new/new.php')">
+		<a href='' class="css_button_small" style="margin:0px;vertical-align:top;" id='new0'
+           onClick="return top.window.parent.left_nav.loadFrame2('new0','RTop','new/new.php')">
 		<span><?php echo htmlspecialchars( xl('NEW PATIENT'), ENT_QUOTES); ?></span></a>
     </td>
     <td style="vertical-align:text-bottom;">
@@ -90,9 +95,15 @@ $res = sqlQuery("select * from users where username='".$_SESSION{"authUser"}."'"
 </tr>
 <?php } //end of acl_check('patients','demo','',array('write','addonly') if ?>
 
-	<tr><td valign="baseline"><B>
-		<a class="text" style='vertical-align:text-bottom;' href="main_title.php" id='showMenuLink' onclick='javascript:showhideMenu();return false;'><?php xl('Hide Menu','e'); ?></a></B>
-	</td></tr></table>
+        <tr>
+            <td valign="baseline">
+                <b><a class="text" style='vertical-align:text-bottom;' href="main_title.php" id='showMenuLink'
+                      onclick='javascript:showhideMenu();return false;'>
+                    <?php xl('Hide Menu','e'); ?>
+                </a></b>
+            </td>
+        </tr>
+    </table>
 <?php } else { ?>
 &nbsp;
 <?php } ?>
@@ -113,13 +124,13 @@ $res = sqlQuery("select * from users where username='".$_SESSION{"authUser"}."'"
         </div></td></tr></table>
 </td>
 
-<td align="right">
+<td align="right" class="top-secondary-nav">
 	<table cellspacing="0" cellpadding="1" style="margin:0px 3px 0px 0px;"><tr>
-		<td align="right" class="text" style="vertical-align:text-bottom;"><a href='main_title.php' onclick="javascript:parent.left_nav.goHome();return false;" ><?php xl('Home','e'); ?></a>
-		&nbsp;|&nbsp;
+		<td align="right" class="text" style="vertical-align:text-bottom;padding-bottom:1em"><span class="css_button_link"><a href='main_title.php' onclick="javascript:parent.left_nav.goHome();return false;" ><?php xl('Home','e'); ?></a>
+		<span class="css_button_separator">&nbsp;|&nbsp;</span>
 		<a href="http://open-emr.org/wiki/index.php/OpenEMR_4.3.0_Users_Guide" target="_blank" id="help_link" >
-			<?php xl('Manual','e'); ?></a>&nbsp;</td>
-		<td align="right" style="vertical-align:top;"><a href="../logout.php" target="_top" class="css_button_small" style='float:right;' id="logout_link" onclick="top.restoreSession()" >
+			<?php xl('Manual','e'); ?></a></span>&nbsp;</td>
+		<td  align="right" style="vertical-align:top;"><a href="../logout.php" target="_top" class="css_button_small" style='float:right;' id="logout_link" onclick="top.restoreSession()" >
 			<span><?php echo htmlspecialchars( xl('Logout'), ENT_QUOTES) ?></span></a></td>
 	</tr><tr>
 		<td colspan='2' valign="baseline" align='right'><B>

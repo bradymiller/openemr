@@ -597,4 +597,108 @@ if ( $esign->isButtonViewable() ) {
 </div> <!-- end large encounter_forms DIV -->
 </body>
 
+<script language="javascript">
+// jQuery stuff to make the page a little easier to use
+
+jQuery(document).ready(function(){
+    jQuery(".onerow").mouseover(function() { jQuery(this).toggleClass("highlight"); });
+    jQuery(".onerow").mouseout(function() { jQuery(this).toggleClass("highlight"); });
+    jQuery(".onerow").click(function() { GotoForm(this); });
+
+    jQuery("#prov_edu_res").click(function() {
+        if ( jQuery('#prov_edu_res').attr('checked') ) {
+            var mode = "add";
+        }
+        else {
+            var mode = "remove";
+        }
+        top.restoreSession();
+        $.post( "../../../library/ajax/amc_misc_data.php",
+            { amc_id: "patient_edu_amc",
+              complete: true,
+              mode: mode,
+              patient_id: <?php echo htmlspecialchars($pid,ENT_NOQUOTES); ?>,
+              object_category: "form_encounter",
+              object_id: <?php echo htmlspecialchars($encounter,ENT_NOQUOTES); ?>
+            }
+        );
+    });
+
+    jQuery("#provide_sum_pat_flag").click(function() {
+        if ( jQuery('#provide_sum_pat_flag').attr('checked') ) {
+            var mode = "add";
+        }
+        else {
+            var mode = "remove";
+        }
+        top.restoreSession();
+        $.post( "../../../library/ajax/amc_misc_data.php",
+            { amc_id: "provide_sum_pat_amc",
+              complete: true,
+              mode: mode,
+              patient_id: <?php echo htmlspecialchars($pid,ENT_NOQUOTES); ?>,
+              object_category: "form_encounter",
+              object_id: <?php echo htmlspecialchars($encounter,ENT_NOQUOTES); ?>
+            }
+        );
+    });
+
+    jQuery("#trans_trand_care").click(function() {
+        if ( jQuery('#trans_trand_care').attr('checked') ) {
+            var mode = "add";
+            // Enable the reconciliation checkbox
+            jQuery("#med_reconc_perf").removeAttr("disabled");
+        }
+        else {
+            var mode = "remove";
+            //Disable the reconciliation checkbox (also uncheck it if applicable)
+            jQuery("#med_reconc_perf").attr("disabled", true);
+            jQuery("#med_reconc_perf").removeAttr("checked");
+        }
+        top.restoreSession();
+        $.post( "../../../library/ajax/amc_misc_data.php",
+            { amc_id: "med_reconc_amc",
+              complete: false,
+              mode: mode,
+              patient_id: <?php echo htmlspecialchars($pid,ENT_NOQUOTES); ?>,
+              object_category: "form_encounter",
+              object_id: <?php echo htmlspecialchars($encounter,ENT_NOQUOTES); ?>
+            }
+        );
+    });
+
+    jQuery("#med_reconc_perf").click(function() {
+        if ( jQuery('#med_reconc_perf').attr('checked') ) {
+            var mode = "complete";
+        }
+        else {
+            var mode = "uncomplete";
+        }
+        top.restoreSession();
+        $.post( "../../../library/ajax/amc_misc_data.php",
+            { amc_id: "med_reconc_amc",
+              complete: true,
+              mode: mode,
+              patient_id: <?php echo htmlspecialchars($pid,ENT_NOQUOTES); ?>,
+              object_category: "form_encounter",
+              object_id: <?php echo htmlspecialchars($encounter,ENT_NOQUOTES); ?>
+            }
+        );
+    });
+
+    // jQuery(".deleteme").click(function(evt) { deleteme(); evt.stopPropogation(); });
+
+    var GotoForm = function(obj) {
+        var parts = jQuery(obj).attr("id").split("~");
+        top.restoreSession();
+        <?php if ($GLOBALS['concurrent_layout']): ?>
+        parent.location.href = "<?php echo $rootdir; ?>/patient_file/encounter/view_form.php?formname="+parts[0]+"&id="+parts[1];
+        <?php else: ?>
+        top.Main.location.href = "<?php echo $rootdir; ?>/patient_file/encounter/view_form.php?formname="+parts[0]+"&id="+parts[1];
+        <?php endif; ?>
+    }
+});
+
+</script>
+
 </html>
