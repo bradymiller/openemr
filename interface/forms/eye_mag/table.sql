@@ -1,77 +1,15 @@
-INSERT INTO categories select (select MAX(id) from categories) + 1, 'Imaging', '', 3, rght, rght + 1 from categories where name = 'Categories';
-UPDATE categories SET rght = rght + 2 WHERE name = 'Categories';
-UPDATE categories SET rght = rght + 2 WHERE name = 'Medical Record';
-INSERT INTO categories select (select MAX(id) from categories) + 1, 'Communication', '', 3, rght, rght + 1 from categories where name = 'Categories';
-UPDATE categories SET rght = rght + 2 WHERE name = 'Categories';
-UPDATE categories SET rght = rght + 2 WHERE name = 'Medical Record';
-INSERT INTO categories select (select MAX(id) from categories) + 1, 'Encounters', '', 3, rght, rght + 1 from categories where name = 'Categories';
-UPDATE categories SET rght = rght + 2 WHERE name = 'Categories';
-UPDATE categories SET rght = rght + 2 WHERE name = 'Medical Record';
-
-INSERT INTO categories select (select MAX(id) from categories) + 1,'External Photos','EXT',(select id from categories where name='Imaging' and parent=3),rght, rght + 1 from categories where name = 'Imaging' and parent='3';
-UPDATE categories SET rght = rght + 2 WHERE name = 'Categories';
-UPDATE categories SET rght = rght + 2 WHERE name = 'Medical Record';
-UPDATE categories SET rght = rght + 2 WHERE name = 'Imaging';
-
-INSERT INTO categories select (select MAX(id) from categories) + 1,'AntSeg Photos','ANTSEG',(select id from categories where name='Imaging' and parent=3),rght, rght + 1 from categories where name = 'Imaging' and parent='3';
-UPDATE categories SET rght = rght + 2 WHERE name = 'Categories';
-UPDATE categories SET rght = rght + 2 WHERE name = 'Medical Record';
-UPDATE categories SET rght = rght + 2 WHERE name = 'Imaging';
-
-INSERT INTO categories select (select MAX(id) from categories) + 1,'US/Biometry','POSTSEG',(select id from categories where name='Imaging' and parent=3),rght, rght + 1 from categories where name = 'Imaging' and parent='3';
-UPDATE categories SET rght = rght + 2 WHERE name = 'Categories';
-UPDATE categories SET rght = rght + 2 WHERE name = 'Medical Record';
-UPDATE categories SET rght = rght + 2 WHERE name = 'Imaging';
-
-INSERT INTO categories select (select MAX(id) from categories) + 1,'Drawings','DRAW',(select id from categories where name='Imaging' and parent=3),rght, rght + 1 from categories where name = 'Imaging' and parent='3';
-UPDATE categories SET rght = rght + 2 WHERE name = 'Categories';
-UPDATE categories SET rght = rght + 2 WHERE name = 'Medical Record';
-UPDATE categories SET rght = rght + 2 WHERE name = 'Imaging';
-
-INSERT INTO categories select (select MAX(id) from categories) + 1,'VF','NEURO',(select id from categories where name='Imaging' and parent=3),rght, rght + 1 from categories where name = 'Imaging' and parent='3';
-UPDATE categories SET rght = rght + 2 WHERE name = 'Categories';
-UPDATE categories SET rght = rght + 2 WHERE name = 'Medical Record';
-UPDATE categories SET rght = rght + 2 WHERE name = 'Imaging';
-
-INSERT INTO categories select (select MAX(id) from categories) + 1,'Radiology','NEURO',(select id from categories where name='Imaging' and parent=3),rght, rght + 1 from categories where name = 'Imaging' and parent='3';
-UPDATE categories SET rght = rght + 2 WHERE name = 'Categories';
-UPDATE categories SET rght = rght + 2 WHERE name = 'Medical Record';
-UPDATE categories SET rght = rght + 2 WHERE name = 'Imaging';
-
-INSERT INTO categories select (select MAX(id) from categories) + 1,'FA/ICG','POSTSEG',(select id from categories where name='Imaging' and parent=3),rght, rght + 1 from categories where name = 'Imaging' and parent='3';
-UPDATE categories SET rght = rght + 2 WHERE name = 'Categories';
-UPDATE categories SET rght = rght + 2 WHERE name = 'Medical Record';
-UPDATE categories SET rght = rght + 2 WHERE name = 'Imaging';
-
-INSERT INTO categories select (select MAX(id) from categories) + 1,'OCT','POSTSEG',(select id from categories where name='Imaging' and parent=3),rght, rght + 1 from categories where name = 'Imaging' and parent='3';
-UPDATE categories SET rght = rght + 2 WHERE name = 'Categories';
-UPDATE categories SET rght = rght + 2 WHERE name = 'Medical Record';
-UPDATE categories SET rght = rght + 2 WHERE name = 'Imaging';
-
-INSERT INTO categories select (select MAX(id) from categories) + 1,'Optic Disk','POSTSEG',(select id from categories where name='Imaging' and parent=3),rght, rght + 1 from categories where name = 'Imaging' and parent='3';
-UPDATE categories SET rght = rght + 2 WHERE name = 'Categories';
-UPDATE categories SET rght = rght + 2 WHERE name = 'Medical Record';
-UPDATE categories SET rght = rght + 2 WHERE name = 'Imaging';
-
-INSERT INTO categories select (select MAX(id) from categories) + 1,'Fundus','POSTSEG',(select id from categories where name='Imaging' and parent=3),rght, rght + 1 from categories where name = 'Imaging' and parent='3';
-UPDATE categories SET rght = rght + 2 WHERE name = 'Categories';
-UPDATE categories SET rght = rght + 2 WHERE name = 'Medical Record';
-UPDATE categories SET rght = rght + 2 WHERE name = 'Imaging';
-UPDATE categories_seq SET id = (select MAX(id) from categories);
-
-ALTER TABLE `list_options`  ADD `subtype` VARCHAR(255) NOT NULL;
-ALTER TABLE `lists`  ADD `subtype` VARCHAR(255) DEFAULT NULL;
-
 CREATE TABLE IF NOT EXISTS `form_eye_mag_dispense` (
 `id` bigint(20) NOT NULL AUTO_INCREMENT,
 `date` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+`encounter` bigint(20) NULL,
 `pid` bigint(20) DEFAULT NULL,
 `user` varchar(255) DEFAULT NULL,
 `groupname` varchar(255) DEFAULT NULL,
 `authorized` tinyint(4) DEFAULT NULL,
 `activity` tinyint(4) DEFAULT NULL,
-`REFDATE` char(10) DEFAULT NULL,
-`REFTYPE` DATETIME NULL DEFAULT NULL,
+`REFDATE` DATETIME NULL DEFAULT NULL,
+`REFTYPE` char(10) DEFAULT NULL,
+`RXTYPE` char(20)DEFAULT NULL,
 `ODSPH` char(10) DEFAULT NULL,
 `ODCYL` char(10) DEFAULT NULL,
 `ODAXIS` char(10) DEFAULT NULL,
@@ -88,15 +26,19 @@ CREATE TABLE IF NOT EXISTS `form_eye_mag_dispense` (
 `OSADD2` varchar(50) DEFAULT NULL,
 `PD` varchar(50) DEFAULT NULL,
 `RXCOMMENTS` mediumtext,
-`ODBRAND` varchar(50) DEFAULT NULL,
-`OSBRAND` varchar(50) DEFAULT NULL,
+`CTLMANUFACTUREROD` char(25) DEFAULT NULL,
+`CTLMANUFACTUREROS` char(25) DEFAULT NULL,
+`CTLSUPPLIEROD` char(25) DEFAULT NULL,
+`CTLSUPPLIEROS` char(25) DEFAULT NULL,
+`CTLBRANDOD` varchar(50) DEFAULT NULL,
+`CTLBRANDOS` varchar(50) DEFAULT NULL,
 `ODDIAM` varchar(50) DEFAULT NULL,
 `ODBC` varchar(50) DEFAULT NULL,
 `OSDIAM` varchar(50) DEFAULT NULL,
 `OSBC` varchar(50) DEFAULT NULL,
 `COMMENTS` char(10) DEFAULT NULL,
 PRIMARY KEY (`id`)
-) ENGINE=MyISAM;
+) ENGINE=InnoDB;
 
 CREATE TABLE IF NOT EXISTS `form_eye_mag` (
 `id` bigint(20) NOT NULL AUTO_INCREMENT,
@@ -383,6 +325,14 @@ CREATE TABLE IF NOT EXISTS `form_eye_mag` (
 `MOTILITY_LI` int(1) DEFAULT NULL,
 `MOTILITY_LR` int(1) DEFAULT NULL,
 `MOTILITY_LL` int(1) DEFAULT NULL,
+`MOTILITY_RRSO` int(1) DEFAULT NULL,
+`MOTILITY_RLSO` int(1) DEFAULT NULL,
+`MOTILITY_RRIO` int(1) DEFAULT NULL,
+`MOTILITY_RLIO` int(1) DEFAULT NULL,
+`MOTILITY_LRSO` int(1) DEFAULT NULL,
+`MOTILITY_LLSO` int(1) DEFAULT NULL,
+`MOTILITY_LRIO` int(1) DEFAULT NULL,
+`MOTILITY_LLIO` int(1) DEFAULT NULL,
 `STEREOPSIS` varchar(25) DEFAULT NULL,
 `ODNPA` varchar(50) DEFAULT NULL,
 `OSNPA` varchar(50) DEFAULT NULL,
@@ -513,9 +463,10 @@ CREATE TABLE IF NOT EXISTS `form_eye_mag` (
 `LOCKEDBY` varchar(50) DEFAULT NULL,
 `FINISHED` char(25) DEFAULT NULL,
 PRIMARY KEY (`id`)
-) ENGINE=MyISAM;
+) ENGINE=InnoDB;
 
-CREATE TABLE IF NOT EXISTS `form_eye_mag_prefs` (
+DROP TABLE IF EXISTS `form_eye_mag_prefs`;
+CREATE TABLE  `form_eye_mag_prefs` (
 `PEZONE` char(25) NOT NULL,
 `LOCATION` char(25) NOT NULL,
 `LOCATION_text` varchar(25) NOT NULL,
@@ -526,7 +477,7 @@ CREATE TABLE IF NOT EXISTS `form_eye_mag_prefs` (
 `ordering` tinyint(4) DEFAULT NULL,
 `FILL_ACTION` char(10) NOT NULL DEFAULT 'ADD' COMMENT 'ADD, REPLACE, INSERT',
 UNIQUE KEY `id` (`id`,`PEZONE`,`LOCATION`,`selection`)
-) ENGINE=MyISAM;
+) ENGINE=InnoDB;
 
 INSERT INTO `form_eye_mag_prefs` (`PEZONE`, `LOCATION`, `LOCATION_text`, `id`, `selection`, `ZONE_ORDER`, `VALUE`, `ordering`,`FILL_ACTION`) VALUES
 ('ANTSEG', 'c', 'CONJ', 2048, 'quiet', 11, NULL, 1,'REPLACE'),
@@ -641,6 +592,7 @@ INSERT INTO `form_eye_mag_prefs` (`PEZONE`, `LOCATION`, `LOCATION_text`, `id`, `
 ('PREFS', 'CR', 'Cycloplegic Refraction', 1, 'CR', 54, '1', 4,'ADD'),
 ('PREFS', 'CTL', 'Contact Lens', 1, 'CTL', 55, '0', 5,'ADD'),
 ('PREFS', 'IOP', 'Intraocular Pressure', 1, 'IOP',64, '0', 14,'ADD'),
+('PREFS', 'VAX', 'Visual Acuities', 1, 'VAX',65, '0', 15,'ADD'),
 ('PREFS', 'ADDITIONAL', 'Additional Data Points', 1, 'ADDITIONAL', 56, '0', 6,'ADD'),
 ('PREFS', 'CLINICAL', 'CLINICAL', 1, 'CLINICAL', 57, '', 7,'ADD'),
 ('PREFS', 'EXAM', 'EXAM', 1, 'EXAM', 58, 'TEXT', 8,'ADD'),
@@ -652,4 +604,31 @@ INSERT INTO `form_eye_mag_prefs` (`PEZONE`, `LOCATION`, `LOCATION_text`, `id`, `
 ('PREFS', 'PANEL_RIGHT', 'PMSFH Panel', 1, 'PANEL_RIGHT', 64, '', 14,''),
 ('PREFS', 'ACT_VIEW', 'ACT View', 1, 'ACT_VIEW', 64, '', 14,'ADD');
 
-INSERT INTO `openemr`.`list_options` (`list_id`, `option_id`, `title`, `seq`, `is_default`, `option_value`, `mapping`, `notes`, `codes`) VALUES ('lists', 'eye_issues_list', 'Past Ocular Issues list', '0', '0', '0', '', '', '');
+CREATE TABLE IF NOT EXISTS `form_eye_mag_orders` (
+`id` bigint(20) NOT NULL AUTO_INCREMENT,
+`ORDER_PID` bigint(20) NOT NULL,
+`ORDER_DETAILS` varchar(255) NOT NULL,
+`ORDER_STATUS` varchar(50) DEFAULT NULL,
+`ORDER_PRIORITY` varchar(50) DEFAULT NULL,
+`ORDER_DATE_PLACED` date NOT NULL,
+`ORDER_PLACED_BYWHOM` varchar(50) DEFAULT NULL,
+`ORDER_DATE_COMPLETED` date DEFAULT NULL,
+`ORDER_COMPLETED_BYWHOM` varchar(50) DEFAULT NULL,
+PRIMARY KEY (`id`),
+UNIQUE KEY `VISIT_ID` (`ORDER_PID`,`ORDER_DETAILS`,`ORDER_DATE_PLACED`,`ORDER_PLACED_BYWHOM`,`ORDER_DATE_COMPLETED`)
+) ENGINE=InnoDB;
+
+CREATE TABLE IF NOT EXISTS `form_eye_mag_impplan` (
+`id` int(11) NOT NULL AUTO_INCREMENT,
+`form_id` bigint(20) NOT NULL,
+`pid` bigint(20) NOT NULL,
+`title` varchar(255) NOT NULL,
+`code` varchar(50) DEFAULT NULL,
+`codetype` varchar(50) DEFAULT NULL,
+`codetext` varchar(255) DEFAULT NULL,
+`plan` varchar(3000) DEFAULT NULL,
+`PMSFH_link` varchar(50) DEFAULT NULL,
+`IMPPLAN_order` tinyint(4) DEFAULT NULL,
+PRIMARY KEY (`id`),
+UNIQUE KEY `second_index` (`form_id`,`pid`,`title`,`plan`(20))
+) ENGINE=InnoDB;

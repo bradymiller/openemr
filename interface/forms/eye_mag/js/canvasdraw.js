@@ -96,7 +96,7 @@ function cPush(zone) {
     cStep[zone]++;
     if (typeof(cPushArray[zone]) == 'undefined') { cPushArray[zone] = new Array;}
     if (cStep[zone] < cPushArray[zone].length) { cPushArray[zone].length = cStep[zone]; }
-    cPushArray[zone].push(document.getElementById('myCanvas_'+zone).toDataURL());
+    cPushArray[zone].push(document.getElementById('myCanvas_'+zone).toDataURL('image/jpeg'));
         //    document.title = cStep[zone] + ":" + cPushArray[zone].length + ":" +zone;
 }
 

@@ -35,6 +35,7 @@ include_once("$srcdir/api.inc");
 include_once("$srcdir/sql.inc");
 require_once("$srcdir/formatting.inc.php");
 
+$form_folder = "eye_mag";
 $showit    = $_REQUEST['zone'];
 if ($showit=='') $showit="general";
 if ($showit=='ext') $showit="external";
@@ -95,8 +96,7 @@ if ($showit=='ext') $showit="external";
 	<link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
 	<script src="//code.jquery.com/jquery-1.10.2.js"></script>
 	<script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
-	<link rel="stylesheet" href="/resources/demos/style.css">
-
+	
 	<style>
 	 	body {
 		 	font: 12px/18px FontAwesome, normal helvetica, sans-serif;
@@ -185,10 +185,12 @@ if ($showit=='ext') $showit="external";
 		font-weight:400;
 		font-size:1.1em;
 		padding:5 10 5 10;">
-<img class="little_image left" height="18" src="/openemr/sites/default/images/login_logo.gif"></img>  OpenEMR: Eye Exam <span class="bold">Keyboard Entry Help</span>
+<img class="little_image left" height="18" src="/openemr/sites/default/images/login_logo.gif"></img>  OpenEMR: Eye Exam <span class="bold">Shorthand Help</span>
 		</div>
 <br />
 		<button id="general_button">Introduction</button>
+		<button id="hpi_button">HPI</button>
+		<button id="pmh_button">PMH</button>
 		<button id="external_button">External</button>
 		<button id="antseg_button">Anterior Segment</button>
 		<button id="retina_button">Retina</button>
@@ -207,13 +209,19 @@ if ($showit=='ext') $showit="external";
 						The structure is simple: <b>Field.text;Field.text;Field.text</b><br />
 
 						<br />
-						You can click on <b>Keyboard Entry</b> anywhere in the form to display the Shorthand <b>Field</b> names.<br />
-						Type the <b>Field</b> name, then a period/fullstop, followed by your findings,
-						 and openEMR: Eye Exam is automatically filled.<br />
+						Click on any <b>Shorthand</b> icon <i class="fa fa-user-md fa-sm fa-2" name="Shorthand_kb" title="Open the Shorthand Window and display Shorthand Codes"></i> in the Eye Form and two things occur:<br />
+						<ol>
+							<li> the Shorthand <b>textbox</b> opens </li>
+								<li> Shorthand <b style="color:red;">Field</b> names are visible</li>
+							</ol>
+							<br />
+						In the Shorthand textbox, type the <b>Field</b> name, then a period/fullstop, followed by your findings.
+						<br />
+						Look around the form - openEMR: Eye Exam is automatically filled.<br />
 						Done. No extra clicks.<br />
 						
 						<hr />
-						This Shorthand tutorial shows you how to document each clinical area via the keyboard.  <br />
+						This tutorial shows you how to document each clinical area using Shorthand.  <br />
 						It centers around four lines of typing which 
 						document normal findings <b>and more than 40 different clinical issues</b>. 
 							<br />
@@ -223,37 +231,44 @@ if ($showit=='ext') $showit="external";
 						The average typist can now do it <b>in less than a minute.</b>
 						<hr />
 
-			<h4 class="bold">External: </h4> 
-					<textarea class="kb_entry">D;bll.+2 meibomitis;rll.frank ect, 7x6mm lid margin bcc lat.a;bul.2mm ptosis;rul.+3 dermato.a
-					</textarea>
-					<button id="external_button2">Details</button>
-					<br /><h4 class="bold">Anterior Segment:</h4>
-					<textarea class="kb_entry">D;bc.+2 inj;bk.med pter;rk.mod endo gut.a;bac.+1 fc, +1 pig cells
-					</textarea>
-					<br />
-					<h4 class="bold">Retina:</h4>
-					<textarea class="kb_entry">D;bd.+2 bowtie pallor;rcup.0.6Vx0.4H w/ inf notch;lcup.0.5;rmac.+2 BDR, +CSME;lmac.flat, tr BDR;v.+PPDR, ++venous beading;rp.ht 1 o,no vh;
-					</textarea>
-					<h4 class="bold">Strabismus:</h4>
-					<textarea class="kb_entry">scDist;5.8ix 1rht;4.10ix;6.6ix;2.15xt;8.5ix;ccDist;4.5ix;5.ortho;6.ortho
-					</textarea>
-					<hr>
-					Go ahead and paste all four lines at once into a test patient's chart.  Voila, 40 clinical findings + normals, documented.  
+						<h4 class="bold">External: </h4> 
+						<textarea class="kb_entry">D;bll.+2 meibomitis;rll.frank ect, 7x6mm lid margin bcc lat.a;bul.2mm ptosis;rul.+3 dermato.a
+						</textarea>
+						<button id="external_button2">Details</button>
+						<br /><h4 class="bold">Anterior Segment:</h4>
+						<textarea class="kb_entry">D;bc.+2 inj;bk.med pter;rk.mod endo gut.a;bac.+1 fc, +1 pig cells
+						</textarea>
+						<button id="antseg_button2">Details</button>
+						
+						<br />
+						<h4 class="bold">Retina:</h4>
+						<textarea class="kb_entry">D;bd.+2 bowtie pallor;rcup.0.6Vx0.4H w/ inf notch;lcup.0.5;rmac.+2 BDR, +CSME;lmac.flat, tr BDR;v.+PPDR, ++venous beading;rp.ht 1 o,no vh;
+						</textarea>
+						<button id="retina_button2">Details</button>
+						
+						<h4 class="bold">Strabismus:</h4>
+						<textarea class="kb_entry">scDist;5.8ix 1rht;4.10ix;6.6ix;2.15xt;8.5ix;ccDist;4.5ix;5.ortho;6.ortho
+						</textarea>
+						<button id="neuro_button2">Details</button>
+						
+						<hr>
+						Below all four lines are strung together. Copy and paste this into a test patient's chart.  Voila, 40 clinical findings + normals, documented.  
 						<hr />
 						
 						<textarea class="kb_entry" style="height:1in;">D;bll.+2 meibomitis;rll.frank ect, 7x6mm lid margin bcc lat.a;bul.2mm ptosis;rul.+3 dermato.a
 bc.+2 inj;bk.med pter;rk.mod endo gut.a;bac.+1 fc, +1 pig cells
-bd.+2 bowtie pallor;rc.0.6Vx0.4H w/ inf notch;lc.0.5;rmac.+2 BDR, +CSME;lmac.flat, tr BDR;v.+PPDR, ++venous beading;rp.ht 1 o,no vh;
+bd.+2 bowtie pallor;rcup.0.6Vx0.4H w/ inf notch;lcup.0.5;rmac.+2 BDR, +CSME;lmac.flat, tr BDR;v.+PPDR, ++venous beading;rp.ht 1 o,no vh;
 scDist;5.8ix 1rht;4.10ix;6.6ix;2.15xt;8.5ix;ccDist;4.5ix;5.ortho;6.ortho
-					</textarea>
+						</textarea>
 
-					<br />
+						<br />
 						Get back to working at the speed of your brain.<br />
+						<small>Now imagine documented this without typing, without a scribe?  It is not that far away...</small>
 						
-							</blockquote>
+					</blockquote>
 				</div>				
 
-				<h3 class="ui-accordion-header external">Shorthand Keyboard Entry Structure</h3>
+				<h3 class="ui-accordion-header external">Shorthand Structure</h3>
 				<div id="general" style="text-align:left;">
 					<h4><b>Usage:</b>  field.text(.a)(;)</h4>
 					<blockquote class="style2"><i>where: <br /></i>
@@ -265,20 +280,53 @@ scDist;5.8ix 1rht;4.10ix;6.6ix;2.15xt;8.5ix;ccDist;4.5ix;5.ortho;6.ortho
 						The trailing "<b>.a</b>" 
 						is optional and will <b>append</b> the <b>text</b> to the data already in the field, instead of replacing it.<br />
 						The semi-colon "<b>;</b>" is used to divide entries, allowing multiple field entries simultaneously. <br />
-						<small><i>The semi-colon separates entries and cannot be used within a text field.</i></small><br />
+						<small><i>The semi-colon separates entries.</i></small><br />
 						After pressing <b>Enter/Return</b>, the data is submitted.  <br />
-						Pressing <b>TAB</b> will jump to the next clinical area's Keboard/Shorthand entry field.<br />
 					</blockquote>
 				</div>
 			</div>	
 				
+			<div id="accordion_hpi_group" name="accordion_group" class="ui-accordion" style="text-align:left;margin:10;padding:20;">
+				<div name="hpi" class="ui-accordion external">
+					<h3 name="hpi_group" id="hpi_0">History of Present Illness: Shorthand Walk Through</h3>
+					<div name="hpi_group" class="external" style="text-align:left;margin:0;padding:0;">
+						<a name="example_hpi"></a>
+						<blockquote class="style2">
+							<h4 class="underline">Shorthand</h4>
+							<textarea class="kb_entry"  style="min-height:1in;">D;CC."My eyes are tearing and there is a yellow discharge";hpi.The symptoms began last week and the discharged turned yellow yesterday.  No photophobia.  The redness spread from the right to the left eye two days ago.;
+							</textarea>
+							<img src="/openemr/interface/forms/eye_mag/images/sh_hpi.png" style="width: 90%;" alt="Shorthand Example: Anterior Segment">
+							<br />
+						</blockquote>
+					</div>
+				</div>
+			</div>
+
+			<div id="accordion_pmh_group" name="accordion_group" class="ui-accordion" style="text-align:left;margin:10;padding:20;">
+				<div name="pmh" class="ui-accordion external">
+					<h3 name="pmh_group" id="pmh_0">Past Medical History: Shorthand Walk Through</h3>
+					<div name="pmh_group" class="external" style="text-align:left;margin:0;padding:0;">
+						<a name="example_pmh"></a>
+						<blockquote class="style2">
+							<h4 class="underline">Shorthand</h4>
+							<textarea class="kb_entry" style="height:1in;">POH.Phaco/IOL OD 4/4/1994.Phaco/IOL OS 4/24/1995.
+Yag:PCO OD 6/5/1999;Meds.Timolol 0.5% GFS QHS OU. Latanoprost 0.01% QHS OU.
+Trazadone 50mg PO QHS.Famvir 500mg PO TID;Surg.Appendectomy 1998.
+Choly 2010.Lap Band 2014.;All.sulfa - hives.PCN - SOB;</textarea>
+							<img src="/openemr/interface/forms/eye_mag/images/sh_pmh.png" style="width: 90%;" alt="Shorthand Example: Anterior Segment">
+							<br />
+						</blockquote>
+					</div>
+				</div>
+			</div>
+
 			<div id="accordion_external_group" name="accordion_group" class="ui-accordion" style="text-align:left;margin:10;padding:20;">
 				<div name="external" class="ui-accordion external">
 					<h3 name="external_group" id="external_0">External: Shorthand Walk Through</h3>
 					<div name="external_group" class="external" style="text-align:left;margin:0;padding:0;">
 						<a name="example_ext"></a>
 						<blockquote class="style2">
-							<h4 class="underline">Keyboard Entry</h4>
+							<h4 class="underline">Shorthand</h4>
 							<textarea class="kb_entry">D;bll.+2 meibomitis;rll.frank ect, 7x6mm lid margin bcc lat.a;bul.2mm ptosis;rul.+3 dermato.a
 							</textarea>
 							<img src="/openemr/interface/forms/eye_mag/images/sh_ext.png" style="width: 90%;" alt="Shorthand Example: Anterior Segment">
@@ -309,7 +357,7 @@ scDist;5.8ix 1rht;4.10ix;6.6ix;2.15xt;8.5ix;ccDist;4.5ix;5.ortho;6.ortho
 						<a name="output_external"></a>
 						<blockquote class="style2">
 							<table style="border:0pt solid black;margin:10;">
-								<tr class="style3"><th>Clinical Field</th><th>Shorthand* Field</th><th>Example Keyboard Entry**</th><th>EMR: Field text</th></tr>
+								<tr class="style3"><th>Clinical Field</th><th>Shorthand* Field</th><th>Example Shorthand**</th><th>EMR: Field text</th></tr>
 								<tr >
 									<td>Default values</td><td>D or d</td>
 									<td><b style="color:red;">d;</b><br /><b style="color:red;">D;</b></td>
@@ -414,7 +462,7 @@ scDist;5.8ix 1rht;4.10ix;6.6ix;2.15xt;8.5ix;ccDist;4.5ix;5.ortho;6.ortho
 							<a name="example_antseg"></a>
 							
 							<blockquote class="style2">
-								<h4 class="underline">Keyboard Entry</h4>
+								<h4 class="underline">Shorthand</h4>
 								<textarea class="kb_entry">D;bc.+2 inj;bk.med pter;rk.moderate endo gut.a;bac.+1 fc, +1 pig cells
 								</textarea>
 								<img src="/openemr/interface/forms/eye_mag/images/sh_antseg.png" alt="Shorthand Example: Anterior Segment">
@@ -444,7 +492,7 @@ scDist;5.8ix 1rht;4.10ix;6.6ix;2.15xt;8.5ix;ccDist;4.5ix;5.ortho;6.ortho
 						<a name="output_antseg"></a>
 						<blockquote class="style2">
 							<table style="border:0pt solid black;margin:10;padding:10;">
-								<tr class="style3"><th>Clinical Field</th><th>Shorthand* Field</th><th>Example Keyboard Entry**</th><th>EMR: Field text</th></tr>
+								<tr class="style3"><th>Clinical Field</th><th>Shorthand* Field</th><th>Example Shorthand**</th><th>EMR: Field text</th></tr>
 								<tr >
 									<td>Default values</td><td>D or d</td>
 									<td><span class="field">d</span>;<br /><span class="field">D</span>;</td>
@@ -542,7 +590,7 @@ scDist;5.8ix 1rht;4.10ix;6.6ix;2.15xt;8.5ix;ccDist;4.5ix;5.ortho;6.ortho
 					<h3 class="retina">Retina: Shorthand Walk Through</h3>
 					<div id="retina_input" class="RETINA" style="text-align:left;margin:0;padding:0;">
 						<blockquote class="style2">
-							<h4 class="underline">Keyboard Entry</h4>
+							<h4 class="underline">Shorthand</h4>
 							<textarea class="kb_entry">D;bd.+2 bowtie pallor;rcup.0.6Vx0.4H w/ inf notch;lcup.0.5;rmac.+2 BDR, +CSME;lmac.flat, tr BDR;v.+PPDR, ++venous beading;rp.ht 1 o,no vh;
 							</textarea>
 							<img src="/openemr/interface/forms/eye_mag/images/sh_retina.png" alt="Shorthand Example: Anterior Segment">
@@ -572,7 +620,7 @@ scDist;5.8ix 1rht;4.10ix;6.6ix;2.15xt;8.5ix;ccDist;4.5ix;5.ortho;6.ortho
 					<div id="retina_codes" style="clear:both; border:0pt solid black;text-align:left;">
 						<blockquote class="style2">
 							<table style="border:1pt solid black;margin:10;width:85%;">
-									<tr class="style3"><th>Clinical Field</th><th>Shorthand* Field</th><th>Example Keyboard Entry**</th><th>EMR: Field text</th></tr>
+									<tr class="style3"><th>Clinical Field</th><th>Shorthand* Field</th><th>Example Shorthand**</th><th>EMR: Field text</th></tr>
 									<tr >
 										<td>Default values</td><td>D or d</td>
 										<td><span class="field">d</span>;<br /><span class="field">D</span>;</td>
@@ -669,7 +717,7 @@ scDist;5.8ix 1rht;4.10ix;6.6ix;2.15xt;8.5ix;ccDist;4.5ix;5.ortho;6.ortho
 					<h3 class="neuro">Neuro: Shorthand Walk Through</h3>
 					<div id="neuro_input" class="neuro" style="text-align:left;margin:0;padding:0;">
 						<blockquote class="style2">
-							<h4 class="underline">Keyboard Entry</h4>
+							<h4 class="underline">Shorthand</h4>
 							<textarea class="kb_entry">scDist;5.8ix 1rht;4.10ix;6.6ix;2.15xt;8.5ix;ccDist;4.5ix;5.ortho;6.ortho
 							</textarea>
 							<img src="/openemr/interface/forms/eye_mag/images/sh_neuro.png" alt="Shorthand Example: Anterior Segment">
@@ -700,7 +748,7 @@ scDist;5.8ix 1rht;4.10ix;6.6ix;2.15xt;8.5ix;ccDist;4.5ix;5.ortho;6.ortho
 					<div id="neuro_codes" style="clear:both; border:0pt solid black;text-align:left;">
 						<blockquote class="style2">
 							<table style="border:1pt solid black;margin:10;width:85%;">
-									<tr class="style3"><th>Clinical Field</th><th>Shorthand* Field</th><th>Example Keyboard Entry**</th><th>EMR: Field text</th></tr>
+									<tr class="style3"><th>Clinical Field</th><th>Shorthand* Field</th><th>Example Shorthand**</th><th>EMR: Field text</th></tr>
 									<tr >
 										<td>Default values</td><td>D or d</td>
 										<td><span class="field">d</span>;<br /><span class="field">D</span>;</td>

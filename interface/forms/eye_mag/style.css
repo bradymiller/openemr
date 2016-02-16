@@ -35,8 +35,8 @@
 #sddm {
     z-index:31;
 }
-    a:link {
-    color: red;
+a:link {
+    color: black;
 }
 
 /* visited link */
@@ -52,9 +52,11 @@ a:hover {
 
 /* selected link */
 a:active {
-    color: red;
+    color: black;
 }
-
+.fa {
+    cursor: pointer;
+}
 .more_visions_1:hover {
     text-decoration: underline;
     cursor:pointer;
@@ -64,26 +66,16 @@ a:active {
     cursor:pointer;
 }
 
-#XCC {
-    width: 3in; 
-    height: 0.2in; 
-    font-family: FontAwesome,Arial,sans-serif; 
-    font-size: 9pt;
-}
-
 .text_clinical {
     text-decoration: none;
     color: #000000;
-    font-family:FontAwesome,Arial,sans-serif;
-    font-size: 1em;
-     
+    font-family:Arial,Arial,sans-serif;     
 }
 
 .text_clinical a b {
     text-decoration: none;
     color: #000000;
-    font-family: FontAwesome, Arial,sans-serif;
-    font-size: 1em;
+    font-family: Arial, Arial,sans-serif;
 }
 
 text_clinical a:hover 
@@ -105,15 +97,24 @@ text_clinical th {
     height:180px;
 }
 
-textarea.ACT { 
+.ACT { 
     border: none; 
+    outline: none;
+    font-size:1.0em;
+    text-align: center;
+    border:1pt solid black;justify-content:center; align-items:center;  
     height:38px;
     width:38px;
-    outline: none;
-    top:50%;
-    font-size:0.6em;
-    text-align: center;
 }
+textarea.ACT { 
+    border: none; 
+    outline: none;
+    font-size:9px;
+    text-align: center;
+    height:38px;
+    width:38px;
+}
+
 .input-helper {
     position: relative;
     display: inline-block;
@@ -138,11 +139,13 @@ textarea.ACT {
     border: 1px solid #222;
 }
 label {
-    font-size:0.9em;
+    font-size:1.0em;
 }
-
+.bigger {
+    font-size:1.1em;
+}
 textarea.HPI_text{
-    height:3.0em;
+    height:40px;
     min-width:95%;
     max-width: 95%;
     max-height:2in;
@@ -154,11 +157,12 @@ textarea.HPI_text{
     font-size:0.8em;
 }
 .QP_class textarea{
-    height:2.55em;
+    height:3.0em;
     width:95%;
     max-width:95%;
     overflow:auto;
-     margin-bottom:2px;
+    margin-bottom:2px;
+    margin-left:5px;
 }
 .HPI_text i {
     font-size:0.9em;
@@ -233,15 +237,14 @@ input[type=text] {
     box-sizing: content-box !important;
     box-shadow: 10px 10px 5px #888888;
     border-radius: 8px;
-    margin: 5 auto;
-    margin-right: 4px; 
-    width:4.0in;
-    font-size: 1.1em;
-    font-family: FontAwesome, Arial,sans-serif;
+    margin: 8 auto;
+    width:4.3in;
+    font-size: 1.2em;
+    font-family: Arial, Arial,sans-serif;
 }
 .refraction td {
     text-align:center;
-    font-size:0.7em;
+    font-size:0.9em;
     width:0.35in;
     vertical-align: text-middle;
     text-decoration: none;
@@ -249,7 +252,6 @@ input[type=text] {
 }
 .refraction th {
     height:0.17in;
-    font-size: 0.8em;
     text-align: left;
     padding: 5 0 2 0;
     color: black; 
@@ -307,23 +309,10 @@ background-color: red;
 }
 
 .section {
-    position:relative;
-    
+    Xposition:relative;
     padding: 0in;
-    display: flex;
     margin: 0 auto 10;
-        
-    display: -webkit-box;
-    display: -moz-box;
-    display: box;
-
-    -webkit-box-align: start;
-    -moz-box-align: start;
-    box-align: start;
-
-    -webkit-box-pack: center;
-    -moz-box-pack: center;
-    box-pack: center;
+    display: table-cell;
 }
 
 .LayerVision2 {
@@ -348,19 +337,28 @@ background: #C0C0C0;
 }
 
 .vitals {
-    float:left; 
-    box-shadow: 10px 10px 5px #888888;
+    box-shadow: 1px 10px 5px #888888;
     border-radius: 8px;
     margin-right: 4px; 
     position:relative; 
-    margin-right: 4px; 
     padding: 0.02in; 
     border: 1.00pt solid #000000; 
     background: #ffffff;
-    font-family:  FontAwesome,Serif, Arial;
-    font-size: 0.8em;
+    font-family:  Arial,Serif, Arial;
+    font-size: 1.2em;
     height: 1.05in;
+    float:left;
+    margin-right: 3px; 
 }
+.vitals_right {
+    float:right;
+    margin-right: 3px; 
+}
+.vitals tr td input{
+    padding: 0.2em 0.4em;
+    display: inline-block;
+}
+
 #divId {
   display: block;
   -moz-box-sizing: border-box;
@@ -393,26 +391,26 @@ background: #C0C0C0;
     margin-right: 4px; 
     border: 1.00pt solid #000000; 
     background: #ffffff;
-    font-family:  FontAwesome,Serif, Arial;
-    font-size: 0.8em;
+    font-family:  Arial,Serif, Arial;
     padding:6px;
+    font-size:1.2em;
 }
 .borderShadow2 {
     box-shadow: 1px 1px 1px #888888;
  
 }
-.vitals tr td input{
-    padding: 0.2em 0.4em;
-    display: inline-block;
-}
 
 .customers {
-    font-family: FontAwesome, Arial,sans-serif;
+    font-family: Arial, Arial,sans-serif;
     border-collapse: collapse;
     padding: 8px;
 }
 
-
+.tab_content table {
+    font-size:0.8em;
+    min-height: 2.0in;
+    text-align:left;
+}
 th {
     font-size: 1.0em;
     text-align: center;
@@ -447,22 +445,34 @@ body
     display:inline-block;
     margin-left:auto;
     margin-right:auto;
-    padding-left:5px; //Or whatever value you would like
+   /* padding-left:5px; //Or whatever value you would like
     padding-right:5px; //Same ^
+    */
     text-align:center;
 }
-
+.sections {
+    text-align:center;
+    vertical-align:top;
+    width:100%;
+    margin:0;
+    font-size:1.4em;
+}
 #form_container {
     border: 0px solid red;
     padding: 0px;
-    margin: 0 auto;
+    margin: 20 auto 0;
+    position:relative;
+}
+
+/* Refraction Panel Defaults */
+#Layer1 {
+        border: 0px solid red;
+    padding: 0px;
+    margin: 20 auto 0;
     position:relative;
     width:100%;
 
 }
-
-/* Refraction Panel Defaults */
-
 .nodisplay {
     display:none !important;
     /* gets visible when Trifocal selected*/    
@@ -496,30 +506,30 @@ body
 .exam_section_left {
     top:0px; 
     float:left; 
-    min-height:335px;
-    width: 453px; 
+    min-height:375px;
+    width: 463px; 
     margin: 5 auto ;
-    font-size:1.0em;
     padding:10px;
 }
 .exam_section_left b {
-    font-size:1.1em;
+    
 }
 .size100 {
     display:inline-block;
+    vertical-align:top;
 }
 .size50 {
     display:inline-block;
-
+    vertical-align:top;
+    min-height:375px;
 }
 .exam_section_right {
-    top:0px;
+    top:0px; 
     float:left; 
-    min-height:335px;
-    width: 453px; 
-    text-align:center;
-    margin:5 auto;
-    font-size:1.1em;
+    min-height:375px;
+    width: 463px; 
+    margin: 5 auto ;
+    padding:10px;
 }
 textarea.EXTTEXT {
     /*narrow_textarea*/
@@ -541,16 +551,14 @@ textarea.ANTSEGTEXT {
 .right {
     text-align: right;
 }
-textarea {
-    Xresize: none;
-}
+
 .canvas {
     
    /* background:#29c7c4;*/
   background-image: url('../../forms/eye_mag/images/beige013.jpg');
     background-size: 10% 10%;
     background-repeat: repeat;
-    height:2.5in;
+    Xheight:2.5in;
 }
 .AntSegSpan {
     /* OU OD OS
@@ -569,7 +577,7 @@ textarea {
     background: #C0C0C0;
     font-color:#000000;
     height:0.05in;
-    font-family:  FontAwesome,Serif, Arial;
+    font-family:  Arial,Serif, Arial;
     font-size: 8pt;
 
 }
@@ -583,10 +591,10 @@ textarea {
     font: 13px sans-serif;
     text-decoration: none;
     color:#050;   
-    font: bold 84% Fontawesome, 'trebuchet ms',helvetica,sans-serif; 
+    font: bold 84% Arial, 'trebuchet ms',helvetica,sans-serif; 
 }
 
-#tabs_wrapper, #tabs_wrapper2 {
+#Xtabs_wrapper, #Xtabs_wrapper2 {
   font-size:0.9em;
 }
 #tabs_container {
@@ -608,7 +616,7 @@ textarea {
   outline: none;
   color:black;
   box-shadow: 0px 5px 9px #888;
-  font-size:1.4em;
+  font-size:1.7em;
   border-radius: 5px 5px 0 0;
   -moz-border-radius: 5px 5px 0 0;
   -webkit-border-top-left-radius: 5px;
@@ -642,7 +650,7 @@ textarea {
 }
 
 #tabs_content_container {
-  border-top: none;
+  border-top: 0.5pt;
   padding: 10px;
   width: 99%;
 }
@@ -820,7 +828,7 @@ h1 {
     border:1px solid #337fed;
     display:inline-block;
     color:#FFDF00;
-    font-family:FontAwesome,Serif;
+    font-family:Arial,Serif;
     font-size:11px;
     font-weight:600;
     line-height:12px;
@@ -886,7 +894,7 @@ height: 18px;
     border:1px solid #337fed;
     display:inline-block;
     color:#FFDF0F;
-    font-family:FontAwesome,Serif;
+    font-family:Arial,Serif;
     font-size:11px;
     font-weight:400;
     line-height:12px;
@@ -920,7 +928,7 @@ height: 18px;
         width:100%;
         border:0pt solid  red;
         border-spacing:0px;
-        cursor:sw-resize;
+        cursor:pointer;
         padding:10 0 0 5;
         
         /*cellspacing:poor IE support for  this*/
@@ -983,8 +991,8 @@ height: 18px;
     .kb_left {
         position:relative;float:left;
         vertical-align: bottom;
-        font-size:0.6em;
-        color:#c0c0c0;
+        font-size:0.7em;
+        color:red;
         text-align:left;
         left:0.0in;
         bottom:0.0in;
@@ -993,8 +1001,8 @@ height: 18px;
     .kb_right {
         position:relative;float:right;
         vertical-align: bottom;
-        font-size:0.6em;
-        color:#c0c0c0;
+        font-size:0.7em;
+        color:red;
         text-align:right;
         right:0.0in;
         bottom:0.0in;
@@ -1003,7 +1011,7 @@ height: 18px;
         position:relative;
         vertical-align: top;
         font-size:0.7em;
-        color:#c0c0c0;
+        color:red;
         
     }
     .yellow {
@@ -1020,24 +1028,22 @@ height: 18px;
         width:96%;
         top:0.4in;
         left:0.1in;
-        font-weight:bold;
         text-align:center;
         margin:auto;
-        padding: 5px;
+        padding: 15px;
     }
     .wide_textarea textarea{
         width:1.8in;
         max-width: 1.8in;
         max-height: 0.44in;
         height: 0.44in;
-        font-size:0.8em;
+        font-size:0.9em;
     }
     .wide_textarea th {
         text-align:center;
     }
     
     .Clinical_header {
-        
         width:100%;
 
     }
@@ -1050,9 +1056,7 @@ height: 18px;
         top:0.4in;
         left:0.1in;
         width:2.6in;
-        font-weight:bold;
-        font-size:0.8em;
-        padding: 5px;
+        padding: 15px 10px 15px 5px;
     }
     .narrow_textarea textarea {
         width:1.0in;
@@ -1076,20 +1080,11 @@ height: 18px;
     .closeButton {
         display:inline-block;
         float:right;
-        /*background:url('http://cdn-sg1.pgimgs.com/images/pg/close-button.png') no-repeat center center;*/
         position:absolute;
         top:8px;
         right:8px;
         padding-left: 10px;
-        /*border:1.5px solid #000;
-        border-radius: 50%;
-        width: 13px;
-        height:13px; 
-        background-color: 33CCFF;
-        color: #000000;
-        font-size: 0.6em;*/
-        /* width and height can be anything, as long as they're equal */
-    }
+     }
     .closeButton:hover {
         color:grey;
         cursor:pointer;
@@ -1112,6 +1107,7 @@ height: 18px;
         top:8px;
         right:30px;
         padding-left: 10px;
+        font-size:12px;
       }
     .closeButton_2:hover {
         color:grey;
@@ -1119,15 +1115,31 @@ height: 18px;
         border:0px solid grey;
         text-decoration: none;
     }
-        .closeButton_3 {
+    .closeButton_3 {
         display:inline-block;
         float:right;
         position:absolute;
         top:8px;
         right:52px;
         padding-left: 10px;
+        font-size:12px;
       }
     .closeButton_3:hover {
+        color:grey;
+        cursor:pointer;
+        border:0px solid grey;
+        text-decoration: none;
+    }
+    .closeButton_4 {
+        display:inline-block;
+        float:right;
+        position:absolute;
+        top:8px;
+        right:74px;
+        padding-left: 10px;
+        font-size:12px;
+      }
+    .closeButton_4:hover {
         color:grey;
         cursor:pointer;
         border:0px solid grey;
@@ -1181,7 +1193,7 @@ height: 18px;
     
     h1 {
         color: #c60;
-        font: small-caps italic bold 1.9em FontAwesome, arial, helvetica, sans-seif;
+        font: small-caps italic bold 1.9em Arial, arial, helvetica, sans-seif;
         letter-spacing: 0.1em;
         padding: 6px 0px 4px;
         margin: 0px 0px 2px;
@@ -1196,9 +1208,8 @@ height: 18px;
 /* done testing ACT header tabs */
 /* ACT_TEXT test */
 .ACT_TEXT {
-    font-weight: bold;
-    font-size:0.6em;
-        display: table-cell; vertical-align:middle;
+    Xfont-weight: bold;
+    display: table-cell; vertical-align:middle;
 
 }
 
@@ -1216,8 +1227,8 @@ height: 18px;
     -moz-border-radius-bottomleft:0px;
     border-bottom-left-radius:0px;
     background-color: white;
+    font-size:1.1em;
     color: black;
-    font-size:1.4em;
     margin: 5 0 0 0;
     border-top:1pt solid black;
     border-left:1pt solid black;
@@ -1242,7 +1253,7 @@ height: 18px;
     border-bottom-left-radius:0px;
     background-color: #2d6775;
     color: white;
-    font-size:1.4em;
+    font-size:1.0em;
     margin: 5;
     border-bottom: 1pt solid black;
     height:25px;
@@ -1288,10 +1299,10 @@ input[type=text].fullscreen {
 }
 
 .top_left {
-    position:absolute; left:0.05in; width: 0.9in;top:0.05in;border:none;
+    position:absolute; left:0.05in;top:0.05in;border:none;
     background-color: white;
     color: black;
-    font-family: FontAwesome,serif,Arial;
+    font-family: Arial,serif,Arial;
     font-size: 1em;
     height: 1.2em;
 padding-bottom: 2px;
@@ -1307,26 +1318,26 @@ vertical-align:bottom;
     float:left;
     background-color:white;
   /*  height:2.5in; */
-    width:1.915in; 
-    padding:0.1in;
+    width:1.97in; 
+    padding:5px 8px;
     text-align:left;
-    font-size: 0.7em;
-    margin:4 8;
+    font-size: 1.0em;
+    margin:3 auto;
 }
 
 .QP_block {
     float:left;
     background-color:white;
  /*   height:2.4in; */
-    width:1.915in;
-    padding:0.1in;
+    width:1.97in;
+    padding:5px 8px;
     text-align:left;
-    font-size: 0.7em;
-    margin:4 auto;
+    font-size: 1.0em;
+    margin:3 auto;
 }
 .QP {
     cursor:pointer;
-    font-size:1.1em;
+    font-size:1.0em;
 }
 
 .rotate-left {
@@ -1372,11 +1383,6 @@ filter: progid:DXImageTransform.Microsoft.BasicImage(rotation=3);
 .PRIORS a {
     text-decoration: none;
 }
-.CONSTRUCTION_ZONE {
-    background-color:yellow;
-    
-    width=100%;
-}
 .Draw_class {
     padding:2px;
 }
@@ -1388,35 +1394,34 @@ filter: progid:DXImageTransform.Microsoft.BasicImage(rotation=3);
     color: #FFF;
     background-color: #3E76C2;
     border-radius:0;
-    top:-0.0in;
+    top:0.0in;
 }
   
 .navbar-custom {
     color:black; /* just changes the base font color */
-    padding:2 10 1;
+    padding:6 10 4;
     margin:0;
 }
 .navbar-nav > li > a {
     color:black; /* just changes the base font color */
     padding:6 10 4;
-    margin:0;
+    padding-top:6px;
+    padding-left:10px;
+    padding-right: 10px;
+    padding-bottom: 4px;
 }
 
 .nav > li > a:focus, .nav > li:focus {
     text-decoration: none;
     background-color: #1C5ECF; /* this is the "hover" blue */
-    color:#fff;
-    
-    /*padding-top:5px;*/
-   
-    /*#33aa33; <--- this is kelly green */
+    color:#fff; /*#33aa33; <--- this is kelly green */
 }
 .navbar-custom, .navbar-nav,.nav > .active > a, .navbar-nav > .active > a:hover, .navbar-nav > .active > a:focus {
     color: white;
     background-color:#C9DBF2; /* Mac Menu title bar background color */
 }
 .dropdown {
-list-style:none;
+    list-style:none;
 }
 .dropdown-menu {
     background-color:#dee9f7; /* Mac Menu dropdown bar background color */
@@ -1426,13 +1431,12 @@ list-style:none;
     text-decoration: none;
     background-color: #1C5ECF; /*#3E76C2;*/
 }
-
-
-
 .navbar-brand {
     color:red;
     height:24px;
-    padding:2 5 0 10;
+    padding:10 5 0 10;
+    margin: 10px 0px 2px 0px;
+    
 }
 .Xnavbar-nav > li > a {
     padding: 10 10 4 10;
@@ -1440,7 +1444,6 @@ list-style:none;
 .navbar-nav > li > .dropdown-menu {
     margin-top: 2px;
 }
-
 .dropdown-menu .divider {
     height: 1px;
     margin: 9px 0px;
@@ -1482,13 +1485,13 @@ a:hover, a:focus {
 }
 .panel_side {
     display: none;
-    width: 170px;
+    width: 140px;
     padding: 10px;
     background-color: beige;
     color: black;
     box-shadow: inset 0 0 0px 1px grey;
     overflow:auto;
-    font-size:1.2em;
+    font-size:1.0em;
     overflow:auto;
 }
 .panel_title {
@@ -1554,11 +1557,11 @@ border: 1px solid #CCC;
     
 .QP_shorten 
 {
-position: absolute;bottom:0.05in;clear:both;font-size:0.7em;text-align:left;padding-left:25px;
+position: absolute;bottom:0.1in;clear:both;text-align:left;padding-left:25px;
 }
 .QP_lengthen 
 {
-position: absolute;bottom:0.05in;clear:both;font-size:0.7em;text-align:left;padding-left:25px;
+position: absolute;bottom:0.1in;clear:both;text-align:left;padding-left:25px;
 }
 .QP_shorten textarea{
     width:2.0in;
@@ -1579,3 +1582,111 @@ position: absolute;bottom:0.05in;clear:both;font-size:0.7em;text-align:left;padd
 .z10 {
     z-index:10;
 }
+
+ #EXAM_KB {
+    text-align:center;
+    z-index:1000000;
+    position: 'fixed'; 
+    top: '35px';
+    left:0px;
+    display:block;
+}
+#stickyalias {
+    display: none;
+    height: 10px;
+}
+#unstickyheader {
+    margin-bottom: 150px;
+}
+.menu_icon {
+        position:absolute;
+        right:15px;
+}
+.ui-draggable-dragging {
+   box-shadow: 5px 5px 9px #red;
+ }
+
+.ui-draggable-handle{
+
+}
+.build_PLAN li:hover {
+    background:yellow;
+}
+.building_blocks {
+    font-size: 1.0em;
+    
+}
+.building_blocks dt, dd {  
+    font-size:0.9em;
+    &:last-of-type {
+        border: 1px solid black; 
+    }
+    span {
+        display: block;
+        color: white;
+    }
+}
+.building_blocks dt {     
+    background: #C9DBF2 none repeat scroll 0% 0%;
+    color: black;
+    font-size: 1.1em;
+    font-family: "FontAwesome";
+    font-weight:400;
+    padding:5px; border:1pt solid #c0c0c0;
+}
+.building_blocks dd {
+    font-weight:400;
+    font-size:0.9em;
+    background-color: white;
+    box-shadow: 1px 1px 3px #888888;
+    border-radius: 8 8 8 8;
+    position:relative; 
+    margin-right: 4px; 
+    margin-bottom:4px;
+    padding-bottom:4px;
+    border: 1.00pt solid #000000; 
+    &:last-of-type {
+       border-top: 1px solid black;
+       position: relative;
+       top: 10px;
+
+     }
+  }
+.IMPPLAN_class {
+    width:95%;
+ }
+.ICD_CODE{
+    min-width: 1in;
+    text-align: left;
+    padding-top:5px;
+    padding-bottom:4px;
+    padding-left:10px;
+}
+.build_PLAN ol { width: 300px;  margin: 0; padding: 0; }
+.build_PLAN li { background: #eee; position:relative;margin: 1em; padding: 0.5em; border: 0px solid gray; padding-left: 42px; }
+li .handle { display: inline-block; padding: 0.4em; }
+.ui-selecting { background: yellow; }
+.build_PLAN .ui-selecting .handle { background: red; }
+.ui-selected { background: #def; margin: 5px; font-size: 0.9em;}  
+.fake-textarea-disabled-4 {
+    width: 4in;
+    min-height:3em;
+    box-sizing: border-box;
+    background-color: #eaeded;
+    color: #cad2d3;
+    cursor: not-allowed;
+    color: #000000 !important;
+    padding: 0.2em !important;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-shadow: 0 1px 3px #ddd inset;
+    box-sizing: border-box;
+    display: inline-block;
+    padding: 0.2em;
+    margin-left: 0;
+    font-family: inherit;
+    font-size: inherit;
+    line-height: inherit;
+    vertical-align: top;
+}
+

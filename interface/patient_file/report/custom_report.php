@@ -46,7 +46,7 @@ if ($GLOBALS['gbl_portal_cms_enable']) {
 // For those who care that this is the patient report.
 $GLOBALS['PATIENT_REPORT_ACTIVE'] = true;
 
-$PDF_OUTPUT = empty($_POST['pdf']) ? 0 : intval($_POST['pdf']);
+$PDF_OUTPUT = empty($_REQUEST['pdf']) ? 0 : intval($_REQUEST['pdf']);
 
 if ($PDF_OUTPUT) {
   require_once("$srcdir/html2pdf/html2pdf.class.php");
@@ -505,6 +505,7 @@ if ($printable) {
   <span class='text'><?php xl('Generated on','e'); ?>: <?php echo oeFormatShortDate(); ?></span>
   <br /><br />
 </span>
+
 <?php
 
 } 
