@@ -3433,8 +3433,8 @@ function Menu_myGetRegistered($state="1", $limit="unlimited", $offset="0") {
     $sql = "SELECT category, nickname, name, state, directory, id, sql_run, " .
       "unpackaged, date FROM registry WHERE " .
       "state LIKE ? ORDER BY category, priority, name";
-    if ($limit != "unlimited") $sql .= " limit ?, ?";
-    $res = sqlStatement($sql,array($state,$limit,$offset));
+    if ($limit != "unlimited") $sql .= " limit " . escape_limit($limit) . ", " . escape_limit($offset);
+    $res = sqlStatement($sql,array($state));
     if ($res) {
         for($iter=0; $row=sqlFetchArray($res); $iter++) {
             $all[$iter] = $row;
