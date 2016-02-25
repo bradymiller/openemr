@@ -499,7 +499,7 @@ function postcalendar_userapi_buildView($args)
 		$tpl->assign_by_ref('TODAY_DATE',$today_date);
 		$tpl->assign_by_ref('DATE',$Date);
 		$tpl->assign('SCHEDULE_BASE_URL', pnModURL(__POSTCALENDAR__,'user','submit'));
-		$tpl->assign_by_ref('interval',$intervals);
+		$tpl->assign_by_ref('intervals',$intervals);
         };
 
 	//=================================================================
