@@ -505,8 +505,6 @@ function computeTableColumnTotal(tableId, colNumber)
   }
 	
 }
-<!--
- 
 
 	function finishTable()
 	{
@@ -536,7 +534,6 @@ function computeTableColumnTotal(tableId, colNumber)
 		 return;
 	}
    
-// -->
 
 </script>
 
