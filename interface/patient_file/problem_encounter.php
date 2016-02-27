@@ -21,7 +21,7 @@
  * @package OpenEMR
  * @author  Rod Roark <rod@sunsetsystems.com>
  * @author  Roberto Vasquez <robertogagliotta@gmail.com>
- * @author  Roberto Vasquez <brady@sparmy.com>
+ * @author  Brady Miller <brady@sparmy.com>
  * @link    http://www.open-emr.org
  */
 
@@ -378,7 +378,7 @@ in that section to add and delete relationships.'); ?>
  if ($_REQUEST['issue']) {
   echo "doclick('p', " . attr(addslashes($_REQUEST['issue'])) . ");\n";
  }
- if ($alertmsg) echo "alert('" . attr(addslashes($alertmsg)) . "');\n";
+ if ($alertmsg) echo "alert('" . addslashes($alertmsg) . "');\n";
 ?>
 </script>
 </body>
