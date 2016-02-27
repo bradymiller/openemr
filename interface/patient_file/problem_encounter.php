@@ -141,7 +141,7 @@ function newIssue() {
 function newEncounter() {
  var f = document.forms[0];
  if (!f.form_save.disabled) {
-  if (!confirm(<?php echo xls('This will abandon your unsaved changes. Are you sure?'); ?>))
+  if (!confirm('<?php echo xls('This will abandon your unsaved changes. Are you sure?'); ?>'))
    return;
  }
  top.restoreSession();
@@ -268,7 +268,7 @@ function doclick(pfx, id) {
     if (pfx == 'p') addPair(id, keyid); else addPair(keyid, id);
    }
   } else {
-   alert(<?php echo xls('You must first select an item in the section whose radio button is checked.') ;?>);
+   alert('<?php echo xls('You must first select an item in the section whose radio button is checked.') ;?>');
   }
  }
 }
