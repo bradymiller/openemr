@@ -1,8 +1,23 @@
 <?php
-// This program is free software; you can redistribute it and/or
-// modify it under the terms of the GNU General Public License
-// as published by the Free Software Foundation; either version 2
-// of the License, or (at your option) any later version.
+/*
+* 
+* Copyright (C) 2016 OEMR.org
+* 
+* LICENSE: This program is free software; you can redistribute it and/or 
+* modify it under the terms of the GNU General Public License 
+* as published by the Free Software Foundation; either version 3 
+* of the License, or (at your option) any later version. 
+* This program is distributed in the hope that it will be useful, 
+* but WITHOUT ANY WARRANTY; without even the implied warranty of 
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the 
+* GNU General Public License for more details. 
+* You should have received a copy of the GNU General Public License 
+* along with this program. If not, see <http://opensource.org/licenses/gpl-license.php>;. 
+* 
+* @package OpenEMR 
+* @author Terry Hill <terry@lillysystems.com> exclude from insurance billing added
+* @link http://www.open-emr.org 
+*/
 
 $fake_register_globals=false;
 $sanitize_all_escapes=true;
@@ -36,6 +51,7 @@ $mode = $_POST['mode'];
 $code_id = 0;
 $related_code = '';
 $active = 1;
+$exclude_from_insurance_billing = 0;
 $reportable = 0;
 $financial_reporting = 0;
 
@@ -49,6 +65,7 @@ if (isset($mode)) {
   $related_code = $_POST['related_code'];
   $cyp_factor = $_POST['cyp_factor'] + 0;
   $active     = empty($_POST['active']) ? 0 : 1;
+  $exclude_from_insurance_billing    = empty($_POST['exclude_from_insurance_billing']) ? 0 : 1;
   $reportable = empty($_POST['reportable']) ? 0 : 1; // dx reporting
   $financial_reporting = empty($_POST['financial_reporting']) ? 0 : 1; // financial service reporting
 
@@ -83,6 +100,7 @@ if (isset($mode)) {
         "cyp_factor = '"   . ffescape($cyp_factor)   . "', " .
         "taxrates = '"     . ffescape($taxrates)     . "', " .
         "active = "        . add_escape_custom($active) . ", " .
+        "exclude_from_insurance_billing = "        . add_escape_custom($exclude_from_insurance_billing) . ", " .
         "financial_reporting = " . add_escape_custom($financial_reporting) . ", " .
         "reportable = "    . add_escape_custom($reportable);
       if ($code_id) {
@@ -109,6 +127,7 @@ if (isset($mode)) {
         $cyp_factor = 0;
         $taxrates = '';
         $active = 1;
+        $exclude_from_insurance_billing = 0;
         $reportable = 0;
       }
     }
@@ -127,6 +146,7 @@ if (isset($mode)) {
       $cyp_factor   = $row['cyp_factor'];
       $taxrates     = $row['taxrates'];
       $active       = 0 + $row['active'];
+      $exclude_from_insurance_billing      = 0 + $row['exclude_from_insurance_billing'];
       $reportable   = 0 + $row['reportable'];
       $financial_reporting  = 0 + $row['financial_reporting'];
     }
@@ -149,6 +169,7 @@ if (isset($mode)) {
       $cyp_factor   = $row['cyp_factor'];
       $taxrates     = $row['taxrates'];
       $active       = $row['active'];
+      $exclude_from_insurance_billing      = $row['exclude_from_insurance_billing'];
       $reportable   = $row['reportable'];
       $financial_reporting  = $row['financial_reporting'];
     }
@@ -407,7 +428,12 @@ foreach ($code_types as $key => $value) {
 
    &nbsp;&nbsp;
    <input type='checkbox' name='active' value='1'<?php if (!empty($active) || ($mode == 'modify' && $active == NULL) ) echo ' checked'; ?> />
-   <?php echo xlt('Active'); ?>
+   <?php echo xlt('Active');
+   if($GLOBALS['bill_to_patient'] ==1) {?>
+   &nbsp;&nbsp;
+   <input type='checkbox' name='exclude_from_insurance_billing' value='1'<?php if (!empty($exclude_from_insurance_billing) || ($mode == 'modify' && $exclude_from_insurance_billing == NULL) ) echo ' checked'; ?> />
+   <?php echo xlt('Exclude From Insurance Billing');
+   }?>
   </td>
  </tr>
 
@@ -567,6 +593,9 @@ foreach ($code_types as $key => $value) {
   <td><span class='bold'><?php echo xlt('Code'); ?></span></td>
   <td><span class='bold'><?php echo xlt('Mod'); ?></span></td>
   <td><span class='bold'><?php echo xlt('Act'); ?></span></td>
+  <?php if($GLOBALS['bill_to_patient'] ==1) { ?>
+     <td><span class='bold'><?php echo xlt('Exclude From Insurance Billing'); ?></span></td>
+  <?php } ?>
   <td><span class='bold'><?php echo xlt('Dx Rep'); ?></span></td>
   <td><span class='bold'><?php echo xlt('Serv Rep'); ?></span></td>
   <td><span class='bold'><?php echo xlt('Type'); ?></span></td>
@@ -617,6 +646,9 @@ if (!empty($all)) {
     else {
       echo "  <td class='text'>" . ( ($iter["active"]) ? xlt('Yes') : xlt('No')) . "</td>\n";
     }
+	if($GLOBALS['bill_to_patient'] ==1) {
+      echo "  <td class='text'>" . ($iter["exclude_from_insurance_billing"] ? xlt('Yes') : xlt('No')) . "</td>\n";
+	}
     echo "  <td class='text'>" . ($iter["reportable"] ? xlt('Yes') : xlt('No')) . "</td>\n";
     echo "  <td class='text'>" . ($iter["financial_reporting"] ? xlt('Yes') : xlt('No')) . "</td>\n";
     echo "  <td class='text'>" . text($iter['code_type_name']) . "</td>\n";

@@ -124,7 +124,7 @@ function findProvider() {
 //
 function echoLine($lino, $codetype, $code, $modifier, $ndc_info='',
   $auth = TRUE, $del = FALSE, $units = NULL, $fee = NULL, $id = NULL,
-  $billed = FALSE, $code_text = NULL, $justify = NULL, $provider_id = 0, $notecodes='')
+  $billed = FALSE, $code_text = NULL, $justify = NULL, $provider_id = 0, $notecodes='', $exclude_from_insurance_billing ="0")
 {
   global $code_types, $ndc_applies, $ndc_uom_choices, $justinit, $pid;
   global $contraception, $usbillstyle, $hasCharges;
@@ -142,7 +142,7 @@ function echoLine($lino, $codetype, $code, $modifier, $ndc_info='',
   }
   if (! $code_text) {
     $sqlArray = array();
-    $query = "select id, units, code_text from codes where code_type = ? " .
+    $query = "select id, units, exclude_from_insurance_billing, code_text from codes where code_type = ? " .
       " and " .
       "code = ? and ";
     array_push($sqlArray,$code_types[$codetype]['id'],$code);
@@ -236,6 +236,8 @@ function echoLine($lino, $codetype, $code, $modifier, $ndc_info='',
       ($auth ? " checked" : "") . " disabled /></td>\n";
     echo "  <td class='billcell' align='center'><input type='checkbox'" .
       " disabled /></td>\n";
+    echo "  <td class='billcell' align='center'$usbillstyle><input type='checkbox'" .
+      ($exclude_from_insurance_billing ? " checked" : "") . " disabled /></td>\n";
   }
   else { // not billed
     if (modifiers_are_used(true)) {
@@ -306,6 +308,11 @@ function echoLine($lino, $codetype, $code, $modifier, $ndc_info='',
       "value='1'" . ($auth ? " checked" : "") . " /></td>\n";
     echo "  <td class='billcell' align='center'><input type='checkbox' name='bill[".attr($lino)."][del]' " .
       "value='1'" . ($del ? " checked" : "") . " /></td>\n";
+        //ADD THE NEW CHECKBOX "exclude_from_insurance_billing"
+    if($GLOBALS['bill_to_patient'] ==1) {
+      echo "  <td class='billcell' align='center'><input type='checkbox' name='bill[".attr($lino)."][exclude_from_insurance_billing]' " .
+        "value='1'" . ($exclude_from_insurance_billing ? " checked" : "") . " /></td>\n";
+    }
   }
 
   echo "  <td class='billcell'>$strike1" . text($code_text) . "$strike2</td>\n";
@@ -412,6 +419,10 @@ function echoProdLine($lino, $drug_id, $del = FALSE, $units = NULL,
     echo "  <td class='billcell' align='center'$usbillstyle>&nbsp;</td>\n"; // auth
     echo "  <td class='billcell' align='center'><input type='checkbox' name='prod[".attr($lino)."][del]' " .
       "value='1'" . ($del ? " checked" : "") . " /></td>\n";
+    if($GLOBALS['bill_to_patient'] ==1) { 
+      echo "  <td class='billcell' align='center'><input type='checkbox' name='bill[".attr($lino)."][exclude_from_insurance_billing]' " .
+        "value='1'" . ($del ? " checked" : "") . " /></td>\n";
+  }
   }
 
   echo "  <td class='billcell'>$strike1" . text($code_text) . "$strike2</td>\n";
@@ -531,6 +542,7 @@ if (!$alertmsg && ($_POST['bn_save'] || $_POST['bn_save_close'])) {
     $code_type = $iter['code_type'];
     $code      = $iter['code'];
     $del       = $iter['del'];
+    $exclude_from_insurance_billing   = $iter['exclude_from_insurance_billing'];
 
     // Skip disabled (billed) line items.
     if ($iter['billed']) continue;
@@ -594,6 +606,7 @@ if (!$alertmsg && ($_POST['bn_save'] || $_POST['bn_save_close'])) {
     if ($justify) $justify = str_replace(',', ':', $justify) . ':';
     // $auth      = $iter['auth'] ? "1" : "0";
     $auth      = "1";
+    $exclude_from_insurance_billing   = $iter['exclude_from_insurance_billing'] == 1 ? 1 : 0;
     $provid    = 0 + $iter['provid'];
 
     $ndc_info = '';
@@ -612,9 +625,9 @@ if (!$alertmsg && ($_POST['bn_save'] || $_POST['bn_save_close'])) {
         sqlQuery("UPDATE billing SET code = ?, " .
           "units = ?, fee = ?, modifier = ?, " .
           "authorized = ?, provider_id = ?, " .
-          "ndc_info = ?, justify = ?, notecodes = ? " .
+          "ndc_info = ?, justify = ?, notecodes = ?, exclude_from_insurance_billing = ? " .
           "WHERE " .
-          "id = ? AND billed = 0 AND activity = 1", array($code,$units,$fee,$modifier,$auth,$provid,$ndc_info,$justify,$notecodes,$id) );
+          "id = ? AND billed = 0 AND activity = 1", array($code,$units,$fee,$modifier,$auth,$provid,$ndc_info,$justify,$notecodes, $exclude_from_insurance_billing, $id) );
       }
     }
 
@@ -622,7 +635,7 @@ if (!$alertmsg && ($_POST['bn_save'] || $_POST['bn_save_close'])) {
     else if (! $del) {
       $code_text = lookup_code_descriptions($code_type.":".$code);
       addBilling($encounter, $code_type, $code, $code_text, $pid, $auth,
-        $provid, $modifier, $units, $fee, $ndc_info, $justify, 0, $notecodes);
+        $provid, $modifier, $units, $fee, $ndc_info, $justify, 0, $notecodes, $exclude_from_insurance_billing);
     }
   } // end for
   
@@ -1084,6 +1097,13 @@ echo " </tr>\n";
   <td class='billcell' align='center'<?php echo $usbillstyle; ?>><b><?php echo xlt('Note Codes');?></b></td>
   <td class='billcell' align='center'<?php echo $usbillstyle; ?>><b><?php echo xlt('Auth');?></b></td>
   <td class='billcell' align='center'><b><?php echo xlt('Delete');?></b></td>
+  <?php if($GLOBALS['bill_to_patient'] ==1) { ?>
+    <td class='billcell' align='center'>
+  <?php } else { ?>
+    <td class='billcell' align='center' style='display: none'>
+  <?php } ?>
+  <b><?php echo xlt('Exclude From Insurance Billing');?></b></td>
+  
   <td class='billcell'><b><?php echo xlt('Description');?></b></td>
  </tr>
 
@@ -1108,6 +1128,7 @@ if ($billresult) {
     $units      = $iter["units"];
     $fee        = $iter["fee"];
     $authorized = $iter["authorized"];
+    $exclude_from_insurance_billing    = $iter["exclude_from_insurance_billing"];
     $ndc_info   = $iter["ndc_info"];
     $justify    = trim($iter['justify']);
     $notecodes  = trim($iter['notecodes']);
@@ -1120,6 +1141,7 @@ if ($billresult) {
       $units      = max(1, intval(trim($bline['units'])));
       $fee        = sprintf('%01.2f',(0 + trim($bline['price'])) * $units);
       $authorized = $bline['auth'];
+      $exclude_from_insurance_billing    = $bline['exclude_from_insurance_billing'];
       $ndc_info   = '';
       if ($bline['ndcnum']) {
         $ndc_info = 'N4' . trim($bline['ndcnum']) . '   ' . $bline['ndcuom'] .
@@ -1139,7 +1161,7 @@ if ($billresult) {
     echoLine($bill_lino, $iter["code_type"], trim($iter["code"]),
       $modifier, $ndc_info,  $authorized,
       $del, $units, $fee, $iter["id"], $iter["billed"],
-      $iter["code_text"], $justify, $provider_id, $notecodes);
+      $iter["code_text"], $justify, $provider_id, $notecodes, $exclude_from_insurance_billing);
   }
 }
 

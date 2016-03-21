@@ -136,7 +136,7 @@ class Claim {
       "b.user, b.groupname, b.authorized, b.encounter, b.code_text, b.billed, " .
       "b.activity, b.payer_id, b.bill_process, b.bill_date, b.process_date, " .
       "b.process_file, b.modifier, b.units, b.fee, b.justify, b.target, b.x12_partner_id, " .
-      "b.ndc_info, b.notecodes, ct.ct_diag " .
+      "b.ndc_info, b.notecodes, ct.ct_diag, b.exclude_from_insurance_billing " .
       "FROM billing as b INNER JOIN code_types as ct " .
       "ON b.code_type = ct.ct_key " .
       "WHERE ct.ct_claim = '1' AND ct.ct_active = '1' AND " .
@@ -146,6 +146,7 @@ class Claim {
     while ($row = sqlFetchArray($res)) {
       // Save all diagnosis codes.
       if ($row['ct_diag'] == '1') {
+        if($row['exclude_form_insurance_billing'] == 1)continue;
         $this->diags[$row['code']] = $row['code'];
         continue;
       }
@@ -608,6 +609,12 @@ class Claim {
   function billingFacilityNPI() {
     return x12clean(trim($this->billing_facility['facility_npi']));
   }
+  
+  function excludeEntry($prockey = 0)
+  {
+      return $this->procs[$prockey]['exclude_form_insurance_billing'];
+      
+  }  
   
   function federalIdType() {
 	if ($this->billing_facility['tax_id_type'])

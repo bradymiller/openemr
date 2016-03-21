@@ -848,6 +848,13 @@ $GLOBALS_METADATA = array(
 	   '0',                              // default = false
 	   xl('Default to a provider for line item in the fee sheet.(only applicable if Support line item billing in option above)')
     ),	
+
+    'bill_to_patient' => array(
+       xl('Allows Fee Sheet Items to be excluded from Insurance Billing'),
+	   'bool',                           // data type
+	   '0',                              // default = false
+	   xl('Allows Fee Sheet Items to be excluded from Insurance Billing')
+    ),
  
     'replicate_justification' => array(
       xl('Automatically replicate justification codes in Fee Sheet'),

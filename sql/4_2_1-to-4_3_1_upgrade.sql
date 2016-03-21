@@ -157,3 +157,11 @@ INSERT INTO list_options (list_id,option_id,title) VALUES ('lists','issue_subtyp
 INSERT INTO list_options (list_id, option_id,title, seq) VALUES ('issue_subtypes', 'eye', 'Eye',10);
 #EndIf
 
+#IfMissingColumn billing exclude_from_insurance_billing
+  ALTER TABLE billing ADD COLUMN exclude_from_insurance_billing tinyint(1) NOT NULL default 0;
+#EndIf
+ 
+#IfMissingColumn codes exclude_from_insurance_billing
+  ALTER TABLE codes ADD COLUMN exclude_from_insurance_billing tinyint(1) NOT NULL default 0;
+#EndIf
+

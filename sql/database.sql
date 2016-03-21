@@ -203,6 +203,7 @@ CREATE TABLE `billing` (
   `ndc_info` varchar(255) default NULL,
   `notecodes` varchar(25) NOT NULL default '',
   `external_id` VARCHAR(20) DEFAULT NULL,
+  `exclude_from_insurance_billing` tinyint(1) NOT NULL default '0',
   PRIMARY KEY  (`id`),
   KEY `pid` (`pid`)
 ) ENGINE=MyISAM AUTO_INCREMENT=1 ;
@@ -699,6 +700,7 @@ CREATE TABLE `codes` (
   `active` TINYINT(1) DEFAULT 1 COMMENT '0 = inactive, 1 = active',
   `reportable` TINYINT(1) DEFAULT 0 COMMENT '0 = non-reportable, 1 = reportable',
   `financial_reporting` TINYINT(1) DEFAULT 0 COMMENT '0 = negative, 1 = considered important code in financial reporting',
+  `exclude_from_insurance_billing` tinyint(1) NOT NULL default '0',
   PRIMARY KEY  (`id`),
   KEY `code` (`code`),
   KEY `code_type` (`code_type`)
