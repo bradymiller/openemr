@@ -35,9 +35,9 @@ $bat_yyyymmdd = date('Ymd', $bat_time);
 // Minutes since 1/1/1970 00:00:00 GMT will be our interchange control number:
 $bat_icn = sprintf('%09.0f', $bat_time/60);
 $bat_filename = date("Y-m-d-Hi", $bat_time) . "-batch.";
-$bat_filename .= (isset($_POST['bn_process_hcfa']) || isset($_POST['bn_process_hcfa_form'])) ? 'pdf' : 'txt';
+$bat_filename .= isset($_POST['bn_process_hcfa']) ? 'pdf' : 'txt';
 
-if (isset($_POST['bn_process_hcfa']) || isset($_POST['bn_process_hcfa_form']) ) {
+if (isset($_POST['bn_process_hcfa'])) {
   $pdf =& new Cezpdf('LETTER');
   $pdf->ezSetMargins(trim($_POST['top_margin'])+0,0,trim($_POST['left_margin'])+0,0);
   $pdf->selectFont($GLOBALS['fileroot'] . "/library/fonts/Courier.afm");
@@ -118,7 +118,7 @@ process_form($_POST);
 function process_form($ar) {
   global $bill_info, $webserver_root, $bat_filename, $pdf;
 
-  if (isset($ar['bn_x12']) || isset($ar['bn_x12_encounter']) || isset($ar['bn_process_hcfa']) || isset($ar['bn_hcfa_txt_file'] ) || isset($ar['bn_process_hcfa_form'])) {
+  if (isset($ar['bn_x12']) || isset($ar['bn_x12_encounter']) || isset($ar['bn_process_hcfa']) || isset($ar['bn_hcfa_txt_file'])) {
     if ($GLOBALS['billing_log_option'] == 1) {
       $hlog = fopen($GLOBALS['OE_SITE_DIR']. "/edi/process_bills.log", 'a');
     }
@@ -170,7 +170,7 @@ function process_form($ar) {
        }
       if (isset($ar['bn_x12']) || isset($ar['bn_x12_encounter'])) {
         $tmp = updateClaim(true, $patient_id, $encounter, $payer_id, $payer_type, 1, 1, '', $target, $claim_array['partner']);
-      } else if (isset($ar['bn_process_hcfa']) || isset($ar['bn_hcfa_txt_file'] ) || isset($ar['bn_process_hcfa_form'])) {
+      } else if (isset($ar['bn_process_hcfa']) || isset($ar['bn_hcfa_txt_file'])) {
         $tmp = updateClaim(true, $patient_id, $encounter, $payer_id, $payer_type, 1, 1, '', 'hcfa');
       } else if (isset($ar['bn_mark'])) {
         // $sql .= " billed = 1, ";
@@ -220,21 +220,6 @@ function process_form($ar) {
             $bill_info[] = xl("Internal error: claim ") . $claimid . xl(" not found!") . "\n";
           }
         }
-        else if (isset($ar['bn_process_hcfa_form'])) {
-        	$log = '';
-        	$lines = gen_hcfa_1500($patient_id, $encounter, $log);
-        	fwrite($hlog, $log);
-        	$alines = explode("\014", $lines); // form feeds may separate pages
-        	foreach ($alines as $tmplines) {
-        		if ($claim_count++) $pdf->ezNewPage();
-        		$pdf->ezSetY($pdf->ez['pageHeight'] - $pdf->ez['topMargin']);
-	      		$pdf->addPngFromFile("cms1500.png", 0,0,612,792);
-        		$pdf->ezText($tmplines, 12, array('justification' => 'left', 'leading' => 12));
-        	}
-        	if (!updateClaim(false, $patient_id, $encounter, -1, -1, 2, 2, $bat_filename)) {
-        		$bill_info[] = xl("Internal error: claim ") . $claimid . xl(" not found!") . "\n";
-        	}
-        }
 
         else if (isset($ar['bn_hcfa_txt_file'])) {
           $log = '';
@@ -274,26 +259,6 @@ function process_form($ar) {
     // Send the PDF download.
     $pdf->ezStream(array('Content-Disposition' => $bat_filename));
     exit;
-  }
-  if ( isset($ar['bn_process_hcfa_form']) ) {
-  	fclose($hlog);
-  	// If a writable edi directory exists (and it should), write the pdf to it.
-  	$fh = @fopen($GLOBALS['OE_SITE_DIR'] . "/edi/$bat_filename", 'a');
-  	if ($fh) {
-  		fwrite($fh, $pdf->ezOutput());
-  		fclose($fh);
-  	}
-  	// Send the PDF download.
-  	header("Pragma: public");
-  	header("Expires: 0");
-  	header("Cache-Control: must-revalidate, post-check=0, pre-check=0");
-  	header("Content-Type: application/force-download");
-  	header("Content-Disposition: attachment; filename=$bat_filename");
-  	header("Content-Description: File Transfer");
-  	//header("Content-Length: " . strlen($bat_content));
-  	echo $pdf->ezOutput();
-  	
-  	exit;
   }
 
   if (isset($ar['bn_hcfa_txt_file'])) {
