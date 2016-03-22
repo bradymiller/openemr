@@ -874,6 +874,12 @@ $GLOBALS_METADATA = array(
       '3',
      xl('Display the Encounter Billing Note or Patient Billing Note or Both in the Billing Screen.')
     ),
+    'preprinted_cms_1500' => array(
+      xl('Prints the CMS 1500 on the Preprinted form.'),
+      'bool',                           // data type
+      '0',                              // default = false
+      xl('Prints the CMS 1500 on the Preprinted form.')
+    ),
   
   	'use_custom_statement' => array(
       xl('Use Custom Statement'),
