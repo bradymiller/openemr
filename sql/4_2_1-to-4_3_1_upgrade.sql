@@ -154,6 +154,6 @@ ALTER TABLE `list_options` ADD COLUMN `subtype` varchar(31) NOT NULL DEFAULT '';
 
 #IfNotRow2D list_options list_id lists option_id issue_subtypes
 INSERT INTO list_options (list_id,option_id,title) VALUES ('lists','issue_subtypes','Issue Subtypes');
-INSERT INTO list_options (list_id, option_id,title, seq) VALUES ('issue_subtypes', 'eye', 'Eye’,10);
+INSERT INTO list_options (list_id, option_id,title, seq) VALUES ('issue_subtypes', 'eye', 'Eye',10);
 #EndIf
 

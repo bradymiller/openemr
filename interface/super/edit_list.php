@@ -951,7 +951,7 @@ while ($row = sqlFetchArray($res)) {
   <td><b><?php xl('Code(s)','e'); ?></b></td>
   <?php 
     if (preg_match('/_issue_list$/',$list_id)) { ?>
-  <td><b><?php xlt('Subtype'); ?></b></td>
+  <td><b><?php echo xlt('Subtype'); ?></b></td>
 <?php }
  } // end not fee sheet ?>
  </tr>
