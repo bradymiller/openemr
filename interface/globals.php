@@ -218,7 +218,7 @@ if (!empty($glrow)) {
         $temp_css_theme_name = $gl_value;
     }
     else if ($gl_name == 'weekend_days') {
-        $GLOBALS[$gl_name] = explode(',', $GLOBALS[$gl_name]);
+        $GLOBALS[$gl_name] = explode(',', $gl_value);
     }
     else if ($gl_name == 'specific_application') {
       if ($gl_value == '2') $GLOBALS['ippf_specific'] = true;
