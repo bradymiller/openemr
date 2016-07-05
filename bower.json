@@ -15,7 +15,10 @@
     "tests"
   ],
   "dependencies": {
+    "DataTables-1-10-11": "DataTables#1.10.11",
     "font-awesome-4-6-3": "font-awesome#4.6.3",
+    "jquery-3-0-0": "jquery#3.0.0",
+    "jquery-ui-1-10-4": "jquery-ui#1.10.4",
     "literallycanvas-0-4-13": "literallycanvas#0.4.13",
     "react-15-1-0": "react#15.1.0"
   }
