@@ -166,17 +166,17 @@
     },
     {
         "name": "spipu/html2pdf",
-        "version": "v4.5.0",
-        "version_normalized": "4.5.0.0",
+        "version": "v4.6.0",
+        "version_normalized": "4.6.0.0",
         "source": {
             "type": "git",
             "url": "https://github.com/spipu/html2pdf.git",
-            "reference": "d254c2a36e87f13ab9c93de221865615b8d09997"
+            "reference": "dd88130923dbd833e07062405e461759530b5eb6"
         },
         "dist": {
             "type": "zip",
-            "url": "https://api.github.com/repos/spipu/html2pdf/zipball/d254c2a36e87f13ab9c93de221865615b8d09997",
-            "reference": "d254c2a36e87f13ab9c93de221865615b8d09997",
+            "url": "https://api.github.com/repos/spipu/html2pdf/zipball/dd88130923dbd833e07062405e461759530b5eb6",
+            "reference": "dd88130923dbd833e07062405e461759530b5eb6",
             "shasum": ""
         },
         "require": {
@@ -187,7 +187,7 @@
             "ext-gd": "Allows to embed images into the PDF",
             "fagundes/zff-html2pdf": "zff-html2pdf module ~0.1.1, if you need to integrate HTML2PDF with Zend Framework 2 (zf2)"
         },
-        "time": "2015-12-18 18:57:52",
+        "time": "2016-03-30 14:08:17",
         "type": "library",
         "installation-source": "dist",
         "autoload": {
