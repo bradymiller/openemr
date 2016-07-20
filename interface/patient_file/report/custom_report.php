@@ -54,9 +54,13 @@ if ($PDF_OUTPUT) {
                        $GLOBALS['pdf_language'],
                        true, // default unicode setting is true
                        'UTF-8', // default encoding setting is UTF-8
-                       array($GLOBALS['pdf_left_margin'],$GLOBALS['pdf_top_margin'],$GLOBALS['pdf_right_margin'],$GLOBALS['pdf_bottom_margin']),
-                       $_SESSION['language_direction'] == 'rtl' ? true : false
+                       array($GLOBALS['pdf_left_margin'],$GLOBALS['pdf_top_margin'],$GLOBALS['pdf_right_margin'],$GLOBALS['pdf_bottom_margin'])
                       );
+  //set rtl(right-to-left) language direction, if rtl is enabled
+  if ($_SESSION['language_direction'] == 'rtl') {
+    $pdf->pdf->setRTL(true);
+  }
+
   //set 'dejavusans' for now. which is supported by a lot of languages - http://dejavu-fonts.org/wiki/Main_Page
   //TODO: can have this selected as setting in globals after we have more experience with this to fully support internationalization.
   $pdf->setDefaultFont('dejavusans');
