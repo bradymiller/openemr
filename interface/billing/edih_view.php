@@ -41,8 +41,8 @@ if (!acl_check('acct', 'eob')) die(xlt("Access Not Authorized"));
 	<meta http-equiv="content-type" content="text/html;charset=utf-8" />
     <!-- jQuery-ui and datatables -->
     <link rel="stylesheet" href="<?php echo $GLOBALS['assets_static_relative']; ?>/jquery-ui-1-10-4/themes/ui-lightness/jquery-ui.min.css" />
-    <link rel="stylesheet" href="<?php echo $GLOBALS['assets_static_relative']; ?>/datatables-1-10-11/media/css/dataTables.jqueryui.min.css" />
-    <link rel="stylesheet" href="<?php echo $GLOBALS['assets_static_relative']; ?>/library/js/DataTables-1.10.11/Scroller-1.4.1/css/scroller.jqueryui.min.css" />
+    <link rel="stylesheet" href="<?php echo $GLOBALS['assets_static_relative']; ?>/datatables.net-jqui-1-10-11/js/dataTables.jqueryui.min.js" />
+    <link rel="stylesheet" href="<?php echo $GLOBALS['assets_static_relative']; ?>/datatables.net-scroller-jqui-1-4-1/css/scroller.jqueryui.min.css" />
     <!-- edi_history css -->
     <link rel="stylesheet" href="<?php echo $web_root?>/library/css/edi_history_v2.css" type="text/css" />
     <link rel="stylesheet" href="<?php echo $web_root?>/library/dynarch_calendar.css" type="text/css" />
@@ -313,20 +313,13 @@ if (!acl_check('acct', 'eob')) die(xlt("Access Not Authorized"));
 </div> 
 <!-- End tabs section -->
 <!--  -->
-<script src="<?php echo $web_root?>/library/js/jquery-ui-1.10.4.custom/js/jquery-1.10.2.min.js" type="text/javascript"></script>
-<script src="<?php echo $web_root?>/library/js/jquery-ui-1.10.4.custom/js/jquery-ui-1.10.4.custom.min.js" type="text/javascript"></script>
-<script src="<?php echo $web_root?>/library/js/DataTables-1.10.11/datatables.min.js"></script>
-<script src="<?php echo $web_root?>/library/js/DataTables-1.10.11/DataTables-1.10.11/datatables.jqueryui.min.js"></script>
+<script src="<?php echo $GLOBALS['assets_static_relative']; ?>/library/js/jquery-ui-1.10.4.custom/js/jquery-1.10.2.min.js" type="text/javascript"></script>
+<script src="<?php echo $GLOBALS['assets_static_relative']; ?>/jquery-ui-1-10-4/ui/minified/jquery-ui.custom.min.js" type="text/javascript"></script>
+<script src="<?php echo $GLOBALS['assets_static_relative']; ?>/datatables.net-1-10-11/js/jquery.dataTables.min.js"></script>
+<script src="<?php echo $GLOBALS['assets_static_relative']; ?>/datatables.net-jqui-1-10-11/js/dataTables.jqueryui.min.js"></script>
 
 <!-- -->
-<script src="<?php echo $web_root?>library/js/DataTables-1.10.11/Scroller-1.4.1/js/dataTables.scroller.min.js"></script>
-<!-- 
-<script
-	  src="https://code.jquery.com/jquery-1.10.2.min.js"
-	  integrity="sha256-C6CB9UYIS9UJeqinPHWTHVqh/E1uhG5Twh+Y5qFQmYg="
-	  crossorigin="anonymous">
-</script>
---> 
+<script src="<?php echo $GLOBALS['assets_static_relative']; ?>/datatables.net-scroller-1-4-1/js/dataTables.scroller.min.js"></script>
 <!-- end DataTables js Begin local js -->
 <script type="text/javascript">
     jQuery(document).ready(function() {
