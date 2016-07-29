@@ -39,27 +39,14 @@ if (!acl_check('acct', 'eob')) die(xlt("Access Not Authorized"));
 <head>
 	<title><?php echo xlt("edi history"); ?></title>
 	<meta http-equiv="content-type" content="text/html;charset=utf-8" />
-	<!-- OpenEMR css
-	<link rel="stylesheet" href="<?php echo $web_root?>/interface/themes/style_oemr.css" />
-	 -->
     <!-- jQuery-ui and datatables -->
-    <link rel="stylesheet" href="<?php echo $web_root?>/library/js/jquery-ui-1.10.4.custom/css/custom-theme/jquery-ui-1.10.4.custom.min.css" />
-<!--
-    <link rel="stylesheet" href="<?php echo $web_root?>/library/js/DataTables-1.10.11/DataTables-1.10.11/css/jquery.dataTables_themeroller.css" />
- -->
-	<link rel="stylesheet" href="<?php echo $web_root?>/library/js/DataTables-1.10.11/DataTables-1.10.11/css/jquery.dataTables.min.css" />
-<!--  -->
-	<link rel="stylesheet" href="<?php echo $web_root?>library/js/DataTables-1.10.11/DataTables-1.10.11/css/dataTables.jqueryui.min.css" />
-
-<!--
-	<link rel="stylesheet" href="<?php echo $web_root?>library/js/DataTables-1.10.11/css/dataTables.min.css" />
--->
-	<link rel="stylesheet" href="<?php echo $web_root?>/library/js/DataTables-1.10.11/Scroller-1.4.1/css/scroller.jqueryui.min.css" />
-<!-- -->
+    <link rel="stylesheet" href="<?php echo $GLOBALS['assets_static_relative']; ?>/jquery-ui-1-10-4/themes/ui-lightness/jquery-ui.min.css" />
+    <link rel="stylesheet" href="<?php echo $GLOBALS['assets_static_relative']; ?>/datatables-1-10-11/media/css/dataTables.jqueryui.min.css" />
+    <link rel="stylesheet" href="<?php echo $GLOBALS['assets_static_relative']; ?>/library/js/DataTables-1.10.11/Scroller-1.4.1/css/scroller.jqueryui.min.css" />
     <!-- edi_history css -->
     <link rel="stylesheet" href="<?php echo $web_root?>/library/css/edi_history_v2.css" type="text/css" />
     <link rel="stylesheet" href="<?php echo $web_root?>/library/dynarch_calendar.css" type="text/css" />
-	<!-- OpenEMR Calendar -->
+    <!-- OpenEMR Calendar -->
     <script type="text/javascript" src="<?php echo $web_root?>/library/dynarch_calendar.js"></script>
     <script type="text/javascript" src="<?php echo $web_root?>/library/dynarch_calendar_setup.js"></script>
     <script type="text/javascript" src="<?php echo $web_root?>/library/textformat.js"></script>
