@@ -9,7 +9,7 @@
  * @author    Laurent MINGUET <webmaster@html2pdf.fr>
  * @copyright 2016 Laurent MINGUET
  */
-class HTML2PDF_myPdf extends TCPDF
+class HTML2PDF_myPdf extends FPDI
 {
     protected $_footerParam = array();
     protected $_transf      = array();
