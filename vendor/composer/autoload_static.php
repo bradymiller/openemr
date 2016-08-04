@@ -4,7 +4,7 @@
 
 namespace Composer\Autoload;
 
-class ComposerStaticInit52ac831ad408220d1237367395663c3f
+class ComposerStaticInit8544cf67e6db01036cb8c895f9ce0b60
 {
     public static $files = array (
         'bf9f5270ae66ac6fa0290b4bf47867b7' => __DIR__ . '/..' . '/adodb/adodb-php/adodb.inc.php',
@@ -47,7 +47,7 @@ class ComposerStaticInit52ac831ad408220d1237367395663c3f
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
-            $loader->classMap = ComposerStaticInit52ac831ad408220d1237367395663c3f::$classMap;
+            $loader->classMap = ComposerStaticInit8544cf67e6db01036cb8c895f9ce0b60::$classMap;
 
         }, null, ClassLoader::class);
     }

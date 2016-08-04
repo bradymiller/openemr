@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "6b72258412f5f6fbb25ed702850d1d32",
-    "content-hash": "89bc0fe619f9e32b7375414fc07e7c9d",
+    "hash": "c364deabe47ade8dda0c3c5afdab1848",
+    "content-hash": "5f313c596b03eea00800ff1fdfc73f3d",
     "packages": [
         {
             "name": "adodb/adodb-php",
@@ -210,16 +210,16 @@
         },
         {
             "name": "spipu/html2pdf",
-            "version": "v4.5.0",
+            "version": "v4.6.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/spipu/html2pdf.git",
-                "reference": "d254c2a36e87f13ab9c93de221865615b8d09997"
+                "reference": "dd88130923dbd833e07062405e461759530b5eb6"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/spipu/html2pdf/zipball/d254c2a36e87f13ab9c93de221865615b8d09997",
-                "reference": "d254c2a36e87f13ab9c93de221865615b8d09997",
+                "url": "https://api.github.com/repos/spipu/html2pdf/zipball/dd88130923dbd833e07062405e461759530b5eb6",
+                "reference": "dd88130923dbd833e07062405e461759530b5eb6",
                 "shasum": ""
             },
             "require": {
@@ -259,7 +259,7 @@
                 "html2pdf",
                 "pdf"
             ],
-            "time": "2015-12-18 18:57:52"
+            "time": "2016-03-30 14:08:17"
         },
         {
             "name": "tecnickcom/tcpdf",

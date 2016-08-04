@@ -13,7 +13,7 @@
 
         "smarty/smarty": "2.6.29",
         "adodb/adodb-php": "5.20.2",
-        "spipu/html2pdf": "4.5.0",
+        "spipu/html2pdf": "4.6.0",
         "setasign/fpdi-tcpdf": "1.6.*"
         
     },
