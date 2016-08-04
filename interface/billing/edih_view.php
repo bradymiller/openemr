@@ -40,9 +40,10 @@ if (!acl_check('acct', 'eob')) die(xlt("Access Not Authorized"));
 	<title><?php echo xlt("edi history"); ?></title>
 	<meta http-equiv="content-type" content="text/html;charset=utf-8" />
     <!-- jQuery-ui and datatables -->
-    <link rel="stylesheet" href="<?php echo $GLOBALS['assets_static_relative']; ?>/jquery-ui-1-10-4/themes/ui-lightness/jquery-ui.min.css" />
+    <link rel="stylesheet" href="<?php echo $GLOBALS['assets_static_relative']; ?>/jquery-ui-1-10-4/themes/sunny/jquery-ui.min.css" />
     <link rel="stylesheet" href="<?php echo $GLOBALS['assets_static_relative']; ?>/datatables.net-jqui-1-10-11/css/dataTables.jqueryui.min.css" />
     <link rel="stylesheet" href="<?php echo $GLOBALS['assets_static_relative']; ?>/datatables.net-scroller-jqui-1-4-1/css/scroller.jqueryui.min.css" />
+
     <!-- edi_history css -->
     <link rel="stylesheet" href="<?php echo $web_root?>/library/css/edi_history_v2.css" type="text/css" />
     <link rel="stylesheet" href="<?php echo $web_root?>/library/dynarch_calendar.css" type="text/css" />
