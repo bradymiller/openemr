@@ -526,14 +526,14 @@ jQuery-UI dialog
 		fl1.addClass('flist1');
 		var fmaxupl = phpserver['maxfuploads'];   // jQuery("#srvvals").data('mf');
 		var pmaxsize = phpserver['postmaxsize']
-		var str = "<p><em>Selected Files:</em></p>";
+		var str = "<p><em><?php echo xla('Selected Files'); ?>:</em></p>";
 		str = str + "<ul id='uplsel' class='fupl'>";
 		for(var i = 0; i < fct; i++) {
-			if (i == fmaxupl) str = str + '</ul><p>max file count reached<br> - reload names below </p><ul class=fupl>';
+			if (i == fmaxupl) str = str + '</ul><p><?php echo xla('max file count reached'); ?><br> - <?php echo xla('reload names below'); ?> </p><ul class=fupl>';
 			str = str + "<li>" + uplfiles[i].name + "</li>";  //' ' +
 			fsize += uplfiles[i].size;
 		};
-		str = str + '</ul><p>Total size: ' + bytesToSize(fsize) + ' (max ' + pmaxsize + ')</p>';
+		str = str + '</ul><p><?php echo xla('Total size'); ?>: ' + bytesToSize(fsize) + ' (<?php echo xla('max'); ?> ' + pmaxsize + ')</p>';
 		jQuery('#uplsubmit').prop('disabled', false);
 		if (upld_ct === 0 ) {
 			jQuery('#processupl').prop('disabled', true);
@@ -585,7 +585,7 @@ jQuery-UI dialog
 					uplForm.reset();
 					upld_ct++;
 				},
-			    error: function( xhr, status ) { alert( "Sorry, there was a problem!" ); },
+			    error: function( xhr, status ) { alert( "<?php echo xls('Sorry, there was a problem!'); ?>" ); },
 			});
 		return false;
 	});
@@ -609,7 +609,7 @@ jQuery-UI dialog
 					}
 				],
 			    error: function( xhr, status ) {
-					alert( "Sorry, there was a problem!" ),
+					alert( "<?php echo xls('Sorry, there was a problem!'); ?>" ),
 					jQuery('#processed').html(status)
 				}				
 			});
@@ -770,7 +770,7 @@ jQuery-UI dialog
 				rspElem.html(data);
 				jQuery('#x12filesbmt').prop('disabled', true);
 			},
-		    error: function( xhr, status ) { alert( "Sorry, there was a problem!" ); }
+		    error: function( xhr, status ) { alert( "<?php echo xls('Sorry, there was a problem!'); ?>" ); }
 		});
 		// jQuery accordion requires html to be present at document ready
 		// accordion does not work for added content, so no effect here
@@ -812,10 +812,10 @@ jQuery-UI dialog
             data: { archivelog: 'yes' },
             dataType: "json",
             success: function(data) {
-				var str = "<p>Archive Log Files</p><ul id='logarchlist'>";
+				var str = "<p><?php echo xla('Archive Log Files'); ?></p><ul id='logarchlist'>";
 				var fct = data.length;
 				if (fct == 0) {
-					str = str + "<li>No logs older than 7 days</li>";
+					str = str + "<li><?php echo xla('No logs older than 7 days'); ?></li>";
 				} else {
 					for(var i = 0; i < fct; i++) {
 						str = str + "<li>" + data[i] + "</li>";
@@ -827,7 +827,7 @@ jQuery-UI dialog
 		        jQuery('#logrsp').html(str);
 		        jQuery('#logrsp').show();				
 			},
-		    error: function( xhr, status ) { alert( "Sorry, there was a problem!" ); }
+		    error: function( xhr, status ) { alert( "<?php echo xls('Sorry, there was a problem!'); ?>" ); }
 		});
 		loglist();
 
@@ -922,7 +922,7 @@ jQuery-UI dialog
 				archForm.reset();
 				
 			},
-			error: function( xhr, status ) { alert( "Sorry, there was a problem!" ); },
+			error: function( xhr, status ) { alert( "<?php echo xls('Sorry, there was a problem!'); ?>" ); },
 			// code to run regardless of success or failure
 			// complete: function( xhr, status ) { alert( "The request is complete!" ); }
 		});
@@ -954,7 +954,7 @@ jQuery-UI dialog
 				jQuery('#archiversp').html(data);
 			},
 			error: function( xhr, status ) {
-				alert( "Sorry, there was a problem!" );
+				alert( "<?php echo xls('Sorry, there was a problem!'); ?>" );
 				rspElem.html(status);
 				rspElem.show();
 			}
@@ -974,7 +974,7 @@ jQuery-UI dialog
 		var sel = jQuery( "#archrestoresel option:selected" ).text();
 		console.log( sel );
 		if (sel == "No Archives") {
-			alert("No archive files present");
+			alert("<?php echo xls('No archive files present'); ?>");
 			return false;
 		}
 		var archrstForm = document.getElementById('formarchrestore'); 
@@ -993,7 +993,7 @@ jQuery-UI dialog
 				rspElem.html('');
 				rspElem.html(data);
 			},
-			error: function( xhr, status ) { alert( "Sorry, there was a problem!" ); },
+			error: function( xhr, status ) { alert( "<?php echo xls('Sorry, there was a problem!'); ?>" ); },
 		});
 	    archlist();
 	    csvlist();

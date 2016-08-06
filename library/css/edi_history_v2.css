@@ -124,7 +124,7 @@ ul.fupl { list-style-type: none;
 }
 /* ***** process class dl.process  padding: 10px; border: none; margin: 2px;*******/
 div#processed {
-    max-width: fit-contents;
+    max-width: fit-content;
     background-color: #B7CBD0;
 }
 
@@ -146,7 +146,7 @@ div#processed dl {
     margin-right: 2;
 }
 div#processed dt {
-    margin-top: .5em;`														
+    margin-top: .5em;	
     margin-bottom: .5em;
     margin-left: 2;
     margin-right: 2;
@@ -510,18 +510,7 @@ table.segtxt td.btnum {
 	padding: 2px, 2px;
 	text-align: right;
 	}
-/* 
- * 
- * ***** old css ******
- */
- /* **** to be deleted 
-p.text {
-	width:80%;
-	text-align:left;
-	font-family: serif;tr.even 
-	font-size: medium;
-	background-color: #ede9c0;	
-	}
+
 /*
  * to show log file 
  * http://dean.resplace.net/blog/2011/08/jquery-tabs-iframes/
