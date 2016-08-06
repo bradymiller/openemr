@@ -128,25 +128,25 @@ if (!acl_check('acct', 'eob')) die(xlt("Access Not Authorized"));
 						</td>						
 						<td align='center'>
 							<select id="csvperiod" name="csv_period">
-								<option value='2w' selected='selected'>2 weeks</option>
-								<option value='1m'>1 month</option>
-								<option value='2m'>2 months</option>
-								<option value='3m'>3 months</option>
-								<option value='6m'>6 months</option>
-								<option value='9m'>9 months</option>
-								<option value='1y'>1 year</option>
-								<option value='ALL'>All Dates</option>
+								<option value='2w' selected='selected'>2 <?php echo xlt('weeks'); ?></option>
+								<option value='1m'>1 <?php echo xlt('month'); ?></option>
+								<option value='2m'>2 <?php echo xlt('months'); ?></option>
+								<option value='3m'>3 <?php echo xlt('months'); ?></option>
+								<option value='6m'>6 <?php echo xlt('months'); ?></option>
+								<option value='9m'>9 <?php echo xlt('months'); ?></option>
+								<option value='1y'>1 <?php echo xlt('year'); ?></option>
+								<option value='ALL'><?php echo xlt('All Dates'); ?></option>
 							</select>
 						</td>
                         <!-- datekeyup(e, defcc, withtime)  dateblur(e, defcc, withtime) -->
                         <td align='left'>
-						   <input type='text' size='10' name="csv_date_start" id="caldte1" value="" title="yyyy-mm-dd Start Date" />
+						   <input type='text' size='10' name="csv_date_start" id="caldte1" value="" title="<?php echo xla('yyyy-mm-dd Start Date'); ?>" />
                            <img src="<?php echo $web_root?>/interface/pic/show_calendar.gif" align='absbottom' width='24' height='22'
-                              id="csvdate1_cal" border="0" alt="[?]" style="cursor:pointer;cursor:hand" title="Start date">
+                              id="csvdate1_cal" border="0" alt="[?]" style="cursor:pointer;cursor:hand" title="<?php echo xla('Start date'); ?>">
                         
-                           <input type="text" size="10" name="csv_date_end" id="caldte2" value="" title="yyyy-mm-dd End Date" />
+                           <input type="text" size="10" name="csv_date_end" id="caldte2" value="" title="<?php echo xla('yyyy-mm-dd End Date'); ?>" />
                            <img src="../pic/show_calendar.gif" align="absbottom" width="24" height="22"
-                              id="csvdate2_cal" border="0" alt="[?]" style="cursor:pointer;cursor:hand" title="End date">
+                              id="csvdate2_cal" border="0" alt="[?]" style="cursor:pointer;cursor:hand" title="<?php echo xla('End date'); ?>">
                         </td>
                         <!-- OEMR calendar srcipt -->
                         <script type="text/javascript"> 
@@ -279,13 +279,13 @@ if (!acl_check('acct', 'eob')) die(xlt("Access Not Authorized"));
 					<fieldset><legend><?php echo xlt("Archive old files "); ?></legend>
 					<label for="archive_sel"><?php echo xlt("Older than"); ?>:</label>
 					<select id="archiveselect" name="archive_sel">
-						<option value="" selected="selected">Choose</option>
-						<option value="24m">24 months</option>
-						<option value="18m">18 months</option>
-						<option value="12m">12 months</option>
-						<option value="9m">9 months</option>
-						<option value="6m">6 months</option>
-						<option value="3m">3 months</option>
+						<option value="" selected="selected"><?php echo xlt('Choose'); ?></option>
+						<option value="24m">24 <?php echo xlt('months'); ?></option>
+						<option value="18m">18 <?php echo xlt('months'); ?></option>
+						<option value="12m">12 <?php echo xlt('months'); ?></option>
+						<option value="9m">9 <?php echo xlt('months'); ?></option>
+						<option value="6m">6 <?php echo xlt('months'); ?></option>
+						<option value="3m">3 <?php echo xlt('months'); ?></option>
 					</select>
 					<label for="archivereport"><?php echo xlt("Report"); ?>:</label>					
 					<input type="button" id="archiverpt" name="archivereport" form="formarchive" value="<?php echo xla("Report"); ?>" />
@@ -318,8 +318,6 @@ if (!acl_check('acct', 'eob')) die(xlt("Access Not Authorized"));
 <script src="<?php echo $GLOBALS['assets_static_relative']; ?>/jquery-ui-1-10-4/ui/minified/jquery-ui.custom.min.js" type="text/javascript"></script>
 <script src="<?php echo $GLOBALS['assets_static_relative']; ?>/datatables.net-1-10-11/js/jquery.dataTables.min.js"></script>
 <script src="<?php echo $GLOBALS['assets_static_relative']; ?>/datatables.net-jqui-1-10-11/js/dataTables.jqueryui.min.js"></script>
-
-<!-- -->
 <script src="<?php echo $GLOBALS['assets_static_relative']; ?>/datatables.net-scroller-1-4-1/js/dataTables.scroller.min.js"></script>
 <!-- end DataTables js Begin local js -->
 <script type="text/javascript">
