@@ -262,7 +262,7 @@ if ($_REQUEST['dispensed']) {
             <link rel="stylesheet" href="../../forms/<?php echo $form_folder; ?>/style.css" type="text/css"> 
 
                  <!-- jQuery library -->
-            <script src="<?php echo $GLOBALS['webroot'] ?>/library/js/jquery.min.js"></script>
+            <script src="<?php echo $GLOBALS['assets_static_relative'] ?>/jquery-min-1-11-1/index.js"></script>
             
             <style>
                 .refraction {
@@ -618,7 +618,7 @@ if ($_REQUEST['dispensed']) {
                 }
             </style>
                  <!-- jQuery library -->
-            <script src="<?php echo $GLOBALS['webroot'] ?>/library/js/jquery.min.js"></script>
+            <script src="<?php echo $GLOBALS['assets_static_relative'] ?>/jquery-min-1-11-1/index.js"></script>
             
             <script>
                 function pick_rxType(rxtype,id) {

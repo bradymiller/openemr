@@ -157,7 +157,7 @@ if ($refresh and $refresh != 'fullscreen') {
   <head>
     <title> <?php echo xlt('Chart'); ?>: <?php echo text($pat_data['fname'])." ".text($pat_data['lname'])." ".text($visit_date); ?></title>
     <!-- jQuery library -->
-    <script src="<?php echo $GLOBALS['webroot'] ?>/library/js/jquery.min.js"></script>
+    <script src="<?php echo $GLOBALS['assets_static_relative'] ?>/jquery-min-1-11-1/index.js"></script>
     <!-- Latest compiled JavaScript -->
     <script src="<?php echo $GLOBALS['assets_static_relative'] ?>/bootstrap-3-3-4/dist/js/bootstrap.min.js"></script>  
       <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->

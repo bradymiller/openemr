@@ -3246,7 +3246,7 @@ function redirector($url) {
     <html>
     <head>
     <!-- jQuery library -->
-    <script src="<?php echo $GLOBALS['webroot']; ?>/library/js/jquery.min.js"></script>
+    <script src="<?php echo $GLOBALS['assets_static_relative'] ?>/jquery-min-1-11-1/index.js"></script>
 
     <!-- Latest compiled JavaScript -->
     <script src="<?php echo $GLOBALS['assets_static_relative'] ?>/bootstrap-3-3-4/dist/js/bootstrap.min.js"></script>  
