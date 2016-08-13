@@ -204,7 +204,7 @@ function display_PRIOR_section($zone,$orig_id,$id_to_show,$pid,$report = '0') {
 
     $result = sqlStatement($query,array($_SESSION['authUserID']));
     while ($prefs= sqlFetchArray($result))   {   
-        ${$prefs['LOCATION']} = $prefs['VALUE'];
+        ${$prefs['LOCATION']} = $prefs['GOVALUE'];
     }
     
     $query = "SELECT * FROM form_".$form_folder." where pid =? and id = ?";
@@ -2463,52 +2463,45 @@ function show_PMSFH_report($PMSFH) {
  *  These selctions are draw from an openEMR list, Eye_QP_$zone_$providerID.  
  *  This list is created from Eye_QP_$zone_defaults when a new provider opens the form.
  *  Because it is a "list", the end-user can modify it.
- *  A link to the list "the pencil icon" is provided to allow customization (RTop frame)
- *
- * @param string $zone options EXT,ANTSEG,RETINA,NEURO 
- * @param string $providerID  
- * @return QP text : when called directly outputs the ZONE specific HTML5 CANVAS widget 
+ *  A link to the list "the pencil icon" is provided to allow customization - displayed in RTop frame.
+ *  If frames are ever removed, this will need to be reworked.
+ *  
+ *  @param string $zone options EXT,ANTSEG,RETINA,NEURO 
+ *  @param string $providerID  
+ *  @return QP text : when called directly outputs the ZONE specific HTML5 CANVAS widget 
  */ 
 function display_QP($zone,$providerID){
     global $prov_data;
     if (!$zone || !$providerID) return;
     ob_start();
-    $query = "SELECT * FROM list_options where list_id =?  ORDER BY seq";
+    $query  = "SELECT * FROM list_options where list_id =?  ORDER BY seq";
     $result = sqlStatement($query,array("Eye_QP_".$zone."_$providerID"));
         
-    if (sqlNumRows($result) < '1') {
-      //copy defaults to this user...
-      $query = "SELECT * FROM list_options where list_id =? ORDER BY seq";
-      $result = sqlStatement($query,array("Eye_QP_".$zone."_defaults"));
-      $build_QP='1';
-      $query = "INSERT INTO `openemr`.`list_options` (`list_id`, `option_id`, `title`, `seq`, `is_default`, `option_value`, `mapping`, `notes`, `codes`) VALUES ('lists', ?, ?, '0', '1', '0', '', '', '')";
-      sqlStatement($query,array('Eye_QP_'.$zone.'_'.$providerID,'Eye QP List '.$zone.' for '.$prov_data['lname']));
+    if (sqlNumRows($result) < '1') { 
+        //this provider's list has not been created yet.
+        //copy defaults for this provider to a new list, which can be customized later by the user via pencil icon...
+        $query = "INSERT INTO `list_options` (`list_id`, `option_id`, `title`, `seq`, `is_default`, `option_value`) VALUES 
+                                             ('lists', ?, ?, '0', '1', '0')";
+        sqlStatement($query,array('Eye_QP_'.$zone.'_'.$providerID,'Eye QP List '.$zone.' for '.$prov_data['lname']));
+        // new provider list created.
+        // now let's populate this new list with the defaults
+        $query = "SELECT * FROM list_options where list_id =? ORDER BY seq";
+        $result = sqlStatement($query,array("Eye_QP_".$zone."_defaults"));
+        while ($QPx= sqlFetchArray($result))   {
+            $SQL_INSERT = "INSERT INTO `list_options` (`list_id`, `option_id`, `title`, `seq`, `mapping`, `notes`, `codes`, `activity`, `subtype`) VALUES (?,?,?,?,?,?,?,?,?)";
+            sqlStatement($SQL_INSERT, array("Eye_QP_".$zone."_".$providerID.",".$QPx['option_id'].",".$QPx['title'].",".$QPx['seq'].",".$QPx['mapping'].",".$QPx['notes'].",".$QPx['codes'].",".$QPx['activity'].",".$QPx['subtype']));
+        }
     }
-    $number_rows=0;
-    $SQL_INSERT = "INSERT INTO `openemr`.`list_options` (`list_id`, `option_id`, `title`, `seq`, `mapping`, `notes`, `codes`, `activity`, `subtype`) VALUES ";
-      
-    while ($QP= sqlFetchArray($result))   {
-      $here[$QP['title']][$QP['subtype']]['notes']  = $QP['notes']; //the text to fill into form
-      $here[$QP['title']][$QP['subtype']]['codes']   = $QP['codes']; //the code if attached.
-      $here[$QP['title']][$QP['subtype']]['mapping'] = $QP['mapping']; //the fieldname without laterality eg CONJ
-      $here[$QP['title']][$QP['subtype']]['activity'] = $QP['activity']; //1 to replace, 0 to append
-      if ($build_QP) {
-        if ($number_rows > 0) $SQL_INSERT .= ",
-        ";
-        $SQL_INSERT .= "('Eye_QP_".$zone."_".$providerID."','".$QP['option_id']."','".$QP['title']."','".$QP['seq']."','".$QP['mapping']."','".$QP['notes']."','".$QP['codes']."','".$QP['activity']."','".$QP['subtype']."')";
-      }
-      $number_rows++;
+    while ($QP= sqlFetchArray($result))   { 
+        $here[$QP['title']][$QP['subtype']]['notes']  = $QP['notes']; //the text to fill into form
+        $here[$QP['title']][$QP['subtype']]['codes']   = $QP['codes']; //the code if attached.
+        $here[$QP['title']][$QP['subtype']]['mapping'] = $QP['mapping']; //the fieldname without laterality eg CONJ
+        $here[$QP['title']][$QP['subtype']]['activity'] = $QP['activity']; //1 to replace, 0 to append
     }
-    if ($build_QP) {
-      $SQL_INSERT .= ";";
-      sqlStatement($SQL_INSERT);
-    }
-    $number_rows=0;
     foreach ($here as $title => $values) { //start QP section items
-        $title_show = (strlen($title) > 15) ? substr($title,0,13).'...' : $title; //what about R and L?
+        $title_show = (strlen($title) > 15) ? substr($title,0,13).'...' : $title; 
         if (preg_match('/clear field/',$title)) {
-          //  $title_show = preg_replace("/clear field/","<em><strong>clear field</strong></em>",$title);
-          $title_show = "<em><strong>$title</strong></em>";
+            $title_show = "<em><strong>$title</strong></em>";
         }
         if ($values['OD']) {
             if ($values['OD']['activity'] == '0') $action = "ADD";
@@ -3246,7 +3239,7 @@ function redirector($url) {
     <html>
     <head>
     <!-- jQuery library -->
-    <script src="<?php echo $GLOBALS['assets_static_relative'] ?>/jquery-min-1-11-1/index.js"></script>
+    <script src="<?php echo $GLOBALS['webroot']; ?>/library/js/jquery.min.js"></script>
 
     <!-- Latest compiled JavaScript -->
     <script src="<?php echo $GLOBALS['assets_static_relative'] ?>/bootstrap-3-3-4/dist/js/bootstrap.min.js"></script>  

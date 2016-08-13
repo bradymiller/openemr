@@ -1,13 +1,11 @@
 <?php
 
 /** 
- * forms/eye_mag/view.php 
+ * forms/eye_mag/help.php 
  * 
- * Central view for the eye_mag form.  Here is where all new data is entered
- * New forms are created via new.php and then this script is displayed.
- * Edit requsts come here too...
+ * Help File for Shorthand Entry Technique on the Eye Form
  * 
- * Copyright (C) 2010-14 Raymond Magauran <magauran@MedFetch.com> 
+ * Copyright (C) 2016 Raymond Magauran <magauran@MedFetch.com> 
  * 
  * LICENSE: This program is free software; you can redistribute it and/or 
  * modify it under the terms of the GNU General Public License 

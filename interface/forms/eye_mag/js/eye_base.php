@@ -2930,7 +2930,7 @@ $(document).ready(function() {
                                             $maxseq = sqlFetchArray($pres);
                                             
                                             $seq=$maxseq['maxseq'];
-                                            $query = "INSERT INTO `openemr`.`list_options` (`list_id`, `option_id`, `title`, `seq`, `is_default`, `option_value`, `mapping`, `notes`, `codes`) VALUES
+                                            $query = "INSERT INTO `list_options` (`list_id`, `option_id`, `title`, `seq`, `is_default`, `option_value`, `mapping`, `notes`, `codes`) VALUES
                                             ('lists', ?, ?, ?, '1', '0', '', '', '')";
                                             sqlStatement($query,array("Eye_defaults_$providerID","Eye Exam Defaults $providerNAME ",$seq));
                                             $query = "INSERT INTO `list_options` (`list_id`, `option_id`, `title`,`notes`,`seq`) VALUES

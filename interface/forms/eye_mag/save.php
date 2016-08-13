@@ -747,7 +747,7 @@ if ($_REQUEST["mode"] == "new")             {
     //now save any Wear RXs (1-4) entered.
     $rx_number='1';
      if ($_POST['W_1']=='1') {
-       $query = "REPLACE INTO `openemr`.`form_eye_mag_wearing` (`ENCOUNTER` ,`FORM_ID` ,`PID` ,`RX_NUMBER` ,`ODSPH` ,`ODCYL` ,`ODAXIS` ,
+       $query = "REPLACE INTO `form_eye_mag_wearing` (`ENCOUNTER` ,`FORM_ID` ,`PID` ,`RX_NUMBER` ,`ODSPH` ,`ODCYL` ,`ODAXIS` ,
         `ODVA` ,`ODADD` ,`ODNEARVA` ,`ODPRISM`,`OSSPH` ,`OSCYL` ,`OSAXIS` ,
         `OSVA` ,`OSADD` ,`OSNEARVA` ,`OSPRISM` ,`ODMIDADD` ,`OSMIDADD` ,
         `RX_TYPE` ,`COMMENTS`) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
@@ -763,7 +763,7 @@ if ($_REQUEST["mode"] == "new")             {
     }
     if ($_POST['W_2']=='1') {
       //store W_2
-      $query = "REPLACE INTO `openemr`.`form_eye_mag_wearing` (`ENCOUNTER` ,`FORM_ID` ,`PID` ,`RX_NUMBER` ,`ODSPH` ,`ODCYL` ,`ODAXIS` ,
+      $query = "REPLACE INTO `form_eye_mag_wearing` (`ENCOUNTER` ,`FORM_ID` ,`PID` ,`RX_NUMBER` ,`ODSPH` ,`ODCYL` ,`ODAXIS` ,
         `ODVA` ,`ODADD` ,`ODNEARVA` ,`ODPRISM`,`OSSPH` ,`OSCYL` ,`OSAXIS` ,
         `OSVA` ,`OSADD` ,`OSNEARVA` ,`OSPRISM` ,`ODMIDADD` ,`OSMIDADD` ,
         `RX_TYPE` ,`COMMENTS`) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
@@ -779,7 +779,7 @@ if ($_REQUEST["mode"] == "new")             {
     }
     if ($_POST['W_3']=='1') {
     //store W_3
-     $query = "REPLACE INTO `openemr`.`form_eye_mag_wearing` (`ENCOUNTER` ,`FORM_ID` ,`PID` ,`RX_NUMBER` ,`ODSPH` ,`ODCYL` ,`ODAXIS` ,
+     $query = "REPLACE INTO `form_eye_mag_wearing` (`ENCOUNTER` ,`FORM_ID` ,`PID` ,`RX_NUMBER` ,`ODSPH` ,`ODCYL` ,`ODAXIS` ,
         `ODVA` ,`ODADD` ,`ODNEARVA` ,`ODPRISM`,`OSSPH` ,`OSCYL` ,`OSAXIS` ,
         `OSVA` ,`OSADD` ,`OSNEARVA` ,`OSPRISM` ,`ODMIDADD` ,`OSMIDADD` ,
         `RX_TYPE` ,`COMMENTS`) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
@@ -795,7 +795,7 @@ if ($_REQUEST["mode"] == "new")             {
     }
     if ($_POST['W_4']=='1') {
      //store W_4
-      $query = "REPLACE INTO `openemr`.`form_eye_mag_wearing` (`ENCOUNTER` ,`FORM_ID` ,`PID` ,`RX_NUMBER` ,`ODSPH` ,`ODCYL` ,`ODAXIS` ,
+      $query = "REPLACE INTO `form_eye_mag_wearing` (`ENCOUNTER` ,`FORM_ID` ,`PID` ,`RX_NUMBER` ,`ODSPH` ,`ODCYL` ,`ODAXIS` ,
         `ODVA` ,`ODADD` ,`ODNEARVA` ,`ODPRISM`,`OSSPH` ,`OSCYL` ,`OSAXIS` ,
         `OSVA` ,`OSADD` ,`OSNEARVA` ,`OSPRISM` ,`ODMIDADD` ,`OSMIDADD` ,
         `RX_TYPE` ,`COMMENTS`) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
