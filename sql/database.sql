@@ -9367,7 +9367,7 @@ CREATE TABLE IF NOT EXISTS `form_eye_mag` (
 `LOCKEDBY` varchar(50) DEFAULT NULL,
 `FINISHED` char(25) DEFAULT NULL,
 PRIMARY KEY (`id`)
-) ENGINE=InnoDB;
+) ENGINE=MyISAM;
 
 DROP TABLE IF EXISTS `form_eye_mag_prefs`;
 CREATE TABLE `form_eye_mag_prefs` (
