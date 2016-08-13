@@ -42,8 +42,6 @@
 
 $fake_register_globals=false;
 $sanitize_all_escapes=true;
-//global $ignoreAuth;
-//global $_SERVER;
 
 require_once("../../globals.php");
 require_once(dirname(__FILE__) ."/../../../library/acl.inc");
@@ -74,7 +72,7 @@ $query  = "SELECT * FROM form_eye_mag_prefs where PEZONE='PREFS' AND id=? ORDER 
 $result = sqlStatement($query,array($_SESSION['authUserID']));
 while ($prefs= sqlFetchArray($result))   {    
   $LOCATION = $prefs['LOCATION'];
-  $$LOCATION = text($prefs['VALUE']);
+  $$LOCATION = text($prefs['GOVALUE']);
 }
 
 function eye_mag_report($pid, $encounter, $cols, $id, $formname='eye_mag') {

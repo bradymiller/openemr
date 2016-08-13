@@ -3568,7 +3568,7 @@ function menu_overhaul_left($pid,$encounter) {
                     </tr>
                     
                     <tr><td class="right" style="vertical-align:top;" nowrap><b><?php echo xlt("Reason/Plan"); ?>:</b>&nbsp;</td>
-                        <td style="vertical-align:top;" nowrap>
+                        <td style="vertical-align:top;">
                             <?php
                             // Start with Appt reason from calendar
                             // Consider using last visit's PLAN field?

@@ -54,6 +54,7 @@ var digit_4="1"; //Established
 var digit_5="4"; //Level 4
 var visit_code;
 var Code_new_est;
+var config_byday;
 
 
 
@@ -328,7 +329,7 @@ function update_PREFS() {
     top.restoreSession();
     $.ajax({
            type 		: 'POST',
-           url          : url,
+           url      : url,
            data 		: formData
            });
 }
@@ -543,15 +544,17 @@ function refresh_page() {
  *  Function to refresh the Glaucoma Flow Sheet.
  */
 function refresh_GFS() {
-    var indexToUpdate = '0';
+  if (typeof config_byday == "undefined") { return; }
+    
+  var indexToUpdate = '0';
     $.each(config_byday.data.labels, function(key,value) {
            if (value == visit_date) {
-           indexToUpdate = key;
+            indexToUpdate = key;
            }
            });
-    
+  
         //var indexToUpdate = config_byday.data.labels.length-1;
-    var ODIOP=0;
+  var ODIOP=0;
     var OSIOP=0;
     if ( $('#ODIOPAP').val()) {
         ODIOP =  $('#ODIOPAP').val();
@@ -584,9 +587,6 @@ function refresh_GFS() {
     config_byhour.data.datasets[0].data[indexToUpdate2] = ODIOP;
     config_byhour.data.datasets[1].data[indexToUpdate2] = OSIOP;
     myLine2.update();
-    
-    
-    
         // Update one of the points in the second dataset
         //  myLine.data.datasets[1].data[indexToUpdate].val($('#ODIOPAP').val());
         //alert(config_byday.data.datasets[1].data[indexToUpdate].val()+' is ending _bydat val');
@@ -594,7 +594,7 @@ function refresh_GFS() {
         //ctx2.update();
     return;
     /*
-     this should refrsh locally and not go back to the server
+     this should refresh locally and not go back to the server
      the only things that would trigger a refresh are
      a change in IOP
      change in IOPTARGET
@@ -1413,13 +1413,13 @@ function build_IMPPLAN(items) {
                               //obj.IMPPLAN_items[item].codetext = '';
                               //obj.IMPPLAN_items[item].codedesc = '';
                               $(this).css('background-color','#F0F8FF');
-                              store_IMPPLAN(obj.IMPPLAN_items);
+                              store_IMPPLAN(obj.IMPPLAN_items,'1');
                               });
         
         $('[id^=PLAN_]').change(function() {
                                 var item = this.id.match(/PLAN_(.*)/)[1];
                                 obj.IMPPLAN_items[item].plan =  $(this).val();
-                              //  store_IMPPLAN(obj.IMPPLAN_items);
+                                store_IMPPLAN(obj.IMPPLAN_items,'1');
                                 $(this).css('background-color','#F0F8FF');
                                 });
         
@@ -1500,7 +1500,7 @@ function update_PMSFH_code(the_issue,new_code){
 /*
  *  This function sends the obj.IMPPLAN_items to the server for storage
  */
-function store_IMPPLAN(storage) {
+function store_IMPPLAN(storage,nodisplay) {
     if (typeof storage !== "undefined") {
         var url = "../../forms/eye_mag/save.php?mode=update&store_IMPPLAN";
         var formData =  JSON.stringify(storage);
@@ -1522,8 +1522,10 @@ function store_IMPPLAN(storage) {
                        code_400(); //the user does not have write privileges!
                        return;
                        }
-                       obj.IMPPLAN_items = result;
-                       build_IMPPLAN(obj.IMPPLAN_items);
+                       if (typeof display === "undefined") {
+                        obj.IMPPLAN_items = result;
+                        build_IMPPLAN(obj.IMPPLAN_items);
+                      }
                        });
     }
 }
@@ -1876,7 +1878,21 @@ shortcut.add("Control+K",function() {
 shortcut.add("Meta+K",function() {
              show_KB();
              });
+$(function(){
+    /*
+     * this swallows backspace keys on any non-input element.
+     * stops backspace -> back
+     */
+    var rx = /INPUT|SELECT|TEXTAREA|SPAN|DIV/i;
 
+    $(document).bind("keydown keypress", function(e){
+        if( e.which == 8 ){ // 8 == backspace
+            if(!rx.test(e.target.tagName) || e.target.disabled || e.target.readOnly ){
+                e.preventDefault();
+            }
+        }
+    });
+});
 /* Undo feature
  *  RIGHT NOW THIS WORKS PER FIELD ONLY in FF. In Chrome it works great.  Not sure about IE at all.
  *  In FF, you select a field and CTRL-Z reverses/Shift-Ctrl-Z forwards value
@@ -1976,6 +1992,7 @@ $(document).ready(function() {
                                            refresh_GFS();
                                            });
                   $('#ODIOPAP,#OSIOPAP,#ODIOPTARGET').change(function() {
+                  //this is failing if there is no config_by_day variable.
                                                              refresh_GFS();
                                                              });
                   if ($("#PREFS_KB").val() =='1') {
@@ -2828,7 +2845,8 @@ $(document).ready(function() {
                                                   }
                                                   $(this).removeClass("buttonRefraction_selected");
                                                   }
-                                                  $(this).css( 'cursor', 'pointer' );                                                                                                                                         update_PREFS();
+                                                  $(this).css( 'cursor', 'pointer' ); 
+                                                  update_PREFS();
                                                   });
                   
                   $('[id$=_lightswitch]').mouseover(function() {

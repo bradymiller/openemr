@@ -28,11 +28,11 @@
 $fake_register_globals=false;
 $sanitize_all_escapes=true;
 
-include_once("../../globals.php");
+require_once("../../globals.php");
 include_once("$srcdir/acl.inc");
 include_once("$srcdir/lists.inc");
 include_once("$srcdir/api.inc");
-include_once("$srcdir/sql.inc");
+//include_once("$srcdir/sql.inc");
 require_once("$srcdir/formatting.inc.php");
 require_once("$srcdir/forms.inc");
 require_once("$srcdir/patient.inc");
@@ -62,7 +62,7 @@ $query  = "SELECT * FROM form_eye_mag_prefs where PEZONE='PREFS' AND (id=?) ORDE
 $result = sqlStatement($query,array($_SESSION['authId'])); 
 while ($prefs= sqlFetchArray($result))   {    
     $LOCATION = $prefs['LOCATION'];
-    $$LOCATION = text($prefs['VALUE']);
+    $$LOCATION = text($prefs['GOVALUE']);
 }
 
 $query = "SELECT * FROM patient_data where pid=?";
@@ -87,10 +87,10 @@ $encounter_data =sqlQuery($query,array($encounter,$pid));
 //should we make a decision here to create an openEMR extract like function?  
 //Would it would have to test for "protected variables" by name?
 
-$providerID  =  findProvider($pid,$encounter);
+$providerID   = findProvider($pid,$encounter);
 $providerNAME = getProviderName($providerID);
-$query = "SELECT * FROM users where id = ?";
-$prov_data =  sqlQuery($query,array($providerID));
+$query        = "SELECT * FROM users where id = ?";
+$prov_data    =  sqlQuery($query,array($providerID));
 
 // build $PMSFH array
 global $priors;
