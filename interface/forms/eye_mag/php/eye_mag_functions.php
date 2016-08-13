@@ -3205,21 +3205,19 @@ function display($pid,$encounter,$category_value) {
             <img src='../../forms/".$form_folder."/images/upload_multi.png' class='little_image'>
         </td>
         <td>";
-        // If there is at least one object in this section, display the link.
         // Choose how to display: ANythingSlider or OpenEMR Douments file.
-        //Could make this a menu based preference... Hard coded for now.
         //open via anything Slider
-         if (count($documents['docs_in_cat_id'][$documents['zones'][$category_value][$j]['id']]) > '0') {
-            $episode .= '<a href="../../forms/'.$form_folder.'/css/AnythingSlider/simple.php?display=i&category_id='.attr($documents['zones'][$category_value][$j]['id']).'&encounter='.$encounter.'&category_name='.urlencode(xla($category_value)).'"
-                    onclick="return dopopup(\'../../forms/'.$form_folder.'/css/AnythingSlider/simple.php?display=i&category_id='.attr($documents['zones'][$category_value][$j]['id']).'&encounter='.$encounter.'&category_name='.urlencode(xla($category_value)).'\')">
+        if (count($documents['docs_in_cat_id'][$documents['zones'][$category_value][$j]['id']]) > '0') {
+            $episode .= '<a href="../../forms/'.$form_folder.'/php/Anything_simple.php?display=i&category_id='.attr($documents['zones'][$category_value][$j]['id']).'&encounter='.$encounter.'&category_name='.urlencode(xla($category_value)).'"
+                    onclick="return dopopup(\'../../forms/'.$form_folder.'/php/Anything_simple.php?display=i&category_id='.attr($documents['zones'][$category_value][$j]['id']).'&encounter='.$encounter.'&category_name='.urlencode(xla($category_value)).'\')">
                     <img src="../../forms/'.$form_folder.'/images/jpg.png" class="little_image" /></a>';     
-        //open via OpenEMR Documents with treemenu
-        /*if (count($documents['docs_in_cat_id'][$documents['zones'][$category_value][$j]['id']]) > '0') {
-            $episode .= '<a href="../../../controller.php?document&view&patient_id='.$pid.'&parent_idX='.$documents['zones'][$category_value][$j]['id'].'&" 
-                    onclick="return dopopup(\'../../../controller.php?document&view&patient_id='.$pid.'&parent_idX='.$documents['zones'][$category_value][$j]['id'].'&document_id='.$doc[id].'&as_file=false\')">
-                    <img src="../../forms/'.$form_folder.'/images/jpg.png" class="little_image" /></a>';
-        */
-                }
+                //open via OpenEMR Documents with treemenu
+                /*if (count($documents['docs_in_cat_id'][$documents['zones'][$category_value][$j]['id']]) > '0') {
+                    $episode .= '<a href="../../../controller.php?document&view&patient_id='.$pid.'&parent_idX='.$documents['zones'][$category_value][$j]['id'].'&" 
+                            onclick="return dopopup(\'../../../controller.php?document&view&patient_id='.$pid.'&parent_idX='.$documents['zones'][$category_value][$j]['id'].'&document_id='.$doc[id].'&as_file=false\')">
+                            <img src="../../forms/'.$form_folder.'/images/jpg.png" class="little_image" /></a>';
+                */
+        }
         $episode .= '</td></tr>';
         $i++;
     }  
@@ -3479,7 +3477,7 @@ function menu_overhaul_top($pid,$encounter,$title="Eye Exam") {
                                 href="<?php echo $GLOBALS['webroot']; ?>/controller.php?document&list&patient_id=<?php echo xla($pid); ?>">
                                 <i class="fa fa-angle-double-up" title="<?php echo xla('Opens in Top frame'); ?>"></i>
                                 <?php echo xlt("Documents"); ?></a></li>
-                                <li><?php echo  $episode .= '<a href="'.$GLOBALS['webroot'].'/interface/forms/'.$form_folder.'/css/AnythingSlider/simple.php?display=i&encounter='.$encounter.'&category_name=OTHER&panel1-1">
+                                <li><?php echo  $episode .= '<a href="'.$GLOBALS['webroot'].'/interface/forms/'.$form_folder.'/php/Anything_simple.php?display=i&encounter='.$encounter.'&category_name=OTHER&panel1-1">
                             Imaging<span class="menu_icon"><img src="'.$GLOBALS['webroot'].'/interface/forms/'.$form_folder.'/images/jpg.png" class="little_image" />'; ?></span></a></li>
                             <li role="presentation" class="divider"></li>
                             <li id="menu_IOP_graph" name="menu_IOP_graph" ><a><?php echo xlt("IOP Graph"); ?></a></li>
