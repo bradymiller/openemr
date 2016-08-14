@@ -2485,7 +2485,7 @@ function display_QP($zone,$providerID){
         $SQL_INSERT = "INSERT INTO `list_options` (`list_id`, `option_id`, `title`, `seq`, `mapping`, `notes`, `codes`, `activity`, `subtype`) VALUES (?,?,?,?,?,?,?,?,?)";
     }
     while ($QP= sqlFetchArray($result))   {
-        if ($SQL_INSERT) sqlStatement($SQL_INSERT, array("Eye_QP_".$zone."_".$providerID.",".$QP['option_id'].",".$QP['title'].",".$QP['seq'].",".$QP['mapping'].",".$QP['notes'].",".$QP['codes'].",".$QP['activity'].",".$QP['subtype']));
+        if ($SQL_INSERT) sqlStatement($SQL_INSERT, array("Eye_QP_".$zone."_".$providerID,$QP['option_id'],$QP['title'],$QP['seq'],$QP['mapping'],$QP['notes'],$QP['codes'],$QP['activity'],$QP['subtype']));
         $here[$QP['title']][$QP['subtype']]['notes']    = $QP['notes'];     //the text to fill into form
         $here[$QP['title']][$QP['subtype']]['codes']    = $QP['codes'];     //the code if attached.
         $here[$QP['title']][$QP['subtype']]['mapping']  = $QP['mapping'];   //the fieldname without laterality eg CONJ
