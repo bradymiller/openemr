@@ -232,20 +232,31 @@ CREATE TABLE `categories` (
 -- Dumping data for table `categories`
 -- 
 
-INSERT INTO `categories` VALUES (1, 'Categories', '', 0, 0, 25);
+INSERT INTO `categories` VALUES (1, 'Categories', '', 0, 0, 55);
 INSERT INTO `categories` VALUES (2, 'Lab Report', '', 1, 1, 2);
-INSERT INTO `categories` VALUES (3, 'Medical Record', '', 1, 3, 4);
-INSERT INTO `categories` VALUES (4, 'Patient Information', '', 1, 5, 10);
-INSERT INTO `categories` VALUES (5, 'Patient ID card', '', 4, 6, 7);
-INSERT INTO `categories` VALUES (6, 'Advance Directive', '', 1, 11, 18);
-INSERT INTO `categories` VALUES (7, 'Do Not Resuscitate Order', '', 6, 12, 13);
-INSERT INTO `categories` VALUES (8, 'Durable Power of Attorney', '', 6, 14, 15);
-INSERT INTO `categories` VALUES (9, 'Living Will', '', 6, 16, 17);
-INSERT INTO `categories` VALUES (10, 'Patient Photograph', '', 4, 8, 9);
-INSERT INTO `categories` VALUES (11, 'CCR', '', 1, 19, 20);
-INSERT INTO `categories` VALUES (12, 'CCD', '', 1, 21, 22);
-INSERT INTO `categories` VALUES (13, 'CCDA', '', 1, 23, 24);
-
+INSERT INTO `categories` VALUES (3, 'Medical Record', '', 1, 3, 48);
+INSERT INTO `categories` VALUES (4, 'Patient Information', '', 1, 7, 12);
+INSERT INTO `categories` VALUES (5, 'Patient ID card', '', 4, 8, 9);
+INSERT INTO `categories` VALUES (6, 'Advance Directive', '', 1, 13, 20);
+INSERT INTO `categories` VALUES (7, 'Do Not Resuscitate Order', '', 6, 14, 15);
+INSERT INTO `categories` VALUES (8, 'Durable Power of Attorney', '', 6, 16, 17);
+INSERT INTO `categories` VALUES (9, 'Living Will', '', 6, 18, 19);
+INSERT INTO `categories` VALUES (10, 'Patient Photograph', '', 4, 10, 11);
+INSERT INTO `categories` VALUES (11, 'CCR', '', 1, 21, 22);
+INSERT INTO `categories` VALUES (12, 'CCD', '', 1, 23, 24);
+INSERT INTO `categories` VALUES (15, 'OCT', 'POSTSEG', 13, 30, 33);
+INSERT INTO `categories` VALUES (13, 'Imaging', '', 3, 25, 30);
+INSERT INTO `categories` VALUES (14, 'FA/ICG', 'POSTSEG', 13, 30, 33);
+INSERT INTO `categories` VALUES (18, 'External Photos', 'EXT', 13, 30, 33);
+INSERT INTO `categories` VALUES (17, 'AntSeg Photos', 'ANTSEG', 13, 30, 33);
+INSERT INTO `categories` VALUES (16, 'Optic Disc', 'POSTSEG', 13, 30, 33);
+INSERT INTO `categories` VALUES (19, 'Fundus', 'POSTSEG', 13, 30, 33);
+INSERT INTO `categories` VALUES (20, 'Radiology', 'NEURO', 13, 30, 33);
+INSERT INTO `categories` VALUES (21, 'VF', 'NEURO', 13, 30, 33);
+INSERT INTO `categories` VALUES (22, 'Encounters', '', 3, 49, 50);
+INSERT INTO `categories` VALUES (24, 'Drawings', '', 13, 28, 29);
+INSERT INTO `categories` VALUES (26, 'Communication', '', 3, 51, 52);
+INSERT INTO `categories` VALUES (27, 'CCDA', '', 1, 53, 54);
 -- --------------------------------------------------------
 
 -- 
