@@ -1,0 +1,1 @@
+Migrated package to public/assets. Note needed to leave several pieces here that are used elsewhere in OpenEMR and are not available in the new package.

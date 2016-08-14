@@ -50,10 +50,10 @@ while ($row = sqlFetchArray($res)) {
 .mytopdiv { float: left; margin-right: 1em; }
 </style>
 
-<script type="text/javascript" src="../../../library/js/datatables/media/js/jquery.js"></script>
-<script type="text/javascript" src="../../../library/js/datatables/media/js/jquery.dataTables.min.js"></script>
+<script type="text/javascript" src="<?php echo $GLOBALS['assets_static_relative']; ?>/jquery-min-1-10-2/index.js"></script>
+<script type="text/javascript" src="<?php echo $GLOBALS['assets_static_relative']; ?>/datatables.net-1-10-11/js/jquery.dataTables.min.js"></script>
 <!-- this is a 3rd party script -->
-<script type="text/javascript" src="../../../library/js/datatables/extras/ColReorder/media/js/ColReorderWithResize.js"></script>
+<script type="text/javascript" src="<?php echo $GLOBALS['assets_static_relative']; ?>/datatables.net-colreorder-1-3-2/js/dataTables.colReorder.min.js"></script>
 
 <script language="JavaScript">
 
