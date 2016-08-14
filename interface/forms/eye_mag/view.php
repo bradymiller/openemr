@@ -3865,33 +3865,33 @@ if ($refresh and $refresh != 'fullscreen') {
                             <tr>
                               <td class="top bold"><?php echo xlt('Address'); ?>:</td>
                               <td class="top"><?php 
-                                  if ($pcp_data['organization'] >'') echo $pcp_data['organization']."<br />"; 
-                                  if ($pcp_data['street'] >'') echo $pcp_data['street']."<br />"; 
-                                  if ($pcp_data['streetb'] >'') echo $pcp_data['streetb']."<br />"; 
-                                  if ($pcp_data['city'] >'') echo $pcp_data['city'].", "; 
-                                  if ($pcp_data['state'] >'') echo $pcp_data['state']." "; 
-                                  if ($pcp_data['zip'] >'') echo $pcp_data['zip']."<br />"; 
+                                  if ($pcp_data['organization'] >'') echo text($pcp_data['organization'])."<br />"; 
+                                  if ($pcp_data['street'] >'') echo text($pcp_data['street'])."<br />"; 
+                                  if ($pcp_data['streetb'] >'') echo text($pcp_data['streetb'])."<br />"; 
+                                  if ($pcp_data['city'] >'') echo text($pcp_data['city']).", "; 
+                                  if ($pcp_data['state'] >'') echo text($pcp_data['state'])." "; 
+                                  if ($pcp_data['zip'] >'') echo text($pcp_data['zip'])."<br />"; 
                                   
-                                  if ($pcp_data['street2'] >'') echo "<br />".$pcp_data['street2']."<br />"; 
-                                  if ($pcp_data['streetb2'] >'') echo $pcp_data['streetb2']."<br />"; 
-                                  if ($pcp_data['city2'] >'') echo $pcp_data['city2'].", "; 
-                                  if ($pcp_data['state2'] >'') echo $pcp_data['state2']." "; 
-                                  if ($pcp_data['zip2'] >'') echo $pcp_data['zip2']."<br />"; 
+                                  if ($pcp_data['street2'] >'') echo "<br />".text($pcp_data['street2'])."<br />"; 
+                                  if ($pcp_data['streetb2'] >'') echo text($pcp_data['streetb2'])."<br />"; 
+                                  if ($pcp_data['city2'] >'') echo text($pcp_data['city2']).", "; 
+                                  if ($pcp_data['state2'] >'') echo text($pcp_data['state2'])." "; 
+                                  if ($pcp_data['zip2'] >'') echo text($pcp_data['zip2'])."<br />"; 
                                   ?>
                               </td>
                               <td class="top"><?php 
-                                  if ($ref_data['organization'] >'') echo $ref_data['organization']."<br />"; 
-                                  if ($ref_data['street'] >'') echo $ref_data['street']."<br />"; 
-                                  if ($ref_data['streetb'] >'') echo $ref_data['streetb']."<br />"; 
-                                  if ($ref_data['city'] >'') echo $ref_data['city'].", "; 
-                                  if ($ref_data['state'] >'') echo $ref_data['state']." "; 
-                                  if ($ref_data['zip'] >'') echo $ref_data['zip']."<br />"; 
+                                  if ($ref_data['organization'] >'') echo text($ref_data['organization'])."<br />"; 
+                                  if ($ref_data['street'] >'') echo text($ref_data['street'])."<br />"; 
+                                  if ($ref_data['streetb'] >'') echo text($ref_data['streetb'])."<br />"; 
+                                  if ($ref_data['city'] >'') echo text($ref_data['city']).", "; 
+                                  if ($ref_data['state'] >'') echo text($ref_data['state'])." "; 
+                                  if ($ref_data['zip'] >'') echo text($ref_data['zip'])."<br />"; 
                                   
-                                  if ($ref_data['street2'] >'') echo "<br />".$ref_data['street2']."<br />"; 
-                                  if ($ref_data['streetb2'] >'') echo $ref_data['streetb2']."<br />"; 
-                                  if ($ref_data['city2'] >'') echo $ref_data['city2'].", "; 
-                                  if ($ref_data['state2'] >'') echo $ref_data['state2']." "; 
-                                  if ($ref_data['zip2'] >'') echo $ref_data['zip2']."<br />"; 
+                                  if ($ref_data['street2'] >'') echo "<br />".text($ref_data['street2'])."<br />"; 
+                                  if ($ref_data['streetb2'] >'') echo text($ref_data['streetb2'])."<br />"; 
+                                  if ($ref_data['city2'] >'') echo text($ref_data['city2']).", "; 
+                                  if ($ref_data['state2'] >'') echo text($ref_data['state2'])." "; 
+                                  if ($ref_data['zip2'] >'') echo text($ref_data['zip2'])."<br />"; 
                                   ?>
                               </td>
                             </tr>

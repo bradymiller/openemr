@@ -4,7 +4,7 @@
  * 
  * This file is the gateway to a practice's fax server.
  * It uses an email fax gateway that is behind the corporate
- * firewall, thus it is HIPPA compliant.  
+ * firewall, thus it is HIPPA compliant (at least TO the fax machine)
  * 
  * Copyright (C) 2016 Raymond Magauran <magauran@MedFetch.com> 
  * 
@@ -78,7 +78,7 @@ require_once("$srcdir/classes/postmaster.php");
  *	So we are only sending To one place at one time...
  *	The second scenario is the creation (or re-creation) of a Report of the encounter.
  *  To lighten loads, consider breaking these tasks up into separate tasks via cron or even using a different server
- *  to process these tasks, if in a multi-server environment.  For now, add this file to background_services.
+ *  to process these tasks, if in a multi-server environment.  Or run this file with openEMR's "background_services".
  *	Use a new table (form_taskman) to delineate this process.
  *  	1.  Create the Task to be performed: send it to DB table from the browser.
  *		2.  Cron job to scour this table, performing tasks as loads allow (check server load? <-- not implemented)
@@ -95,8 +95,6 @@ global $form_id;
 global $task;
 global $send;
 
-session_start();
-
 $PDF_OUTPUT='1';
 // If this is a request to make a task, make it.
 $ajax_req = $_REQUEST;
@@ -104,7 +102,7 @@ if ($_REQUEST['action']=='make_task') make_task($ajax_req);
 if ($_REQUEST['action']=='show_task') show_task($ajax_req);
 
 // Get the list of Tasks and process them one-by-one
-//unless this is a clal from the web, then just do the task at hand
+//unless this is a call from the web, then just do the task at hand
 //or should the web not do these at all, leave them to the background processor?
 $query  = "SELECT * FROM form_taskman where COMPLETED is NULL or COMPLETED != '1'  order by REQ_DATE";
 $result = sqlStatement($query); 
