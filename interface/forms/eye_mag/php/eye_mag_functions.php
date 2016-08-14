@@ -2478,7 +2478,7 @@ function display_QP($zone,$providerID){
     $result = sqlStatement($query,array("Eye_QP_".$zone."_$providerID"));
     if (sqlNumRows($result) < '1') { 
         //this provider's list has not been created yet.
-        $query = "INSERT INTO `list_options` (`list_id`, `option_id`, `title`, `seq`, `is_default`, `option_value`) VALUES ('lists', ?, ?, '0', '1', '0')";
+        $query = "REPLACE INTO `list_options` (`list_id`, `option_id`, `title`, `seq`, `is_default`, `option_value`) VALUES ('lists', ?, ?, '0', '1', '0')";
         sqlStatement($query,array('Eye_QP_'.$zone.'_'.$providerID,'Eye QP List '.$zone.' for '.$prov_data['lname']));
         $query = "SELECT * FROM list_options where list_id =? ORDER BY seq";
         $result = sqlStatement($query,array("Eye_QP_".$zone."_defaults"));
