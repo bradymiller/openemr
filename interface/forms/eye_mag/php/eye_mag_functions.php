@@ -4506,7 +4506,7 @@ function display_GlaucomaFlowSheet($pid,$bywhat='byday') {
                             }
                             $i++;
                         }
-                        if (!$current_drugs) {$current_drugs = "<tr><td colspan='3' class='GFS_td_1' style='text-align:center;'>".xlt('None documented'); ?></td></tr>"; $no_drugs='1'; }
+                        if (!$current_drugs) {$current_drugs = "<tr><td colspan='3' class='GFS_td_1' style='text-align:center;'>".xlt('None documented')."</td></tr>"; $no_drugs='1'; }
                         foreach ($PMSFH[0]['Medication'] as $drug) {
                             if (($drug['row_subtype'] =="eye")&&($drug['enddate'] > "")) $FAILED_drug .= "<li>".text($drug['title'])."</li>";
                         }
