@@ -2483,7 +2483,6 @@ function display_QP($zone,$providerID){
         $query = "SELECT * FROM list_options where list_id =? ORDER BY seq";
         $result = sqlStatement($query,array("Eye_QP_".$zone."_defaults"));
         $SQL_INSERT = "INSERT INTO `list_options` (`list_id`, `option_id`, `title`, `seq`, `mapping`, `notes`, `codes`, `activity`, `subtype`) VALUES (?,?,?,?,?,?,?,?,?)";
-       }
     }
     while ($QP= sqlFetchArray($result))   {
         if ($SQL_INSERT) sqlStatement($SQL_INSERT, array("Eye_QP_".$zone."_".$providerID.",".$QP['option_id'].",".$QP['title'].",".$QP['seq'].",".$QP['mapping'].",".$QP['notes'].",".$QP['codes'].",".$QP['activity'].",".$QP['subtype']));
