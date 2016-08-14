@@ -75,12 +75,9 @@
 		<link rel="shortcut icon" href="<?php echo $GLOBALS['assets_static_relative'] ?>/AnythingSlider-1-9-4/demos/images/favicon.ico" type="image/x-icon">
 		<link rel="apple-touch-icon" href="<?php echo $GLOBALS['assets_static_relative'] ?>/AnythingSlider-1-9-4/demos/images/apple-touch-icon.png">
 
-	   <!-- jQuery library -->
 	    <script src="<?php echo $GLOBALS['webroot']; ?>/library/js/jquery.min.js"></script>
-	    <!-- Latest compiled JavaScript -->
 	    <script src="<?php echo $GLOBALS['assets_static_relative'] ?>/bootstrap-3-3-4/dist/js/bootstrap.min.js"></script>  
       	<script src="<?php echo $GLOBALS['assets_static_relative'] ?>/jquery-ui-1-11-4/jquery-ui.min.js"></script>
-		<!-- Anything Slider -->
 		<link rel="stylesheet" href="<?php echo $GLOBALS['assets_static_relative'] ?>/AnythingSlider-1-9-4/css/anythingslider.css">
 		<!-- AnythingSlider optional extensions -->
 		<script src="<?php echo $GLOBALS['assets_static_relative'] ?>/AnythingSlider-1-9-4/js/jquery.anythingslider.fx.js"></script> 
@@ -371,7 +368,6 @@
 										href="simple.php?display=i&encounter='.attr($encounter).'&category_name=OTHER">
 										'.xlt('OTHER').'<span class="menu_icon">+</span></a></li>
 										';
-						
 							?>
 						</ul>
 					</li>

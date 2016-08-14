@@ -64,16 +64,6 @@ if ($issue) {
   $irow['type'] = $thistype;
   $irow['subtype'] = $subtype;
 }
-/*
-if ($thistype == "medical_problem" && $_REQUEST['subtype'] =="eye") {
-  $irow['type'] = "POH";
-  $thistype = "POH";
-}
-if ($thistype == "surgery" && $_REQUEST['subtype'] =="eye") {
-  $irow['type'] = "POS";
-  $thistype = "POS";
-}
-*/
 if (!empty($irow['type'])) {
   foreach ($ISSUE_TYPES as $key => $value) {
     if ($key == $irow['type']) break;
@@ -92,17 +82,8 @@ foreach (explode(',',$given) as $item) {
 <title><?php echo xlt('Add New Issue'); ?></title>
 <link rel="stylesheet" href='<?php echo $css_header ?>' type='text/css'>
 <link rel="stylesheet" href="<?php echo $GLOBALS['webroot']; ?>/interface/forms/<?php echo $form_folder; ?>/style.css" type="text/css"> 
-<!-- jQuery library -->
 <script src="<?php echo $GLOBALS['assets_static_relative'] ?>/jquery-min-1-11-1/index.js"></script>
-
-<!-- Latest compiled JavaScript -->
 <script src="<?php echo $GLOBALS['assets_static_relative'] ?>/bootstrap-3-3-4/dist/js/bootstrap.min.js"></script>  
-<!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
-    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
-    <!--[if lt IE 9]>
-        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
-        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
-    <![endif]-->
 <script src="<?php echo $GLOBALS['assets_static_relative'] ?>/jquery-ui-1-11-4/jquery-ui.min.js"></script>
 <script type="text/javascript" src="<?php echo $GLOBALS['webroot']; ?>/library/restoreSession.php"></script>
 <link rel="stylesheet" href="<?php echo $GLOBALS['assets_static_relative'] ?>/font-awesome-4-6-3/css/font-awesome.min.css">
@@ -151,11 +132,6 @@ foreach (explode(',',$given) as $item) {
     // If the provider has more 2 items already defined in the last month, they are collated
     // and ranked by frequency, sort alphabetically and <=10 are listed.
     // If not, we use the defaults from list_options/
-    // eg. one provider might have a lot of cataract surgery patients and list it as Phaco/PCIOL and another
-    // might use a femto laser assisted Restore IOL procedure and he uses FT/Restore IOL
-    // No matter the specialty, how the doctor documented the ISSUE_TYPE over the past 30Days is used
-    // and list_options created in the VIEW TABLE in the order
-    // of their frequency.  Start at 10 should they want to always have something at the top.
   $i='0';
   
   foreach ($PMSFH[0] as $key => $value) {
@@ -604,7 +580,6 @@ function negate_radio(section) {
      <input type="hidden" name="issue" id="issue" value = "<?php echo attr($issue); ?>">
      <input type="hidden" name="uniqueID" id="uniqueID" value = "<?php echo attr($uniqueID); ?>">
         <?php
-        // $index = 0;
         $output ='';
         global $counter_header;
         $count_header='0';
@@ -619,7 +594,6 @@ function negate_radio(section) {
           if ($key == "SOCH") $key_short_title = "Soc";
           $HELLO[attr($key)] = '<input type="radio" name="form_type" id="PMSFH_'.attr($key).'" value="'.attr($key).'" '.$checked.' onclick="top.restoreSession();newtype(\''.attr($key).'\');" /><span style="margin-top:2px;font-weight:bold;">'.
                           '<label class="input-helper input-helper--checkbox" for="PMSFH_'.attr($key).'" style="font-size:0.7em;">' . xlt($key_short_title) . '</label></span>&nbsp;';
-         // ++$index;
         }
         //put them in the desired display order  
         echo $HELLO['POH'].$HELLO['POS'].$HELLO['PMH'].$HELLO['Medication'].$HELLO['Surgery'].$HELLO['Allergy'].$HELLO['FH'].$HELLO['SOCH'].$HELLO['ROS'];
@@ -976,7 +950,7 @@ function negate_radio(section) {
                 <tr class="nodisplay">
                   <td class="right"  nowrap><?php echo xlt('Seatbelt'); ?>:</td>
                   <td class="text data" colspan="3">
-                    <input type="text" name="form_seatbelt_use" id="form_box" size="20" title="Seatbelt use" value="<?php echo attr($result2['seatbelt_use']['resnote']); ?>">
+                    <input type="text" name="form_seatbelt_use" id="form_box" size="20" title="<?php echo xla('Seatbelt use'); ?>" value="<?php echo attr($result2['seatbelt_use']['resnote']); ?>">
                   </td>
                 </tr>
             </tbody>

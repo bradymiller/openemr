@@ -3229,18 +3229,8 @@ function redirector($url) {
      ?>
     <html>
     <head>
-    <!-- jQuery library -->
     <script src="<?php echo $GLOBALS['webroot']; ?>/library/js/jquery.min.js"></script>
-
-    <!-- Latest compiled JavaScript -->
     <script src="<?php echo $GLOBALS['assets_static_relative'] ?>/bootstrap-3-3-4/dist/js/bootstrap.min.js"></script>  
-    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
-        <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
-        <!--[if lt IE 9]>
-            <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
-            <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
-        <![endif]-->
-        <!-- Add Font stuff for the look and feel.  -->
     <link rel="stylesheet" href="<?php echo $GLOBALS['assets_static_relative'] ?>/pure-0-5-0/pure-min.css">
     <link rel="stylesheet" href="<?php echo $GLOBALS['assets_static_relative'] ?>/qtip2-2-2-1/jquery.qtip.min.css" />
     <link rel="stylesheet" href="<?php echo $GLOBALS['css_header']; ?>" type="text/css">
@@ -3730,12 +3720,13 @@ function report_header($pid,$direction='shell') {
     *******************************************************************/
     $titleres = getPatientData($pid, "fname,lname,providerID,DATE_FORMAT(DOB,'%m/%d/%Y') as DOB_TS");
     if ($_SESSION['pc_facility']) {
-    $sql = "select * from facility where id=" . $_SESSION['pc_facility'];
+        $sql = "select * from facility where id=?";
+        $facility = sqlQuery($sql,array($_SESSION['pc_facility']));
     } else {
-    $sql = "SELECT * FROM facility ORDER BY billing_location DESC LIMIT 1";
+        $sql = "SELECT * FROM facility ORDER BY billing_location DESC LIMIT 1";
+        $facility = sqlQuery($sql);
     }
     /******************************************************************/
-    $facility = sqlQuery($sql);
     ob_start();
     // Use logo if it exists as 'practice_logo.gif' in the site dir
     // old code used the global custom dir which is no longer a valid
@@ -4515,7 +4506,7 @@ function display_GlaucomaFlowSheet($pid,$bywhat='byday') {
                             }
                             $i++;
                         }
-                        if (!$current_drugs) {$current_drugs = "<tr><td colspan='3' class='GFS_td_1' style='text-align:center;'>None documented</td></tr>"; $no_drugs='1'; }
+                        if (!$current_drugs) {$current_drugs = "<tr><td colspan='3' class='GFS_td_1' style='text-align:center;'>".xlt('None documented'); ?></td></tr>"; $no_drugs='1'; }
                         foreach ($PMSFH[0]['Medication'] as $drug) {
                             if (($drug['row_subtype'] =="eye")&&($drug['enddate'] > "")) $FAILED_drug .= "<li>".text($drug['title'])."</li>";
                         }
@@ -4600,7 +4591,7 @@ function display_GlaucomaFlowSheet($pid,$bywhat='byday') {
                         }
                     }
                     $GONIO = chop($GONIO,",");
-                    if ($count ==0) $gonios = "<tr><td colspan='3' class='GFS_td_1' style='text-align:center;'>Not documented</td></tr>"; 
+                    if ($count ==0) $gonios = "<tr><td colspan='3' class='GFS_td_1' style='text-align:center;'>".xlt('Not documented')."</td></tr>"; 
                     ?>
                 <tr>
                     <td class="GFS_title_1" id="GFS_gonios" name="GFS_gonios" style="position:relative;"><?php echo xlt('Gonioscopy'); ?>:</td>
