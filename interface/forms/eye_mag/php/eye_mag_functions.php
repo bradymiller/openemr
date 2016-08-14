@@ -2476,27 +2476,21 @@ function display_QP($zone,$providerID){
     ob_start();
     $query  = "SELECT * FROM list_options where list_id =?  ORDER BY seq";
     $result = sqlStatement($query,array("Eye_QP_".$zone."_$providerID"));
-        
     if (sqlNumRows($result) < '1') { 
         //this provider's list has not been created yet.
-        //copy defaults for this provider to a new list, which can be customized later by the user via pencil icon...
-        $query = "INSERT INTO `list_options` (`list_id`, `option_id`, `title`, `seq`, `is_default`, `option_value`) VALUES 
-                                             ('lists', ?, ?, '0', '1', '0')";
+        $query = "INSERT INTO `list_options` (`list_id`, `option_id`, `title`, `seq`, `is_default`, `option_value`) VALUES ('lists', ?, ?, '0', '1', '0')";
         sqlStatement($query,array('Eye_QP_'.$zone.'_'.$providerID,'Eye QP List '.$zone.' for '.$prov_data['lname']));
-        // new provider list created.
-        // now let's populate this new list with the defaults
         $query = "SELECT * FROM list_options where list_id =? ORDER BY seq";
         $result = sqlStatement($query,array("Eye_QP_".$zone."_defaults"));
-        while ($QPx= sqlFetchArray($result))   {
-            $SQL_INSERT = "INSERT INTO `list_options` (`list_id`, `option_id`, `title`, `seq`, `mapping`, `notes`, `codes`, `activity`, `subtype`) VALUES (?,?,?,?,?,?,?,?,?)";
-            sqlStatement($SQL_INSERT, array("Eye_QP_".$zone."_".$providerID.",".$QPx['option_id'].",".$QPx['title'].",".$QPx['seq'].",".$QPx['mapping'].",".$QPx['notes'].",".$QPx['codes'].",".$QPx['activity'].",".$QPx['subtype']));
-        }
+        $SQL_INSERT = "INSERT INTO `list_options` (`list_id`, `option_id`, `title`, `seq`, `mapping`, `notes`, `codes`, `activity`, `subtype`) VALUES (?,?,?,?,?,?,?,?,?)";
+       }
     }
-    while ($QP= sqlFetchArray($result))   { 
-        $here[$QP['title']][$QP['subtype']]['notes']  = $QP['notes']; //the text to fill into form
-        $here[$QP['title']][$QP['subtype']]['codes']   = $QP['codes']; //the code if attached.
-        $here[$QP['title']][$QP['subtype']]['mapping'] = $QP['mapping']; //the fieldname without laterality eg CONJ
-        $here[$QP['title']][$QP['subtype']]['activity'] = $QP['activity']; //1 to replace, 0 to append
+    while ($QP= sqlFetchArray($result))   {
+        if ($SQL_INSERT) sqlStatement($SQL_INSERT, array("Eye_QP_".$zone."_".$providerID.",".$QP['option_id'].",".$QP['title'].",".$QP['seq'].",".$QP['mapping'].",".$QP['notes'].",".$QP['codes'].",".$QP['activity'].",".$QP['subtype']));
+        $here[$QP['title']][$QP['subtype']]['notes']    = $QP['notes'];     //the text to fill into form
+        $here[$QP['title']][$QP['subtype']]['codes']    = $QP['codes'];     //the code if attached.
+        $here[$QP['title']][$QP['subtype']]['mapping']  = $QP['mapping'];   //the fieldname without laterality eg CONJ
+        $here[$QP['title']][$QP['subtype']]['activity'] = $QP['activity'];  //1 to replace, 0 to append
     }
     foreach ($here as $title => $values) { //start QP section items
         $title_show = (strlen($title) > 15) ? substr($title,0,13).'...' : $title; 
@@ -4544,12 +4538,12 @@ function display_GlaucomaFlowSheet($pid,$bywhat='byday') {
                     $count=0;
                     foreach ($documents['docs_in_name']['VF'] as $VF) {
                         if ($count < 1) {
-                            $current_VF = '<tr><td colspan="3" class="GFS_td_1 blue"><a href="../../forms/'.$form_folder.'/css/AnythingSlider/simple.php?display=i&category_id='.attr($VF['parent']).'&encounter='.$encounter.'&category_name=VF" '.
-                            'onclick="return dopopup(\'../../forms/'.$form_folder.'/css/AnythingSlider/simple.php?display=i&category_id='.attr($VF['parent']).'&encounter='.$encounter.'&category_name=VF">
+                            $current_VF = '<tr><td colspan="3" class="GFS_td_1 blue"><a href="../../forms/'.$form_folder.'/php/Anything_simple.php?display=i&category_id='.attr($VF['parent']).'&encounter='.$encounter.'&category_name=VF" '.
+                            'onclick="return dopopup(\'../../forms/'.$form_folder.'/php/Anything_simple.php?display=i&category_id='.attr($VF['parent']).'&encounter='.$encounter.'&category_name=VF">
                             '.$VF['encounter_date'].'&nbsp;<img src="../../forms/'.$form_folder.'/images/jpg.png" class="little_image" style="width:15px; height:15px;" /></a></td></tr>';
                         } else {
-                            $old_VFs .= '<tr><td colspan="3" class="GFS_td_1 hideme_VFs nodisplay""><a href="../../forms/'.$form_folder.'/css/AnythingSlider/simple.php?display=i&category_id='.attr($VF['parent']).'&encounter='.$encounter.'&category_name=VF" '.
-                            'onclick="return dopopup(\'../../forms/'.$form_folder.'/css/AnythingSlider/simple.php?display=i&category_id='.attr($VF['parent']).'&encounter='.$encounter.'&category_name=VF">
+                            $old_VFs .= '<tr><td colspan="3" class="GFS_td_1 hideme_VFs nodisplay""><a href="../../forms/'.$form_folder.'/php/Anything_simple.php?display=i&category_id='.attr($VF['parent']).'&encounter='.$encounter.'&category_name=VF" '.
+                            'onclick="return dopopup(\'../../forms/'.$form_folder.'/php/Anything_simple.php?display=i&category_id='.attr($VF['parent']).'&encounter='.$encounter.'&category_name=VF">
                             '.$VF['encounter_date'].'&nbsp;<img src="../../forms/'.$form_folder.'/images/jpg.png" class="little_image" style="width:15px; height:15px;" /></a></td></tr>';
                         }
                         $count++;
@@ -4577,12 +4571,12 @@ function display_GlaucomaFlowSheet($pid,$bywhat='byday') {
                             foreach ($documents['docs_in_name']['OCT'] as $OCT) {
                                 //get encounter date from encounter id
                                 if ($count < 1) {
-                                    $current_OCT = '<tr><td colspan="3" class="GFS_td_1"><a href="../../forms/'.$form_folder.'/css/AnythingSlider/simple.php?display=i&category_id='.attr($OCT['parent']).'&encounter='.$encounter.'&category_name=OCT" '.
-                                    'onclick="return dopopup(\'../../forms/'.$form_folder.'/css/AnythingSlider/simple.php?display=i&category_id='.attr($OCT['parent']).'&encounter='.$encounter.'&category_name=OCT">
+                                    $current_OCT = '<tr><td colspan="3" class="GFS_td_1"><a href="../../forms/'.$form_folder.'/php/Anything_simple.php?display=i&category_id='.attr($OCT['parent']).'&encounter='.$encounter.'&category_name=OCT" '.
+                                    'onclick="return dopopup(\'../../forms/'.$form_folder.'/php/Anything_simple.php?display=i&category_id='.attr($OCT['parent']).'&encounter='.$encounter.'&category_name=OCT">
                                     '.$OCT['encounter_date'].'&nbsp;<img src="../../forms/'.$form_folder.'/images/jpg.png" class="little_image" style="width:15px; height:15px;" /></a></td></tr>';
                                 } else {
-                                    $old_OCTs .= '<tr><td class="hideme_OCTs nodisplay GFS_td_1" colspan="3"><a href="../../forms/'.$form_folder.'/css/AnythingSlider/simple.php?display=i&category_id='.attr($OCT['parent']).'&encounter='.$encounter.'&category_name=OCT" '.
-                                    'onclick="return dopopup(\'../../forms/'.$form_folder.'/css/AnythingSlider/simple.php?display=i&category_id='.attr($OCT['parent']).'&encounter='.$encounter.'&category_name=OCT">
+                                    $old_OCTs .= '<tr><td class="hideme_OCTs nodisplay GFS_td_1" colspan="3"><a href="../../forms/'.$form_folder.'/php/Anything_simple.php?display=i&category_id='.attr($OCT['parent']).'&encounter='.$encounter.'&category_name=OCT" '.
+                                    'onclick="return dopopup(\'../../forms/'.$form_folder.'/php/Anything_simple.php?display=i&category_id='.attr($OCT['parent']).'&encounter='.$encounter.'&category_name=OCT">
                                     '.$OCT['encounter_date'].'&nbsp;<img src="../../forms/'.$form_folder.'/images/jpg.png" class="little_image" style="width:15px; height:15px;" /></a></td></tr>';
                                 }
                                 $count++;
