@@ -311,8 +311,9 @@ $ures = sqlStatement("SELECT id, username, fname, lname FROM users WHERE " .
     echo ">" . text($urow['lname']);
     if ($urow['fname']) echo ", " . text($urow['fname']);
     echo "</option>\n";
-    echo "</select>";
-  }
+  }  
+  echo "</select>";
+  
     /****************************************************************/
 ?>
 </td></tr>
