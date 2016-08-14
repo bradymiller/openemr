@@ -2060,12 +2060,12 @@ $(document).ready(function() {
                                                                    }
                                                                    });
                   $("[id^='sketch_tools_']").click(function() {
-                                                   var zone = this.id.match(/sketch_tools_(.*)/)[1];
+                                                   var zone = this.id.match(/sketch_tools_(.*)_/)[1];
                                                    $("[id^='sketch_tools_"+zone+"']").css("height","30px");
                                                    $(this).css("height","50px");
                                                    });
                   $("[id^='sketch_sizes_']").click(function() {
-                                                   var zone = this.id.match(/sketch_sizes_(.*)/)[1];
+                                                   var zone = this.id.match(/sketch_sizes_(.*)_/)[1];
                                                    $("[id^='sketch_sizes_"+zone+"']").css("background","").css("border-bottom","");
                                                    $(this).css("border-bottom","2pt solid black");
                                                    });
