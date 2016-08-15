@@ -1332,12 +1332,14 @@ function build_IMPPLAN(items) {
             //ok we have at least one item, display them in order; hide the Builder instructions
         $('#IMPPLAN_text').addClass('nodisplay');
         $('#IMPPLAN_zone').removeClass('nodisplay');
+        count_dx=0;
         $.each(items, function( index, value ) {
                if (!value.codetext) value.codetext="";
                if (!value.code) value.code="";
                if ((value.code==="") || (value.code.match(/Code/) || (value.code==null))) {
                value.code="<i class='fa fa-search-plus'></i>&nbsp;Code";
                } else {
+               count_dx++;
                if (value.code.match(/\,/g)) {
                // If there is a comma in there, there is more than one code present for this item. Split them out.
                // If code is manually changed or copied from a prior visit - item will not have a PMSFH_link
@@ -1348,7 +1350,7 @@ function build_IMPPLAN(items) {
                var TitleArr = value.codedesc.split("\r");
                for (i=0;i < CodeArr.length;i++) {
                if (CodeArr.length == (TitleArr.length-1)) { //there is a trailing \r
-               $('#Coding_DX_Codes').append(CodeArr[i]+': '+TitleArr[i]+'<br />');
+               $('#Coding_DX_Codes').append(count_dx +'. '+CodeArr[i]+': '+TitleArr[i]+'<br />');
                } else {
                //just look it up via ajax or tell them to code it manually on the feesheet ;).
                $('#Coding_DX_Codes').append(CodeArr[i]+': <?php echo xlt('Manually retrieve description on Fee Sheet'); ?> <br />');
@@ -1361,7 +1363,7 @@ function build_IMPPLAN(items) {
                var location = value.PMSFH_link.match(/Clinical_(.*)/)[1];
                if (obj.Clinical[location]!=null ) {
                for (i=0; i< obj.Clinical[location].length; i++) {
-               $('#Coding_DX_Codes').append(obj.Clinical[location][i].code+': '+obj.Clinical[location][i].codedesc+'<br />');
+               $('#Coding_DX_Codes').append(count_dx +'. '+obj.Clinical[location][i].code+': '+obj.Clinical[location][i].codedesc+'<br />');
                }
                } else {
                //item has a PMSFH_link but it is not from a Clinical field
@@ -1371,7 +1373,7 @@ function build_IMPPLAN(items) {
                }
                }
                } else { //all is good, one code only
-               $('#Coding_DX_Codes').append(value.code+': '+value.codedesc+'<br />');
+               $('#Coding_DX_Codes').append(count_dx +'. '+value.code+': '+value.codedesc+'<br />');
                }
                }
                contents_here = ( index + 1 ) +

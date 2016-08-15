@@ -407,7 +407,7 @@ if ($refresh and $refresh != 'fullscreen') {
                                         <b><span title="<?php echo xla('In the patient\'s words'); ?>"><?php echo xlt('Chief Complaint'); ?> 2:
                                         </span>  </b>
                                         <br />
-                                        <textarea name="CC2" id="CC2" class="HPI_text" tabindex="10" style="height:60px;""><?php echo text($CC2); ?></textarea>
+                                        <textarea name="CC2" id="CC2" class="HPI_text" tabindex="10" style="height:60px;"><?php echo text($CC2); ?></textarea>
                                       </td>
                                     </tr> 
                                     <tr>
@@ -3543,8 +3543,8 @@ if ($refresh and $refresh != 'fullscreen') {
                       *  Pencil icon links to 'list_options' in DB which opens in the RTop frame.
                       *  If the provider-specific list does not exist, create it and populate it 
                       *  with generic starter items from list_options list "Eye_todo_done_defaults".
-                      *  This list is used to create the plan for the next visit and anything with a CODE
-                      *  is listed in the billable sections, TESTS in the CODING ENGINE.
+                      *  This list is used to create the plan for the next visit.  Anything with a CODE
+                      *  is also listed as a billable item/TEST in the CODING ENGINE.
                       */
                       $query = "select * from list_options where list_id=? and activity='1' order by seq";
                       $TODO_data = sqlStatement($query,array("Eye_todo_done_".$providerID));
@@ -3626,16 +3626,14 @@ if ($refresh and $refresh != 'fullscreen') {
                         <?php 
                         /* 
                          *  The goal here is to auto-code the encounter and link it directly to the billing module.  
-                         *  We do not know what method of coding this user uses, if any.
-                         *  Dx. codes in the Imp/Plan list make up the ICD-10 list.
-                         *  If a DX CODE is missing, it can't show up in a bill...
-                         *  This form needs a way to link to testing done during this encounter, like OCT/Photos, VF etc.
-                         *  Perhaps a minor procedure was performed and needs to be documented and billed?
-                         *  Finally we have the "Prior Visit" functionality of the form. 
-                         *  We should be able to look at and perhaps carry forward the billing data/codes?  
+                         *  Select Visit Type from dropdown (CPT4) built from practice's fee_sheet_options table.
+                         *  Active coding system = $default_search_type;
+                         *  We present the $default_search_type codes found in the Imp/Plan.
+                         *  Perhaps a minor procedure/test was performed? 
+                         *  Select options drawn from Eye_todo_done_".$providerID list with a CODE
+                         *  TODO: Finally we have the "Prior Visit" functionality of the form. 
+                         *  We should be able to look past codes and perhaps carry this forward?  
                          */
-
-                        //is there an active coding system selected for procedures/visits? YES=$default_search_type;
                         ?>
                         <script>
                           var default_search_type = '<?php echo text($default_search_type); ?>';
@@ -3643,10 +3641,18 @@ if ($refresh and $refresh != 'fullscreen') {
 
                       <dt class="borderShadow"><span><?php echo xlt('Coding Engine'); ?></span></dt>
                       <dd>
-                        <div style="padding:5px 20px 5px 20px;">
+                        <div style="padding:5px 10px 5px 10px;">
                           <table style="width:100%;">
+                             <tr>
+                              <td style="" colspan="2"><b><?php echo xlt('Diagnostic'). " ".xlt('Codes'); ?>:</b>
+                              </td>
+                            </tr>
                             <tr>
-                              <td style="vertical-align:top;"><b><?php echo xlt('Visit'); echo " ".xlt('Codes'); ?>:</b></td>
+                              <td colspan="3" style="padding-top:5px;padding-left:15px;"><span id="Coding_DX_Codes"><br /></span>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td style="padding-top:5px;vertical-align:top;"><b><?php echo xlt('Visit'); echo " ".xlt('Codes'); ?>:</b></td>
                               <td colspan="2" style="text-align:right;padding:left:20px;">
                                 <span class="CODE_LOW" title="<?php echo xla('Documentation for a Detailed HPI requires').":\n ".xla('> 3 HPI elements')."\n ".
                                    xla('OR{{as in AND/OR, ie. not an abbreviation}}')."\n ".
@@ -3662,7 +3668,7 @@ if ($refresh and $refresh != 'fullscreen') {
                               <td colspan="3" style="padding-top:5px;padding-left:15px;">
  
                                 <div class="ui-widget">
-                                  <select id="visit_codes">
+                                  <select id="visit_codes" size=5>
                                     <?php
                                     $i = 0;
                                     $last_category = '';
@@ -3679,9 +3685,10 @@ if ($refresh and $refresh != 'fullscreen') {
                                         $last_category = $fs_category;
                                         echo "    <option value=''> " . text(substr($fs_category, 1)) . "</option>\n";
                                       }
-                                      echo "    <option value='" . attr($fs_codes) . "'>" . text($code)." ".text(substr($fs_category, 1)).": ".text(substr($fs_option, 1)) . "</option>\n";
+                                      $code_text = (strlen(substr($fs_option, 1)) > 15) ? substr(substr($fs_option, 1),0,13).'...' : substr($fs_option, 1); 
+                                    
+                                      echo "    <option value='" . attr($fs_codes) . "'>" . text($code)." ".text(substr($fs_category, 1)).": ".text($code_text) . "</option>\n";
                                     }
-
                                     // Create drop-lists based on categories defined within the codes.
                                     $pres = sqlStatement("SELECT option_id, title FROM list_options " .
                                       "WHERE list_id = 'superbill' ORDER BY seq");
@@ -3694,8 +3701,9 @@ if ($refresh and $refresh != 'fullscreen') {
                                       while ($row = sqlFetchArray($res)) {
                                         $ctkey = alphaCodeType($row['code_type']);
                                         if ($code_types[$ctkey]['nofs']) continue;
-                                        echo "    <option value='" . attr($ctkey) . "|" .
-                                          attr($row['code']) . ':'. attr($row['modifier']) . "|'>" . text($row['code_text']) . "</option>\n";
+                                        $code_text = (strlen($row['code_text']) > 15) ? substr($row['code_text'],0,13).'...' : $row['code_text']; 
+                                      echo "    <option value='" . attr($ctkey) . "|" .
+                                          attr($row['code']) . ':'. attr($row['modifier']) . "|'>" . text($code_text) . "</option>\n";
                                       }
                                     }
                                     ?>
@@ -3741,14 +3749,18 @@ if ($refresh and $refresh != 'fullscreen') {
                                       if (in_array($row['codes'],$arrTESTS)) { 
                                         $checked = "checked='yes'";
                                       }
-                                      //This will link to a report generator for billable procedures/tests.  
-                                      //They need to be read/interpreted to be billable, but the reading may be documented on the
-                                      //document itself.  This will be optional and should link to the document engine.
-                                      //If a procedure/test has a document category and there is a document uploaded for today's encounter
-                                      //it should be displayed alongside the DB fields needed for the interpretation.
-                                      //Procedures/surgeries performed will need an op-note like format.
-                                      //This will be another series of forms then.
-                                      //echo "<i class='fa fa-file-word-o'></i>";
+                                      /**
+                                       *  This will link to a report generator for billable procedures/tests.  
+                                       *  They items need to be read/interpreted/dictated/documented to be billable.
+                                       *  The reading may already be documented within the scanned item itself.  
+                                       *  Thus this will be optional.
+                                       *  If needed, these reports should be categoriezed and filed ala the document engine.
+                                       *  If a procedure/test has a document category and there is a document uploaded for today's encounter
+                                       *  an icon should be displayed linked to the test/interpretation.
+                                       *  Procedures/surgeries performed will need an op-note like format.
+                                       *  This will be another series of forms then.
+                                       *  echo "<i class='fa fa-file-word-o'></i>";
+                                       */
                                       echo "<input type='checkbox' class='TESTS' id='TEST_$counter' codetext='".attr($codetext)."' title='".attr($codedesc)."' name='TEST[]' $checked value='". attr($row['codes']) ."'> ";
                                       $label = text(substr($codedesc,0,25));
                                       echo "<label for='TEST_$counter' class='input-helper input-helper--checkbox'>";
@@ -3769,14 +3781,7 @@ if ($refresh and $refresh != 'fullscreen') {
                               </td>
                             </tr>
                             
-                            <tr>
-                              <td style="padding-top:5px;" colspan="2"><b><?php echo xlt('Diagnostic'). " ".xlt('Codes'); ?>:</b>
-                              </td>
-                            </tr>
-                            <tr>
-                              <td colspan="3" style="padding-left:15px;"><span id="Coding_DX_Codes"><br /></span>
-                              </td>
-                            </tr>
+                           
                             <tr>
                               <td colspan="3" style="padding-top:5px;text-align:center;"> 
                                 <button id="code_me_now"><?php echo xlt('Populate Fee Sheet'); ?></button>
