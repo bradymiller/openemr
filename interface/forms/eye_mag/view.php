@@ -367,7 +367,7 @@ if ($refresh and $refresh != 'fullscreen') {
                                       <div class="kb kb_left">CC</div><b><span title="<?php echo xla('In the patient\'s words'); ?>"><?php echo xlt('Chief Complaint'); ?> 1:
                                       </span>  </b>
                                       <br />
-                                      <textarea name="CC1" id="CC1" class="HPI_text" tabindex="10"><?php echo text($CC1); ?></textarea>
+                                      <textarea name="CC1" id="CC1" class="HPI_text" style="height:53px;" tabindex="10"><?php echo text($CC1); ?></textarea>
                                     </td>
                                   </tr> 
                                   <tr>
@@ -407,7 +407,7 @@ if ($refresh and $refresh != 'fullscreen') {
                                         <b><span title="<?php echo xla('In the patient\'s words'); ?>"><?php echo xlt('Chief Complaint'); ?> 2:
                                         </span>  </b>
                                         <br />
-                                        <textarea name="CC2" id="CC2" class="HPI_text" tabindex="10" style="height:56px;"><?php echo text($CC2); ?></textarea>
+                                        <textarea name="CC2" id="CC2" class="HPI_text" tabindex="10" style="height:60px;""><?php echo text($CC2); ?></textarea>
                                       </td>
                                     </tr> 
                                     <tr>
@@ -429,7 +429,7 @@ if ($refresh and $refresh != 'fullscreen') {
                                         <b><span title="<?php echo xla('In the patient\'s words'); ?>"><?php echo xlt('Chief Complaint'); ?> 3:
                                         </span>  </b>
                                         <br />
-                                        <textarea name="CC3" id="CC3" class="HPI_text" tabindex="10" style="height:65px;"><?php echo text($CC3); ?></textarea>
+                                        <textarea name="CC3" id="CC3" class="HPI_text" tabindex="10" style="height:60px;"><?php echo text($CC3); ?></textarea>
                                       </td>
                                     </tr> 
                                     <tr>
@@ -2047,7 +2047,7 @@ if ($refresh and $refresh != 'fullscreen') {
                                   <td><input type="text" size="1" name="LCNVII" class="EXT" id="LCNVII" value="<?php echo attr($LCNVII); ?>"></td>
                               </tr>
                          
-                              <tr><td colspan=3 style="padding-top:0.05in;text-decoration:underline;"><br /><?php echo xlt('Hertel Exophthalmometry'); ?></td></tr>
+                              <tr><td colspan=3 style="padding-top:0.05in;text-decoration:underline;"><?php echo xlt('Hertel Exophthalmometry'); ?></td></tr>
                               <tr style="text-align:center;">
                                   <td>
                                       <input type="text" size="1" id="ODHERTEL" name="ODHERTEL" class="EXT" value="<?php echo attr($ODHERTEL); ?>">
