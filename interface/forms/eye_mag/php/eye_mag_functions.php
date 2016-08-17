@@ -3718,7 +3718,8 @@ function report_header($pid,$direction='shell') {
     $titleres = getPatientData($pid, "fname,lname,providerID");
     $sql = "SELECT * FROM facility ORDER BY billing_location DESC LIMIT 1";
     *******************************************************************/
-    $titleres = getPatientData($pid, "fname,lname,providerID,DATE_FORMAT(DOB,'%m/%d/%Y') as DOB_TS");
+    //$titleres = getPatientData($pid, "fname,lname,providerID,DATE_FORMAT(DOB,'%m/%d/%Y') as DOB_TS");
+    $titleres = getPatientData($pid, "fname,lname,providerID,DOB");
     if ($_SESSION['pc_facility']) {
         $sql = "select * from facility where id=?";
         $facility = sqlQuery($sql,array($_SESSION['pc_facility']));
@@ -3726,6 +3727,7 @@ function report_header($pid,$direction='shell') {
         $sql = "SELECT * FROM facility ORDER BY billing_location DESC LIMIT 1";
         $facility = sqlQuery($sql);
     }
+    $DOB = oeFormatShortDate($titleres['DOB']);
     /******************************************************************/
     ob_start();
     // Use logo if it exists as 'practice_logo.gif' in the site dir
@@ -3750,18 +3752,19 @@ function report_header($pid,$direction='shell') {
             }
             ?>
             </td>
-                    <td style='width:40%;'>
-            <em style="font-weight:bold;font-size:1.4em;"><?php echo text($facility['name']); ?></em><br />
-            <?php echo text($facility['street']); ?><br />
-            <?php echo text($facility['city']); ?>, <?php echo text($facility['state']); ?> <?php echo text($facility['postal_code']); ?><br />
-            <?php echo text($facility['phone']); ?><br clear='all' />
-            <?php 
-                $visit= getEncounterDateByEncounter($encounter); 
-                $visit_date = $visit['date']; 
+            <td style='width:40%;'>
+                <em style="font-weight:bold;font-size:1.4em;"><?php echo text($facility['name']); ?></em><br />
+                <?php echo text($facility['street']); ?><br />
+                <?php echo text($facility['city']); ?>, <?php echo text($facility['state']); ?> <?php echo text($facility['postal_code']); ?><br />
+                <?php echo text($facility['phone']); ?><br clear='all' />
+                <?php 
+                    $visit= getEncounterDateByEncounter($encounter); 
+                    $visit_date = $visit['date']; 
                 ?>
             </td>
                 <td>
                 <em style="font-weight:bold;font-size:1.4em;"><?php echo text($titleres['fname']) . " " . text($titleres['lname']); ?></em><br />
+                <b style="font-weight:bold;"><?php echo xlt('DOB'); ?>:</b> <?php echo text($DOB); ?><br />
                 <b style="font-weight:bold;"><?php echo xlt('Generated on'); ?>:</b> <?php echo oeFormatShortDate(); ?><br />
                 <b><?php echo xlt('Visit Date'); ?>:</b> <?php echo oeFormatSDFT(strtotime($visit_date)); ?><br />
                 <b><?php echo xlt('Provider') . ':</b> ' . text(getProviderName(getProviderIdOfEncounter($encounter))).'<br />'; ?>

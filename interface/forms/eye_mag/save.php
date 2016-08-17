@@ -43,12 +43,12 @@ $table_name   = "form_eye_mag";
 $form_name    = "eye_mag";
 $form_folder  = "eye_mag";
 
-include_once("../../globals.php");
+require_once("../../globals.php");
   
 require_once("$srcdir/html2pdf/vendor/autoload.php");
-include_once("$srcdir/api.inc");
-include_once("$srcdir/forms.inc");
-include_once("php/".$form_name."_functions.php");
+require_once("$srcdir/api.inc");
+require_once("$srcdir/forms.inc");
+require_once("php/".$form_name."_functions.php");
 require_once("$srcdir/formatting.inc.php");
 require_once($srcdir . "/../controllers/C_Document.class.php");
 require_once($srcdir . "/documents.php");
@@ -89,6 +89,11 @@ if ($_REQUEST['AJAX_PREFS']) {
                 VALUES 
                 ('PREFS','W','Current Rx',?,'W','52',?,'2')";
     sqlQuery($query,array($_SESSION['authId'],$_REQUEST['PREFS_W']));
+
+    $query = "REPLACE INTO ".$table_name."_prefs (PEZONE,LOCATION,LOCATION_text,id,selection,ZONE_ORDER,GOVALUE,ordering) 
+                VALUES 
+                ('PREFS','W_width','Detailed Rx',?,'W_width','80',?,'100')";
+    sqlQuery($query,array($_SESSION['authId'],$_REQUEST['PREFS_W_width']));
   
     $query = "REPLACE INTO ".$table_name."_prefs (PEZONE,LOCATION,LOCATION_text,id,selection,ZONE_ORDER,GOVALUE,ordering) 
               VALUES 
@@ -96,6 +101,11 @@ if ($_REQUEST['AJAX_PREFS']) {
     sqlQuery($query,array($_SESSION['authId'],$_REQUEST['PREFS_MR']));
   
     $query = "REPLACE INTO ".$table_name."_prefs (PEZONE,LOCATION,LOCATION_text,id,selection,ZONE_ORDER,GOVALUE,ordering) 
+                VALUES 
+                ('PREFS','MR_width','Detailed MR',?,'MR_width','81',?,'110')";
+    sqlQuery($query,array($_SESSION['authId'],$_REQUEST['PREFS_W_width']));
+  
+   $query = "REPLACE INTO ".$table_name."_prefs (PEZONE,LOCATION,LOCATION_text,id,selection,ZONE_ORDER,GOVALUE,ordering) 
               VALUES 
               ('PREFS','CR','Cycloplegic Refraction',?,'CR','54',?,'4')";
     sqlQuery($query,array($_SESSION['authId'],$_REQUEST['PREFS_CR']));

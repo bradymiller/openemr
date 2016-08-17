@@ -240,10 +240,13 @@ input[type=text] {
     font-size: 1.2em;
     font-family: Arial, Arial,sans-serif;
 }
+.refraction_wide {
+    width:95%;
+}
 .refraction td {
     text-align:center;
     font-size:0.9em;
-    width:0.35in;
+    width:0.5in;
     vertical-align: text-middle;
     text-decoration: none;
     padding: 2px;
@@ -1087,6 +1090,12 @@ height: 18px;
         position:absolute;
         top:8px;
         right:44px;
+    }
+    .closeButton4 {
+        display:inline-block;
+        position:absolute;
+        top:8px;
+        right:64px;
     }
     .closeButton {
         display:inline-block;

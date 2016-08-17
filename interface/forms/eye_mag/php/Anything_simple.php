@@ -338,13 +338,13 @@
 					      				$class = "git";
 					      			}
 					      			$count = count($documents['docs_in_zone'][$zone[0][value]]);
-					      				if ($count!=1) {$s ="s";} else {$s='';}
-					      			$response[$zone[0][value]] = '<a title="'.$count.' Document'. $s.'" 
+					      				if ($count!=1) {$s =xla('s{{suffix to make Document plural, ie. Documents}}');} else {$s='';}
+					      			$response[$zone[0][value]] = '<a title="'.$count.' '.xla('Document'). $s.'" 
 										class="'.$class.' " 
 										href="simple.php?display=i&encounter='.attr($encounter).'&category_name='.attr($zone[0][value]).'">'.
 										text($name).'</a>
 										'.$append;
-										$menu[$zone[0][value]] = '<li><a title="'.$count.' Document'. $s.'" 
+										$menu[$zone[0][value]] = '<li><a title="'.$count.' '.xla('Document'). $s.'" 
 										class="'.$class.' " 
 										href="simple.php?display=i&encounter='.attr($encounter).'&category_name='.attr($zone[0][value]).'">'.
 										text($name).' <span class="menu_icon">+'.$count.'</span></a></li>';
@@ -354,7 +354,7 @@
 							  				class="'.$class.' borderShadow"
 											disabled >'.text($name).'</a>
 										';
-									$menu[$zone[0][value]] = '<li><a title="'.$count.' Document'. $s.'" 
+									$menu[$zone[0][value]] = '<li><a title="'.$count.' '.xla('Document'). $s.'" 
 										class="'.$class.'" 
 										href="simple.php?display=i&encounter='.attr($encounter).'&category_name='.attr($zone[0][value]).'">'.
 										text($name).'</a></li>';
@@ -483,11 +483,11 @@
 		    			$class="play";
 		    			$append = "<i class='fa fa-arrow-down'></i>"; }
 			      	
-					if ($zone['name'] == "Advance Directives" or 
-						$zone['name'] == "Durable Power of Attorney" or
-						$zone['name'] == "Patient Information" or
-						$zone['name'] == "Living Will" or 
-						$zone['name'] == "Imaging") { 
+					if ($zone['name'] == xl('Advance Directives') ||
+						$zone['name'] == xl('Durable Power of Attorney') ||
+						$zone['name'] == xl('Patient Information') ||
+						$zone['name'] == xl('Living Will') ||
+						$zone['name'] == xl('Imaging')) { 
 					} else {
 						$count = count($documents['docs_in_name'][$zone['name']]);
 		      				if ($count!=1) {$s ="s";} else {$s='';}
@@ -495,12 +495,12 @@
 						if ($count =='0') {
 							$class = 'current';
 							$disabled = "disabled='disabled'";
-							echo ' <a '.$disabled.' title="'.$count.' Document'.$s.'" class="" >
+							echo ' <a '.$disabled.' title="'.$count.' '.xla('Document').$s.'" class="" >
 								<span class="borderShadow '.$class.'">'.text($zone['name']).'</span></a> 
 							'.$append;	
 						} else {
 
-							echo ' <a '.$disabled.' title="'.$count.' Document'.$s.'" class="'.$class.'" 
+							echo ' <a '.$disabled.' title="'.$count.' '.xla('Document').$s.'" class="'.$class.'" 
 								href="simple.php?display=i&category_id='.$zone['id'].'&encounter='.$encounter.'&category_name='.$category_name.'">
 								<span  class="borderShadow">'.text($zone['name']).'</span></a> 
 								'.$append;	

@@ -301,6 +301,8 @@ function update_PREFS() {
         'PREFS_VA'              : $('#PREFS_VA').val(),
         'PREFS_W'               : $('#PREFS_W').val(),
         'PREFS_MR'              : $('#PREFS_MR').val(),
+        'PREFS_W_width'         : $('#PREFS_W_width').val(),
+        'PREFS_MR_width'        : $('#PREFS_MR_width').val(),
         'PREFS_CR'              : $('#PREFS_CR').val(),
         'PREFS_CTL'             : $('#PREFS_CTL').val(),
         'PREFS_ADDITIONAL'      : $('#PREFS_ADDITIONAL').val(),
@@ -2612,6 +2614,28 @@ $(document).ready(function() {
                                           $("#WODADD2").removeClass('nodisplay');
                                           $("#WOSADD2").removeClass('nodisplay');
                                           });
+                  $("[name=W_width_display]").click(function() {
+                    if ($("#PREFS_W_width").val() !="1") {
+                      $("#PREFS_W_width").val('1');
+                      //make each display W wide
+                      $('#LayerVision_W_1').addClass('refraction_wide');
+                      $('#LayerVision_W_2').addClass('refraction_wide');
+                      $('#LayerVision_W_3').addClass('refraction_wide');
+                      $('#LayerVision_W_4').addClass('refraction_wide');
+                      $("[name=W_wide]").removeClass('nodisplay');
+                    } else {
+                      $("#PREFS_W_width").val('0');
+                      //make each display W narrow
+                      $('#LayerVision_W_1').removeClass('refraction_wide');
+                      $('#LayerVision_W_2').removeClass('refraction_wide');
+                      $('#LayerVision_W_3').removeClass('refraction_wide');
+                      $('#LayerVision_W_4').removeClass('refraction_wide');    
+                      $("[name=W_wide]").addClass('nodisplay');
+                    }
+                    update_PREFS();
+
+                  });
+                  ($("#PREFS_W_width").val() == '1') ? $("[name=W_wide]").removeClass('nodisplay') : $("[name=W_wide]").addClass('nodisplay');
                   $("#Amsler-Normal").change(function() {
                                              if ($(this).is(':checked')) {
                                              var number1 = document.getElementById("AmslerOD").src.match(/(Amsler_\d)/)[1];
