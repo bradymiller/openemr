@@ -3756,7 +3756,9 @@ function report_header($pid,$direction='shell') {
                 <em style="font-weight:bold;font-size:1.4em;"><?php echo text($facility['name']); ?></em><br />
                 <?php echo text($facility['street']); ?><br />
                 <?php echo text($facility['city']); ?>, <?php echo text($facility['state']); ?> <?php echo text($facility['postal_code']); ?><br />
-                <?php echo text($facility['phone']); ?><br clear='all' />
+                <?php echo xlt('Phone').': ' .text($facility['phone']); ?><br />
+                <?php echo xlt('Fax').': ' .text($facility['fax']); ?><br />
+                <br clear='all' />
                 <?php 
                     $visit= getEncounterDateByEncounter($encounter); 
                     $visit_date = $visit['date']; 

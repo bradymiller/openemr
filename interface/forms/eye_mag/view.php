@@ -1220,7 +1220,7 @@ if ($refresh and $refresh != 'fullscreen') {
                           <td name="W_wide" title="<?php echo xla('Monocular Pupillary Diameter - Distance'); ?>"><?php echo xlt('MPD-D{{abbreviation for Monocular Pupillary Diameter - Distance}}'); ?></td>
                           <td name="W_wide" title="<?php echo xla('Monocular Pupillary Diameter - Near'); ?>"><?php echo xlt('MPD-N{{abbreviation for Monocular Pupillary Diameter - Near}}'); ?></td>
 
-                          <td rowspan="4" class="right" style="padding:10 0 10 0;font-size:0.8em;width:100px;">
+                          <td rowspan="5" class="right" style="padding:10 0 10 0;font-size:0.8em;width:100px;">
                             <b style="font-weight:600;text-decoration:underline;"><?php echo xlt('Rx Type{{Type of glasses prescription}}'); ?></b><br />
                             <label for="Single_1" class="input-helper input-helper--checkbox"><?php echo xlt('Single'); ?></label>
                             <input type="radio" value="0" id="Single_1" name="RX_TYPE_1" <?php if ($RX_TYPE_1 == '0') echo 'checked="checked"'; ?> /></span><br /><br />
@@ -1281,19 +1281,16 @@ if ($refresh and $refresh != 'fullscreen') {
                           <td name="W_wide" title="<?php echo xla('Binocular Pupillary Diameter - Distance'); ?>"><?php echo xlt('PD-D{{abbreviation for Binocular Pupillary Diameter - Distance}}'); ?></td>
                           <td name="W_wide" title="<?php echo xla('Binocular Pupillary Diameter - Near'); ?>"><?php echo xlt('PD-N{{abbreviation for Binocular Pupillary Diameter - Near}}'); ?></td>
                           <td name="W_wide" title="<?php echo xla('Lens Material'); ?>" colspan="2"><?php echo xlt('Lens Material'); ?> </td>
-                          <td name="W_wide" colspan="3" rowspan="4" style="text-align:left;padding-left:10px;"><span style="text-align:center;text-decoration:underline;"><?php echo xlt('Lens Treatments'); ?></span>
+                          <td name="W_wide" colspan="3" rowspan="4" style="text-align:left;padding-left:10px;"><span style="text-decoration:underline;"><?php echo xlt('Lens Treatments'); ?></span>
                             <br />
-                            <input type="checkbox" value="1" id="AScratch_1" name="AScratch_1" <?php if ($AScratch_1 == '1') echo 'checked="checked"'; ?> />
-                            <label for="AScratch_1" class="input-helper input-helper--checkbox"><?php echo xlt('Anti-scratch coating'); ?></label>
-                            <br />
-                            <input type="checkbox" value="1" id="AR_Coating_1" name="AR_coating_1" <?php if ($AR_Coating_1 == '1') echo 'checked="checked"'; ?> />
-                            <label for="AR_Coating_1" class="input-helper input-helper--checkbox"><?php echo xlt('Anti-reflective coating'); ?></label>
-                            <br />
-                            <input type="checkbox" value="1" id="UVBlock_1" name="UVBlock_1" <?php if ($AR_Coating_1 == '1') echo 'checked="checked"'; ?> />
-                            <label for="UVBlock_1" class="input-helper input-helper--checkbox"><?php echo xlt('UV-blocking treatment'); ?></label>
-                            <br />
-                            <input type="checkbox" value="1" id="PhotoChrom_1" name="PhotoChrom_1" <?php if ($PhotoChrom_1 == '1') echo 'checked="checked"'; ?> />
-                            <label for="PhotoChrom_1" class="input-helper input-helper--checkbox"><?php echo xlt('Photochromic treatment'); ?></label>
+                            <?php 
+                              $frow['data_type'] = "21";
+                              $frow['field_id'] = "LENS_TREATMENTS";
+                              $frow['list_id'] = "Eye_Lens_Treatments";
+                              $frow['list_backup_id'] = "";
+                              $frow['fld_length'] = "1"; //number of colums to show
+                              generate_form_field($frow, $LENS_TREATMENTS);  //LENS_TREATMENTS is a | separated list
+                            ?>
                           </td>                         
                         </tr>
                         <tr class="WNEAR">

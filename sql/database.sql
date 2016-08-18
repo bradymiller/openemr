@@ -8514,6 +8514,22 @@ INSERT INTO `list_options` (`list_id`, `option_id`, `title`, `seq`, `is_default`
 ('Eye_Defaults_for_GENERAL', 'RMRD', '+3', 110, 0, 0, '', 'EXT', '', 0, 0, 0, ''),
 ('Eye_Defaults_for_GENERAL', 'RUL', 'normal lids and lashes', 10, 0, 0, '', 'EXT', '', 0, 0, 0, '');
 
+INSERT INTO `list_options` (`list_id`, `option_id`, `title`, `seq`, `is_default`, `option_value`, `mapping`, `notes`, `codes`, `toggle_setting_1`, `toggle_setting_2`, `activity`, `subtype`) VALUES
+('lists', 'Eye_Lens_Material', 'Eye Lens Material', 310, 1, 0, '', '', '', 0, 0, 0, ''),
+('lists', 'Eye_Lens_Treatments', 'Eye Lens Treatments', 312, 1, 0, '', '', '', 0, 0, 0, '');
+
+INSERT INTO `list_options` (`list_id`, `option_id`, `title`, `seq`, `is_default`, `option_value`, `mapping`, `notes`, `codes`, `toggle_setting_1`, `toggle_setting_2`, `activity`, `subtype`) VALUES
+('Eye_Lens_Material', 'LM_CG', 'Crown Glass', 10, 0, 0, '', 'Excellent optics. Low cost. Downsides: heavy, breakable. Abbe Value: 59', '', 0, 0, 1, ''),
+('Eye_Lens_Material', 'LM_CR', 'CR-39', 20, 0, 0, '', 'Excellent optics. Low cost. Downside: thickness. Abbe Value: 58', '', 0, 0, 1, ''),
+('Eye_Lens_Material', 'LM_HI_PLASTICS_1', 'High-index Plastics (1.6 to 1.67)', 60, 0, 0, '', 'Thin and lightweight. Block 100 percent UV. Less costly than 1.70-1.74 high-index lenses.  Abbe: 36(1.6) - 32 (1.67)', '', 0, 0, 1, ''),
+('Eye_Lens_Material', 'LM_HI_PLASTICS_2', 'High-index Plastics (1.7 to 1.74)', 70, 0, 0, '', 'The thinnest lenses available. Block 100 percent UV. Lightweight.  Abbe: 36(1.7) - 33(1.74)', '', 0, 0, 1, ''),
+('Eye_Lens_Material', 'LM_POLY', 'Polycarbonate', 40, 0, 0, '', 'Superior impact resistance. Blocks 100 percent UV. Lighter than high-index plastic lenses.  Abbe: 30', '', 0, 0, 1, ''),
+('Eye_Lens_Material', 'LM_TRIBRID', 'Tribrid', 50, 0, 0, '', 'Thin and lightweight. Significantly more impact-resistant than CR-39 plastic and high-index plastic lenses (except polycarbonate and Trivex). Higher Abbe value than polycarbonate. Downside: Not yet available in a wide variety of lens designs.  Abbe: 41', '', 0, 0, 1, ''),
+('Eye_Lens_Material', 'LM_TRIVEX', 'Trivex', 30, 0, 0, '', 'Superior impact resistance. Blocks 100 percent UV. Higher Abbe value than polycarbonate. Lightest lens material available. Abbe Value: 45', '', 0, 0, 1, ''),
+('Eye_Lens_Treatments', 'LT_ARCOAT', 'Anti-reflective coating', 20, 0, 0, '', '', '', 0, 0, 1, ''),
+('Eye_Lens_Treatments', 'LT_ASCRATCH', 'Anti-scratch coating', 10, 0, 0, '', '', '', 0, 0, 1, ''),
+('Eye_Lens_Treatments', 'LT_UVBLOCK', 'UV-blocking treatment', 30, 0, 0, '', '', '', 0, 0, 1, ''),
+('Eye_Lens_Treatments', 'PT_PHOTOGREY', 'Photochromic treatment', 40, 0, 0, '', '', '', 0, 0, 1, '');
 -- --------------------------------------------------------
 
 -- 
@@ -8984,16 +9000,31 @@ CREATE TABLE IF NOT EXISTS `form_eye_mag_dispense` (
 `OSSPH` char(10) DEFAULT NULL,
 `OSCYL` char(10) DEFAULT NULL,
 `OSAXIS` char(10) DEFAULT NULL,
-`ODPRISM` varchar(50) DEFAULT NULL,
-`ODBASE` varchar(50) DEFAULT NULL,
-`OSPRISM` varchar(50) DEFAULT NULL,
-`OSBASE` varchar(50) DEFAULT NULL,
-`ODADD1` varchar(50) DEFAULT NULL,
-`OSADD1` varchar(50) DEFAULT NULL,
-`ODADD2` varchar(50) DEFAULT NULL,
-`OSADD2` varchar(50) DEFAULT NULL,
-`PD` varchar(50) DEFAULT NULL,
+`ODADD1` varchar(10) DEFAULT NULL,
+`OSADD1` varchar(10) DEFAULT NULL,
+`ODADD2` varchar(10) DEFAULT NULL,
+`OSADD2` varchar(10) DEFAULT NULL,
 `RXCOMMENTS` text,
+`ODHPD` varchar(20) DEFAULT NULL,
+`ODHBASE` varchar(20) DEFAULT NULL,
+`ODVPD` varchar(20) DEFAULT NULL,
+`ODVBASE` varchar(20) DEFAULT NULL,
+`ODSLABOFF` varchar(20) DEFAULT NULL,
+`ODVERTEXDIST` varchar(20) DEFAULT NULL,
+`OSHPD` varchar(20) DEFAULT NULL,
+`OSHBASE` varchar(20) DEFAULT NULL,
+`OSVPD` varchar(20) DEFAULT NULL,
+`OSVBASE` varchar(20) DEFAULT NULL,
+`OSSLABOFF` varchar(20) DEFAULT NULL,
+`OSVERTEXDIST` varchar(20) DEFAULT NULL,
+`ODMPDD` varchar(20) DEFAULT NULL,
+`ODMPDN` varchar(20) DEFAULT NULL,
+`OSMPDD` varchar(20) DEFAULT NULL,
+`OSMPDN` varchar(20) DEFAULT NULL,
+`BPDD` varchar(20) DEFAULT NULL,
+`BPDN` varchar(20) DEFAULT NULL,
+`LENS_MATERIAL` varchar(20) DEFAULT NULL,
+`LENS_TREATMENTS` varchar(100) DEFAULT NULL,
 `CTLMANUFACTUREROD` char(25) DEFAULT NULL,
 `CTLMANUFACTUREROS` char(25) DEFAULT NULL,
 `CTLSUPPLIEROD` char(25) DEFAULT NULL,
@@ -9432,7 +9463,9 @@ INSERT INTO `form_eye_mag_prefs` (`PEZONE`, `LOCATION`, `LOCATION_text`, `id`, `
 ('PREFS', 'VA', 'Vision', 2048, 'RS', 51, '1', 2048, 'ADD', '', '', ''),
 ('PREFS', 'VAX', 'Visual Acuities', 2048, 'VAX', 65, '0', 15, 'ADD', '', '', ''),
 ('PREFS', 'TOOLTIPS', 'Toggle Tooltips', 2048, 'TOOLTIPS', 66, 'on', NULL, 'ADD', '', '', ''),
-('PREFS', 'W', 'Current Rx', 2048, 'W', 52, '1', 2, 'ADD', '', '', '');
+('PREFS', 'W', 'Current Rx', 2048, 'W', 52, '1', 2, 'ADD', '', '', ‘’),
+('PREFS', 'W_width', ‘Detailed Rx', 2048, ‘W_width’, 80, ‘100’, ‘’, '', '', '', ‘’),
+('PREFS', ‘MR_width', ‘Detailed MR’, 2048, ‘MR_width’, 81, ‘110’, , '', '', '', '');
 
 CREATE TABLE IF NOT EXISTS `form_eye_mag_orders` (
 `id` bigint(20) NOT NULL AUTO_INCREMENT,
@@ -9512,4 +9545,3 @@ CREATE TABLE IF NOT EXISTS `form_taskman` (
 ) ENGINE=INNODB
 
 --------------------------------------------------------
-
