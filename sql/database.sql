@@ -8994,17 +8994,19 @@ CREATE TABLE IF NOT EXISTS `form_eye_mag_dispense` (
 `REFDATE` DATETIME NULL DEFAULT NULL,
 `REFTYPE` char(10) DEFAULT NULL,
 `RXTYPE` char(20)DEFAULT NULL,
-`ODSPH` char(10) DEFAULT NULL,
-`ODCYL` char(10) DEFAULT NULL,
-`ODAXIS` char(10) DEFAULT NULL,
-`OSSPH` char(10) DEFAULT NULL,
-`OSCYL` char(10) DEFAULT NULL,
-`OSAXIS` char(10) DEFAULT NULL,
-`ODADD1` varchar(10) DEFAULT NULL,
-`OSADD1` varchar(10) DEFAULT NULL,
-`ODADD2` varchar(10) DEFAULT NULL,
-`OSADD2` varchar(10) DEFAULT NULL,
-`RXCOMMENTS` text,
+
+`ODSPH` varchar(10) DEFAULT NULL,
+`ODCYL` varchar(10) DEFAULT NULL,
+`ODAXIS` varchar(10) DEFAULT NULL,
+`OSSPH` varchar(10) DEFAULT NULL,
+`OSCYL` varchar(10) DEFAULT NULL,
+`OSAXIS` varchar(10) DEFAULT NULL,
+
+`ODMIDADD` varchar(10) DEFAULT NULL,
+`OSMIDADD` varchar(10) DEFAULT NULL,
+`ODADD` varchar(10) DEFAULT NULL,
+`OSADD` varchar(10) DEFAULT NULL,
+
 `ODHPD` varchar(20) DEFAULT NULL,
 `ODHBASE` varchar(20) DEFAULT NULL,
 `ODVPD` varchar(20) DEFAULT NULL,
@@ -9017,6 +9019,7 @@ CREATE TABLE IF NOT EXISTS `form_eye_mag_dispense` (
 `OSVBASE` varchar(20) DEFAULT NULL,
 `OSSLABOFF` varchar(20) DEFAULT NULL,
 `OSVERTEXDIST` varchar(20) DEFAULT NULL,
+
 `ODMPDD` varchar(20) DEFAULT NULL,
 `ODMPDN` varchar(20) DEFAULT NULL,
 `OSMPDD` varchar(20) DEFAULT NULL,
@@ -9025,6 +9028,7 @@ CREATE TABLE IF NOT EXISTS `form_eye_mag_dispense` (
 `BPDN` varchar(20) DEFAULT NULL,
 `LENS_MATERIAL` varchar(20) DEFAULT NULL,
 `LENS_TREATMENTS` varchar(100) DEFAULT NULL,
+
 `CTLMANUFACTUREROD` char(25) DEFAULT NULL,
 `CTLMANUFACTUREROS` char(25) DEFAULT NULL,
 `CTLSUPPLIEROD` char(25) DEFAULT NULL,
@@ -9035,6 +9039,8 @@ CREATE TABLE IF NOT EXISTS `form_eye_mag_dispense` (
 `ODBC` varchar(50) DEFAULT NULL,
 `OSDIAM` varchar(50) DEFAULT NULL,
 `OSBC` varchar(50) DEFAULT NULL,
+`RXCOMMENTS` text,
+
 `COMMENTS` char(10) DEFAULT NULL,
 PRIMARY KEY (`id`)
 ) ENGINE=InnoDB;
@@ -9463,9 +9469,9 @@ INSERT INTO `form_eye_mag_prefs` (`PEZONE`, `LOCATION`, `LOCATION_text`, `id`, `
 ('PREFS', 'VA', 'Vision', 2048, 'RS', 51, '1', 2048, 'ADD', '', '', ''),
 ('PREFS', 'VAX', 'Visual Acuities', 2048, 'VAX', 65, '0', 15, 'ADD', '', '', ''),
 ('PREFS', 'TOOLTIPS', 'Toggle Tooltips', 2048, 'TOOLTIPS', 66, 'on', NULL, 'ADD', '', '', ''),
-('PREFS', 'W', 'Current Rx', 2048, 'W', 52, '1', 2, 'ADD', '', '', ‘’),
-('PREFS', 'W_width', ‘Detailed Rx', 2048, ‘W_width’, 80, ‘100’, ‘’, '', '', '', ‘’),
-('PREFS', ‘MR_width', ‘Detailed MR’, 2048, ‘MR_width’, 81, ‘110’, , '', '', '', '');
+('PREFS', 'W', 'Current Rx', 2048, 'W', 52, '1', 2, 'ADD', '', '', ‘'),
+('PREFS', 'W_width', 'Detailed Rx', 2048, 'W_width', 80, '100', ‘', '', '', '', ‘'),
+('PREFS', 'MR_width', 'Detailed MR', 2048, 'MR_width', 81, ‘110', , '', '', '', '');
 
 CREATE TABLE IF NOT EXISTS `form_eye_mag_orders` (
 `id` bigint(20) NOT NULL AUTO_INCREMENT,
@@ -9506,26 +9512,43 @@ CREATE TABLE IF NOT EXISTS `form_eye_mag_wearing` (
   `ODSPH` varchar(10) DEFAULT NULL,
   `ODCYL` varchar(10) DEFAULT NULL,
   `ODAXIS` varchar(10) DEFAULT NULL,
-  `ODVA` varchar(10) DEFAULT NULL,
-  `ODADD` varchar(10) DEFAULT NULL,
-  `ODNEARVA` varchar(10) DEFAULT NULL,
-  `ODPRISM` varchar(10) DEFAULT NULL,
   `OSSPH` varchar(10) DEFAULT NULL,
   `OSCYL` varchar(10) DEFAULT NULL,
   `OSAXIS` varchar(10) DEFAULT NULL,
-  `OSVA` varchar(10) DEFAULT NULL,
-  `OSADD` varchar(10) DEFAULT NULL,
-  `OSNEARVA` varchar(10) DEFAULT NULL,
-  `OSPRISM` varchar(10) DEFAULT NULL,
   `ODMIDADD` varchar(10) DEFAULT NULL,
   `OSMIDADD` varchar(10) DEFAULT NULL,
+  `ODADD` varchar(10) DEFAULT NULL,
+  `OSADD` varchar(10) DEFAULT NULL,
+  `ODVA` varchar(10) DEFAULT NULL,
+  `OSVA` varchar(10) DEFAULT NULL,
+  `ODNEARVA` varchar(10) DEFAULT NULL,
+  `OSNEARVA` varchar(10) DEFAULT NULL,
+  `ODHPD` varchar(20) DEFAULT NULL,
+  `ODHBASE` varchar(20) DEFAULT NULL,
+  `ODVPD` varchar(20) DEFAULT NULL,
+  `ODVBASE` varchar(20) DEFAULT NULL,
+  `ODSLABOFF` varchar(20) DEFAULT NULL,
+  `ODVERTEXDIST` varchar(20) DEFAULT NULL,
+  `OSHPD` varchar(20) DEFAULT NULL,
+  `OSHBASE` varchar(20) DEFAULT NULL,
+  `OSVPD` varchar(20) DEFAULT NULL,
+  `OSVBASE` varchar(20) DEFAULT NULL,
+  `OSSLABOFF` varchar(20) DEFAULT NULL,
+  `OSVERTEXDIST` varchar(20) DEFAULT NULL,
+  `ODMPDD` varchar(20) DEFAULT NULL,
+  `ODMPDN` varchar(20) DEFAULT NULL,
+  `OSMPDD` varchar(20) DEFAULT NULL,
+  `OSMPDN` varchar(20) DEFAULT NULL,
+  `BPDD` varchar(20) DEFAULT NULL,
+  `BPDN` varchar(20) DEFAULT NULL,
+  `LENS_MATERIAL` varchar(20) DEFAULT NULL,
+  `LENS_TREATMENTS` varchar(100) DEFAULT NULL,
   `RX_TYPE` varchar(25) DEFAULT NULL,
-  `COMMENTS` varchar(255) DEFAULT NULL,
+  `COMMENTS` text DEFAULT NULL,
   UNIQUE KEY `id` (`id`),
   UNIQUE KEY `FORM_ID` (`FORM_ID`,`ENCOUNTER`,`PID`,`RX_NUMBER`)
 ) ENGINE=InnoDB;
 -------------------------------------------------------- 
-
 -- 
 -- Table structure for table `form_taskman`
 --
