@@ -8524,12 +8524,12 @@ INSERT INTO `list_options` (`list_id`, `option_id`, `title`, `seq`, `is_default`
 ('Eye_Lens_Material', 'LM_HI_PLASTICS_1', 'High-index Plastics (1.6 to 1.67)', 60, 0, 0, '', 'Thin and lightweight. Block 100 percent UV. Less costly than 1.70-1.74 high-index lenses.  Abbe: 36(1.6) - 32 (1.67)', '', 0, 0, 1, ''),
 ('Eye_Lens_Material', 'LM_HI_PLASTICS_2', 'High-index Plastics (1.7 to 1.74)', 70, 0, 0, '', 'The thinnest lenses available. Block 100 percent UV. Lightweight.  Abbe: 36(1.7) - 33(1.74)', '', 0, 0, 1, ''),
 ('Eye_Lens_Material', 'LM_POLY', 'Polycarbonate', 40, 0, 0, '', 'Superior impact resistance. Blocks 100 percent UV. Lighter than high-index plastic lenses.  Abbe: 30', '', 0, 0, 1, ''),
-('Eye_Lens_Material', 'LM_TRIBRID', 'Tribrid', 50, 0, 0, '', 'Thin and lightweight. Significantly more impact-resistant than CR-39 plastic and high-index plastic lenses (except polycarbonate and Trivex). Higher Abbe value than polycarbonate. Downside: Not yet available in a wide variety of lens designs.  Abbe: 41', '', 0, 0, 1, ''),
+('Eye_Lens_Material', 'LM_TRIBRID', 'Tribrid’, 50, 0, 0, '', 'Thin and lightweight. Significantly more impact-resistant than CR-39 plastic and high-index plastic lenses (except polycarbonate and Trivex). Higher Abbe value than polycarbonate. Downside: Not yet available in a wide variety of lens designs.  Abbe: 41', '', 0, 0, 1, ''),
 ('Eye_Lens_Material', 'LM_TRIVEX', 'Trivex', 30, 0, 0, '', 'Superior impact resistance. Blocks 100 percent UV. Higher Abbe value than polycarbonate. Lightest lens material available. Abbe Value: 45', '', 0, 0, 1, ''),
 ('Eye_Lens_Treatments', 'LT_ARCOAT', 'Anti-reflective coating', 20, 0, 0, '', '', '', 0, 0, 1, ''),
 ('Eye_Lens_Treatments', 'LT_ASCRATCH', 'Anti-scratch coating', 10, 0, 0, '', '', '', 0, 0, 1, ''),
 ('Eye_Lens_Treatments', 'LT_UVBLOCK', 'UV-blocking treatment', 30, 0, 0, '', '', '', 0, 0, 1, ''),
-('Eye_Lens_Treatments', 'PT_PHOTOGREY', 'Photochromic treatment', 40, 0, 0, '', '', '', 0, 0, 1, '');
+('Eye_Lens_Treatments', ‘LT_PHOTOGREY', 'Photochromic treatment', 40, 0, 0, '', '', '', 0, 0, 1, '');
 -- --------------------------------------------------------
 
 -- 

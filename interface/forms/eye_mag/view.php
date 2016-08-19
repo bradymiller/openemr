@@ -1255,10 +1255,10 @@ if ($refresh and $refresh != 'fullscreen') {
                         <tr>
                           <td rowspan="2"><?php echo xlt('Dist{{distance}}'); ?></td>    
                           <td><b><?php echo xlt('OD{{right eye}}'); ?>:</b></td>
-                          <td><input type="text" class="sphere" id="ODSPH_1" name="ODSPH_1"  value="<?php echo attr($ODSPH_1); ?>" tabindex="100"></td>
-                          <td><input type="text" class="cylinder" id="ODCYL_1" name="ODCYL_1"  value="<?php echo attr($ODCYL_1); ?>" tabindex="101"></td>
-                          <td><input type="text" class="axis" id="ODAXIS_1" name="ODAXIS_1" value="<?php echo attr($ODAXIS_1); ?>" tabindex="102"></td>
-                          <td><input type="text" class="acuity" id="ODVA_1" name="ODVA_1" value="<?php echo attr($ODVA_1); ?>" tabindex="108"></td>
+                          <td><input type="text" class="sphere" id="ODSPH_1" name="ODSPH_1"  value="<?php echo attr($ODSPH_1); ?>" tabindex="10100"></td>
+                          <td><input type="text" class="cylinder" id="ODCYL_1" name="ODCYL_1"  value="<?php echo attr($ODCYL_1); ?>" tabindex="10101"></td>
+                          <td><input type="text" class="axis" id="ODAXIS_1" name="ODAXIS_1" value="<?php echo attr($ODAXIS_1); ?>" tabindex="10102"></td>
+                          <td><input type="text" class="acuity" id="ODVA_1" name="ODVA_1" value="<?php echo attr($ODVA_1); ?>" tabindex="10108"></td>
 
                           <td name="W_wide"></td>
                           <td name="W_wide"><input type="text" class="prism" id="ODHPD_1" name="ODHPD_1" value="<?php echo attr($ODHPD_1); ?>"></td>
@@ -1272,10 +1272,10 @@ if ($refresh and $refresh != 'fullscreen') {
                         </tr>
                         <tr>
                           <td><b><?php echo xlt('OS{{left eye}}'); ?>:</b></td>
-                          <td><input type="text" class="sphere" id="OSSPH_1" name="OSSPH_1" value="<?php echo attr($OSSPH_1); ?>" tabindex="103"></td>
-                          <td><input type="text" class="cylinder" id="OSCYL_1" name="OSCYL_1" value="<?php echo attr($OSCYL_1); ?>" tabindex="104"></td>
-                          <td><input type="text" class="axis" id="OSAXIS_1" name="OSAXIS_1" value="<?php echo attr($OSAXIS_1); ?>" tabindex="105"></td>
-                          <td><input type="text" class="acuity" id="OSVA_1" name="OSVA_1" value="<?php echo attr($OSVA_1); ?>" tabindex="109"></td>
+                          <td><input type="text" class="sphere" id="OSSPH_1" name="OSSPH_1" value="<?php echo attr($OSSPH_1); ?>" tabindex="10103"></td>
+                          <td><input type="text" class="cylinder" id="OSCYL_1" name="OSCYL_1" value="<?php echo attr($OSCYL_1); ?>" tabindex="10104"></td>
+                          <td><input type="text" class="axis" id="OSAXIS_1" name="OSAXIS_1" value="<?php echo attr($OSAXIS_1); ?>" tabindex="10105"></td>
+                          <td><input type="text" class="acuity" id="OSVA_1" name="OSVA_1" value="<?php echo attr($OSVA_1); ?>" tabindex="10109"></td>
 
                           <td name="W_wide"></td>
                           <td name="W_wide"><input type="text" class="prism" id="OSHPD_1" name="OSHPD_1" value="<?php echo attr($OSHPD_1); ?>"></td>
@@ -1292,16 +1292,23 @@ if ($refresh and $refresh != 'fullscreen') {
                           <td><b><?php echo xlt('OD{{right eye}}'); ?>:</b></td>
                           <?php echo '<input type="hidden" name="RXStart_1" id="RXStart_1" value="'.$RX_TYPE_1.'">'; ?>
                           <td class="WMid"><input type="text" class="presbyopia" id="ODMIDADD_1" name="ODMIDADD_1" value="<?php echo attr($ODMIDADD_1); ?>"></td>
-                          <td class="WAdd2"><input type="text" class="presbyopia" id="ODADD_1" name="ODADD_1" value="<?php echo attr($ODADD_1); ?>" tabindex="106"></td>
+                          <td class="WAdd2"><input type="text" class="presbyopia" id="ODADD_1" name="ODADD_1" value="<?php echo attr($ODADD_1); ?>" tabindex="10106"></td>
                           <td></td>
-                          <td><input class="jaeger" type="text" id="ODNEARVA_1" name="ODNEARVA_1" value="<?php echo attr($ODNEARVA_1); ?>" tabindex="110"></td>
+                          <td><input class="jaeger" type="text" id="ODNEARVA_1" name="ODNEARVA_1" value="<?php echo attr($ODNEARVA_1); ?>" tabindex="10110"></td>
 
                           <td name="W_wide"></td>
                           
                           <td name="W_wide" title="<?php echo xla('Binocular Pupillary Diameter - Distance'); ?>"><?php echo xlt('PD-D{{abbreviation for Binocular Pupillary Diameter - Distance}}'); ?></td>
                           <td name="W_wide" title="<?php echo xla('Binocular Pupillary Diameter - Near'); ?>"><?php echo xlt('PD-N{{abbreviation for Binocular Pupillary Diameter - Near}}'); ?></td>
-                          <td name="W_wide" title="<?php echo xla('Lens Material'); ?>" colspan="2" class="underline"><?php echo xlt('Lens Material'); ?> </td>
-                          <td name="W_wide" colspan="4" rowspan="4" style="text-align:left;vertical-align:top;padding-left:10px;"><span style="text-decoration:underline;"><?php echo xlt('Lens Treatments'); ?></span>
+                          <td name="W_wide" title="<?php echo xla('Lens Material'); ?>" colspan="2">
+                            <a href="<?php echo $GLOBALS['webroot']; ?>/interface/super/edit_list.php?list_id=Eye_Lens_Material" target="RTop" 
+                                  title="<?php echo xla('Click here to edit list of available Lens Materials'); ?>" 
+                                  name="Lens_mat"><span style="text-decoration:underline;"><?php echo xlt('Lens Material'); ?></span> <i class="fa fa-pencil fa-fw"></i> </a>
+                          </td>
+                          <td name="W_wide" colspan="4" rowspan="4" style="text-align:left;vertical-align:top;padding-left:10px;">
+                            <a href="<?php echo $GLOBALS['webroot']; ?>/interface/super/edit_list.php?list_id=Eye_Lens_Treatments" target="RTop" 
+                                  title="<?php echo xla('Click here to edit list of available Lens Treatment Options'); ?>" 
+                                  name="Lens_txs"><span style="text-decoration:underline;"><?php echo xlt('Lens Treatments'); ?></span> <i class="fa fa-pencil fa-fw"></i> </a>
                             <br />
                             <?php 
                               $query = "SELECT * FROM list_options where list_id =? ORDER BY seq";
@@ -1326,9 +1333,9 @@ if ($refresh and $refresh != 'fullscreen') {
                         <tr class="WNEAR">
                           <td><b><?php echo xlt('OS{{left eye}}'); ?>:</b></td>
                           <td class="WMid"><input type="text" class="presbyopia" id="OSMIDADD_1" name="OSMIDADD_1" value="<?php echo attr($OSMIDADD_1); ?>"></td>
-                          <td class="WAdd2"><input type="text" class="presbyopia" id="OSADD_1" name="OSADD_1" value="<?php echo attr($OSADD_1); ?>" tabindex="107"></td>
+                          <td class="WAdd2"><input type="text" class="presbyopia" id="OSADD_1" name="OSADD_1" value="<?php echo attr($OSADD_1); ?>" tabindex="10107"></td>
                           <td></td>
-                          <td><input class="jaeger" type="text" id="OSNEARVA_1" name="OSNEARVA_1" value="<?php echo attr($OSNEARVA_1); ?>" tabindex="110"></td>
+                          <td><input class="jaeger" type="text" id="OSNEARVA_1" name="OSNEARVA_1" value="<?php echo attr($OSNEARVA_1); ?>" tabindex="10110"></td>
                         
                           <td name="W_wide"></td>
                           
@@ -1345,7 +1352,7 @@ if ($refresh and $refresh != 'fullscreen') {
                         </tr>
                         <tr>
                           <td colspan="6">
-                            <textarea style="width:100%;height:3.0em;" id="COMMENTS_1" name="COMMENTS_1"><?php echo text($COMMENTS_1); ?></textarea>     
+                            <textarea style="width:100%;height:3.0em;" id="COMMENTS_1" name="COMMENTS_1" tabindex="10111"><?php echo text($COMMENTS_1); ?></textarea>     
                           </td>
                           <td colspan="8"> 
                           </td>
@@ -1399,10 +1406,10 @@ if ($refresh and $refresh != 'fullscreen') {
                                     <tr>
                           <td rowspan="2"><?php echo xlt('Dist{{distance}}'); ?></td>    
                           <td><b><?php echo xlt('OD{{right eye}}'); ?>:</b></td>
-                          <td><input type="text" class="sphere" id="ODSPH_2" name="ODSPH_2"  value="<?php echo attr($ODSPH_2); ?>" tabindex="100"></td>
-                          <td><input type="text" class="cylinder" id="ODCYL_2" name="ODCYL_2"  value="<?php echo attr($ODCYL_2); ?>" tabindex="101"></td>
-                          <td><input type="text" class="axis" id="ODAXIS_2" name="ODAXIS_2" value="<?php echo attr($ODAXIS_2); ?>" tabindex="102"></td>
-                          <td><input type="text" class="acuity" id="ODVA_2" name="ODVA_2" value="<?php echo attr($ODVA_2); ?>" tabindex="108"></td>
+                          <td><input type="text" class="sphere" id="ODSPH_2" name="ODSPH_2"  value="<?php echo attr($ODSPH_2); ?>" tabindex="10100"></td>
+                          <td><input type="text" class="cylinder" id="ODCYL_2" name="ODCYL_2"  value="<?php echo attr($ODCYL_2); ?>" tabindex="10101"></td>
+                          <td><input type="text" class="axis" id="ODAXIS_2" name="ODAXIS_2" value="<?php echo attr($ODAXIS_2); ?>" tabindex="10102"></td>
+                          <td><input type="text" class="acuity" id="ODVA_2" name="ODVA_2" value="<?php echo attr($ODVA_2); ?>" tabindex="10108"></td>
 
                           <td name="W_wide"></td>
                           <td name="W_wide"><input type="text" class="prism" id="ODHPD_2" name="ODHPD_2" value="<?php echo attr($ODHPD_2); ?>"></td>
@@ -1416,10 +1423,10 @@ if ($refresh and $refresh != 'fullscreen') {
                         </tr>
                         <tr>
                           <td><b><?php echo xlt('OS{{left eye}}'); ?>:</b></td>
-                          <td><input type="text" class="sphere" id="OSSPH_2" name="OSSPH_2" value="<?php echo attr($OSSPH_2); ?>" tabindex="103"></td>
-                          <td><input type="text" class="cylinder" id="OSCYL_2" name="OSCYL_2" value="<?php echo attr($OSCYL_2); ?>" tabindex="104"></td>
-                          <td><input type="text" class="axis" id="OSAXIS_2" name="OSAXIS_2" value="<?php echo attr($OSAXIS_2); ?>" tabindex="105"></td>
-                          <td><input type="text" class="acuity" id="OSVA_2" name="OSVA_2" value="<?php echo attr($OSVA_2); ?>" tabindex="109"></td>
+                          <td><input type="text" class="sphere" id="OSSPH_2" name="OSSPH_2" value="<?php echo attr($OSSPH_2); ?>" tabindex="10103"></td>
+                          <td><input type="text" class="cylinder" id="OSCYL_2" name="OSCYL_2" value="<?php echo attr($OSCYL_2); ?>" tabindex="10104"></td>
+                          <td><input type="text" class="axis" id="OSAXIS_2" name="OSAXIS_2" value="<?php echo attr($OSAXIS_2); ?>" tabindex="10105"></td>
+                          <td><input type="text" class="acuity" id="OSVA_2" name="OSVA_2" value="<?php echo attr($OSVA_2); ?>" tabindex="10109"></td>
 
                           <td name="W_wide"></td>
                           <td name="W_wide"><input type="text" class="prism" id="OSHPD_2" name="OSHPD_2" value="<?php echo attr($OSHPD_2); ?>"></td>
@@ -1436,9 +1443,9 @@ if ($refresh and $refresh != 'fullscreen') {
                           <td><b><?php echo xlt('OD{{right eye}}'); ?>:</b></td>
                           <?php echo '<input type="hidden" name="RXStart_2" id="RXStart_2" value="'.$RX_TYPE_2.'">'; ?>
                           <td><input type="text" class="presbyopia" id="ODMIDADD_2" name="ODMIDADD_2" value="<?php echo attr($ODMIDADD_2); ?>"></td>
-                          <td class="WAdd2"><input type="text" class="presbyopia" id="ODADD_2" name="ODADD_2" value="<?php echo attr($ODADD_2); ?>" tabindex="116"></td>
+                          <td class="WAdd2"><input type="text" class="presbyopia" id="ODADD_2" name="ODADD_2" value="<?php echo attr($ODADD_2); ?>" tabindex="10116"></td>
                           <td></td>
-                          <td><input type="text" class="jaeger" id="ODVANEAR_2" name="ODVANEAR_2" value="<?php echo attr($ODNEARVA_2); ?>" tabindex="120"></td>
+                          <td><input type="text" class="jaeger" id="ODVANEAR_2" name="ODVANEAR_2" value="<?php echo attr($ODNEARVA_2); ?>" tabindex="10120"></td>
                            
                           <td name="W_wide"></td>
                           
@@ -1470,9 +1477,9 @@ if ($refresh and $refresh != 'fullscreen') {
                         <tr class="WNEAR">
                           <td><b><?php echo xlt('OS{{left eye}}'); ?>:</b></td>
                           <td class="WMid"><input type="text" class="presbyopia" id="OSMIDADD_2" name="OSMIDADD_2" value="<?php echo attr($OSMIDADD_2); ?>"></td>
-                          <td class="WAdd2"><input type="text" class="presbyopia" id="OSADD_2" name="OSADD_2" value="<?php echo attr($OSADD_2); ?>" tabindex="117"></td>
+                          <td class="WAdd2"><input type="text" class="presbyopia" id="OSADD_2" name="OSADD_2" value="<?php echo attr($OSADD_2); ?>" tabindex="10117"></td>
                           <td></td>
-                          <td><input class="jaeger" type="text" id="OSNEARVA_2" name="OSNEARVA_2" value="<?php echo attr($OSNEARVA_2); ?>" tabindex="121"></td>
+                          <td><input class="jaeger" type="text" id="OSNEARVA_2" name="OSNEARVA_2" value="<?php echo attr($OSNEARVA_2); ?>" tabindex="10121"></td>
 
                           <td name="W_wide"></td>
                           
@@ -1489,7 +1496,7 @@ if ($refresh and $refresh != 'fullscreen') {
                         </tr>
                         <tr>
                           <td colspan="6">
-                            <textarea style="width:100%;height:3.0em;" id="COMMENTS_2" name="COMMENTS_2"><?php echo text($COMMENTS_2); ?></textarea>     
+                            <textarea style="width:100%;height:3.0em;" id="COMMENTS_2" name="COMMENTS_2" tabindex="10110"><?php echo text($COMMENTS_2); ?></textarea>     
                           </td>
                           <td colspan="2"> 
                           </td>
@@ -1543,10 +1550,10 @@ if ($refresh and $refresh != 'fullscreen') {
                         <tr>
                           <td rowspan="2"><?php echo xlt('Dist{{distance}}'); ?></td>    
                           <td><b><?php echo xlt('OD{{right eye}}'); ?>:</b></td>
-                          <td><input type="text" class="sphere" id="ODSPH_3" name="ODSPH_3"  value="<?php echo attr($ODSPH_3); ?>" tabindex="100"></td>
-                          <td><input type="text" class="cylinder" id="ODCYL_3" name="ODCYL_3"  value="<?php echo attr($ODCYL_3); ?>" tabindex="101"></td>
-                          <td><input type="text" class="axis" id="ODAXIS_3" name="ODAXIS_3" value="<?php echo attr($ODAXIS_3); ?>" tabindex="102"></td>
-                          <td><input type="text" class="acuity" id="ODVA_3" name="ODVA_3" value="<?php echo attr($ODVA_3); ?>" tabindex="108"></td>
+                          <td><input type="text" class="sphere" id="ODSPH_3" name="ODSPH_3"  value="<?php echo attr($ODSPH_3); ?>" tabindex="10100"></td>
+                          <td><input type="text" class="cylinder" id="ODCYL_3" name="ODCYL_3"  value="<?php echo attr($ODCYL_3); ?>" tabindex="10101"></td>
+                          <td><input type="text" class="axis" id="ODAXIS_3" name="ODAXIS_3" value="<?php echo attr($ODAXIS_3); ?>" tabindex="10102"></td>
+                          <td><input type="text" class="acuity" id="ODVA_3" name="ODVA_3" value="<?php echo attr($ODVA_3); ?>" tabindex="10108"></td>
 
                           <td name="W_wide"></td>
                           <td name="W_wide"><input type="text" class="prism" id="ODHPD_3" name="ODHPD_3" value="<?php echo attr($ODHPD_3); ?>"></td>
@@ -1560,10 +1567,10 @@ if ($refresh and $refresh != 'fullscreen') {
                         </tr>
                         <tr>
                           <td><b><?php echo xlt('OS{{left eye}}'); ?>:</b></td>
-                          <td><input type="text" class="sphere" id="OSSPH_3" name="OSSPH_3" value="<?php echo attr($OSSPH_3); ?>" tabindex="103"></td>
-                          <td><input type="text" class="cylinder" id="OSCYL_3" name="OSCYL_3" value="<?php echo attr($OSCYL_3); ?>" tabindex="104"></td>
-                          <td><input type="text" class="axis" id="OSAXIS_3" name="OSAXIS_3" value="<?php echo attr($OSAXIS_3); ?>" tabindex="105"></td>
-                          <td><input type="text" class="acuity" id="OSVA_3" name="OSVA_3" value="<?php echo attr($OSVA_3); ?>" tabindex="109"></td>
+                          <td><input type="text" class="sphere" id="OSSPH_3" name="OSSPH_3" value="<?php echo attr($OSSPH_3); ?>" tabindex="10103"></td>
+                          <td><input type="text" class="cylinder" id="OSCYL_3" name="OSCYL_3" value="<?php echo attr($OSCYL_3); ?>" tabindex="10104"></td>
+                          <td><input type="text" class="axis" id="OSAXIS_3" name="OSAXIS_3" value="<?php echo attr($OSAXIS_3); ?>" tabindex="10105"></td>
+                          <td><input type="text" class="acuity" id="OSVA_3" name="OSVA_3" value="<?php echo attr($OSVA_3); ?>" tabindex="10109"></td>
 
                           <td name="W_wide"></td>
                           <td name="W_wide"><input type="text" class="prism" id="OSHPD_3" name="OSHPD_3" value="<?php echo attr($OSHPD_3); ?>"></td>
@@ -1580,9 +1587,9 @@ if ($refresh and $refresh != 'fullscreen') {
                           <td><b><?php echo xlt('OD{{right eye}}'); ?>:</b></td>
                           <?php echo '<input type="hidden" name="RXStart_3" id="RXStart_3" value="'.$RX_TYPE_3.'">'; ?>
                           <td class="WMid"><input type="text" class="presbyopia" id="ODMIDADD_3" name="ODMIDADD_3" value="<?php echo attr($ODMIDADD_3); ?>"></td>
-                          <td class="WAdd2"><input type="text" class="presbyopia" id="ODADD_3" name="ODADD_3" value="<?php echo attr($ODADD_3); ?>" tabindex="136"></td>
+                          <td class="WAdd2"><input type="text" class="presbyopia" id="ODADD_3" name="ODADD_3" value="<?php echo attr($ODADD_3); ?>" tabindex="10136"></td>
                           <td></td>
-                          <td><input class="jaeger" type="text" id="NEARODVA_3" name="NEARODVA_3" value="<?php echo attr($NEARODVA_3); ?>" tabindex="180"></td>
+                          <td><input class="jaeger" type="text" id="NEARODVA_3" name="NEARODVA_3" value="<?php echo attr($NEARODVA_3); ?>" tabindex="10180"></td>
                           
                           <td name="W_wide"></td>
                           
@@ -1613,9 +1620,9 @@ if ($refresh and $refresh != 'fullscreen') {
                         <tr class="WNEAR">
                           <td><b><?php echo xlt('OS{{left eye}}'); ?>:</b></td>
                           <td class="WMid"><input type="text" class="presbyopia" id="OSMIDADD_3" name="OSMIDADD_3" value="<?php echo attr($OSMIDADD_3); ?>"></td>
-                          <td class="WAdd2"><input type="text" class="presbyopia" id="OSADD_3" name="OSADD_3" value="<?php echo attr($OSADD_3); ?>" tabindex="137"></td>
+                          <td class="WAdd2"><input type="text" class="presbyopia" id="OSADD_3" name="OSADD_3" value="<?php echo attr($OSADD_3); ?>" tabindex="10137"></td>
                           <td></td>
-                          <td><input class="jaeger" type="text" id="NEAROSVA_3" name="NEAROSVA_3" value="<?php echo attr($NEAROSVA_3); ?>" tabindex="181"></td>
+                          <td><input class="jaeger" type="text" id="NEAROSVA_3" name="NEAROSVA_3" value="<?php echo attr($NEAROSVA_3); ?>" tabindex="10181"></td>
 
                           <td name="W_wide"></td>
                           
@@ -1632,7 +1639,7 @@ if ($refresh and $refresh != 'fullscreen') {
                         </tr>
                         <tr>
                           <td colspan="6">
-                            <textarea style="width:100%;height:3.0em;" id="COMMENTS_3" name="COMMENTS_3"><?php echo text($COMMENTS_3); ?></textarea>     
+                            <textarea style="width:100%;height:3.0em;" id="COMMENTS_3" name="COMMENTS_3" tabindex="2110"><?php echo text($COMMENTS_3); ?></textarea>     
                           </td>
                           <td colspan="2"> 
                           </td>
@@ -1683,10 +1690,10 @@ if ($refresh and $refresh != 'fullscreen') {
                         <tr>
                           <td rowspan="2"><?php echo xlt('Dist{{distance}}'); ?></td>    
                           <td><b><?php echo xlt('OD{{right eye}}'); ?>:</b></td>
-                          <td><input type="text" class="sphere" id="ODSPH_4" name="ODSPH_4"  value="<?php echo attr($ODSPH_4); ?>" tabindex="100"></td>
-                          <td><input type="text" class="cylinder" id="ODCYL_4" name="ODCYL_4"  value="<?php echo attr($ODCYL_4); ?>" tabindex="101"></td>
-                          <td><input type="text" class="axis" id="ODAXIS_4" name="ODAXIS_4" value="<?php echo attr($ODAXIS_4); ?>" tabindex="102"></td>
-                          <td><input type="text" class="acuity" id="ODVA_4" name="ODVA_4" value="<?php echo attr($ODVA_4); ?>" tabindex="108"></td>
+                          <td><input type="text" class="sphere" id="ODSPH_4" name="ODSPH_4"  value="<?php echo attr($ODSPH_4); ?>" tabindex="10100"></td>
+                          <td><input type="text" class="cylinder" id="ODCYL_4" name="ODCYL_4"  value="<?php echo attr($ODCYL_4); ?>" tabindex="10101"></td>
+                          <td><input type="text" class="axis" id="ODAXIS_4" name="ODAXIS_4" value="<?php echo attr($ODAXIS_4); ?>" tabindex="10102"></td>
+                          <td><input type="text" class="acuity" id="ODVA_4" name="ODVA_4" value="<?php echo attr($ODVA_4); ?>" tabindex="10108"></td>
 
                           <td name="W_wide"></td>
                           <td name="W_wide"><input type="text" class="prism" id="ODHPD_4" name="ODHPD_4" value="<?php echo attr($ODHPD_4); ?>"></td>
@@ -1700,10 +1707,10 @@ if ($refresh and $refresh != 'fullscreen') {
                         </tr>
                         <tr>
                           <td><b><?php echo xlt('OS{{left eye}}'); ?>:</b></td>
-                          <td><input type="text" class="sphere" id="OSSPH_4" name="OSSPH_4" value="<?php echo attr($OSSPH_4); ?>" tabindex="103"></td>
-                          <td><input type="text" class="cylinder" id="OSCYL_4" name="OSCYL_4" value="<?php echo attr($OSCYL_4); ?>" tabindex="104"></td>
-                          <td><input type="text" class="axis" id="OSAXIS_4" name="OSAXIS_4" value="<?php echo attr($OSAXIS_4); ?>" tabindex="105"></td>
-                          <td><input type="text" class="acuity" id="OSVA_4" name="OSVA_4" value="<?php echo attr($OSVA_4); ?>" tabindex="109"></td>
+                          <td><input type="text" class="sphere" id="OSSPH_4" name="OSSPH_4" value="<?php echo attr($OSSPH_4); ?>" tabindex="10103"></td>
+                          <td><input type="text" class="cylinder" id="OSCYL_4" name="OSCYL_4" value="<?php echo attr($OSCYL_4); ?>" tabindex="10104"></td>
+                          <td><input type="text" class="axis" id="OSAXIS_4" name="OSAXIS_4" value="<?php echo attr($OSAXIS_4); ?>" tabindex="10105"></td>
+                          <td><input type="text" class="acuity" id="OSVA_4" name="OSVA_4" value="<?php echo attr($OSVA_4); ?>" tabindex="10109"></td>
 
                           <td name="W_wide"></td>
                           <td name="W_wide"><input type="text" class="prism" id="OSHPD_4" name="OSHPD_4" value="<?php echo attr($OSHPD_4); ?>"></td>
@@ -1720,9 +1727,9 @@ if ($refresh and $refresh != 'fullscreen') {
                           <td><b><?php echo xlt('OD{{right eye}}'); ?>:</b></td>
                           <?php echo '<input type="hidden" name="RXStart_4" id="RXStart_4" value="'.$RX_TYPE_4.'">'; ?>
                           <td class="WMid"><input type="text" class="presbyopia" id="ODMIDADD_4" name="ODMIDADD_4" value="<?php echo attr($ODMIDADD_4); ?>"></td>
-                          <td class="WAdd2"><input type="text" class="presbyopia" id="ODADD_4" name="ODADD_4" value="<?php echo attr($ODADD_4); ?>" tabindex="156"></td>
+                          <td class="WAdd2"><input type="text" class="presbyopia" id="ODADD_4" name="ODADD_4" value="<?php echo attr($ODADD_4); ?>" tabindex="10156"></td>
                           <td></td>
-                          <td><input class="jaeger" type="text" id="NEARODVA_4" name="NEARODVA_4" value="<?php echo attr($NEARODVA_4); ?>" tabindex="160"></td>
+                          <td><input class="jaeger" type="text" id="NEARODVA_4" name="NEARODVA_4" value="<?php echo attr($NEARODVA_4); ?>" tabindex="10160"></td>
 
                           <td name="W_wide"></td>
                           
@@ -1753,9 +1760,9 @@ if ($refresh and $refresh != 'fullscreen') {
                         <tr class="WNEAR">
                           <td><b><?php echo xlt('OS{{left eye}}'); ?>:</b></td>
                           <td class="WMid"><input type="text" class="presbyopia" id="OSMIDADD_4" name="OSMIDADD_4" value="<?php echo attr($OSMIDADD_4); ?>"></td>
-                          <td class="WAdd2"><input type="text" class="presbyopia" id="OSADD_4" name="OSADD_4" value="<?php echo attr($OSADD_4); ?>" tabindex="157"></td>
+                          <td class="WAdd2"><input type="text" class="presbyopia" id="OSADD_4" name="OSADD_4" value="<?php echo attr($OSADD_4); ?>" tabindex="10157"></td>
                           <td></td>
-                          <td><input class="jaeger" type="text" id="NEAROSVA_4" name="NEAROSVA_4" value="<?php echo attr($NEAROSVA_4); ?>" tabindex="161"></td>         
+                          <td><input class="jaeger" type="text" id="NEAROSVA_4" name="NEAROSVA_4" value="<?php echo attr($NEAROSVA_4); ?>" tabindex="10161"></td>         
                           <td name="W_wide"></td>
                           
                           <td name="W_wide"><input type="text" class="prism" id="BPDD_4" name="BPDD_4" value="<?php echo attr($BPDD_4); ?>"></td>
@@ -1771,7 +1778,7 @@ if ($refresh and $refresh != 'fullscreen') {
                         </tr>
                         <tr>
                           <td colspan="6">
-                            <textarea style="width:100%;height:3.0em;" id="COMMENTS_4" name="COMMENTS_4"><?php echo text($COMMENTS_4); ?></textarea>     
+                            <textarea style="width:100%;height:3.0em;" id="COMMENTS_4" name="COMMENTS_4" tabindex="30110"><?php echo text($COMMENTS_4); ?></textarea>     
                           </td>
                           <td colspan="2"> 
                           </td>
@@ -1789,7 +1796,7 @@ if ($refresh and $refresh != 'fullscreen') {
                     <table id="dry_wet_refraction">
                       <th colspan="5"><?php echo xlt('Manifest (Dry) Refraction'); ?></th>
                       <th NOWRAP colspan="2">
-                        <input type="checkbox" name="BALANCED" id="Balanced" value="on" <?php if ($BALANCED =='on') echo "checked='checked'"; ?> tabindex="182">
+                        <input type="checkbox" name="BALANCED" id="Balanced" value="on" <?php if ($BALANCED =='on') echo "checked='checked'"; ?> tabindex="10182">
                         <label for="Balanced" class="input-helper input-helper--checkbox"><?php echo xlt('Balanced'); ?></label>
                       </th>
 
@@ -1805,22 +1812,22 @@ if ($refresh and $refresh != 'fullscreen') {
                       </tr>
                       <tr>
                         <td><b><?php echo xlt('OD{{right eye}}'); ?>:</b></td>
-                        <td><input type="text" id="MRODSPH" name="MRODSPH" value="<?php echo attr($MRODSPH); ?>" tabindex="170"></td>
-                        <td><input type="text" id="MRODCYL" name="MRODCYL" value="<?php echo attr($MRODCYL); ?>" tabindex="171"></td>
-                        <td><input type="text" id="MRODAXIS"  name="MRODAXIS" value="<?php echo attr($MRODAXIS); ?>" tabindex="172"></td>
-                        <td><input type="text" id="MRODVA"  name="MRODVA" value="<?php echo attr($MRODVA); ?>" tabindex="176"></td>
-                        <td><input type="text" id="MRODADD"  name="MRODADD" value="<?php echo attr($MRODADD); ?>" tabindex="178"></td>
-                        <td><input class="jaeger" type="text" id="MRNEARODVA"  name="MRNEARODVA" value="<?php echo attr($MRNEARODVA); ?>" tabindex="180"> </td>
+                        <td><input type="text" id="MRODSPH" name="MRODSPH" value="<?php echo attr($MRODSPH); ?>" tabindex="10170"></td>
+                        <td><input type="text" id="MRODCYL" name="MRODCYL" value="<?php echo attr($MRODCYL); ?>" tabindex="10171"></td>
+                        <td><input type="text" id="MRODAXIS"  name="MRODAXIS" value="<?php echo attr($MRODAXIS); ?>" tabindex="10172"></td>
+                        <td><input type="text" id="MRODVA"  name="MRODVA" value="<?php echo attr($MRODVA); ?>" tabindex="10176"></td>
+                        <td><input type="text" id="MRODADD"  name="MRODADD" value="<?php echo attr($MRODADD); ?>" tabindex="10178"></td>
+                        <td><input class="jaeger" type="text" id="MRNEARODVA"  name="MRNEARODVA" value="<?php echo attr($MRNEARODVA); ?>" tabindex="10180"> </td>
                         <td><input type="text" id="MRODPRISM"  name="MRODPRISM" value="<?php echo attr($MRODPRISM); ?>"></td>
                       </tr>
                       <tr>
                         <td><b><?php echo xlt('OS{{left eye}}'); ?>:</b></td>
-                        <td><input type="text" id="MROSSPH" name="MROSSPH" value="<?php echo attr($MROSSPH); ?>" tabindex="173"></td>
-                        <td><input type="text" id="MROSCYL" name="MROSCYL" value="<?php echo attr($MROSCYL); ?>" tabindex="174"></td>
-                        <td><input type="text" id="MROSAXIS"  name="MROSAXIS" value="<?php echo attr($MROSAXIS); ?>" tabindex="175"></td>
-                        <td><input type="text" id="MROSVA"  name="MROSVA" value="<?php echo attr($MROSVA); ?>" tabindex="177"></td>
-                        <td><input type="text" id="MROSADD"  name="MROSADD" value="<?php echo attr($MROSADD); ?>" tabindex="179"></td>
-                        <td><input class="jaeger" type="text" id="MRNEAROSVA"  name="MRNEAROSVA" value="<?php echo attr($MRNEAROSVA); ?>" tabindex="181"></td>
+                        <td><input type="text" id="MROSSPH" name="MROSSPH" value="<?php echo attr($MROSSPH); ?>" tabindex="10173"></td>
+                        <td><input type="text" id="MROSCYL" name="MROSCYL" value="<?php echo attr($MROSCYL); ?>" tabindex="10174"></td>
+                        <td><input type="text" id="MROSAXIS"  name="MROSAXIS" value="<?php echo attr($MROSAXIS); ?>" tabindex="10175"></td>
+                        <td><input type="text" id="MROSVA"  name="MROSVA" value="<?php echo attr($MROSVA); ?>" tabindex="10177"></td>
+                        <td><input type="text" id="MROSADD"  name="MROSADD" value="<?php echo attr($MROSADD); ?>" tabindex="10179"></td>
+                        <td><input class="jaeger" type="text" id="MRNEAROSVA"  name="MRNEAROSVA" value="<?php echo attr($MRNEAROSVA); ?>" tabindex="10181"></td>
                         <td><input type="text" id="MROSPRISM"  name="MROSPRISM" value="<?php echo attr($MROSPRISM); ?>"></td>
                       </tr>
                     </table>
@@ -1845,10 +1852,10 @@ if ($refresh and $refresh != 'fullscreen') {
                       </tr>
                       <tr>
                         <td><b><?php echo xlt('OD{{right eye}}'); ?>:</b></td>
-                        <td><input type="text" id="CRODSPH" name="CRODSPH" value="<?php echo attr($CRODSPH); ?>" tabindex="183"></td>
-                        <td><input type="text" id="CRODCYL" name="CRODCYL" value="<?php echo attr($CRODCYL); ?>" tabindex="184"></td>
-                        <td><input type="text" id="CRODAXIS" name="CRODAXIS" value="<?php echo attr($CRODAXIS); ?>" tabindex="185"></td>
-                        <td><input type="text" id="CRODVA" name="CRODVA"  value="<?php echo attr($CRODVA); ?>" tabindex="189"></td>
+                        <td><input type="text" id="CRODSPH" name="CRODSPH" value="<?php echo attr($CRODSPH); ?>" tabindex="10183"></td>
+                        <td><input type="text" id="CRODCYL" name="CRODCYL" value="<?php echo attr($CRODCYL); ?>" tabindex="10184"></td>
+                        <td><input type="text" id="CRODAXIS" name="CRODAXIS" value="<?php echo attr($CRODAXIS); ?>" tabindex="10185"></td>
+                        <td><input type="text" id="CRODVA" name="CRODVA"  value="<?php echo attr($CRODVA); ?>" tabindex="10189"></td>
                         <td colspan="1" style="text-align:left;">
                           <input type="radio" name="WETTYPE" id="Auto" value="Auto" <?php if ($WETTYPE == "Auto") echo "checked='checked'"; ?>>
                           <label for="Auto" class="input-helper input-helper--checkbox"><?php echo xlt('Auto{{autorefraction}}'); ?></label>
@@ -1857,10 +1864,10 @@ if ($refresh and $refresh != 'fullscreen') {
                         </tr>
                         <tr>
                           <td><b><?php echo xlt('OS{{left eye}}'); ?>:</b></td>
-                          <td><input type="text" id="CROSSPH" name="CROSSPH" value="<?php echo attr($CROSSPH); ?>" tabindex="186"></td>
-                          <td><input type="text" id="CROSCYL" name="CROSCYL" value="<?php echo attr($CROSCYL); ?>" tabindex="187"></td>
-                          <td><input type="text" id="CROSAXIS" name="CROSAXIS" value="<?php echo attr($CROSAXIS); ?>" tabindex="188"></td>
-                          <td><input type="text" id="CROSVA" name="CROSVA" value="<?php echo attr($CROSVA); ?>" tabindex="190"></td>
+                          <td><input type="text" id="CROSSPH" name="CROSSPH" value="<?php echo attr($CROSSPH); ?>" tabindex="10186"></td>
+                          <td><input type="text" id="CROSCYL" name="CROSCYL" value="<?php echo attr($CROSCYL); ?>" tabindex="10187"></td>
+                          <td><input type="text" id="CROSAXIS" name="CROSAXIS" value="<?php echo attr($CROSAXIS); ?>" tabindex="10188"></td>
+                          <td><input type="text" id="CROSVA" name="CROSVA" value="<?php echo attr($CROSVA); ?>" tabindex="10190"></td>
                           <td colspan="1" style="text-align:left;">
                             <input type="radio" name="WETTYPE" id="Manual" value="Manual" <?php if ($WETTYPE == "Manual") echo "checked='checked'"; ?>>
                             <label for="Manual" class="input-helper input-helper--checkbox"><?php echo xlt('Manual'); ?></label>
@@ -1888,21 +1895,21 @@ if ($refresh and $refresh != 'fullscreen') {
                       </tr>
                       <tr>
                         <td><b><?php echo xlt('OD{{right eye}}'); ?>:</b></td>
-                        <td><input type="text" id="ARODSPH" name="ARODSPH" value="<?php echo attr($ARODSPH); ?>" tabindex="220"></td>
-                        <td><input type="text" id="ARODCYL" name="ARODCYL" value="<?php echo attr($ARODCYL); ?>" tabindex="221"></td>
-                        <td><input type="text" id="ARODAXIS" name="ARODAXIS" value="<?php echo attr($ARODAXIS); ?>" tabindex="222"></td>
-                        <td><input type="text" id="ARODVA" name="ARODVA" value="<?php echo attr($ARODVA); ?>" tabindex="228"></td>
-                        <td><input type="text" id="ARODADD" name="ARODADD" value="<?php echo attr($ARODADD); ?>" tabindex="226"></td>
+                        <td><input type="text" id="ARODSPH" name="ARODSPH" value="<?php echo attr($ARODSPH); ?>" tabindex="10220"></td>
+                        <td><input type="text" id="ARODCYL" name="ARODCYL" value="<?php echo attr($ARODCYL); ?>" tabindex="10221"></td>
+                        <td><input type="text" id="ARODAXIS" name="ARODAXIS" value="<?php echo attr($ARODAXIS); ?>" tabindex="10222"></td>
+                        <td><input type="text" id="ARODVA" name="ARODVA" value="<?php echo attr($ARODVA); ?>" tabindex="10228"></td>
+                        <td><input type="text" id="ARODADD" name="ARODADD" value="<?php echo attr($ARODADD); ?>" tabindex="10226"></td>
                         <td><input class="jaeger" type="text" id="ARNEARODVA" name="ARNEARODVA" value="<?php echo attr($ARNEARODVA); ?>"></td>
                         <td><input type="text" id="ARODPRISM" name="ARODPRISM" value="<?php echo attr($ARODPRISM); ?>"></td>
                       </tr>
                       <tr>
                         <td><b><?php echo xlt('OS{{left eye}}'); ?>:</b></td>
-                        <td><input type="text" id="AROSSPH" name="AROSSPH" value="<?php echo attr($AROSSPH); ?>" tabindex="223"></td>
-                        <td><input type="text" id="AROSCYL" name="AROSCYL" value="<?php echo attr($AROSCYL); ?>" tabindex="224"></td>
-                        <td><input type="text" id="AROSAXIS" name="AROSAXIS" value="<?php echo attr($AROSAXIS); ?>" tabindex="225"></td>
-                        <td><input type="text" id="AROSVA" name="AROSVA" value="<?php echo attr($AROSVA); ?>" tabindex="229"></td>
-                        <td><input type="text" id="AROSADD" name="AROSADD" value="<?php echo attr($AROSADD); ?>" tabindex="227"></td>
+                        <td><input type="text" id="AROSSPH" name="AROSSPH" value="<?php echo attr($AROSSPH); ?>" tabindex="10223"></td>
+                        <td><input type="text" id="AROSCYL" name="AROSCYL" value="<?php echo attr($AROSCYL); ?>" tabindex="10224"></td>
+                        <td><input type="text" id="AROSAXIS" name="AROSAXIS" value="<?php echo attr($AROSAXIS); ?>" tabindex="10225"></td>
+                        <td><input type="text" id="AROSVA" name="AROSVA" value="<?php echo attr($AROSVA); ?>" tabindex="10229"></td>
+                        <td><input type="text" id="AROSADD" name="AROSADD" value="<?php echo attr($AROSADD); ?>" tabindex="10227"></td>
                         <td><input class="jaeger" type="text" id="ARNEAROSVA" name="ARNEAROSVA" value="<?php echo attr($ARNEAROSVA); ?>"></td>
                         <td><input type="text" id="AROSPRISM" name="AROSPRISM" value="<?php echo attr($AROSPRISM); ?>"></td>
                       </tr>
@@ -1988,19 +1995,19 @@ if ($refresh and $refresh != 'fullscreen') {
                                     ' ; 
                                   }
                                   ?>
-                                  <select id="CTLMANUFACTUREROD" name="CTLMANUFACTUREROD" tabindex="230">
+                                  <select id="CTLMANUFACTUREROD" name="CTLMANUFACTUREROD" tabindex="10230">
                                     <option></option>
                                     <?php echo $CTLMANUFACTURER_list_OD; ?>
                                   </select>
                                 </td>
                                 <td>
-                                  <select id="CTLSUPPLIEROD" name="CTLSUPPLIEROD" tabindex="231">
+                                  <select id="CTLSUPPLIEROD" name="CTLSUPPLIEROD" tabindex="10231">
                                     <option></option>
                                     <?php echo $CTLSUPPLIER_list_OD; ?>
                                   </select>
                                 </td>
                                 <td>
-                                  <select id="CTLBRANDOD" name="CTLBRANDOD" tabindex="232">
+                                  <select id="CTLBRANDOD" name="CTLBRANDOD" tabindex="10232">
                                     <option></option>
                                     <?php echo $CTLBRAND_list_OD; ?>
                                   </select>
@@ -2009,19 +2016,19 @@ if ($refresh and $refresh != 'fullscreen') {
                               <tr >
                                 <td><b><?php echo xlt('OS'); ?>:</b></td>
                                 <td>
-                                  <select id="CTLMANUFACTUREROS" name="CTLMANUFACTUREROS" tabindex="233">
+                                  <select id="CTLMANUFACTUREROS" name="CTLMANUFACTUREROS" tabindex="10233">
                                     <option></option>
                                     <?php echo $CTLMANUFACTURER_list_OS; ?>
                                   </select>
                                 </td>
                                 <td>
-                                  <select id="CTLSUPPLIEROS" name="CTLSUPPLIEROS" tabindex="234">
+                                  <select id="CTLSUPPLIEROS" name="CTLSUPPLIEROS" tabindex="10234">
                                     <option></option>
                                     <?php echo $CTLSUPPLIER_list_OS; ?>
                                   </select>
                                 </td>
                                 <td>
-                                  <select id="CTLBRANDOS" name="CTLBRANDOS" tabindex="235">
+                                  <select id="CTLBRANDOS" name="CTLBRANDOS" tabindex="10235">
                                     <option></option>
                                     <?php echo $CTLBRAND_list_OS; ?>
                                   </select>
@@ -2045,30 +2052,30 @@ if ($refresh and $refresh != 'fullscreen') {
                       </tr>
                       <tr>
                         <td><b><?php echo xlt('OD{{right eye}}'); ?>:</b></td>
-                        <td><input type="text" id="CTLODSPH" name="CTLODSPH" value="<?php echo attr($CTLODSPH); ?>" tabindex="236"></td>
-                        <td><input type="text" id="CTLODCYL" name="CTLODCYL" value="<?php echo attr($CTLODCYL); ?>" tabindex="240"></td>
-                        <td><input type="text" id="CTLODAXIS" name="CTLODAXIS" value="<?php echo attr($CTLODAXIS); ?>" tabindex="241"></td>
-                        <td><input type="text" id="CTLODBC" name="CTLODBC" value="<?php echo attr($CTLODBC); ?>" tabindex="237"></td>
-                        <td><input type="text" id="CTLODDIAM" name="CTLODDIAM" value="<?php echo attr($CTLODDIAM); ?>" tabindex="238"></td>
-                        <td><input type="text" id="CTLODADD" name="CTLODADD" value="<?php echo attr($CTLODADD); ?>" tabindex="242"></td>
-                        <td><input type="text" id="CTLODVA" name="CTLODVA" value="<?php echo attr($CTLODVA); ?>" tabindex="239"></td>
+                        <td><input type="text" id="CTLODSPH" name="CTLODSPH" value="<?php echo attr($CTLODSPH); ?>" tabindex="10236"></td>
+                        <td><input type="text" id="CTLODCYL" name="CTLODCYL" value="<?php echo attr($CTLODCYL); ?>" tabindex="10240"></td>
+                        <td><input type="text" id="CTLODAXIS" name="CTLODAXIS" value="<?php echo attr($CTLODAXIS); ?>" tabindex="10241"></td>
+                        <td><input type="text" id="CTLODBC" name="CTLODBC" value="<?php echo attr($CTLODBC); ?>" tabindex="10237"></td>
+                        <td><input type="text" id="CTLODDIAM" name="CTLODDIAM" value="<?php echo attr($CTLODDIAM); ?>" tabindex="10238"></td>
+                        <td><input type="text" id="CTLODADD" name="CTLODADD" value="<?php echo attr($CTLODADD); ?>" tabindex="10242"></td>
+                        <td><input type="text" id="CTLODVA" name="CTLODVA" value="<?php echo attr($CTLODVA); ?>" tabindex="10239"></td>
                       </tr>
                       <tr >
                         <td><b><?php echo xlt('OS{{left eye}}'); ?>:</b></td>
-                        <td><input type="text" id="CTLOSSPH" name="CTLOSSPH" value="<?php echo attr($CTLOSSPH); ?>" tabindex="243"></td>
-                        <td><input type="text" id="CTLOSCYL" name="CTLOSCYL" value="<?php echo attr($CTLOSCYL); ?>" tabindex="247"></td>
-                        <td><input type="text" id="CTLOSAXIS" name="CTLOSAXIS" value="<?php echo attr($CTLOSAXIS); ?>" tabindex="248"></td>
-                        <td><input type="text" id="CTLOSBC" name="CTLOSBC" value="<?php echo attr($CTLOSBC); ?>" tabindex="244"></td>
-                        <td><input type="text" id="CTLOSDIAM" name="CTLOSDIAM" value="<?php echo attr($CTLOSDIAM); ?>" tabindex="245"></td>
-                        <td><input type="text" id="CTLOSADD" name="CTLOSADD" value="<?php echo attr($CTLOSADD); ?>" tabindex="249"></td>
-                        <td><input type="text" id="CTLOSVA" name="CTLOSVA" value="<?php echo attr($CTLOSVA); ?>" tabindex="246"></td>
+                        <td><input type="text" id="CTLOSSPH" name="CTLOSSPH" value="<?php echo attr($CTLOSSPH); ?>" tabindex="10243"></td>
+                        <td><input type="text" id="CTLOSCYL" name="CTLOSCYL" value="<?php echo attr($CTLOSCYL); ?>" tabindex="10247"></td>
+                        <td><input type="text" id="CTLOSAXIS" name="CTLOSAXIS" value="<?php echo attr($CTLOSAXIS); ?>" tabindex="10248"></td>
+                        <td><input type="text" id="CTLOSBC" name="CTLOSBC" value="<?php echo attr($CTLOSBC); ?>" tabindex="10244"></td>
+                        <td><input type="text" id="CTLOSDIAM" name="CTLOSDIAM" value="<?php echo attr($CTLOSDIAM); ?>" tabindex="10245"></td>
+                        <td><input type="text" id="CTLOSADD" name="CTLOSADD" value="<?php echo attr($CTLOSADD); ?>" tabindex="10249"></td>
+                        <td><input type="text" id="CTLOSVA" name="CTLOSVA" value="<?php echo attr($CTLOSVA); ?>" tabindex="10246"></td>
                       </tr>
                       <tr>
                         <td colspan="2" class="right bold">
                           <?php echo xlt('Comments'); ?>:
                         </td>
                         <td colspan="6" style="text-align:left;">
-                          <textarea style="width:95%;height:30px;" name="CTL_COMMENTS" id="CTL_COMMENTS" rows="1" tabindex="250"><?php echo text($CTL_COMMENTS); ?></textarea>
+                          <textarea style="width:95%;height:30px;" name="CTL_COMMENTS" id="CTL_COMMENTS" rows="1" tabindex="10250"><?php echo text($CTL_COMMENTS); ?></textarea>
                         </td>
                       </tr>
                     </table>
@@ -2090,23 +2097,23 @@ if ($refresh and $refresh != 'fullscreen') {
                         <td><?php echo xlt('Axis'); ?></td>
                       </tr>
                       <tr><td><b><?php echo xlt('OD{{right eye}}'); ?>:</b></td>
-                        <td><input type="text" id="PHODVA" name="PHODVA" title="<?php echo xla('Pinhole Vision'); ?>" value="<?php echo attr($PHODVA); ?>" tabindex="251"></td>
-                        <td><input type="text" id="PAMODVA" name="PAMODVA" title="<?php echo xla('Potential Acuity Meter'); ?>" value="<?php echo attr($PAMODVA); ?>" tabindex="253"></td>
-                        <td><input type="text" id="LIODVA" name="LIODVA"  title="<?php echo xla('Laser Interferometry'); ?>" value="<?php echo attr($LIODVA); ?>" tabindex="255"></td>
-                        <td><input type="text" id="GLAREODVA" name="GLAREODVA" title="<?php echo xla('Brightness Acuity Testing'); ?>" value="<?php echo attr($GLAREODVA); ?>" tabindex="257"></td>
-                        <td><input type="text" id="ODK1" name="ODK1" value="<?php echo attr($ODK1); ?>" tabindex="259"></td>
-                        <td><input type="text" id="ODK2" name="ODK2" value="<?php echo attr($ODK2); ?>" tabindex="260"></td>
-                        <td><input type="text" id="ODK2AXIS" name="ODK2AXIS" value="<?php echo attr($ODK2AXIS); ?>" tabindex="261"></td>
+                        <td><input type="text" id="PHODVA" name="PHODVA" title="<?php echo xla('Pinhole Vision'); ?>" value="<?php echo attr($PHODVA); ?>" tabindex="10251"></td>
+                        <td><input type="text" id="PAMODVA" name="PAMODVA" title="<?php echo xla('Potential Acuity Meter'); ?>" value="<?php echo attr($PAMODVA); ?>" tabindex="10253"></td>
+                        <td><input type="text" id="LIODVA" name="LIODVA"  title="<?php echo xla('Laser Interferometry'); ?>" value="<?php echo attr($LIODVA); ?>" tabindex="10255"></td>
+                        <td><input type="text" id="GLAREODVA" name="GLAREODVA" title="<?php echo xla('Brightness Acuity Testing'); ?>" value="<?php echo attr($GLAREODVA); ?>" tabindex="10257"></td>
+                        <td><input type="text" id="ODK1" name="ODK1" value="<?php echo attr($ODK1); ?>" tabindex="10259"></td>
+                        <td><input type="text" id="ODK2" name="ODK2" value="<?php echo attr($ODK2); ?>" tabindex="10260"></td>
+                        <td><input type="text" id="ODK2AXIS" name="ODK2AXIS" value="<?php echo attr($ODK2AXIS); ?>" tabindex="10261"></td>
                       </tr>
                       <tr>
                         <td><b><?php echo xlt('OS{{left eye}}'); ?>:</b></td>
-                        <td><input type="text" id="PHOSVA" name="PHOSVA" title="<?php echo xla('Pinhole Vision'); ?>" value="<?php echo attr($PHOSVA); ?>" tabindex="252"></td>
-                        <td><input type="text" id="PAMOSVA" name="PAMOSVA" title="<?php echo xla('Potential Acuity Meter'); ?>" value="<?php echo attr($PAMOSVA); ?>" tabindex="254"></td>
-                        <td><input type="text" id="LIOSVA" name="LIOSVA" title="<?php echo xla('Laser Interferometry'); ?>" value="<?php echo attr($LIOSVA); ?>" tabindex="256"></td>
-                        <td><input type="text" id="GLAREOSVA" name="GLAREOSVA" title="<?php echo xla('Brightness Acuity Testing'); ?>" value="<?php echo attr($GLAREOSVA); ?>"  tabindex="258"></td>
-                        <td><input type="text" id="OSK1" name="OSK1" value="<?php echo attr($OSK1); ?>" tabindex="262"></td>
-                        <td><input type="text" id="OSK2" name="OSK2" value="<?php echo attr($OSK2); ?>" tabindex="263"></td>
-                        <td><input type="text" id="OSK2AXIS" name="OSK2AXIS" value="<?php echo attr($OSK2AXIS); ?>" tabindex="264"></td>
+                        <td><input type="text" id="PHOSVA" name="PHOSVA" title="<?php echo xla('Pinhole Vision'); ?>" value="<?php echo attr($PHOSVA); ?>" tabindex="10252"></td>
+                        <td><input type="text" id="PAMOSVA" name="PAMOSVA" title="<?php echo xla('Potential Acuity Meter'); ?>" value="<?php echo attr($PAMOSVA); ?>" tabindex="10254"></td>
+                        <td><input type="text" id="LIOSVA" name="LIOSVA" title="<?php echo xla('Laser Interferometry'); ?>" value="<?php echo attr($LIOSVA); ?>" tabindex="10256"></td>
+                        <td><input type="text" id="GLAREOSVA" name="GLAREOSVA" title="<?php echo xla('Brightness Acuity Testing'); ?>" value="<?php echo attr($GLAREOSVA); ?>"  tabindex="10258"></td>
+                        <td><input type="text" id="OSK1" name="OSK1" value="<?php echo attr($OSK1); ?>" tabindex="10262"></td>
+                        <td><input type="text" id="OSK2" name="OSK2" value="<?php echo attr($OSK2); ?>" tabindex="10263"></td>
+                        <td><input type="text" id="OSK2AXIS" name="OSK2AXIS" value="<?php echo attr($OSK2AXIS); ?>" tabindex="10264"></td>
                       </tr>
                       <tr><td>&nbsp;</td></tr>
                       <tr>
@@ -2120,22 +2127,22 @@ if ($refresh and $refresh != 'fullscreen') {
                         <!-- <td><?php echo xlt('pend'); ?></td> -->
                       </tr>
                       <tr><td><b><?php echo xlt('OD{{right eye}}'); ?>:</b></td>
-                        <td><input type="text" id="ODAXIALLENGTH" name="ODAXIALLENGTH"  value="<?php echo attr($ODAXIALLENGTH); ?>"  tabindex="265"></td>
-                        <td><input type="text" id="ODACD" name="ODACD"  value="<?php echo attr($ODACD); ?>" tabindex="267"></td>
-                        <td><input type="text" id="ODPDMeasured" name="ODPDMeasured"  value="<?php echo attr($ODPDMeasured); ?>" tabindex="269"></td>
-                        <td><input type="text" id="ODLT" name="ODLT"  value="<?php echo attr($ODLT); ?>" tabindex="271"></td>
-                        <td><input type="text" id="ODW2W" name="ODW2W"  value="<?php echo attr($ODW2W); ?>" tabindex="273"></td>
-                        <td><input type="text" id="ODECL" name="ODECL"  value="<?php echo attr($ODECL); ?>" tabindex="275"></td>
+                        <td><input type="text" id="ODAXIALLENGTH" name="ODAXIALLENGTH"  value="<?php echo attr($ODAXIALLENGTH); ?>"  tabindex="10265"></td>
+                        <td><input type="text" id="ODACD" name="ODACD"  value="<?php echo attr($ODACD); ?>" tabindex="10267"></td>
+                        <td><input type="text" id="ODPDMeasured" name="ODPDMeasured"  value="<?php echo attr($ODPDMeasured); ?>" tabindex="10269"></td>
+                        <td><input type="text" id="ODLT" name="ODLT"  value="<?php echo attr($ODLT); ?>" tabindex="10271"></td>
+                        <td><input type="text" id="ODW2W" name="ODW2W"  value="<?php echo attr($ODW2W); ?>" tabindex="10273"></td>
+                        <td><input type="text" id="ODECL" name="ODECL"  value="<?php echo attr($ODECL); ?>" tabindex="10275"></td>
                         <!-- <td><input type="text" id="pend" name="pend"  value="<?php echo attr($pend); ?>"></td> -->
                       </tr>
                       <tr>
                         <td><b><?php echo xlt('OS{{left eye}}'); ?>:</b></td>
-                        <td><input type="text" id="OSAXIALLENGTH" name="OSAXIALLENGTH" value="<?php echo attr($OSAXIALLENGTH); ?>" tabindex="266"></td>
-                        <td><input type="text" id="OSACD" name="OSACD" value="<?php echo attr($OSACD); ?>" tabindex="268"></td>
-                        <td><input type="text" id="OSPDMeasured" name="OSPDMeasured" value="<?php echo attr($OSPDMeasured); ?>" tabindex="270"></td>
-                        <td><input type="text" id="OSLT" name="OSLT" value="<?php echo attr($OSLT); ?>" tabindex="272"></td>
-                        <td><input type="text" id="OSW2W" name="OSW2W" value="<?php echo attr($OSW2W); ?>" tabindex="274"></td>
-                        <td><input type="text" id="OSECL" name="OSECL" value="<?php echo attr($OSECL); ?>" tabindex="276"></td>
+                        <td><input type="text" id="OSAXIALLENGTH" name="OSAXIALLENGTH" value="<?php echo attr($OSAXIALLENGTH); ?>" tabindex="10266"></td>
+                        <td><input type="text" id="OSACD" name="OSACD" value="<?php echo attr($OSACD); ?>" tabindex="10268"></td>
+                        <td><input type="text" id="OSPDMeasured" name="OSPDMeasured" value="<?php echo attr($OSPDMeasured); ?>" tabindex="10270"></td>
+                        <td><input type="text" id="OSLT" name="OSLT" value="<?php echo attr($OSLT); ?>" tabindex="10272"></td>
+                        <td><input type="text" id="OSW2W" name="OSW2W" value="<?php echo attr($OSW2W); ?>" tabindex="10274"></td>
+                        <td><input type="text" id="OSECL" name="OSECL" value="<?php echo attr($OSECL); ?>" tabindex="10276"></td>
                         <!--  <td><input type="text" id="pend" name="pend" value="<?php echo attr($pend); ?>"></td> -->
                       </tr>
                     </table>
@@ -2157,22 +2164,22 @@ if ($refresh and $refresh != 'fullscreen') {
 
                       </tr>
                       <tr><td><b><?php echo xlt('OD{{right eye}}'); ?>:</b></td>
-                        <td><input type="text" id="SCODVA_copy_brd" name="SCODVA_copy_brd" value="<?php echo attr($SCODVA); ?>" tabindex="300"></td>
-                        <td><input type="text" id="ODVA_1_copy_brd" name="ODVA_1_copy_brd" value="<?php echo attr($ODVA_1); ?>" tabindex="302"></td>
-                        <td><input type="text" id="ARODVA_copy_brd" name="ARODVA_copy_brd" value="<?php echo attr($ARODVA); ?>" tabindex="304"></td>
-                        <td><input type="text" id="MRODVA_copy_brd" name="MRODVA_copy_brd" value="<?php echo attr($MRODVA); ?>" tabindex="306"></td>
-                        <td><input type="text" id="CRODVA_copy_brd" name="CRODVA_copy_brd" value="<?php echo attr($CRODVA); ?>" tabindex="308"></td>
-                        <td><input type="text" id="PHODVA_copy_brd" name="PHODVA_copy_brd" value="<?php echo attr($PHODVA); ?>" tabindex="310"></td>
-                        <td><input type="text" id="CTLODVA_copy_brd" name="CTLODVA_copy_brd" value="<?php echo attr($CTLODVA); ?>" tabindex="312"></td>
+                        <td><input type="text" id="SCODVA_copy_brd" name="SCODVA_copy_brd" value="<?php echo attr($SCODVA); ?>" tabindex="10300"></td>
+                        <td><input type="text" id="ODVA_1_copy_brd" name="ODVA_1_copy_brd" value="<?php echo attr($ODVA_1); ?>" tabindex="10302"></td>
+                        <td><input type="text" id="ARODVA_copy_brd" name="ARODVA_copy_brd" value="<?php echo attr($ARODVA); ?>" tabindex="10304"></td>
+                        <td><input type="text" id="MRODVA_copy_brd" name="MRODVA_copy_brd" value="<?php echo attr($MRODVA); ?>" tabindex="10306"></td>
+                        <td><input type="text" id="CRODVA_copy_brd" name="CRODVA_copy_brd" value="<?php echo attr($CRODVA); ?>" tabindex="10308"></td>
+                        <td><input type="text" id="PHODVA_copy_brd" name="PHODVA_copy_brd" value="<?php echo attr($PHODVA); ?>" tabindex="10310"></td>
+                        <td><input type="text" id="CTLODVA_copy_brd" name="CTLODVA_copy_brd" value="<?php echo attr($CTLODVA); ?>" tabindex="10312"></td>
                       </tr>
                       <tr><td><b><?php echo xlt('OS{{left eye}}'); ?>:</b></td>
-                        <td><input type="text" id="SCOSVA_copy"     name="SCOSVA_copy"     value="<?php echo attr($SCOSVA); ?>" tabindex="301"></td>
-                        <td><input type="text" id="OSVA_1_copy_brd" name="OSVA_1_copy_brd" value="<?php echo attr($OSVA_1); ?>" tabindex="303"></td>
-                        <td><input type="text" id="AROSVA_copy_brd" name="AROSVA_copy_brd" value="<?php echo attr($AROSVA); ?>" tabindex="305"></td>
-                        <td><input type="text" id="MROSVA_copy_brd" name="MROSVA_copy_brd" value="<?php echo attr($MROSVA); ?>" tabindex="307"></td>
-                        <td><input type="text" id="CROSVA_copy_brd" name="CROSVA_copy_brd" value="<?php echo attr($CROSVA); ?>" tabindex="309"></td>
-                        <td><input type="text" id="PHOSVA_copy_brd" name="PHOSVA_copy_brd" value="<?php echo attr($PHOSVA); ?>" tabindex="311"></td>
-                        <td><input type="text" id="CTLOSVA_copy_brd" name="CTLOSVA_copy_brd" value="<?php echo attr($CTLOSVA); ?>" tabindex="313"></td>
+                        <td><input type="text" id="SCOSVA_copy"     name="SCOSVA_copy"     value="<?php echo attr($SCOSVA); ?>" tabindex="10301"></td>
+                        <td><input type="text" id="OSVA_1_copy_brd" name="OSVA_1_copy_brd" value="<?php echo attr($OSVA_1); ?>" tabindex="10303"></td>
+                        <td><input type="text" id="AROSVA_copy_brd" name="AROSVA_copy_brd" value="<?php echo attr($AROSVA); ?>" tabindex="10305"></td>
+                        <td><input type="text" id="MROSVA_copy_brd" name="MROSVA_copy_brd" value="<?php echo attr($MROSVA); ?>" tabindex="10307"></td>
+                        <td><input type="text" id="CROSVA_copy_brd" name="CROSVA_copy_brd" value="<?php echo attr($CROSVA); ?>" tabindex="10309"></td>
+                        <td><input type="text" id="PHOSVA_copy_brd" name="PHOSVA_copy_brd" value="<?php echo attr($PHOSVA); ?>" tabindex="10311"></td>
+                        <td><input type="text" id="CTLOSVA_copy_brd" name="CTLOSVA_copy_brd" value="<?php echo attr($CTLOSVA); ?>" tabindex="10313"></td>
                       </tr>
                       <tr><td>&nbsp;</td></tr>
                       <tr>
@@ -2186,22 +2193,22 @@ if ($refresh and $refresh != 'fullscreen') {
                         <td title="<?php echo xla('Contrast Acuity'); ?>"><?php echo xlt('Contrast'); ?></td>
                       </tr>
                       <tr><td><b><?php echo xlt('OD{{right eye}}'); ?>:</b></td>
-                        <td><input class="jaeger" type="text" id="SCNEARODVA" title="<?php echo xla('Near Acuity without Correction'); ?>" name="SCNEARODVA" value="<?php echo attr($SCNEARODVA); ?>" tabindex="320"></td>
-                        <td><input class="jaeger" type="text" id="ODNEARVA_1_copy_brd" title="<?php echo xla('Near Acuity with Correction'); ?>" name="ODNEARVA_1_copy_brd" value="<?php echo attr($ODNEARVA_1); ?>" tabindex="322"></td>
-                        <td><input class="jaeger" type="text" id="ARNEARODVA_copy_brd" title="<?php echo xla('Near Acuity AutoRefraction'); ?>" name="ARNEARODVA_copy_brd" value="<?php echo attr($ARNEARODVA); ?>" tabindex="324"></td>
-                        <td><input class="jaeger" type="text" id="MRNEARODVA_copy_brd" title="<?php echo xla('Near Acuity Manifest Refraction'); ?>" name="MRNEARODVA_copy_brd" value="<?php echo attr($MRNEARODVA); ?>" tabindex="326"></td>
-                        <td><input type="text" id="PAMODVA_copy_brd" title="<?php echo xla('Potential Acuity Meter'); ?>" name="PAMODVA_copy_brd" value="<?php echo attr($PAMODVA); ?>" tabindex="328"></td>
-                        <td><input type="text" id="GLAREODVA_copy_brd" title="<?php echo xla('Brightness Acuity Testing'); ?>" name="GLAREODVA_copy_brd" value="<?php echo attr($GLAREODVA); ?>" tabindex="330"></td>
-                        <td><input type="text" id="CONTRASTODVA_copy_brd" title="<?php echo xla('Contrast Acuity Testing'); ?>" name="CONTRASTODVA_copy_brd" value="<?php echo attr($CONTRASTODVA); ?>" tabindex="332"></td>
+                        <td><input class="jaeger" type="text" id="SCNEARODVA" title="<?php echo xla('Near Acuity without Correction'); ?>" name="SCNEARODVA" value="<?php echo attr($SCNEARODVA); ?>" tabindex="10320"></td>
+                        <td><input class="jaeger" type="text" id="ODNEARVA_1_copy_brd" title="<?php echo xla('Near Acuity with Correction'); ?>" name="ODNEARVA_1_copy_brd" value="<?php echo attr($ODNEARVA_1); ?>" tabindex="10322"></td>
+                        <td><input class="jaeger" type="text" id="ARNEARODVA_copy_brd" title="<?php echo xla('Near Acuity AutoRefraction'); ?>" name="ARNEARODVA_copy_brd" value="<?php echo attr($ARNEARODVA); ?>" tabindex="10324"></td>
+                        <td><input class="jaeger" type="text" id="MRNEARODVA_copy_brd" title="<?php echo xla('Near Acuity Manifest Refraction'); ?>" name="MRNEARODVA_copy_brd" value="<?php echo attr($MRNEARODVA); ?>" tabindex="10326"></td>
+                        <td><input type="text" id="PAMODVA_copy_brd" title="<?php echo xla('Potential Acuity Meter'); ?>" name="PAMODVA_copy_brd" value="<?php echo attr($PAMODVA); ?>" tabindex="10328"></td>
+                        <td><input type="text" id="GLAREODVA_copy_brd" title="<?php echo xla('Brightness Acuity Testing'); ?>" name="GLAREODVA_copy_brd" value="<?php echo attr($GLAREODVA); ?>" tabindex="10330"></td>
+                        <td><input type="text" id="CONTRASTODVA_copy_brd" title="<?php echo xla('Contrast Acuity Testing'); ?>" name="CONTRASTODVA_copy_brd" value="<?php echo attr($CONTRASTODVA); ?>" tabindex="10332"></td>
                       </tr>
                       <tr><td><b><?php echo xlt('OS{{left eye}}'); ?>:</b></td>
-                        <td><input class="jaeger" type="text" id="SCNEAROSVA" title="<?php echo xla('Near Acuity without Correction'); ?>" name="SCNEAROSVA" value="<?php echo attr($SCNEAROSVA); ?>" tabindex="321"></td>
-                        <td><input class="jaeger" type="text" id="OSNEARVA_1_copy_brd" title="<?php echo xla('Near Acuity with Correction'); ?>" name="OSNEARVA_1_copy_brd" value="<?php echo attr($OSNEARVA_1); ?>" tabindex="323"></td>
-                        <td><input class="jaeger" type="text" id="ARNEAROSVA_copy" title="<?php echo xla('Near Acuity AutoRefraction'); ?>" name="ARNEAROSVA_copy" value="<?php echo attr($ARNEAROSVA); ?>" tabindex="325"></td>
-                        <td><input class="jaeger" type="text" id="MRNEAROSVA_copy" title="<?php echo xla('Near Acuity Manifest Refraction'); ?>" name="MRNEAROSVA_copy" value="<?php echo attr($MRNEAROSVA); ?>" tabindex="327"></td>
-                        <td><input type="text" id="PAMOSVA_copy_brd" title="<?php echo xla('Potential Acuity Meter'); ?>" name="PAMOSVA_copy_brd" value="<?php echo attr($PAMOSVA); ?>" tabindex="329"></td>
-                        <td><input type="text" id="GLAREOSVA_copy_brd" title="<?php echo xla('Brightness Acuity Testing'); ?>" name="GLAREOSVA_copy_brd" value="<?php echo attr($GLAREOSVA); ?>" tabindex="331"></td>
-                        <td><input type="text" id="CONTRASTOSVA" title="<?php echo xla('Contrast Acuity Testing'); ?>" name="CONTRASTOSVA" value="<?php echo attr($CONTRASTOSVA); ?>" tabindex="333"></td>
+                        <td><input class="jaeger" type="text" id="SCNEAROSVA" title="<?php echo xla('Near Acuity without Correction'); ?>" name="SCNEAROSVA" value="<?php echo attr($SCNEAROSVA); ?>" tabindex="10321"></td>
+                        <td><input class="jaeger" type="text" id="OSNEARVA_1_copy_brd" title="<?php echo xla('Near Acuity with Correction'); ?>" name="OSNEARVA_1_copy_brd" value="<?php echo attr($OSNEARVA_1); ?>" tabindex="10323"></td>
+                        <td><input class="jaeger" type="text" id="ARNEAROSVA_copy" title="<?php echo xla('Near Acuity AutoRefraction'); ?>" name="ARNEAROSVA_copy" value="<?php echo attr($ARNEAROSVA); ?>" tabindex="10325"></td>
+                        <td><input class="jaeger" type="text" id="MRNEAROSVA_copy" title="<?php echo xla('Near Acuity Manifest Refraction'); ?>" name="MRNEAROSVA_copy" value="<?php echo attr($MRNEAROSVA); ?>" tabindex="10327"></td>
+                        <td><input type="text" id="PAMOSVA_copy_brd" title="<?php echo xla('Potential Acuity Meter'); ?>" name="PAMOSVA_copy_brd" value="<?php echo attr($PAMOSVA); ?>" tabindex="10329"></td>
+                        <td><input type="text" id="GLAREOSVA_copy_brd" title="<?php echo xla('Brightness Acuity Testing'); ?>" name="GLAREOSVA_copy_brd" value="<?php echo attr($GLAREOSVA); ?>" tabindex="10331"></td>
+                        <td><input type="text" id="CONTRASTOSVA" title="<?php echo xla('Contrast Acuity Testing'); ?>" name="CONTRASTOSVA" value="<?php echo attr($CONTRASTOSVA); ?>" tabindex="10333"></td>
                       </tr>
                     </table>
                   </div>
