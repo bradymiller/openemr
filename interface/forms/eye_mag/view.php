@@ -1207,8 +1207,9 @@ if ($refresh and $refresh != 'fullscreen') {
                     ($W_width =='1') ? ($display_W_width = "refraction_wide") : ($display_W_width = ""); 
                   ?>
                   <div id="LayerVision_W" class="<?php echo $display_W; ?> <?php echo $display_W_width; ?>" style="display:inline-block;">
+                   
                     <input type="hidden" id="W_1" name="W_1" value="1">
-                    <div id="LayerVision_W_1" class="refraction current_W borderShadow <?php echo $display_W_width; ?>">
+                    <div id="LayerVision_W_1" name="currentRX" class="refraction current_W borderShadow <?php echo $display_W_width; ?>">
                       <i class="closeButton fa fa-close" id="Close_W_1" name="Close_W_1" 
                         title="<?php echo xla('Close All Current Rx Panels and make this a Preference to stay closed'); ?>"></i>
                       <i class="closeButton2 fa fa-arrows-h " id="W_width_display_1" name="W_width_display"
@@ -1310,7 +1311,7 @@ if ($refresh and $refresh != 'fullscreen') {
                                   title="<?php echo xla('Click here to edit list of available Lens Treatment Options'); ?>" 
                                   name="Lens_txs"><span style="text-decoration:underline;"><?php echo xlt('Lens Treatments'); ?></span> <i class="fa fa-pencil fa-fw"></i> </a>
                             <br />
-                            <?php  echo generate_lens_treatments('1','144',$LENS_TREATMENTS_1); ?>
+                            <?php  echo generate_lens_treatments('1',$LENS_TREATMENTS_1); ?>
                           </td>                         
                         </tr>
                         <tr class="WNEAR">
@@ -1342,6 +1343,15 @@ if ($refresh and $refresh != 'fullscreen') {
                          </tr>
                       </table>
                     </div>
+                    <?php 
+                      
+                        for ($i=2; $i < 6; $i++) {
+                          echo generate_specRx($i);
+                        }
+                    ?>
+                    <!--
+
+                     
                     <input type="hidden" id="W_2" name="W_2" value="<?php echo text($W_2); ?>">
                     <div id="LayerVision_W_2" class="refraction current_W borderShadow <?php echo attr($display_W_2); ?> <?php echo $display_W_width; ?>">
                       <i class="closeButton fa fa-close" id="Close_W_2" name="Close_W_2" 
@@ -1469,8 +1479,8 @@ if ($refresh and $refresh != 'fullscreen') {
                         </tr>
                       </table>
                     </div>
-                    <input type="hidden" id="W_3" name="W_3" value="<?php echo text($W_3); ?>">
-                    <div id="LayerVision_W_3" class="refraction current_W borderShadow <?php echo attr($display_W_3); ?> <?php echo $display_W_width; ?>">
+                    
+                  <div id="LayerVision_W_3" class="refraction current_W borderShadow <?php echo attr($display_W_3); ?> <?php echo $display_W_width; ?>">
                       <i class="closeButton fa fa-close" id="Close_W_3" name="Close_W_3" 
                         title="<?php echo xla('Close this panel and delete this Rx'); ?>"></i>
                       <i class="closeButton2 fa fa-arrows-h " id="W_width_display_3" name="W_width_display"
@@ -1596,6 +1606,7 @@ if ($refresh and $refresh != 'fullscreen') {
                         </tr>
                       </table>
                     </div>
+ 
                     <input type="hidden" id="W_4" name="W_4" value="<?php echo text($W_4); ?>">
                     <div id="LayerVision_W_4" class="refraction current_W borderShadow <?php echo attr($display_W_4); ?> <?php echo $display_W_width; ?>">
                       <i class="closeButton fa fa-close" id="Close_W_4" name="Close_W_4" title="<?php echo xla('Close this panel and delete this Rx'); ?>"></i>
@@ -1719,6 +1730,7 @@ if ($refresh and $refresh != 'fullscreen') {
                         </tr>
                       </table>
                     </div>
+                  -->
                   </div>
 
                   <?php ($MR==1) ? ($display_AR = "") : ($display_AR = "nodisplay");?>

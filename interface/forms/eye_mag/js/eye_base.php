@@ -2618,18 +2618,12 @@ $(document).ready(function() {
                     if ($("#PREFS_W_width").val() !="1") {
                       $("#PREFS_W_width").val('1');
                       //make each display W wide
-                      $('#LayerVision_W_1').addClass('refraction_wide');
-                      $('#LayerVision_W_2').addClass('refraction_wide');
-                      $('#LayerVision_W_3').addClass('refraction_wide');
-                      $('#LayerVision_W_4').addClass('refraction_wide');
+                      $("[name=currentRX]").addClass('refraction_wide');
                       $("[name=W_wide]").removeClass('nodisplay');
                     } else {
                       $("#PREFS_W_width").val('0');
                       //make each display W narrow
-                      $('#LayerVision_W_1').removeClass('refraction_wide');
-                      $('#LayerVision_W_2').removeClass('refraction_wide');
-                      $('#LayerVision_W_3').removeClass('refraction_wide');
-                      $('#LayerVision_W_4').removeClass('refraction_wide');    
+                      $("[name=currentRX]").removeClass('refraction_wide');
                       $("[name=W_wide]").addClass('nodisplay');
                     }
                     update_PREFS();
@@ -3716,11 +3710,13 @@ $(document).ready(function() {
                                  submit_form('1');//tell the server where we stand
                                  });
                   $('#Add_Glasses').click(function() {
-                                          for (i=2; i <5; i++) {
+                                          for (i=2; i <6; i++) { //come on, 5 current rx glasses should be enough...
                                           if ($('#W_'+i).val() != '1') {
+                                          //send a call to server to make a new pair and return the html for it.
+                                          //we have to let the form know DOM that there are new fields eh?
                                           $('#W_'+i).val('1');
                                           $('#LayerVision_W_'+i).removeClass('nodisplay');
-                                          if (i==4) { $('#Add_Glasses').addClass('nodisplay'); }
+                                          if (i==5) { $('#Add_Glasses').addClass('nodisplay'); }
                                           break;
                                           }
                                           }

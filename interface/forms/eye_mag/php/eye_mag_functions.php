@@ -5103,12 +5103,13 @@ function findProvider($pid,$encounter) {
     return $providerid;
 }
 
-function generate_lens_treatments($W,$tabindex,$LTs_present) {
+function generate_lens_treatments($W,$LTs_present) {
     ob_start();
     $query = "SELECT * FROM list_options where list_id =? ORDER BY seq";
     $TXs_data = sqlStatement($query,array("Eye_Lens_Treatments"));
     $counter=0;
     $TXs_arr = explode("|",$LTs_present);
+    $tabindex=$W."0144";
     while ($row = sqlFetchArray($TXs_data)) {
         $checked ='';
         $ID=$row['option_id'];
@@ -5120,7 +5121,167 @@ function generate_lens_treatments($W,$tabindex,$LTs_present) {
         echo "<label for='TXs_".$W."_".$counter."' class='input-helper input-helper--checkbox' title='".attr($row['notes'])."'>";
         echo $label."</label><br />";
         $counter++;
+        $tabindex++;
     }
+    $output = ob_get_contents();
+    ob_end_clean();
+    return $output;
+}
+
+/**
+ *  Function to display the fields for a currently worn glasses/spectacle Rx.
+ *  @param $W - the Rx number, in order of documentation 
+ */
+function generate_specRx($W) {
+    global $pid,$form_id,$encounter,$display_W_width;
+ 
+    $query  = "select * from form_eye_mag_wearing where PID=? and FORM_ID=? and ENCOUNTER=? and RX_NUMBER =?";
+    $wear   = sqlQuery($query,array($pid,$form_id,$encounter,$W));
+    if ($wear) {
+        $RX_VALUE='1';
+        @extract($wear);
+    } else {
+        $RX_VALUE='';
+        $display_W='nodisplay';
+    }
+    ob_start();
+    ?>
+    <input type="hidden" id="W_<?php echo $W; ?>" name="W_<?php echo $W; ?>" value="<?php echo attr($RX_VALUE); ?>">
+                    
+    <div id="LayerVision_W_<?php echo $W; ?>" name="currentRX" class="refraction current_W borderShadow <?php echo attr($display_W); ?> <?php echo $display_W_width; ?>">
+                      <i class="closeButton fa fa-close" id="Close_W_<?php echo $W; ?>" name="Close_W_<?php echo $W; ?>" 
+                        title="<?php echo xla('Close this panel and delete this Rx'); ?>"></i>
+                      <i class="closeButton2 fa fa-arrows-h " id="W_width_display_<?php echo $W; ?>" name="W_width_display"
+                        title="<?php echo xla("Rx Details"); ?>" ></i>
+                      <i onclick="top.restoreSession();  doscript('W','<?php echo attr($pid); ?>','<?php echo attr($encounter); ?>','<?php echo $W; ?>'); return false;" 
+                       title="<?php echo xla("Dispense Rx"); ?>" class="closeButton3 fa fa-print"></i>
+                      <i onclick="top.restoreSession();  dispensed('<?php echo attr($pid); ?>');return false;" 
+                         title="<?php echo xla("List of previously dispensed Spectacle and Contact Lens Rxs"); ?>" class="closeButton4 fa fa-list-ul"></i>
+                      <table id="wearing_<?php echo $W; ?>" >
+                        <tr>
+                          <th colspan="9"><?php echo xlt('Current Glasses'); ?>: #<?php echo $W; ?>
+                          </th>
+                        </tr>
+                        <tr style="font-weight:400;">
+                          <td ></td>
+                          <td></td>
+                          <td><?php echo xlt('Sph{{Sphere}}'); ?></td>
+                          <td><?php echo xlt('Cyl{{Cylinder}}'); ?></td>
+                          <td><?php echo xlt('Axis'); ?></td>
+                          <td><?php echo xlt('Acuity'); ?></td>
+                                                    <td name="W_wide"></td>
+                          <td name="W_wide" title="<?php echo xla('Horizontal Prism Power'); ?>"><?php echo xlt('HP{{abbreviation for Horizontal Prism Power}}'); ?></td>
+                          <td name="W_wide" title="<?php echo xla('Horizontal Prism Base'); ?>"><?php echo xlt('HB{{abbreviation for Horizontal Prism Base}}'); ?></td>
+                          <td name="W_wide" title="<?php echo xla('Vertical Prism Power'); ?>"><?php echo xlt('VP{{abbreviation for Vertical Prism Power}}'); ?></td>
+                          <td name="W_wide" title="<?php echo xla('Vertical Prism Base'); ?>"><?php echo xlt('VB{{abbreviation for Vertical Prism Base}}'); ?></td>
+                          <td name="W_wide" title="<?php echo xla('Slab Off'); ?>"><?php echo xlt('Slab Off'); ?></td>
+                          <td name="W_wide" title="<?php echo xla('Vertex Distance'); ?>"><?php echo xlt('VD{{abbreviation for Vertex Distance}}'); ?></td>
+                          <td name="W_wide" title="<?php echo xla('Monocular Pupillary Diameter - Distance'); ?>"><?php echo xlt('MPD-D{{abbreviation for Monocular Pupillary Diameter - Distance}}'); ?></td>
+                          <td name="W_wide" title="<?php echo xla('Monocular Pupillary Diameter - Near'); ?>"><?php echo xlt('MPD-N{{abbreviation for Monocular Pupillary Diameter - Near}}'); ?></td>
+      
+                          <td rowspan="5" class="right" style="padding:10 0 10 0;font-size:0.8em;width:100px;">
+                            <b style="font-weight:600;text-decoration:underline;"><?php echo xlt('Rx Type{{Type of glasses prescription}}'); ?></b><br />
+                            <label for="Single_<?php echo $W; ?>" class="input-helper input-helper--checkbox"><?php echo xlt('Single'); ?></label>
+                            <input type="radio" value="0" id="Single_<?php echo $W; ?>" name="RX_TYPE_<?php echo $W; ?>" <?php if ($RX_TYPE == '0') echo 'checked="checked"'; ?> /></span><br /><br />
+                            <label for="Bifocal_<?php echo $W; ?>" class="input-helper input-helper--checkbox"><?php echo xlt('Bifocal'); ?></label>
+                            <input type="radio" value="1" id="Bifocal_<?php echo $W; ?>" name="RX_TYPE_<?php echo $W; ?>" <?php if ($RX_TYPE == '1') echo 'checked="checked"'; ?> /></span><br /><br />
+                            <label for="Trifocal_<?php echo $W; ?>" class="input-helper input-helper--checkbox"><?php echo xlt('Trifocal'); ?></label>
+                            <input type="radio" value="2" id="Trifocal_<?php echo $W; ?>" name="RX_TYPE_<?php echo $W; ?>" <?php if ($RX_TYPE == '2') echo 'checked="checked"'; ?> /></span><br /><br />
+                            <label for="Progressive_<?php echo $W; ?>" class="input-helper input-helper--checkbox"><?php echo xlt('Prog.'); ?></label>
+                            <input type="radio" value="3" id="Progressive_<?php echo $W; ?>" name="RX_TYPE_<?php echo $W; ?>" <?php if ($RX_TYPE == '3') echo 'checked="checked"'; ?> /></span><br />
+                          </td>
+                        </tr>
+                        <tr>
+                          <td rowspan="2"><?php echo xlt('Dist{{distance}}'); ?></td>    
+                          <td><b><?php echo xlt('OD{{right eye}}'); ?>:</b></td>
+                          <td><?php echo ${"ODSPH_$W"}; ?><input type="text" class="sphere" id="ODSPH_<?php echo $W; ?>" name="ODSPH_<?php echo $W; ?>"  value="<?php echo attr($ODSPH); ?>" tabindex="<?php echo $W; ?>0100"></td>
+                          <td><input type="text" class="cylinder" id="ODCYL_<?php echo $W; ?>" name="ODCYL_<?php echo $W; ?>"  value="<?php echo attr($ODCYL); ?>" tabindex="<?php echo $W; ?>0101"></td>
+                          <td><input type="text" class="axis" id="ODAXIS_<?php echo $W; ?>" name="ODAXIS_<?php echo $W; ?>" value="<?php echo attr($ODAXIS); ?>" tabindex="<?php echo $W; ?>0102"></td>
+                          <td><input type="text" class="acuity" id="ODVA_<?php echo $W; ?>" name="ODVA_<?php echo $W; ?>" value="<?php echo attr($ODVA); ?>" tabindex="<?php echo $W; ?>0108"></td>
+
+                          <td name="W_wide"></td>
+                          <td name="W_wide"><input type="text" class="prism" id="ODHPD_<?php echo $W; ?>" name="ODHPD_<?php echo $W; ?>" value="<?php echo attr($ODHPD); ?>" tabindex="<?php echo $W; ?>0112"></td>
+                          <td name="W_wide"><input type="text" class="prism" id="ODHBASE_<?php echo $W; ?>" name="ODHBASE_<?php echo $W; ?>" value="<?php echo attr($ODHBASE); ?>" tabindex="<?php echo $W; ?>0114"></td>
+                          <td name="W_wide"><input type="text" class="prism" id="ODVPD_<?php echo $W; ?>" name="ODVPD_<?php echo $W; ?>" value="<?php echo attr($ODVPD); ?>" tabindex="<?php echo $W; ?>0116"></td>
+                          <td name="W_wide"><input type="text" class="prism" id="ODVBASE_<?php echo $W; ?>" name="ODVBASE_<?php echo $W; ?>" value="<?php echo attr($ODVBASE); ?>" tabindex="<?php echo $W; ?>0118"></td>
+                          <td name="W_wide"><input type="text" class="prism" id="ODSLABOFF_<?php echo $W; ?>" name="ODSLABOFF_<?php echo $W; ?>" value="<?php echo attr($ODSLABOFF); ?>" tabindex="<?php echo $W; ?>0120"></td>
+                          <td name="W_wide"><input type="text" class="prism" id="ODVERTEXDIST_<?php echo $W; ?>" name="ODVERTEXDIST_<?php echo $W; ?>" value="<?php echo attr($ODVERTEXDIST); ?>" tabindex="<?php echo $W; ?>0122"></td>
+                          <td name="W_wide"><input type="text" class="prism" id="ODMPDD_<?php echo $W; ?>" name="ODMPDD_<?php echo $W; ?>" value="<?php echo attr($ODMPDD); ?>" tabindex="<?php echo $W; ?>0124"></td>
+                          <td name="W_wide"><input type="text" class="prism" id="ODMPDN_<?php echo $W; ?>" name="ODMPDN_<?php echo $W; ?>" value="<?php echo attr($ODMPDN); ?>" tabindex="<?php echo $W; ?>0126"></td>
+                        </tr>
+                        <tr>
+                          <td><b><?php echo xlt('OS{{left eye}}'); ?>:</b></td>
+                          <td><input type="text" class="sphere" id="OSSPH_<?php echo $W; ?>" name="OSSPH_<?php echo $W; ?>" value="<?php echo attr($OSSPH); ?>" tabindex="<?php echo $W; ?>0103"></td>
+                          <td><input type="text" class="cylinder" id="OSCYL_<?php echo $W; ?>" name="OSCYL_<?php echo $W; ?>" value="<?php echo attr($OSCYL); ?>" tabindex="<?php echo $W; ?>0104"></td>
+                          <td><input type="text" class="axis" id="OSAXIS_<?php echo $W; ?>" name="OSAXIS_<?php echo $W; ?>" value="<?php echo attr($OSAXIS); ?>" tabindex="<?php echo $W; ?>0105"></td>
+                          <td><input type="text" class="acuity" id="OSVA_<?php echo $W; ?>" name="OSVA_<?php echo $W; ?>" value="<?php echo attr($OSVA); ?>" tabindex="<?php echo $W; ?>0109"></td>
+
+                          <td name="W_wide"></td>
+                          <td name="W_wide"><input type="text" class="prism" id="OSHPD_<?php echo $W; ?>" name="OSHPD_<?php echo $W; ?>" value="<?php echo attr($OSHPD); ?>" tabindex="<?php echo $W; ?>0113"></td>
+                          <td name="W_wide"><input type="text" class="prism" id="OSHBASE_<?php echo $W; ?>" name="OSHBASE_<?php echo $W; ?>" value="<?php echo attr($OSHBASE); ?>" tabindex="<?php echo $W; ?>0115"></td>
+                          <td name="W_wide"><input type="text" class="prism" id="OSVPD_<?php echo $W; ?>" name="OSVPD_<?php echo $W; ?>" value="<?php echo attr($OSVPD); ?>" tabindex="<?php echo $W; ?>0117"></td>
+                          <td name="W_wide"><input type="text" class="prism" id="OSVBASE_<?php echo $W; ?>" name="OSVBASE_<?php echo $W; ?>" value="<?php echo attr($OSVBASE); ?>" tabindex="<?php echo $W; ?>0119"></td>
+                          <td name="W_wide"><input type="text" class="prism" id="OSSLABOFF_<?php echo $W; ?>" name="OSSLABOFF_<?php echo $W; ?>" value="<?php echo attr($OSSLABOFF); ?>" tabindex="<?php echo $W; ?>0121"></td>
+                          <td name="W_wide"><input type="text" class="prism" id="OSVERTEXDIST_<?php echo $W; ?>" name="OSVERTEXDIST_<?php echo $W; ?>" value="<?php echo attr($OSVERTEXDIST); ?>" tabindex="<?php echo $W; ?>0123"></td>
+                          <td name="W_wide"><input type="text" class="prism" id="OSMPDD_<?php echo $W; ?>" name="OSMPDD_<?php echo $W; ?>" value="<?php echo attr($OSMPDD); ?>" tabindex="<?php echo $W; ?>0125"></td>
+                          <td name="W_wide"><input type="text" class="prism" id="OSMPDN_<?php echo $W; ?>" name="OSMPDN_<?php echo $W; ?>" value="<?php echo attr($OSMPDN); ?>" tabindex="<?php echo $W; ?>0127"></td>
+                        </tr>                
+                        <tr class="WNEAR">
+                          <td rowspan=2><span style="text-decoration:none;"><?php echo xlt('Mid{{middle Rx strength}}'); ?>/<br /><?php echo xlt('Near'); ?></span></td>    
+                          <td><b><?php echo xlt('OD{{right eye}}'); ?>:</b></td>
+                          <?php echo '<input type="hidden" name="RXStart_'.$W.' id="RXStart_'.$W.'" value="'.$RX_TYPE.'">'; ?>
+                          <td class="WMid"><input type="text" class="presbyopia" id="ODMIDADD_<?php echo $W; ?>" name="ODMIDADD_<?php echo $W; ?>" value="<?php echo attr($ODMIDADD); ?>"></td>
+                          <td class="WAdd2"><input type="text" class="presbyopia" id="ODADD_<?php echo $W; ?>" name="ODADD_<?php echo $W; ?>" value="<?php echo attr($ODADD); ?>" tabindex="<?php echo $W; ?>0106"></td>
+                          <td></td>
+                          <td><input class="jaeger" type="text" id="NEARODVA_<?php echo $W; ?>" name="NEARODVA_<?php echo $W; ?>" value="<?php echo attr($NEARODVA); ?>" tabindex="<?php echo $W; ?>0110"></td>
+                          
+                          <td name="W_wide"></td>
+                          
+                          <td name="W_wide" title="<?php echo xla('Binocular Pupillary Diameter - Distance'); ?>"><?php echo xlt('PD-D{{abbreviation for Binocular Pupillary Diameter - Distance}}'); ?></td>
+                          <td name="W_wide" title="<?php echo xla('Binocular Pupillary Diameter - Near'); ?>"><?php echo xlt('PD-N{{abbreviation for Binocular Pupillary Diameter - Near}}'); ?></td>
+                          <td name="W_wide" title="<?php echo xla('Lens Material'); ?>" colspan="2">
+                            <a href="<?php echo $GLOBALS['webroot']; ?>/interface/super/edit_list.php?list_id=Eye_Lens_Material" target="RTop" 
+                                  title="<?php echo xla('Click here to edit list of available Lens Materials'); ?>" 
+                                  name="Lens_mat"><span style="text-decoration:underline;"><?php echo xlt('Lens Material'); ?></span> <i class="fa fa-pencil fa-fw"></i> </a>
+                          </td>
+                          <td name="W_wide" colspan="4" rowspan="4" style="text-align:left;vertical-align:top;padding-left:10px;">
+                            <a href="<?php echo $GLOBALS['webroot']; ?>/interface/super/edit_list.php?list_id=Eye_Lens_Treatments" target="RTop" 
+                                  title="<?php echo xla('Click here to edit list of available Lens Treatment Options'); ?>" 
+                                  name="Lens_txs"><span style="text-decoration:underline;"><?php echo xlt('Lens Treatments'); ?></span> <i class="fa fa-pencil fa-fw"></i> </a>
+                            <br />
+                            <?php  echo generate_lens_treatments($W,$LENS_TREATMENTS); ?>
+                          </td>  
+                        </tr>
+                        <tr class="WNEAR">
+                          <td><b><?php echo xlt('OS{{left eye}}'); ?>:</b></td>
+                          <td class="WMid"><input type="text" class="presbyopia" id="OSMIDADD_<?php echo $W; ?>" name="OSMIDADD_<?php echo $W; ?>" value="<?php echo attr($OSMIDADD); ?>"></td>
+                          <td class="WAdd2"><input type="text" class="presbyopia" id="OSADD_<?php echo $W; ?>" name="OSADD_<?php echo $W; ?>" value="<?php echo attr($OSADD); ?>" tabindex="<?php echo $W; ?>0107"></td>
+                          <td></td>
+                          <td><input class="jaeger" type="text" id="NEAROSVA_<?php echo $W; ?>" name="NEAROSVA_<?php echo $W; ?>" value="<?php echo attr($NEAROSVA); ?>" tabindex="<?php echo $W; ?>0111"></td>
+
+                          <td name="W_wide"></td>
+                          
+                          <td name="W_wide"><input type="text" class="prism" id="BPDD_<?php echo $W; ?>" name="BPDD_<?php echo $W; ?>" value="<?php echo attr($BPDD); ?>" tabindex="<?php echo $W; ?>0128"></td>
+                          <td name="W_wide"><input type="text" class="prism" id="BPDN_<?php echo $W; ?>" name="BPDN_<?php echo $W; ?>" value="<?php echo attr($BPDN); ?>" tabindex="<?php echo $W; ?>0129"></td>
+                          <td name="W_wide" title="<?php echo xla('Lens Material Options'); ?>" colspan="2">
+                            <?php echo generate_select_list("LENS_MATERIAL_".$W, "Eye_Lens_Material", "$LENS_MATERIAL",'','--Lens Material--','','restoreSession;submit_form();','',array('style'=>'width:120px','tabindex'=>$W.'0130')); ?> 
+                          </td>
+                        </tr>
+                        <tr style="top:3.5in;">
+                          <td colspan="2" style="text-align:right;vertical-align:top;top:0px;"><b><?php echo xlt('Comments'); ?>:</b>
+                          </td>
+                          <td colspan="4" class="up" style="text-align:left;vertical-align:middle;top:0px;"></td>
+                        </tr>
+                        <tr>
+                          <td colspan="6">
+                            <textarea style="width:100%;height:3.0em;" id="COMMENTS_<?php echo $W; ?>" name="COMMENTS_<?php echo $W; ?>" tabindex="<?php echo $W; ?>0110"><?php echo text($COMMENTS); ?></textarea>     
+                          </td>
+                          <td colspan="2"> 
+                          </td>
+                        </tr>
+                      </table>
+    </div>
+    <?php 
     $output = ob_get_contents();
     ob_end_clean();
     return $output;
