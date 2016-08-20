@@ -8529,7 +8529,7 @@ INSERT INTO `list_options` (`list_id`, `option_id`, `title`, `seq`, `is_default`
 ('Eye_Lens_Treatments', 'LT_ARCOAT', 'Anti-reflective coating', 20, 0, 0, '', '', '', 0, 0, 1, ''),
 ('Eye_Lens_Treatments', 'LT_ASCRATCH', 'Anti-scratch coating', 10, 0, 0, '', '', '', 0, 0, 1, ''),
 ('Eye_Lens_Treatments', 'LT_UVBLOCK', 'UV-blocking treatment', 30, 0, 0, '', '', '', 0, 0, 1, ''),
-('Eye_Lens_Treatments', ‘LT_PHOTOGREY', 'Photochromic treatment', 40, 0, 0, '', '', '', 0, 0, 1, '');
+('Eye_Lens_Treatments', 'LT_PHOTOGREY', 'Photochromic treatment', 40, 0, 0, '', '', '', 0, 0, 1, '');
 -- --------------------------------------------------------
 
 -- 

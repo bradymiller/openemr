@@ -5103,5 +5103,27 @@ function findProvider($pid,$encounter) {
     return $providerid;
 }
 
+function generate_lens_treatments($W,$tabindex,$LTs_present) {
+    ob_start();
+    $query = "SELECT * FROM list_options where list_id =? ORDER BY seq";
+    $TXs_data = sqlStatement($query,array("Eye_Lens_Treatments"));
+    $counter=0;
+    $TXs_arr = explode("|",$LTs_present);
+    while ($row = sqlFetchArray($TXs_data)) {
+        $checked ='';
+        $ID=$row['option_id'];
+        if (in_array($ID,$TXs_arr)) {
+            $checked = "checked='yes'";
+        }
+        echo "<input type='checkbox' id='TXs_".$W."_".$counter."' name='LENS_TREATMENTS_".$W."[]' $checked value='".attr($ID)."' tabindex='$tabindex'> ";
+        $label = text(substr($row['title'],0,30));
+        echo "<label for='TXs_".$W."_".$counter."' class='input-helper input-helper--checkbox' title='".attr($row['notes'])."'>";
+        echo $label."</label><br />";
+        $counter++;
+    }
+    $output = ob_get_contents();
+    ob_end_clean();
+    return $output;
+}
 
 ?>

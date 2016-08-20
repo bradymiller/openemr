@@ -1255,46 +1255,46 @@ if ($refresh and $refresh != 'fullscreen') {
                         <tr>
                           <td rowspan="2"><?php echo xlt('Dist{{distance}}'); ?></td>    
                           <td><b><?php echo xlt('OD{{right eye}}'); ?>:</b></td>
-                          <td><input type="text" class="sphere" id="ODSPH_1" name="ODSPH_1"  value="<?php echo attr($ODSPH_1); ?>" tabindex="10100"></td>
-                          <td><input type="text" class="cylinder" id="ODCYL_1" name="ODCYL_1"  value="<?php echo attr($ODCYL_1); ?>" tabindex="10101"></td>
-                          <td><input type="text" class="axis" id="ODAXIS_1" name="ODAXIS_1" value="<?php echo attr($ODAXIS_1); ?>" tabindex="10102"></td>
-                          <td><input type="text" class="acuity" id="ODVA_1" name="ODVA_1" value="<?php echo attr($ODVA_1); ?>" tabindex="10108"></td>
+                          <td><input type="text" class="sphere" id="ODSPH_1" name="ODSPH_1"  value="<?php echo attr($ODSPH_1); ?>" tabindex="100"></td>
+                          <td><input type="text" class="cylinder" id="ODCYL_1" name="ODCYL_1"  value="<?php echo attr($ODCYL_1); ?>" tabindex="101"></td>
+                          <td><input type="text" class="axis" id="ODAXIS_1" name="ODAXIS_1" value="<?php echo attr($ODAXIS_1); ?>" tabindex="102"></td>
+                          <td><input type="text" class="acuity" id="ODVA_1" name="ODVA_1" value="<?php echo attr($ODVA_1); ?>" tabindex="108"></td>
 
                           <td name="W_wide"></td>
-                          <td name="W_wide"><input type="text" class="prism" id="ODHPD_1" name="ODHPD_1" value="<?php echo attr($ODHPD_1); ?>"></td>
-                          <td name="W_wide"><input type="text" class="prism" id="ODHBASE_1" name="ODHBASE_1" value="<?php echo attr($ODHBASE_1); ?>"></td>
-                          <td name="W_wide"><input type="text" class="prism" id="ODVPD_1" name="ODVPD_1" value="<?php echo attr($ODVPD_1); ?>"></td>
-                          <td name="W_wide"><input type="text" class="prism" id="ODVBASE_1" name="ODVBASE_1" value="<?php echo attr($ODVBASE_1); ?>"></td>
-                          <td name="W_wide"><input type="text" class="prism" id="ODSLABOFF_1" name="ODSLABOFF_1" value="<?php echo attr($ODSLABOFF_1); ?>"></td>
-                          <td name="W_wide"><input type="text" class="prism" id="ODVERTEXDIST_1" name="ODVERTEXDIST_1" value="<?php echo attr($ODVERTEXDIST_1); ?>"></td>
-                          <td name="W_wide"><input type="text" class="prism" id="ODMPDD_1" name="ODMPDD_1" value="<?php echo attr($ODMPDD_1); ?>"></td>
-                          <td name="W_wide"><input type="text" class="prism" id="ODMPDN_1" name="ODMPDN_1" value="<?php echo attr($ODMPDN_1); ?>"></td>
+                          <td name="W_wide"><input type="text" class="prism" id="ODHPD_1" name="ODHPD_1" value="<?php echo attr($ODHPD_1); ?>" tabindex="122"></td>
+                          <td name="W_wide"><input type="text" class="prism" id="ODHBASE_1" name="ODHBASE_1" value="<?php echo attr($ODHBASE_1); ?>" tabindex="124"></td>
+                          <td name="W_wide"><input type="text" class="prism" id="ODVPD_1" name="ODVPD_1" value="<?php echo attr($ODVPD_1); ?>" tabindex="126"></td>
+                          <td name="W_wide"><input type="text" class="prism" id="ODVBASE_1" name="ODVBASE_1" value="<?php echo attr($ODVBASE_1); ?>" tabindex="128"></td>
+                          <td name="W_wide"><input type="text" class="prism" id="ODSLABOFF_1" name="ODSLABOFF_1" value="<?php echo attr($ODSLABOFF_1); ?>" tabindex="130"></td>
+                          <td name="W_wide"><input type="text" class="prism" id="ODVERTEXDIST_1" name="ODVERTEXDIST_1" value="<?php echo attr($ODVERTEXDIST_1); ?>" tabindex="132"></td>
+                          <td name="W_wide"><input type="text" class="prism" id="ODMPDD_1" name="ODMPDD_1" value="<?php echo attr($ODMPDD_1); ?>" tabindex="134"></td>
+                          <td name="W_wide"><input type="text" class="prism" id="ODMPDN_1" name="ODMPDN_1" value="<?php echo attr($ODMPDN_1); ?>" tabindex="136"></td>
                         </tr>
                         <tr>
                           <td><b><?php echo xlt('OS{{left eye}}'); ?>:</b></td>
-                          <td><input type="text" class="sphere" id="OSSPH_1" name="OSSPH_1" value="<?php echo attr($OSSPH_1); ?>" tabindex="10103"></td>
-                          <td><input type="text" class="cylinder" id="OSCYL_1" name="OSCYL_1" value="<?php echo attr($OSCYL_1); ?>" tabindex="10104"></td>
-                          <td><input type="text" class="axis" id="OSAXIS_1" name="OSAXIS_1" value="<?php echo attr($OSAXIS_1); ?>" tabindex="10105"></td>
-                          <td><input type="text" class="acuity" id="OSVA_1" name="OSVA_1" value="<?php echo attr($OSVA_1); ?>" tabindex="10109"></td>
+                          <td><input type="text" class="sphere" id="OSSPH_1" name="OSSPH_1" value="<?php echo attr($OSSPH_1); ?>" tabindex="103"></td>
+                          <td><input type="text" class="cylinder" id="OSCYL_1" name="OSCYL_1" value="<?php echo attr($OSCYL_1); ?>" tabindex="104"></td>
+                          <td><input type="text" class="axis" id="OSAXIS_1" name="OSAXIS_1" value="<?php echo attr($OSAXIS_1); ?>" tabindex="105"></td>
+                          <td><input type="text" class="acuity" id="OSVA_1" name="OSVA_1" value="<?php echo attr($OSVA_1); ?>" tabindex="109"></td>
 
                           <td name="W_wide"></td>
-                          <td name="W_wide"><input type="text" class="prism" id="OSHPD_1" name="OSHPD_1" value="<?php echo attr($OSHPD_1); ?>"></td>
-                          <td name="W_wide"><input type="text" class="prism" id="OSHBASE_1" name="OSHBASE_1" value="<?php echo attr($OSHBASE_1); ?>"></td>
-                          <td name="W_wide"><input type="text" class="prism" id="OSVPD_1" name="OSVPD_1" value="<?php echo attr($OSVPD_1); ?>"></td>
-                          <td name="W_wide"><input type="text" class="prism" id="OSVBASE_1" name="OSVBASE_1" value="<?php echo attr($OSVBASE_1); ?>"></td>
-                          <td name="W_wide"><input type="text" class="prism" id="OSSLABOFF_1" name="OSSLABOFF_1" value="<?php echo attr($OSSLABOFF_1); ?>"></td>
-                          <td name="W_wide"><input type="text" class="prism" id="OSVERTEXDIST_1" name="OSVERTEXDIST_1" value="<?php echo attr($OSVERTEXDIST_1); ?>"></td>
-                          <td name="W_wide"><input type="text" class="prism" id="OSMPDD_1" name="OSMPDD_1" value="<?php echo attr($OSMPDD_1); ?>"></td>
-                          <td name="W_wide"><input type="text" class="prism" id="OSMPDN_1" name="OSMPDN_1" value="<?php echo attr($OSMPDN_1); ?>"></td>
+                          <td name="W_wide"><input type="text" class="prism" id="OSHPD_1" name="OSHPD_1" value="<?php echo attr($OSHPD_1); ?>"        tabindex="123"></td>
+                          <td name="W_wide"><input type="text" class="prism" id="OSHBASE_1" name="OSHBASE_1" value="<?php echo attr($OSHBASE_1); ?>"  tabindex="125"></td>
+                          <td name="W_wide"><input type="text" class="prism" id="OSVPD_1" name="OSVPD_1" value="<?php echo attr($OSVPD_1); ?>"        tabindex="127"></td>
+                          <td name="W_wide"><input type="text" class="prism" id="OSVBASE_1" name="OSVBASE_1" value="<?php echo attr($OSVBASE_1); ?>"  tabindex="129"></td>
+                          <td name="W_wide"><input type="text" class="prism" id="OSSLABOFF_1" name="OSSLABOFF_1" value="<?php echo attr($OSSLABOFF_1); ?>" tabindex="131"></td>
+                          <td name="W_wide"><input type="text" class="prism" id="OSVERTEXDIST_1" name="OSVERTEXDIST_1" value="<?php echo attr($OSVERTEXDIST_1); ?>" tabindex="133"></td>
+                          <td name="W_wide"><input type="text" class="prism" id="OSMPDD_1" name="OSMPDD_1" value="<?php echo attr($OSMPDD_1); ?>" tabindex="135"></td>
+                          <td name="W_wide"><input type="text" class="prism" id="OSMPDN_1" name="OSMPDN_1" value="<?php echo attr($OSMPDN_1); ?>" tabindex="137"></td>
                         </tr>
                         <tr class="WNEAR">
                           <td rowspan=2><span style="text-decoration:none;"><?php echo xlt('Mid{{middle Rx strength}}'); ?>/<br /><?php echo xlt('Near'); ?></span></td>    
                           <td><b><?php echo xlt('OD{{right eye}}'); ?>:</b></td>
                           <?php echo '<input type="hidden" name="RXStart_1" id="RXStart_1" value="'.$RX_TYPE_1.'">'; ?>
                           <td class="WMid"><input type="text" class="presbyopia" id="ODMIDADD_1" name="ODMIDADD_1" value="<?php echo attr($ODMIDADD_1); ?>"></td>
-                          <td class="WAdd2"><input type="text" class="presbyopia" id="ODADD_1" name="ODADD_1" value="<?php echo attr($ODADD_1); ?>" tabindex="10106"></td>
+                          <td class="WAdd2"><input type="text" class="presbyopia" id="ODADD_1" name="ODADD_1" value="<?php echo attr($ODADD_1); ?>" tabindex="106"></td>
                           <td></td>
-                          <td><input class="jaeger" type="text" id="ODNEARVA_1" name="ODNEARVA_1" value="<?php echo attr($ODNEARVA_1); ?>" tabindex="10110"></td>
+                          <td><input class="jaeger" type="text" id="ODNEARVA_1" name="ODNEARVA_1" value="<?php echo attr($ODNEARVA_1); ?>" tabindex="110"></td>
 
                           <td name="W_wide"></td>
                           
@@ -1310,38 +1310,21 @@ if ($refresh and $refresh != 'fullscreen') {
                                   title="<?php echo xla('Click here to edit list of available Lens Treatment Options'); ?>" 
                                   name="Lens_txs"><span style="text-decoration:underline;"><?php echo xlt('Lens Treatments'); ?></span> <i class="fa fa-pencil fa-fw"></i> </a>
                             <br />
-                            <?php 
-                              $query = "SELECT * FROM list_options where list_id =? ORDER BY seq";
-                              $TXs_data = sqlStatement($query,array("Eye_Lens_Treatments"));
-                              $counter=0;
-                              $TXs_arr = explode("|",$LENS_TREATMENTS_1);
-                              while ($row = sqlFetchArray($TXs_data)) {
-                                  $checked ='';
-                                  $ID=$row['option_id'];
-                                  if (in_array($ID,$TXs_arr)) {
-                                    $checked = "checked='yes'";
-                                  }
-                                  echo "<input type='checkbox' id='TXs_1_$counter' name='LENS_TREATMENTS_1[]' $checked value='".attr($ID)."'> ";
-                                  $label = text(substr($row['title'],0,30));
-                                  echo "<label for='TXs_1_$counter' class='input-helper input-helper--checkbox' title='".attr($row['notes'])."'>";
-                                  echo $label."</label><br />";
-                                  $counter++;
-                              }
-                            ?>
+                            <?php  echo generate_lens_treatments('1','144',$LENS_TREATMENTS_1); ?>
                           </td>                         
                         </tr>
                         <tr class="WNEAR">
                           <td><b><?php echo xlt('OS{{left eye}}'); ?>:</b></td>
                           <td class="WMid"><input type="text" class="presbyopia" id="OSMIDADD_1" name="OSMIDADD_1" value="<?php echo attr($OSMIDADD_1); ?>"></td>
-                          <td class="WAdd2"><input type="text" class="presbyopia" id="OSADD_1" name="OSADD_1" value="<?php echo attr($OSADD_1); ?>" tabindex="10107"></td>
+                          <td class="WAdd2"><input type="text" class="presbyopia" id="OSADD_1" name="OSADD_1" value="<?php echo attr($OSADD_1); ?>" tabindex="107"></td>
                           <td></td>
-                          <td><input class="jaeger" type="text" id="OSNEARVA_1" name="OSNEARVA_1" value="<?php echo attr($OSNEARVA_1); ?>" tabindex="10110"></td>
+                          <td><input class="jaeger" type="text" id="OSNEARVA_1" name="OSNEARVA_1" value="<?php echo attr($OSNEARVA_1); ?>" tabindex="110"></td>
                         
                           <td name="W_wide"></td>
                           
-                          <td name="W_wide"><input type="text" class="prism" id="BPDD_1" name="BPDD_1" value="<?php echo attr($BPDD_1); ?>"></td>
-                          <td name="W_wide"><input type="text" class="prism" id="BPDN_1" name="BPDN_1" value="<?php echo attr($BPDN_1); ?>"></td>
-                          <td name="W_wide" title="<?php echo xla('Lens Material Options'); ?>" colspan="2">
+                          <td name="W_wide"><input type="text" class="prism" id="BPDD_1" name="BPDD_1" value="<?php echo attr($BPDD_1); ?>" tabindex="138"></td>
+                          <td name="W_wide"><input type="text" class="prism" id="BPDN_1" name="BPDN_1" value="<?php echo attr($BPDN_1); ?>" tabindex="140"></td>
+                          <td name="W_wide" title="<?php echo xla('Lens Material Options'); ?>" colspan="2"  tabindex="142">
                             <?php echo generate_select_list("LENS_MATERIAL_1", "Eye_Lens_Material", "$LENS_MATERIAL_1",'','--Lens Material--','','restoreSession;submit_form();','',array('style'=>'width:120px')); ?> 
                           </td>
                         </tr>
@@ -1352,7 +1335,7 @@ if ($refresh and $refresh != 'fullscreen') {
                         </tr>
                         <tr>
                           <td colspan="6">
-                            <textarea style="width:100%;height:3.0em;" id="COMMENTS_1" name="COMMENTS_1" tabindex="10111"><?php echo text($COMMENTS_1); ?></textarea>     
+                            <textarea style="width:100%;height:3.0em;" id="COMMENTS_1" name="COMMENTS_1" tabindex="111"><?php echo text($COMMENTS_1); ?></textarea>     
                           </td>
                           <td colspan="8"> 
                           </td>
@@ -1406,46 +1389,46 @@ if ($refresh and $refresh != 'fullscreen') {
                                     <tr>
                           <td rowspan="2"><?php echo xlt('Dist{{distance}}'); ?></td>    
                           <td><b><?php echo xlt('OD{{right eye}}'); ?>:</b></td>
-                          <td><input type="text" class="sphere" id="ODSPH_2" name="ODSPH_2"  value="<?php echo attr($ODSPH_2); ?>" tabindex="10100"></td>
-                          <td><input type="text" class="cylinder" id="ODCYL_2" name="ODCYL_2"  value="<?php echo attr($ODCYL_2); ?>" tabindex="10101"></td>
-                          <td><input type="text" class="axis" id="ODAXIS_2" name="ODAXIS_2" value="<?php echo attr($ODAXIS_2); ?>" tabindex="10102"></td>
-                          <td><input type="text" class="acuity" id="ODVA_2" name="ODVA_2" value="<?php echo attr($ODVA_2); ?>" tabindex="10108"></td>
+                          <td><input type="text" class="sphere" id="ODSPH_2" name="ODSPH_2"  value="<?php echo attr($ODSPH_2); ?>" tabindex="20100"></td>
+                          <td><input type="text" class="cylinder" id="ODCYL_2" name="ODCYL_2"  value="<?php echo attr($ODCYL_2); ?>" tabindex="20101"></td>
+                          <td><input type="text" class="axis" id="ODAXIS_2" name="ODAXIS_2" value="<?php echo attr($ODAXIS_2); ?>" tabindex="20102"></td>
+                          <td><input type="text" class="acuity" id="ODVA_2" name="ODVA_2" value="<?php echo attr($ODVA_2); ?>" tabindex="20108"></td>
 
                           <td name="W_wide"></td>
-                          <td name="W_wide"><input type="text" class="prism" id="ODHPD_2" name="ODHPD_2" value="<?php echo attr($ODHPD_2); ?>"></td>
-                          <td name="W_wide"><input type="text" class="prism" id="ODHBASE_2" name="ODHBASE_2" value="<?php echo attr($ODHBASE_2); ?>"></td>
-                          <td name="W_wide"><input type="text" class="prism" id="ODVPD_2" name="ODVPD_2" value="<?php echo attr($ODVPD_2); ?>"></td>
-                          <td name="W_wide"><input type="text" class="prism" id="ODVBASE_2" name="ODVBASE_2" value="<?php echo attr($ODVBASE_2); ?>"></td>
-                          <td name="W_wide"><input type="text" class="prism" id="ODSLABOFF_2" name="ODSLABOFF_2" value="<?php echo attr($ODSLABOFF_2); ?>"></td>
-                          <td name="W_wide"><input type="text" class="prism" id="ODVERTEXDIST_2" name="ODVERTEXDIST_2" value="<?php echo attr($ODVERTEXDIST_2); ?>"></td>
-                          <td name="W_wide"><input type="text" class="prism" id="ODMPDD_2" name="ODMPDD_2" value="<?php echo attr($ODMPDD_2); ?>"></td>
-                          <td name="W_wide"><input type="text" class="prism" id="ODMPDN_2" name="ODMPDN_2" value="<?php echo attr($ODMPDN_2); ?>"></td>
+                          <td name="W_wide"><input type="text" class="prism" id="ODHPD_2" name="ODHPD_2" value="<?php echo attr($ODHPD_2); ?>" tabindex="20116"></td>
+                          <td name="W_wide"><input type="text" class="prism" id="ODHBASE_2" name="ODHBASE_2" value="<?php echo attr($ODHBASE_2); ?>" tabindex="20117"></td>
+                          <td name="W_wide"><input type="text" class="prism" id="ODVPD_2" name="ODVPD_2" value="<?php echo attr($ODVPD_2); ?>" tabindex="20119"></td>
+                          <td name="W_wide"><input type="text" class="prism" id="ODVBASE_2" name="ODVBASE_2" value="<?php echo attr($ODVBASE_2); ?>" tabindex="20121"></td>
+                          <td name="W_wide"><input type="text" class="prism" id="ODSLABOFF_2" name="ODSLABOFF_2" value="<?php echo attr($ODSLABOFF_2); ?>" tabindex="20123"></td>
+                          <td name="W_wide"><input type="text" class="prism" id="ODVERTEXDIST_2" name="ODVERTEXDIST_2" value="<?php echo attr($ODVERTEXDIST_2); ?>" tabindex="20125"></td>
+                          <td name="W_wide"><input type="text" class="prism" id="ODMPDD_2" name="ODMPDD_2" value="<?php echo attr($ODMPDD_2); ?>" tabindex="20127"></td>
+                          <td name="W_wide"><input type="text" class="prism" id="ODMPDN_2" name="ODMPDN_2" value="<?php echo attr($ODMPDN_2); ?>" tabindex="20129"></td>
                         </tr>
                         <tr>
                           <td><b><?php echo xlt('OS{{left eye}}'); ?>:</b></td>
-                          <td><input type="text" class="sphere" id="OSSPH_2" name="OSSPH_2" value="<?php echo attr($OSSPH_2); ?>" tabindex="10103"></td>
-                          <td><input type="text" class="cylinder" id="OSCYL_2" name="OSCYL_2" value="<?php echo attr($OSCYL_2); ?>" tabindex="10104"></td>
-                          <td><input type="text" class="axis" id="OSAXIS_2" name="OSAXIS_2" value="<?php echo attr($OSAXIS_2); ?>" tabindex="10105"></td>
-                          <td><input type="text" class="acuity" id="OSVA_2" name="OSVA_2" value="<?php echo attr($OSVA_2); ?>" tabindex="10109"></td>
+                          <td><input type="text" class="sphere" id="OSSPH_2" name="OSSPH_2" value="<?php echo attr($OSSPH_2); ?>" tabindex="20103"></td>
+                          <td><input type="text" class="cylinder" id="OSCYL_2" name="OSCYL_2" value="<?php echo attr($OSCYL_2); ?>" tabindex="20104"></td>
+                          <td><input type="text" class="axis" id="OSAXIS_2" name="OSAXIS_2" value="<?php echo attr($OSAXIS_2); ?>" tabindex="20105"></td>
+                          <td><input type="text" class="acuity" id="OSVA_2" name="OSVA_2" value="<?php echo attr($OSVA_2); ?>" tabindex="20109"></td>
 
                           <td name="W_wide"></td>
-                          <td name="W_wide"><input type="text" class="prism" id="OSHPD_2" name="OSHPD_2" value="<?php echo attr($OSHPD_2); ?>"></td>
-                          <td name="W_wide"><input type="text" class="prism" id="OSHBASE_2" name="OSHBASE_2" value="<?php echo attr($OSHBASE_2); ?>"></td>
-                          <td name="W_wide"><input type="text" class="prism" id="OSVPD_2" name="OSVPD_2" value="<?php echo attr($OSVPD_2); ?>"></td>
-                          <td name="W_wide"><input type="text" class="prism" id="OSVBASE_2" name="OSVBASE_2" value="<?php echo attr($OSVBASE_2); ?>"></td>
-                          <td name="W_wide"><input type="text" class="prism" id="OSSLABOFF_2" name="OSSLABOFF_2" value="<?php echo attr($OSSLABOFF_2); ?>"></td>
-                          <td name="W_wide"><input type="text" class="prism" id="OSVERTEXDIST_2" name="OSVERTEXDIST_2" value="<?php echo attr($OSVERTEXDIST_2); ?>"></td>
-                          <td name="W_wide"><input type="text" class="prism" id="OSMPDD_2" name="OSMPDD_2" value="<?php echo attr($OSMPDD_2); ?>"></td>
-                          <td name="W_wide"><input type="text" class="prism" id="OSMPDN_2" name="OSMPDN_2" value="<?php echo attr($OSMPDN_2); ?>"></td>
+                          <td name="W_wide"><input type="text" class="prism" id="OSHPD_2" name="OSHPD_2" value="<?php echo attr($OSHPD_2); ?>" tabindex="20116"></td>
+                          <td name="W_wide"><input type="text" class="prism" id="OSHBASE_2" name="OSHBASE_2" value="<?php echo attr($OSHBASE_2); ?>" tabindex="20118"></td>
+                          <td name="W_wide"><input type="text" class="prism" id="OSVPD_2" name="OSVPD_2" value="<?php echo attr($OSVPD_2); ?>" tabindex="20120"></td>
+                          <td name="W_wide"><input type="text" class="prism" id="OSVBASE_2" name="OSVBASE_2" value="<?php echo attr($OSVBASE_2); ?>" tabindex="20122"></td>
+                          <td name="W_wide"><input type="text" class="prism" id="OSSLABOFF_2" name="OSSLABOFF_2" value="<?php echo attr($OSSLABOFF_2); ?>" tabindex="20124"></td>
+                          <td name="W_wide"><input type="text" class="prism" id="OSVERTEXDIST_2" name="OSVERTEXDIST_2" value="<?php echo attr($OSVERTEXDIST_2); ?>" tabindex="20126"></td>
+                          <td name="W_wide"><input type="text" class="prism" id="OSMPDD_2" name="OSMPDD_2" value="<?php echo attr($OSMPDD_2); ?>" tabindex="20128"></td>
+                          <td name="W_wide"><input type="text" class="prism" id="OSMPDN_2" name="OSMPDN_2" value="<?php echo attr($OSMPDN_2); ?>" tabindex="20130"></td>
                         </tr>
                         <tr class="WNEAR">
                           <td rowspan=2><span style="text-decoration:none;"><?php echo xlt('Mid{{middle Rx strength}}'); ?>/<br /><?php echo xlt('Near'); ?></span></td>    
                           <td><b><?php echo xlt('OD{{right eye}}'); ?>:</b></td>
                           <?php echo '<input type="hidden" name="RXStart_2" id="RXStart_2" value="'.$RX_TYPE_2.'">'; ?>
                           <td><input type="text" class="presbyopia" id="ODMIDADD_2" name="ODMIDADD_2" value="<?php echo attr($ODMIDADD_2); ?>"></td>
-                          <td class="WAdd2"><input type="text" class="presbyopia" id="ODADD_2" name="ODADD_2" value="<?php echo attr($ODADD_2); ?>" tabindex="10116"></td>
+                          <td class="WAdd2"><input type="text" class="presbyopia" id="ODADD_2" name="ODADD_2" value="<?php echo attr($ODADD_2); ?>" tabindex="20111"></td>
                           <td></td>
-                          <td><input type="text" class="jaeger" id="ODVANEAR_2" name="ODVANEAR_2" value="<?php echo attr($ODNEARVA_2); ?>" tabindex="10120"></td>
+                          <td><input type="text" class="jaeger" id="ODVANEAR_2" name="ODVANEAR_2" value="<?php echo attr($ODNEARVA_2); ?>" tabindex="20113"></td>
                            
                           <td name="W_wide"></td>
                           
@@ -1454,39 +1437,22 @@ if ($refresh and $refresh != 'fullscreen') {
                           <td name="W_wide" title="<?php echo xla('Lens Material'); ?>" colspan="2"><?php echo xlt('Lens Material'); ?> </td>
                           <td name="W_wide" colspan="4" rowspan="4" style="text-align:left;vertical-align:top;padding-left:10px;"><span style="text-decoration:underline;"><?php echo xlt('Lens Treatments'); ?></span>
                             <br />
-                              <?php 
-                              $query = "SELECT * FROM list_options where list_id =? ORDER BY seq";
-                              $TXs_data = sqlStatement($query,array("Eye_Lens_Treatments"));
-                              $counter=0;
-                              $TXs_arr = explode("|",$LENS_TREATMENTS_2);
-                              while ($row = sqlFetchArray($TXs_data)) {
-                                  $checked ='';
-                                  $ID=$row['option_id'];
-                                  if (in_array($ID,$TXs_arr)) {
-                                    $checked = "checked='yes'";
-                                  }
-                                  echo "<input type='checkbox' id='TXs_2_$counter' name='LENS_TREATMENTS_2[]' $checked value='".attr($ID)."'> ";
-                                  $label = text(substr($row['title'],0,30));
-                                  echo "<label for='TXs_2_$counter' class='input-helper input-helper--checkbox' title='".attr($row['notes'])."'>";
-                                  echo $label."</label><br />";
-                                  $counter++;
-                              }
-                            ?>
+                              <?php  echo generate_lens_treatments('2','20144',$LENS_TREATMENTS_2); ?>
                           </td>  
                         </tr>
                         <tr class="WNEAR">
                           <td><b><?php echo xlt('OS{{left eye}}'); ?>:</b></td>
                           <td class="WMid"><input type="text" class="presbyopia" id="OSMIDADD_2" name="OSMIDADD_2" value="<?php echo attr($OSMIDADD_2); ?>"></td>
-                          <td class="WAdd2"><input type="text" class="presbyopia" id="OSADD_2" name="OSADD_2" value="<?php echo attr($OSADD_2); ?>" tabindex="10117"></td>
+                          <td class="WAdd2"><input type="text" class="presbyopia" id="OSADD_2" name="OSADD_2" value="<?php echo attr($OSADD_2); ?>" tabindex="20112"></td>
                           <td></td>
-                          <td><input class="jaeger" type="text" id="OSNEARVA_2" name="OSNEARVA_2" value="<?php echo attr($OSNEARVA_2); ?>" tabindex="10121"></td>
+                          <td><input class="jaeger" type="text" id="OSNEARVA_2" name="OSNEARVA_2" value="<?php echo attr($OSNEARVA_2); ?>" tabindex="20114"></td>
 
                           <td name="W_wide"></td>
                           
-                          <td name="W_wide"><input type="text" class="prism" id="BPDD_2" name="BPDD_2" value="<?php echo attr($BPDD_2); ?>"></td>
-                          <td name="W_wide"><input type="text" class="prism" id="BPDN_2" name="BPDN_2" value="<?php echo attr($BPDN_2); ?>"></td>
+                          <td name="W_wide"><input type="text" class="prism" id="BPDD_2" name="BPDD_2" value="<?php echo attr($BPDD_2); ?>" tabindex="20131"></td>
+                          <td name="W_wide"><input type="text" class="prism" id="BPDN_2" name="BPDN_2" value="<?php echo attr($BPDN_2); ?>" tabindex="20132"></td>
                           <td name="W_wide" title="<?php echo xla('Lens Material Options'); ?>" colspan="2">
-                            <?php echo generate_select_list("LENS_MATERIAL_2", "Eye_Lens_Material", "$LENS_MATERIAL_2",'','--Lens Material--','','restoreSession;submit_form();','',array('style'=>'width:120px')); ?> 
+                            <?php echo generate_select_list("LENS_MATERIAL_2", "Eye_Lens_Material", "$LENS_MATERIAL_2",'','--Lens Material--','','restoreSession;submit_form();','',array('style'=>'width:120px','tabindex'=>'20133')); ?> 
                           </td>
                         </tr>
                         <tr style="top:3.5in;">
@@ -1496,7 +1462,7 @@ if ($refresh and $refresh != 'fullscreen') {
                         </tr>
                         <tr>
                           <td colspan="6">
-                            <textarea style="width:100%;height:3.0em;" id="COMMENTS_2" name="COMMENTS_2" tabindex="10110"><?php echo text($COMMENTS_2); ?></textarea>     
+                            <textarea style="width:100%;height:3.0em;" id="COMMENTS_2" name="COMMENTS_2" tabindex="20115"><?php echo text($COMMENTS_2); ?></textarea>     
                           </td>
                           <td colspan="2"> 
                           </td>
@@ -1598,24 +1564,8 @@ if ($refresh and $refresh != 'fullscreen') {
                           <td name="W_wide" title="<?php echo xla('Lens Material'); ?>" colspan="2" class="underline"><?php echo xlt('Lens Material'); ?> </td>
                           <td name="W_wide" colspan="4" rowspan="4" style="text-align:left;vertical-align:top;padding-left:10px;"><span style="text-decoration:underline;"><?php echo xlt('Lens Treatments'); ?></span>
                             <br />
-                            <?php 
-                              $query = "SELECT * FROM list_options where list_id =? ORDER BY seq";
-                              $TXs_data = sqlStatement($query,array("Eye_Lens_Treatments"));
-                              $counter=0;
-                              $TXs_arr = explode("|",$LENS_TREATMENTS_3);
-                              while ($row = sqlFetchArray($TXs_data)) {
-                                  $checked ='';
-                                  $ID=$row['option_id'];
-                                  if (in_array($ID,$TXs_arr)) {
-                                    $checked = "checked='yes'";
-                                  }
-                                  echo "<input type='checkbox' id='TXs_3_$counter' name='LENS_TREATMENTS_3[]' $checked value='".attr($ID)."'> ";
-                                  $label = text(substr($row['title'],0,30));
-                                  echo "<label for='TXs_3_$counter' class='input-helper input-helper--checkbox' title='".attr($row['notes'])."'>";
-                                  echo $label."</label><br />";
-                                  $counter++;
-                              }
-                            ?></td>  
+                            <?php  echo generate_lens_treatments('3','30144',$LENS_TREATMENTS_3); ?>
+                          </td>  
                         </tr>
                         <tr class="WNEAR">
                           <td><b><?php echo xlt('OS{{left eye}}'); ?>:</b></td>
@@ -1690,10 +1640,10 @@ if ($refresh and $refresh != 'fullscreen') {
                         <tr>
                           <td rowspan="2"><?php echo xlt('Dist{{distance}}'); ?></td>    
                           <td><b><?php echo xlt('OD{{right eye}}'); ?>:</b></td>
-                          <td><input type="text" class="sphere" id="ODSPH_4" name="ODSPH_4"  value="<?php echo attr($ODSPH_4); ?>" tabindex="10100"></td>
-                          <td><input type="text" class="cylinder" id="ODCYL_4" name="ODCYL_4"  value="<?php echo attr($ODCYL_4); ?>" tabindex="10101"></td>
-                          <td><input type="text" class="axis" id="ODAXIS_4" name="ODAXIS_4" value="<?php echo attr($ODAXIS_4); ?>" tabindex="10102"></td>
-                          <td><input type="text" class="acuity" id="ODVA_4" name="ODVA_4" value="<?php echo attr($ODVA_4); ?>" tabindex="10108"></td>
+                          <td><input type="text" class="sphere" id="ODSPH_4" name="ODSPH_4"  value="<?php echo attr($ODSPH_4); ?>" tabindex="30100"></td>
+                          <td><input type="text" class="cylinder" id="ODCYL_4" name="ODCYL_4"  value="<?php echo attr($ODCYL_4); ?>" tabindex="30101"></td>
+                          <td><input type="text" class="axis" id="ODAXIS_4" name="ODAXIS_4" value="<?php echo attr($ODAXIS_4); ?>" tabindex="30102"></td>
+                          <td><input type="text" class="acuity" id="ODVA_4" name="ODVA_4" value="<?php echo attr($ODVA_4); ?>" tabindex="30108"></td>
 
                           <td name="W_wide"></td>
                           <td name="W_wide"><input type="text" class="prism" id="ODHPD_4" name="ODHPD_4" value="<?php echo attr($ODHPD_4); ?>"></td>
@@ -1707,10 +1657,10 @@ if ($refresh and $refresh != 'fullscreen') {
                         </tr>
                         <tr>
                           <td><b><?php echo xlt('OS{{left eye}}'); ?>:</b></td>
-                          <td><input type="text" class="sphere" id="OSSPH_4" name="OSSPH_4" value="<?php echo attr($OSSPH_4); ?>" tabindex="10103"></td>
-                          <td><input type="text" class="cylinder" id="OSCYL_4" name="OSCYL_4" value="<?php echo attr($OSCYL_4); ?>" tabindex="10104"></td>
-                          <td><input type="text" class="axis" id="OSAXIS_4" name="OSAXIS_4" value="<?php echo attr($OSAXIS_4); ?>" tabindex="10105"></td>
-                          <td><input type="text" class="acuity" id="OSVA_4" name="OSVA_4" value="<?php echo attr($OSVA_4); ?>" tabindex="10109"></td>
+                          <td><input type="text" class="sphere" id="OSSPH_4" name="OSSPH_4" value="<?php echo attr($OSSPH_4); ?>" tabindex="30103"></td>
+                          <td><input type="text" class="cylinder" id="OSCYL_4" name="OSCYL_4" value="<?php echo attr($OSCYL_4); ?>" tabindex="30104"></td>
+                          <td><input type="text" class="axis" id="OSAXIS_4" name="OSAXIS_4" value="<?php echo attr($OSAXIS_4); ?>" tabindex="30105"></td>
+                          <td><input type="text" class="acuity" id="OSVA_4" name="OSVA_4" value="<?php echo attr($OSVA_4); ?>" tabindex="30109"></td>
 
                           <td name="W_wide"></td>
                           <td name="W_wide"><input type="text" class="prism" id="OSHPD_4" name="OSHPD_4" value="<?php echo attr($OSHPD_4); ?>"></td>
@@ -1727,9 +1677,9 @@ if ($refresh and $refresh != 'fullscreen') {
                           <td><b><?php echo xlt('OD{{right eye}}'); ?>:</b></td>
                           <?php echo '<input type="hidden" name="RXStart_4" id="RXStart_4" value="'.$RX_TYPE_4.'">'; ?>
                           <td class="WMid"><input type="text" class="presbyopia" id="ODMIDADD_4" name="ODMIDADD_4" value="<?php echo attr($ODMIDADD_4); ?>"></td>
-                          <td class="WAdd2"><input type="text" class="presbyopia" id="ODADD_4" name="ODADD_4" value="<?php echo attr($ODADD_4); ?>" tabindex="10156"></td>
+                          <td class="WAdd2"><input type="text" class="presbyopia" id="ODADD_4" name="ODADD_4" value="<?php echo attr($ODADD_4); ?>" tabindex="30156"></td>
                           <td></td>
-                          <td><input class="jaeger" type="text" id="NEARODVA_4" name="NEARODVA_4" value="<?php echo attr($NEARODVA_4); ?>" tabindex="10160"></td>
+                          <td><input class="jaeger" type="text" id="NEARODVA_4" name="NEARODVA_4" value="<?php echo attr($NEARODVA_4); ?>" tabindex="30160"></td>
 
                           <td name="W_wide"></td>
                           
@@ -1738,31 +1688,15 @@ if ($refresh and $refresh != 'fullscreen') {
                           <td name="W_wide" title="<?php echo xla('Lens Material'); ?>" colspan="2"><?php echo xlt('Lens Material'); ?> </td>
                           <td name="W_wide" colspan="4" rowspan="4" style="text-align:left;vertical-align:top;padding-left:10px;"><span style="\text-decoration:underline;"><?php echo xlt('Lens Treatments'); ?></span>
                             <br />
-                            <?php 
-                              $query = "SELECT * FROM list_options where list_id =? ORDER BY seq";
-                              $TXs_data = sqlStatement($query,array("Eye_Lens_Treatments"));
-                              $counter=0;
-                              $TXs_arr = explode("|",$LENS_TREATMENTS_1);
-                              while ($row = sqlFetchArray($TXs_data)) {
-                                  $checked ='';
-                                  $ID=$row['option_id'];
-                                  if (in_array($ID,$TXs_arr)) {
-                                    $checked = "checked='yes'";
-                                  }
-                                  echo "<input type='checkbox' id='TXs_4_$counter' name='LENS_TREATMENTS_4[]' $checked value='".attr($ID)."'> ";
-                                  $label = text(substr($row['title'],0,30));
-                                  echo "<label for='TXs_4_$counter' class='input-helper input-helper--checkbox' title='".attr($row['notes'])."'>";
-                                  echo $label."</label><br />";
-                                  $counter++;
-                              }
-                            ?></td>  
+                             <?php  echo generate_lens_treatments('4','40144',$LENS_TREATMENTS_4); ?>
+                            </td>  
                         </tr>
                         <tr class="WNEAR">
                           <td><b><?php echo xlt('OS{{left eye}}'); ?>:</b></td>
                           <td class="WMid"><input type="text" class="presbyopia" id="OSMIDADD_4" name="OSMIDADD_4" value="<?php echo attr($OSMIDADD_4); ?>"></td>
-                          <td class="WAdd2"><input type="text" class="presbyopia" id="OSADD_4" name="OSADD_4" value="<?php echo attr($OSADD_4); ?>" tabindex="10157"></td>
+                          <td class="WAdd2"><input type="text" class="presbyopia" id="OSADD_4" name="OSADD_4" value="<?php echo attr($OSADD_4); ?>" tabindex="30157"></td>
                           <td></td>
-                          <td><input class="jaeger" type="text" id="NEAROSVA_4" name="NEAROSVA_4" value="<?php echo attr($NEAROSVA_4); ?>" tabindex="10161"></td>         
+                          <td><input class="jaeger" type="text" id="NEAROSVA_4" name="NEAROSVA_4" value="<?php echo attr($NEAROSVA_4); ?>" tabindex="30161"></td>         
                           <td name="W_wide"></td>
                           
                           <td name="W_wide"><input type="text" class="prism" id="BPDD_4" name="BPDD_4" value="<?php echo attr($BPDD_4); ?>"></td>
