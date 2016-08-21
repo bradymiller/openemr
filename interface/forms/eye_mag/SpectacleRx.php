@@ -756,7 +756,7 @@ if ($_REQUEST['dispensed']) {
                                 if ($REFTYPE !="CTL") { ?>
                                     <table id="SpectacleRx" name="SpectacleRx" class="refraction bordershadow" style="min-width:610px;top:0px;">
                                         <tr style="font-weight:bold;text-align:center;">
-                                            <td><i name="reverse"  id="reverse" class="fa fa-gamepad"></i></td>
+                                            <td><i name="reverse"  id="reverse" class="fa fa-gamepad fa-2x"></i></td>
                                             <td></td>
                                             <td><?php echo xlt('Sph{{Sphere}}'); ?></td>
                                             <td><?php echo xlt('Cyl{{Cylinder}}'); ?></td>
