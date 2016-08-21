@@ -121,23 +121,22 @@ if ($_REQUEST['REFTYPE']) {
     $data =  sqlQuery($query, array($id,$encounter) );
 
     if ($REFTYPE =="W") {
-        //we have rx_number 1-4 to process...
+        //we have rx_number 1-5 to process...
         $query = "select * from form_eye_mag_wearing where ENCOUNTER=? and FORM_ID=? and PID=? and RX_NUMBER=?";
         $wear = sqlStatement($query,array($encounter,$_REQUEST['form_id'],$_REQUEST['pid'],$_REQUEST['rx_number']));
         $wearing = sqlFetchArray($wear);
         $ODSPH = $wearing['ODSPH'];
         $ODAXIS = $wearing['ODAXIS'];
         $ODCYL = $wearing['ODCYL'];
-        $ODPRISM = $wearing['ODPRISM'];
         $OSSPH = $wearing['OSSPH'];
         $OSCYL = $wearing['OSCYL'];
         $OSAXIS = $wearing['OSAXIS'];
-        $OSPRISM = $wearing['OSPRISM'];
         $COMMENTS = $wearing['COMMENTS']; 
-        $ODADD1 = $wearing['ODMIDADD'];
+        $ODMIDADD = $wearing['ODMIDADD'];
         $ODADD2 = $wearing['ODADD'];
-        $OSADD1 = $wearing['OSMIDADD'];
+        $OSMIDADD = $wearing['OSMIDADD'];
         $OSADD2 = $wearing['OSADD'];
+        @extract($wearing);
         if ($wearing['RX_TYPE']=='0') {
             $Single="checked='checked'";
             $RXTYPE="Single";
@@ -151,6 +150,7 @@ if ($_REQUEST['REFTYPE']) {
             $Progressive ="checked='checked'";
             $RXTYPE="Progressive";
         } 
+        //do LT and Lens materials
     } elseif ($REFTYPE =="AR") {
             $ODSPH = $data['ARODSPH'];
             $ODAXIS = $data['ARODAXIS'];
@@ -249,7 +249,7 @@ if ($_REQUEST['dispensed']) {
        
     $query = "SELECT * from form_eye_mag_dispense where pid =? ORDER BY date DESC";
     $dispensed = sqlStatement($query,array($_REQUEST['pid']));
-  ?><html>
+    ?><html>
         <title><?php echo xlt('Rx Dispensed History'); ?></title>
         <head>         
             <script src="<?php echo $GLOBALS['assets_static_relative'] ?>/jquery-min-1-10-2/index.js"></script>
@@ -320,8 +320,8 @@ if ($_REQUEST['dispensed']) {
                     font-weight:normal;
                 }
             </style>
-            <script>
-            <?php require($GLOBALS['srcdir'] . "/restoreSession.php"); ?>
+            <script language="JavaScript">    
+                <?php       require_once("$srcdir/restoreSession.php");  ?>
 
                 function delete_me(delete_id){
                     top.restoreSession();
@@ -339,6 +339,7 @@ if ($_REQUEST['dispensed']) {
                         alert(o);
                     });
                 }
+                
             </script>
         </head>
         <body>
@@ -404,7 +405,7 @@ if ($_REQUEST['dispensed']) {
                                             <td class="center"><?php echo xlt('Sph{{Sphere}}'); ?></td>
                                             <td class="center"><?php echo xlt('Cyl{{Cylinder}}'); ?></td>
                                             <td class="center"><?php echo xlt('Axis{{Axis in a glasses prescription}}'); ?></td>
-                                            <td rowspan="5" class="right bold underline" colspan="4" style="min-width:250px;font-weight:bold;">
+                                            <td rowspan="5" class="right bold underline" colspan="2" style="min-width:200px;font-weight:bold;">
                                                 <?php echo xlt('Rx Type'); ?><br /><br />
                                                 <?php echo xlt('Single'); ?>
                                                     <input type="radio" disabled <?php echo text($Single); ?>><br />
@@ -434,12 +435,12 @@ if ($_REQUEST['dispensed']) {
                                         <tr class="NEAR">
                                             <td rowspan=2 nowrap><span style="text-decoration:none;"><?php echo xlt('ADD'); ?>:<br /><?php echo xlt("Mid{{Middle segment in a trifocal glasses prescription}}"); ?>/<?php echo xlt("Near"); ?></span></td>    
                                             <td><b><?php echo xlt('OD{{right eye}}'); ?></b></td>
-                                            <td class="WMid"><?php echo text($row['ODADD1']); ?></td>
+                                            <td class="WMid"><?php echo text($row['ODMIDADD']); ?></td>
                                             <td class="WAdd2"><?php echo text($row['ODADD2']); ?></td>
                                         </tr>
                                         <tr class="NEAR">
                                             <td><b><?php echo xlt('OS{{left eye}}'); ?></b></td>
-                                            <td class="WMid"><?php echo text($row['OSADD1']); ?></td>
+                                            <td class="WMid"><?php echo text($row['OSMIDADD']); ?></td>
                                             <td class="WAdd2"><?php echo text($row['OSADD2']); ?></td>
                                         </tr>
                                         <tr style="">
@@ -632,7 +633,8 @@ if ($_REQUEST['dispensed']) {
             </style>
                  <!-- jQuery library -->
             
-            <script>
+            <script language="JavaScript">    
+                <?php require_once("$srcdir/restoreSession.php"); ?>
                 function pick_rxType(rxtype,id) {
                     var url = "../../forms/eye_mag/SpectacleRx.php";
                     var formData = {
@@ -646,16 +648,16 @@ if ($_REQUEST['dispensed']) {
                    data         : formData
                    });
                    if (rxtype == 'Trifocal') {
-                    $("[name$='ADD1']").show();
+                    $("[name$='MIDADD']").show();
                     $("[name$='ADD2']").show();
                     } else if  (rxtype == 'Bifocal') {
-                    $("[name$='ADD1']").hide().val('');
+                    $("[name$='MIDADD']").hide().val('');
                     $("[name$='ADD2']").show();
                     } else if  (rxtype == 'Progressive') {
-                    $("[name$='ADD1']").hide().val('');
+                    $("[name$='MIDADD']").hide().val('');
                     $("[name$='ADD2']").show();
                     } else if (rxtype =="Single") {
-                    $("[name$='ADD1']").hide().val('');
+                    $("[name$='MIDADD']").hide().val('');
                     $("[name$='ADD2']").hide().val('');
                    } 
                 }
@@ -668,6 +670,67 @@ if ($_REQUEST['dispensed']) {
                        url      : url,      
                        data     : formData 
                        });
+                }
+                //add sph and cyl, flip cyl sign, rotate axis 90.
+                function reverse_cylinder() {
+                    var Rsph  = $('#ODSPH').val();
+                    var Rcyl  = $('#ODCYL').val();
+                    var Raxis = $('#ODAXIS').val();
+                    var Lsph  = $('#OSSPH').val();
+                    var Lcyl  = $('#OSCYL').val();
+                    var Laxis = $('#OSAXIS').val();
+                    if (Rsph=='' && Rcyl =='' && Lsph=='' && lcyl =='') return;
+                    if ((!Rcyl.match(/SPH/i)) && (Rcyl >'')) {
+                        if (Rsph.match(/plano/i)) Rsph ='0';
+                        Rsph = Number(Rsph);
+                        Rcyl = Number(Rcyl);
+                        Rnewsph = Rsph + Rcyl;
+                        if (Rnewsph ==0) Rnewsph ="PLANO";
+                        Rnewcyl = Rcyl * -1;
+                        if (Rnewcyl > 0) Rnewcyl = "+"+Rnewcyl;
+                        if (parseInt(Raxis) < 90) {
+                            Rnewaxis = parseInt(Raxis) + 90;
+                        } else {
+                            Rnewaxis = parseInt(Raxis) - 90;
+                        }
+                        if (Rnewcyl=='0') Rnewcyl = "SPH";
+                        if (Rnewsph =='0') {
+                            Rnewsph ="PLANO";
+                            if (Rnewcyl =="SPH") Rnewcyl = '';
+                        }
+                        $("#ODSPH").val(Rnewsph);
+                        $("#ODCYL").val(Rnewcyl);
+                        $("#ODAXIS").val(Rnewaxis);
+                        $('#ODAXIS').trigger('blur');
+                        $('#ODSPH').trigger('blur');
+                        $('#ODCYL').trigger('blur');
+                    }
+                     if ((!Lcyl.match(/SPH/i)) && (Lcyl >'')) {
+                        if (!Lsph.match(/\d/)) Lsph ='0';
+                        Lsph = Number(Lsph);
+                        Lcyl = Number(Lcyl);
+                        Lnewsph = Lsph + Lcyl;
+                        Lnewcyl = Lcyl * -1;
+                        if (Lnewcyl > 0) Lnewcyl = "+"+ Lnewcyl;
+                        if (parseInt(Laxis) < 90) {
+                            Lnewaxis = parseInt(Laxis) + 90;
+                        } else {
+                            Lnewaxis = parseInt(Laxis) - 90;
+                        }
+
+                        if (Lnewcyl=='0') Lnewcyl = "SPH";
+                        if (Lnewsph =='0') {
+                            Lnewsph ="PLANO";
+                            if (Lnewcyl =="SPH") Lnewcyl = '';
+                        }
+                        
+                        $("#OSSPH").val(Lnewsph);
+                        $("#OSCYL").val(Lnewcyl);
+                        $("#OSAXIS").val(Lnewaxis);
+                        $('#OSAXIS').trigger('blur');
+                        $('#OSSPH').trigger('blur');
+                        $('#OSCYL').trigger('blur');
+                    }
                 }
             </script>
         </head>
@@ -698,7 +761,7 @@ if ($_REQUEST['dispensed']) {
                                             <td><?php echo xlt('Sph{{Sphere}}'); ?></td>
                                             <td><?php echo xlt('Cyl{{Cylinder}}'); ?></td>
                                             <td><?php echo xlt('Axis{{Axis of a glasses prescription}}'); ?></td>
-                                            <td rowspan="5" class="right" colspan="3" style="min-width:250px;font-weight:bold;">
+                                            <td rowspan="5" class="right" colspan="3" style="min-width:200px;font-weight:bold;">
                                                 <b style="font-weight:bold;text-decoration:underline;"><?php echo xlt('Rx Type'); ?></b><br /><br />
                                                 <b id="SingleVision_span" name="SingleVision_span"><?php echo xlt('Single'); ?>
                                                     <input type="radio" onclick="pick_rxType('Single','<?php echo attr(addslashes($insert_this_id)); ?>');" value="Single" id="RXTYPE" name="RXTYPE" class="input-helper--radio input-helper--radio" <?php echo attr($Single); ?>></b><br />
@@ -712,26 +775,26 @@ if ($_REQUEST['dispensed']) {
                                         </tr>
                                         <tr class="center">
                                             <td rowspan="2"  style="text-align:right;font-weight:bold;"><?php echo xlt('Distance'); ?></td>    
-                                            <td style="text-align:right;font-weight:bold;"><?php echo xlt('OD{{right eye}}'); ?></td>
+                                            <td style="text-align:right;font-weight:bold;"><span name="reverse"  id="reverse">Reverse</span><?php echo xlt('OD{{right eye}}'); ?></td>
                                             <td><input type=text id="ODSPH" name="ODSPH" value="<?php echo attr($ODSPH); ?>"></td>
                                             <td><input type=text id="ODCYL" name="ODCYL" value="<?php echo attr($ODCYL); ?>"></td>
                                             <td><input type=text id="ODAXIS" name="ODAXIS" value="<?php echo attr($ODAXIS); ?>"></td>
                                         </tr>
                                         <tr class="center">
                                             <td name="W_wide" style="text-align:right;font-weight:bold;"><?php echo xlt('OS{{left eye}}'); ?></td>
-                                            <td><input type=text id="OSSPH" name=="OSSPH" value="<?php echo attr($OSSPH); ?>"></td>
+                                            <td><input type=text id="OSSPH" name="OSSPH" value="<?php echo attr($OSSPH); ?>"></td>
                                             <td><input type=text id="OSCYL" name="OSCYL" value="<?php echo attr($OSCYL); ?>"></td>
                                             <td><input type=text id="OSAXIS" name="OSAXIS" value="<?php echo attr($OSAXIS); ?>"></td>
                                         </tr>
                                         <tr class="NEAR center">
                                             <td rowspan=2 nowrap style="text-decoration:none;text-align:right;font-weight:bold;"><?php echo xlt('ADD'); ?>:<br /><?php echo xlt("Mid{{Middle segment in a trifocal glasses prescription}}"); ?>/<?php echo xlt("Near"); ?></td>    
                                             <td style="text-align:right;font-weight:bold;"><?php echo xlt('OD{{right eye}}'); ?></td>
-                                            <td name="COLADD1"><input type="text" id="ODADD1" name="ODADD1" value="<?php echo attr($ODADD1); ?>"></td>
+                                            <td name="COLADD1"><input type="text" id="ODMIDADD" name="ODMIDADD" value="<?php echo attr($ODMIDADD); ?>"></td>
                                             <td class="WAdd2"><input type="text" id="ODADD2" name="ODADD2" value="<?php echo attr($ODADD2); ?>"></td>
                                         </tr>
                                         <tr class="NEAR center">
                                             <td style="text-align:right;font-weight:bold;"><?php echo xlt('OS{{left eye}}'); ?></td>
-                                            <td name="COLADD1"><input type="text" id="OSADD1" name="OSADD1" value="<?php echo attr($OSADD1); ?>"></td>
+                                            <td name="COLADD1"><input type="text" id="OSMIDADD" name="OSMIDADD" value="<?php echo attr($OSMIDADD); ?>"></td>
                                             <td class="WAdd2"><input type="text" id="OSADD2" name="OSADD2" value="<?php echo attr($OSADD2); ?>"></td>
                                         </tr>
                                         <tr>
@@ -760,7 +823,7 @@ if ($_REQUEST['dispensed']) {
 
                                             </td>
                                         </tr>
-                                        <tr><td colspan="9" class="right"><hr /></td></tr>
+                                        <tr><td colspan="9" class="right"><xhr /></td></tr>
                                         <tr class="dispense_data" style="font-weight:bold;text-align:center;">
                                             <td name="W_wide" colspan="2"></td>
                                             <td name="W_wide" title="<?php echo xla('Horizontal Prism Power'); ?>"><?php echo xlt('Horiz Prism{{abbreviation for Horizontal Prism Power}}'); ?></td>
@@ -788,14 +851,14 @@ if ($_REQUEST['dispensed']) {
                                             <td name="W_wide"><input type="text" class="prism" id="OSSLABOFF" name="OSSLABOFF" value="<?php echo attr($OSSLABOFF); ?>"></td>
                                             <td name="W_wide"><input type="text" class="prism" id="OSVERTEXDIST" name="OSVERTEXDIST" value="<?php echo attr($OSVERTEXDIST); ?>"></td>
                                          </tr>
-                                        <tr class="dispense_data"><td colspan="9" class="center"><hr /></td></tr>
+                                        <tr class="dispense_data"><td colspan="9" class="center"><xhr /></td></tr>
                                         <tr class="dispense_data" style="font-weight:bold;text-align:center;">
                                             <td></td>
                                             <td></td>
                                             <td name="W_wide" title="<?php echo xla('Monocular Pupillary Diameter - Distance'); ?>"><?php echo xlt('MPD-D{{abbreviation for Monocular Pupillary Diameter - Distance}}'); ?></td>
                                             <td name="W_wide" title="<?php echo xla('Monocular Pupillary Diameter - Near'); ?>"><?php echo xlt('MPD-N{{abbreviation for Monocular Pupillary Diameter - Near}}'); ?></td>
-                                            <td name="W_wide" title="<?php echo xla('Monocular Pupillary Diameter - Near'); ?>"><?php echo xlt('MPD-N{{abbreviation for Monocular Pupillary Diameter - Near}}'); ?></td>
-                                            <td name="W_wide" title="<?php echo xla('Monocular Pupillary Diameter - Near'); ?>"><?php echo xlt('MPD-N{{abbreviation for Monocular Pupillary Diameter - Near}}'); ?></td>
+                                            <td name="W_wide" title="<?php echo xla('Binocular Pupillary Diameter - Distance'); ?>"><?php echo xlt('BPD-D{{abbreviation for Binocular Pupillary Diameter - Distance}}'); ?></td>
+                                            <td name="W_wide" title="<?php echo xla('Binocular Pupillary Diameter - Near'); ?>"><?php echo xlt('BPD-N{{abbreviation for Binocular Pupillary Diameter - Near}}'); ?></td>
                                        
                                             <td colspan="2">Lens Material:</td>
                                         </tr>
@@ -806,33 +869,23 @@ if ($_REQUEST['dispensed']) {
                                             <td name="W_wide" rowspan="2" style="vertical-align:middle;"><input type="text" class="prism" id="BPDD" name="BPDD" value="<?php echo attr($BPDD); ?>"></td>
                                             <td name="W_wide" rowspan="2" style="vertical-align:middle;"><input type="text" class="prism" id="BPDN" name="BPDN" value="<?php echo attr($BPDN); ?>"></td>
                                             <td colspan="2">   <?php 
-                                                if ($LENS_MATERIAL == '') $LENS_MATERIAL = " ";
-                                                echo generate_select_list("lens_material_4", "Eye_Lens_Material", '','',attr($LENS_MATERIAL),'','','',array('style'=>'width:120px')); ?> 
-                                            </td> 
+                                                        echo generate_select_list("LENS_MATERIAL", "Eye_Lens_Material", "$LENS_MATERIAL",'',' ','','restoreSession;submit_form();','',array('style'=>'width:120px')); 
+                                                                ?>
+                                                </td> 
                                         </tr>
                                         <tr>
                                             <td name="W_wide" style="text-align:right;font-weight:bold;" colspan="2"><?php echo xlt('OS{{left eye}}'); ?></td>
                                             <td name="W_wide"><input type="text" class="prism" id="OSMPDD" name="OSMPDD" value="<?php echo attr($OSMPDD); ?>"></td>
                                             <td name="W_wide"><input type="text" class="prism" id="OSMPDN" name="OSMPDN" value="<?php echo attr($OSMPDN); ?>"></td>
                                         </tr>
-                                        <tr class="dispense_data"><td colspan="9" class="center"><hr /></td></tr>
+                                        <tr class="dispense_data"><td colspan="9" class="center"><xhr /></td></tr>
                                         <tr style="font-weight:bold;text-align:center;">
                                             <td colspan="3"><?php echo xlt('Lens Treatments'); ?>
                                             </td>
                                         </tr>
                                         <tr style="text-align:left;vertical-align:top;">
                                             <td colspan="5" style="font-weight:bold;text-align:left;">
-                                                <input type="checkbox" value="1" id="AScratch" name="AScratch" <?php if ($AScratch == '1') echo 'checked="checked"'; ?> />
-                                                <label for="AScratch" class="input-helper input-helper--checkbox"><?php echo xlt('Anti-scratch coating'); ?></label>
-                                                <br />
-                                                <input type="checkbox" value="1" id="AR_Coating" name="AR_coating" <?php if ($AR_Coating == '1') echo 'checked="checked"'; ?> />
-                                                <label for="AR_Coating" class="input-helper input-helper--checkbox"><?php echo xlt('Anti-reflective coating'); ?></label>
-                                                <br />
-                                                <input type="checkbox" value="1" id="UVBlock" name="UVBlock" <?php if ($UV_block == '1') echo 'checked="checked"'; ?> />
-                                                <label for="UVBlock" class="input-helper input-helper--checkbox"><?php echo xlt('UV-blocking treatment'); ?></label>
-                                                <br />
-                                                <input type="checkbox" value="1" id="PhotoChrom" name="PhotoChrom" <?php if ($PhotoChrom == '1') echo 'checked="checked"'; ?> />
-                                                <label for="PhotoChrom" class="input-helper input-helper--checkbox"><?php echo xlt('Photochromic treatment'); ?></label>
+                                                <?php  echo generate_lens_treatments($W,$LENS_TREATMENTS); ?>
                                             </td>
                                         </tr>
                                         <tr class="dispense_data"><td colspan="9" class="center"><hr /></td></tr>
@@ -944,12 +997,178 @@ if ($_REQUEST['dispensed']) {
                 });
                 <?php if (!$detailed) { echo "$('.header').trigger('click');"; } ?>
 
+                $("input[name$='PD']").blur(function() {
+                                                                       //make it all caps
+                                                                       var str = $(this).val();
+                                                                       str = str.toUpperCase();
+                                                                       $(this).val(str);
+                                                                       });
+                $('input[name$="SPH"]').blur(function() {
+                                              var mid = $(this).val();
+                                              if (mid.match(/PLANO/i)) {
+                                                 $(this).val('PLANO');
+                                                 return;
+                                             }
+                                              if (mid.match(/^[\+\-]?\d{1}$/)) {
+                                              mid = mid+".00";
+                                              }
+                                              if (mid.match(/\.[27]$/)) {
+                                              mid = mid + '5';
+                                              }
+                                              if (mid.match(/\.\d$/)) {
+                                              mid = mid + '0';
+                                              }
+                                              //if near is +2. make it +2.00
+                                              if (mid.match(/\.$/)) {
+                                              mid= mid + '00';
+                                              }
+                                              if ((!mid.match(/\./))&&(mid.match(00|25|50|75))) {
+                                              var front = mid.match(/(\d{0,2})(00|25|50|75)/)[1];
+                                              var back = mid.match(/(\d{0,2})(00|25|50|75)/)[2];
+                                              if (front =='') front ='0';
+                                              mid = front + "." + back;
+                                              }
+                                              if (!mid.match(/\./)) {
+                                              var front = mid.match(/([\+\-]?\d{0,2})(\d{2})/)[1];
+                                              var back  = mid.match(/(\d{0,2})(\d{2})/)[2];
+                                              if (front =='') front ='0';
+                                              if (front =='-') front ='-0';
+                                              mid = front + "." + back;
+                                              }
+                                              if (!mid.match(/^(\+|\-){1}/)) {
+                                              mid = "+" + mid;
+                                              }
+                                              $(this).val(mid);
+                                              });
+                  
+                $("input[name$='ADD'],input[name$='ADD2']").blur(function() {
+                                            var add = $(this).val();
+                                            add = add.replace(/=/g,"+");
+                                            //if add is one digit, eg. 2, make it +2.00
+                                            if (add.match(/^\d{1}$/)) {
+                                                add = "+"+add+".00";
+                                            }
+                                            //if add is '+'one digit, eg. +2, make it +2.00
+                                            if (add.match(/^\+\d{1}$/)) {
+                                                add = add+".00";
+                                            }
+                                            //if add is 2.5 or 2.0 make it 2.50 or 2.00
+                                            if (add.match(/\.[05]$/)) {
+                                                add = add + '0';
+                                            }
+                                            //if add is 2.2 or 2.7 make it 2.25 or 2.75
+                                            if (add.match(/\.[27]$/)) {
+                                                add = add + '5';
+                                            }
+                                            //if add is +2. make it +2.00
+                                            if (add.match(/\.$/)) {
+                                                add = add + '00';
+                                            }
+                                            if ((!add.match(/\./))&&(add.match(/(0|25|50|75)$/))) {
+                                                var front = add.match(/([\+]?\d{0,1})(00|25|50|75)/)[1];
+                                                var back  = add.match(/([\+]?\d{0,1})(00|25|50|75)/)[2];
+                                                if (front =='') front ='0';
+                                                add = front + "." + back;
+                                            }
+                                            if (!add.match(/^(\+)/) && (add.length >  0)) {
+                                                add= "+" + add;
+                                            }
+                                            $(this).val(add);
+                                            if (this.id=="ODADD2") $('#OSADD2').val(add);
+                                            if (this.id=="ODMIDADD") $('#OSMIDADD').val(add);
+                                            if (this.id=="CTLODADD") $('#CTLOSADD').val(add);
+                                            });
+
+                $("input[name$='AXIS']").blur(function() {
+                                             // Make this a 3 digit leading zeros number.
+                                             // we are not translating text to numbers, just numbers to
+                                             // a 3 digit format with leading zeroes as needed.
+                                             // assume the end user KNOWS there are only numbers presented and
+                                             // more than 3 digits is a mistake...
+                                             // (although this may change with topographic answer)
+                                             var axis = $(this).val();
+                                             var group = this.name.replace("AXIS", "CYL");;
+                                             var cyl = $("#"+group).val();
+                                             if ((cyl > '') && (cyl != 'SPH')) {
+                                             if (!axis.match(/\d\d\d/)) {
+                                             if (!axis.match(/\d\d/)) {
+                                             if (!axis.match(/\d/)) {
+                                             axis = '0';
+                                             }
+                                             axis = '0' + axis;
+                                             }
+                                             axis = '0' + axis;
+                                             }
+                                             } else {
+                                             axis = '';
+                                             }
+                                             $(this).val(axis);
+                                             });
+                $("[name$='CYL']").blur(function() {
+                                                var mid = $(this).val();
+                                                var group = this.name.replace("CYL", "SPH");;
+                                                var sphere = $("#"+group).val();
+                                                if (((mid.length == 0) && (sphere.length >  0))||(mid.match(/sph/i))) {
+                                                $(this).val('SPH'); 
+                                                var axis = this.name.replace("CYL", "AXIS");
+                                                $("#"+axis).val('');
+                                                return;
+                                                } else if (sphere.length >  0) {
+                                                if (mid.match(/^[\+\-]?\d{1}$/)) {
+                                                mid = mid+".00";
+                                                }
+                                                if (mid.match(/^(\d)(\d)$/)) {
+                                                mid = mid[0] + '.' +mid[1];
+                                                }
+                                                //if mid is 2.5 or 2.0 make it 2.50 or 2.00
+                                                if (mid.match(/\.[05]$/)) {
+                                                mid = mid + '0';
+                                                }
+                                                //if mid is 2.2 or 2.7 make it 2.25 or 2.75
+                                                if (mid.match(/\.[27]$/)) {
+                                                mid = mid + '5';
+                                                }
+                                                //if mid is +2. make it +2.00
+                                                if (mid.match(/\.$/)) {
+                                                mid = mid + '00';
+                                                }
+                                                if (mid.match(/([\+\-]?\d{0,2})\.?(00|25|50|75)/)) {
+                                                var front = mid.match(/([\+\-]?\d{0,2})\.?(00|25|50|75)/)[1];
+                                                var back  = mid.match(/([\+\-]?\d{0,2})\.?(00|25|50|75)/)[2];
+                                                if (front =='') front ='0';
+                                                mid = front + "." + back;
+                                                }
+                                                if (!mid.match(/^(\+|\-){1}/) && (sphere.length >  0)) {
+                                                //Since it doesn't start with + or - then give it '+'
+                                                mid = "+" + mid;
+                                                } 
+                                                $(this).val(mid);
+                                                }
+                                                });
+                $("input,textarea,text,checkbox").change(function(){
+                                                           //$(this).css("background-color","#F0F8FF");
+                                                           //submit_form($(this));
+                                                           });
+                $("#reverse").click(function() {
+                    //alert('Start');
+                    reverse_cylinder('');
+                    //alert('Finish');
+                    
+                });
+                                  $("input[name$='SPH'],input[name$='CYL']").on('keyup', function(e) {
+                                                                                        if (e.keyCode=='61' || e.keyCode=='74') {
+                                                                                        now = $(this).val();
+                                                                                        now = now.replace(/=/g,"+").replace(/^j/g,"J");
+                                                                                        $(this).val(now);
+                                                                                        }
+                                                                                        });
+
             });
             </script>
     </html>
 
     <?php 
-
+exit;
     global $web_root, $webserver_root;
     $content = ob_get_clean();
     echo $content; 

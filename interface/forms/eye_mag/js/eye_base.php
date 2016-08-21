@@ -182,7 +182,7 @@ function check_lock(modify) {
     var locked = $("#LOCKED").val();
     var locked_by = $("#LOCKEDBY").val();
     if ($("#LOCKEDDATE").val() > '') {
-        var locked_date = parseDate($("#LOCKEDDATE").val()); //parseDate($("#LOCKEDDATE").val());
+        var locked_date = parseDate($("#LOCKEDDATE").val()); 
     } else{
         var locked_date= new Date('2000-01-01');
         
@@ -1885,7 +1885,7 @@ shortcut.add("Meta+K",function() {
 $(function(){
     /*
      * this swallows backspace keys on any non-input element.
-     * stops backspace -> back
+     * stops backspace -> back a page in the browser, a very annoying thing indeed.
      */
     var rx = /INPUT|SELECT|TEXTAREA|SPAN|DIV/i;
 
@@ -1931,6 +1931,83 @@ function update_DOCS() {
                    return;
                    }
                    });
+}
+
+/**
+ *  Function to convert ophthalmic prescriptions between plus cylinder and minus cylinder
+ *
+ */
+function reverse_cylinder(target) {
+  //target can be revW1-5,AR,MR,CR,CTL,
+  var prefix;
+  var suffix;
+  if (target.match(/^(AR|MR|CR|CTL)$/)) {
+    prefix = target;
+    suffix = '';
+  }
+  if (target.match(/^revW[1-5]{1}$/)) { //matches on digit only, here 1-5
+    target = target.replace("revW","");
+    prefix = '';
+    suffix = '_'+target;
+  }
+  var Rsph  = $('#'+prefix+'ODSPH'+suffix).val();
+  var Rcyl  = $('#'+prefix+'ODCYL'+suffix).val();
+  var Raxis = $('#'+prefix+'ODAXIS'+suffix).val();
+  var Lsph  = $('#'+prefix+'OSSPH'+suffix).val();
+  var Lcyl  = $('#'+prefix+'OSCYL'+suffix).val();
+  var Laxis = $('#'+prefix+'OSAXIS'+suffix).val();
+  if (Rsph=='' && Rcyl =='' && Lsph=='' && lcyl =='') return;
+  if ((!Rcyl.match(/SPH/i)) && (Rcyl >'')) {
+      if (Rsph.match(/plano/i)) Rsph ='0';
+      Rsph = Number(Rsph);
+      Rcyl = Number(Rcyl);
+      Rnewsph = Rsph + Rcyl;
+      if (Rnewsph ==0) Rnewsph ="PLANO";
+      Rnewcyl = Rcyl * -1;
+      if (Rnewcyl > 0) Rnewcyl = "+"+Rnewcyl;
+      if (parseInt(Raxis) < 90) {
+          Rnewaxis = parseInt(Raxis) + 90;
+      } else {
+          Rnewaxis = parseInt(Raxis) - 90;
+      }
+      if (Rnewcyl=='0') Rnewcyl = "SPH";
+      if (Rnewsph =='0') {
+          Rnewsph ="PLANO";
+          if (Rnewcyl =="SPH") Rnewcyl = '';
+      }
+      $('#'+prefix+'ODSPH'+suffix).val(Rnewsph);
+      $('#'+prefix+'ODCYL'+suffix).val(Rnewcyl);
+      $('#'+prefix+'ODAXIS'+suffix).val(Rnewaxis);
+      $('#'+prefix+'ODAXIS'+suffix).trigger('blur');
+      $('#'+prefix+'ODSPH'+suffix).trigger('blur');
+      $('#'+prefix+'ODCYL'+suffix).trigger('blur');
+  }
+  if ((!Lcyl.match(/SPH/i)) && (Lcyl >'')) {
+      if (!Lsph.match(/\d/)) Lsph ='0';
+      Lsph = Number(Lsph);
+      Lcyl = Number(Lcyl);
+      Lnewsph = Lsph + Lcyl;
+      Lnewcyl = Lcyl * -1;
+      if (Lnewcyl > 0) Lnewcyl = "+"+ Lnewcyl;
+      if (parseInt(Laxis) < 90) {
+          Lnewaxis = parseInt(Laxis) + 90;
+      } else {
+          Lnewaxis = parseInt(Laxis) - 90;
+      }
+
+      if (Lnewcyl=='0') Lnewcyl = "SPH";
+      if (Lnewsph =='0') {
+          Lnewsph ="PLANO";
+          if (Lnewcyl =="SPH") Lnewcyl = '';
+      }
+      
+      $('#'+prefix+'OSSPH'+suffix).val(Lnewsph);
+      $('#'+prefix+'OSCYL'+suffix).val(Lnewcyl);
+      $('#'+prefix+'OSAXIS'+suffix).val(Lnewaxis);
+      $('#'+prefix+'OSAXIS'+suffix).trigger('blur');
+      $('#'+prefix+'OSSPH'+suffix).trigger('blur');
+      $('#'+prefix+'OSCYL'+suffix).trigger('blur');
+  } 
 }
 
 $(document).ready(function() {
@@ -2267,6 +2344,10 @@ $(document).ready(function() {
                                                                        });
                   $('input[class^="sphere"],input[name$="SPH"]').blur(function() {
                                                                       var mid = $(this).val();
+                                                                      if (mid.match(/PLANO/i)) {
+                                                                        $(this).val('PLANO');
+                                                                        return;
+                                                                      }
                                                                       if (mid.match(/^[\+\-]?\d{1}$/)) {
                                                                       mid = mid+".00";
                                                                       }
@@ -2338,8 +2419,10 @@ $(document).ready(function() {
                                                                                                               if (this.id=="ODMIDADD_2") $('#OSMIDADD_2').val(add);
                                                                                                               if (this.id=="ODADD_3") $('#OSADD_3').val(add);
                                                                                                               if (this.id=="ODMIDADD_3") $('#OSMIDADD_3').val(add);
-                                                                                                              if (this.id=="ODADD_4") $('#OSADD_1').val(add);
+                                                                                                              if (this.id=="ODADD_4") $('#OSADD_4').val(add);
                                                                                                               if (this.id=="ODMIDADD_4") $('#OSMIDADD_4').val(add);
+                                                                                                              if (this.id=="ODADD_5") $('#OSADD_5').val(add);
+                                                                                                              if (this.id=="ODMIDADD_5") $('#OSMIDADD_5').val(add);
                                                                                                               if (this.id=="MRODADD") $('#MROSADD').val(add);
                                                                                                               if (this.id=="ARODADD") $('#AROSADD').val(add);
                                                                                                               if (this.id=="CTLODADD") $('#CTLOSADD').val(add);
@@ -2378,9 +2461,13 @@ $(document).ready(function() {
                                                                         var mid = $(this).val();
                                                                         var group = this.name.replace("CYL", "SPH");;
                                                                         var sphere = $("#"+group).val();
-                                                                        if ((mid.length == 0) && (sphere.length >  0)) {
-                                                                        $(this).val('SPH');
-                                                                        submit_form($(this));
+                                                                        if (((mid.length == 0) && (sphere.length >  0))||(mid.match(/sph/i))) {
+                                                                          $(this).val('SPH'); 
+                                                                          if (sphere.match(/plano/i)) $(this).val(''); 
+                                                                          var axis = this.name.replace("CYL", "AXIS");
+                                                                          $("#"+axis).val('');
+                                                                          submit_form($(this));
+                                                                          return;
                                                                         } else if (sphere.length >  0) {
                                                                         if (mid.match(/^[\+\-]?\d{1}$/)) {
                                                                         mid = mid+".00";
@@ -3712,8 +3799,6 @@ $(document).ready(function() {
                   $('#Add_Glasses').click(function() {
                                           for (i=2; i <6; i++) { //come on, 5 current rx glasses should be enough...
                                           if ($('#W_'+i).val() != '1') {
-                                          //send a call to server to make a new pair and return the html for it.
-                                          //we have to let the form know DOM that there are new fields eh?
                                           $('#W_'+i).val('1');
                                           $('#LayerVision_W_'+i).removeClass('nodisplay');
                                           if (i==5) { $('#Add_Glasses').addClass('nodisplay'); }
@@ -3721,6 +3806,10 @@ $(document).ready(function() {
                                           }
                                           }
                                           });
+                  $("[name='reverseme']").click(function() {
+                                              var target = this.id;
+                                              reverse_cylinder(target);
+                                            });
                   
                   $('#code_me_now').click(function(event) {
                                           event.preventDefault();
