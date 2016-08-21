@@ -1226,7 +1226,7 @@ if ($refresh and $refresh != 'fullscreen') {
                         </tr>
                         <tr style="font-weight:400;padding-left:20px;">
                           <td>&nbsp;</td>
-                          <td><i class="fa fa-gamepad fa-2" name="reverseme" aria-hidden="true" id="revW1" ></i></td>
+                          <td><i class="fa fa-gamepad fa-2" name="reverseme" title="<?php echo xla('Convert between plus and minus cylinder'); ?>" aria-hidden="true" id="revW1" ></i></td>
                           <td><?php echo xlt('Sph{{Sphere}}'); ?></td>
                           <td><?php echo xlt('Cyl{{Cylinder}}'); ?></td>
                           <td><?php echo xlt('Axis'); ?></td>
@@ -1364,7 +1364,7 @@ if ($refresh and $refresh != 'fullscreen') {
                       </th>
 
                       <tr>
-                        <td><i class="fa fa-gamepad fa-2" name="reverseme" aria-hidden="true" id="MR" ></i></td>
+                        <td><i class="fa fa-gamepad fa-2" name="reverseme" title="<?php echo xla('Convert between plus and minus cylinder'); ?>" aria-hidden="true" id="MR" ></i></td>
                         <td><?php echo xlt('Sph{{Sphere}}'); ?></td>
                         <td><?php echo xlt('Cyl{{Cylinder}}'); ?></td>
                         <td><?php echo xlt('Axis'); ?></td>
@@ -1399,7 +1399,7 @@ if ($refresh and $refresh != 'fullscreen') {
                       <th colspan=4 style="text-align:right;"><i title="<?php echo xla("Dispense Rx"); ?>" class="fa fa-print" onclick="top.restoreSession();doscript('CR',<?php echo attr($pid); ?>,<?php echo attr($encounter); ?>);return false;"></i></th>
 
                       <tr>
-                        <td><i class="fa fa-gamepad fa-2" name="reverseme" aria-hidden="true" id="CR" ></i></td>
+                        <td><i class="fa fa-gamepad fa-2" name="reverseme" title="<?php echo xla('Convert between plus and minus cylinder'); ?>" aria-hidden="true" id="CR" ></i></td>
                         <td><?php echo xlt('Sph{{Sphere}}'); ?></td>
                         <td><?php echo xlt('Cyl{{Cylinder}}'); ?></td>
                         <td><?php echo xlt('Axis'); ?></td>
@@ -1447,7 +1447,7 @@ if ($refresh and $refresh != 'fullscreen') {
                     <table id="autorefraction">
                       <th colspan="9"><?php echo xlt('Auto Refraction'); ?></th>
                       <tr>
-                        <td><i class="fa fa-gamepad fa-2" name="reverseme" aria-hidden="true" id="AR" ></i></td>
+                        <td><i class="fa fa-gamepad fa-2" name="reverseme" title="<?php echo xla('Convert between plus and minus cylinder'); ?>" aria-hidden="true" id="AR" ></i></td>
                         <td><?php echo xlt('Sph{{Sphere}}'); ?></td>
                         <td><?php echo xlt('Cyl{{Cylinder}}'); ?></td>
                         <td><?php echo xlt('Axis'); ?></td>
@@ -1604,7 +1604,7 @@ if ($refresh and $refresh != 'fullscreen') {
                     </table>
                     <table>
                       <tr>
-                        <td><i class="fa fa-gamepad fa-2" name="reverseme" aria-hidden="true" id="CTL" ></i></td>
+                        <td><i class="fa fa-gamepad fa-2" name="reverseme" title="<?php echo xla('Convert between plus and minus cylinder'); ?>" aria-hidden="true" id="CTL" ></i></td>
                         <td><?php echo xlt('Sph{{Sphere}}'); ?></td>
                         <td><?php echo xlt('Cyl{{Cylinder}}'); ?></td>
                         <td><?php echo xlt('Axis'); ?></td>

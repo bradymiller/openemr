@@ -5160,7 +5160,7 @@ function generate_specRx($W) {
                         </tr>
                         <tr style="font-weight:400;">
                           <td></td>
-                          <td><i class="fa fa-gamepad fa-2" name="reverseme" aria-hidden="true" id="revW<?php echo attr($W); ?>" ></i></td>
+                          <td><i class="fa fa-gamepad fa-2" name="reverseme" title="<?php echo xla('Convert between plus and minus cylinder'); ?>"aria-hidden="true" id="revW<?php echo attr($W); ?>" ></i></td>
                           <td><?php echo xlt('Sph{{Sphere}}'); ?></td>
                           <td><?php echo xlt('Cyl{{Cylinder}}'); ?></td>
                           <td><?php echo xlt('Axis'); ?></td>
