@@ -776,7 +776,7 @@ if ($_REQUEST['dispensed']) {
                                         <tr class="center">
                                             <td><i name="reverse"  id="reverse" class="fa fa-gamepad"></i></td>
                                             <td style="text-align:right;font-weight:bold;"><?php echo xlt('Distance'); ?></td>    
-                                            <td style="text-align:right;font-weight:bold;">?php echo xlt('OD{{right eye}}'); ?></td>
+                                            <td style="text-align:right;font-weight:bold;"><?php echo xlt('OD{{right eye}}'); ?></td>
                                             <td><input type=text id="ODSPH" name="ODSPH" value="<?php echo attr($ODSPH); ?>"></td>
                                             <td><input type=text id="ODCYL" name="ODCYL" value="<?php echo attr($ODCYL); ?>"></td>
                                             <td><input type=text id="ODAXIS" name="ODAXIS" value="<?php echo attr($ODAXIS); ?>"></td>
