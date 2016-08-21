@@ -756,7 +756,7 @@ if ($_REQUEST['dispensed']) {
                                 if ($REFTYPE !="CTL") { ?>
                                     <table id="SpectacleRx" name="SpectacleRx" class="refraction bordershadow" style="min-width:610px;top:0px;">
                                         <tr style="font-weight:bold;text-align:center;">
-                                            <td></td>
+                                            <td><i name="reverse"  id="reverse" class="fa fa-gamepad"></i></td>
                                             <td></td>
                                             <td><?php echo xlt('Sph{{Sphere}}'); ?></td>
                                             <td><?php echo xlt('Cyl{{Cylinder}}'); ?></td>
@@ -774,8 +774,7 @@ if ($_REQUEST['dispensed']) {
                                             </td>
                                         </tr>
                                         <tr class="center">
-                                            <td><i name="reverse"  id="reverse" class="fa fa-gamepad"></i></td>
-                                            <td style="text-align:right;font-weight:bold;"><?php echo xlt('Distance'); ?></td>    
+                                            <td rowspan="2"  style="text-align:right;font-weight:bold;"><?php echo xlt('Distance'); ?></td>    
                                             <td style="text-align:right;font-weight:bold;"><?php echo xlt('OD{{right eye}}'); ?></td>
                                             <td><input type=text id="ODSPH" name="ODSPH" value="<?php echo attr($ODSPH); ?>"></td>
                                             <td><input type=text id="ODCYL" name="ODCYL" value="<?php echo attr($ODCYL); ?>"></td>
