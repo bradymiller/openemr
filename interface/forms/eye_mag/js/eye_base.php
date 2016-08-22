@@ -128,9 +128,9 @@ function submit_form(action) {
     $("#menustate").val('0');
     top.restoreSession();
     $.ajax({
-           type 	: 'POST',
-           url 		: url,
-           data 	: formData //,           dataType: "json"
+           type   : 'POST',
+           url    : url,
+           data   : formData //,           dataType: "json"
            }).done(function(result) {
                    if (result == 'Code 400') {
                    code_400(); //Not the owner: read-only mode or take ownership
@@ -182,7 +182,7 @@ function check_lock(modify) {
     var locked = $("#LOCKED").val();
     var locked_by = $("#LOCKEDBY").val();
     if ($("#LOCKEDDATE").val() > '') {
-        var locked_date = parseDate($("#LOCKEDDATE").val()); 
+        var locked_date = parseDate($("#LOCKEDDATE").val());
     } else{
         var locked_date= new Date('2000-01-01');
         
@@ -244,8 +244,8 @@ function check_lock(modify) {
         if (confirm('\tLOCKED by another user:\t\n\tSelect OK to take ownership or\t\n\tCANCEL to enter READ-ONLY mode.\t')) {
             top.restoreSession();
             $.ajax({
-                   type 	: 'POST',
-                   url 		: url,
+                   type   : 'POST',
+                   url    : url,
                    data     : {
                    'acquire_lock'  : '1',
                    'uniqueID'      : uniqueID, //this user is becoming the new owner
@@ -330,9 +330,9 @@ function update_PREFS() {
     };
     top.restoreSession();
     $.ajax({
-           type 		: 'POST',
+           type     : 'POST',
            url      : url,
-           data 		: formData
+           data     : formData
            });
 }
 /*
@@ -350,9 +350,9 @@ function unlock() {
     };
     top.restoreSession();
     $.ajax({
-           type 		: 'POST',
+           type     : 'POST',
            url          : url,
-           data 		: formData }).done(function(o) {
+           data     : formData }).done(function(o) {
                                            $("#warning").removeClass("nodisplay");
                                            $('#LOCKEDBY').val('');
                                            $('#chart_status').val('off');
@@ -376,20 +376,20 @@ function create_task(to_id,task,to_type) {
     $.ajax({
            type         : 'POST',
            url          : url,
-           data 		    : formData 
-         }).done(function(result) {
-              //OPTIONS to consider: we could return a status code from the server.
-              //maybe 1 = no doc, 2= doc made and queued, 3= sent
-              //maybe this is a checkbox.  Check to create the task, uncheck to delete it.
-              //if the task is completed, checkbox is checked and disabled?
-              //return doc_id and display it in html for id='status_'+task+'_'+to_type
-              obj = JSON.parse(result);
-              if (obj.DOC_link) {
-                $('#status_'+task+'_'+to_type).html(obj.DOC_link);
-              } 
-              if (obj.comments) alert(obj.comments);
-              //maybe change an icon to sent?  Think.
-            });
+           data         : formData
+           }).done(function(result) {
+                   //OPTIONS to consider: we could return a status code from the server.
+                   //maybe 1 = no doc, 2= doc made and queued, 3= sent
+                   //maybe this is a checkbox.  Check to create the task, uncheck to delete it.
+                   //if the task is completed, checkbox is checked and disabled?
+                   //return doc_id and display it in html for id='status_'+task+'_'+to_type
+                   obj = JSON.parse(result);
+                   if (obj.DOC_link) {
+                   $('#status_'+task+'_'+to_type).html(obj.DOC_link);
+                   }
+                   if (obj.comments) alert(obj.comments);
+                   //maybe change an icon to sent?  Think.
+                   });
 }
 
 
@@ -460,9 +460,9 @@ function delete_issue2(issue_number,PMSFH_type) {
     };
     top.restoreSession();
     $.ajax({
-           type 		: 'POST',
+           type     : 'POST',
            url          : url,
-           data 		: formData,
+           data     : formData,
            success:(function(result) {
                     populate_PMSFH(result);
                     })
@@ -528,9 +528,9 @@ function refresh_page() {
     };
     top.restoreSession();
     $.ajax({
-           type 		: 'POST',
+           type     : 'POST',
            url          : url,
-           data 		: formData,
+           data     : formData,
            success:(function(result) {
                     populate_form(result);
                     })
@@ -546,17 +546,17 @@ function refresh_page() {
  *  Function to refresh the Glaucoma Flow Sheet.
  */
 function refresh_GFS() {
-  if (typeof config_byday == "undefined") { return; }
+    if (typeof config_byday == "undefined") { return; }
     
-  var indexToUpdate = '0';
+    var indexToUpdate = '0';
     $.each(config_byday.data.labels, function(key,value) {
            if (value == visit_date) {
-            indexToUpdate = key;
+           indexToUpdate = key;
            }
            });
-  
+    
         //var indexToUpdate = config_byday.data.labels.length-1;
-  var ODIOP=0;
+    var ODIOP=0;
     var OSIOP=0;
     if ( $('#ODIOPAP').val()) {
         ODIOP =  $('#ODIOPAP').val();
@@ -712,7 +712,7 @@ function store_PDF() {
     $.ajax({
            type         : 'POST',
            url          : url,
-           data 		: formData
+           data     : formData
            });
 }
 
@@ -934,9 +934,9 @@ function show_PRIORS_section(section,newValue) {
     }
     top.restoreSession();
     $.ajax({
-           type 		: 'POST',
+           type     : 'POST',
            url       : url,
-           data 		: formData,
+           data     : formData,
            success   : function(result) {
            $("#PRIORS_" + section + "_left_text").html(result);
            }
@@ -1038,9 +1038,9 @@ function menu_select(zone,che) {
         };
         top.restoreSession();
         $.ajax({
-               type 		: 'GET',
+               type     : 'GET',
                url          : url,
-               data 		: formData,
+               data     : formData,
                success      : function(result) {
                window.parent.RTop.document.result;
                }
@@ -1455,9 +1455,9 @@ function set_related(codetype, code, selector, codedesc) {
     obj.IMPPLAN_items[IMP_target].codetype = codetype;
     obj.IMPPLAN_items[IMP_target].codedesc = codedesc;
     obj.IMPPLAN_items[IMP_target].codetext = codetype + ':' + code + ' ('+codedesc+')';
-  // This lists the text for the CODE at the top of the PLAN_
-  // It is already there on mouseover the code itself and is printed in reports//faxes, so it was removed here
-  //  obj.IMPPLAN_items[IMP_target].plan = codedesc+"\r"+obj.IMPPLAN_items[IMP_target].plan;
+        // This lists the text for the CODE at the top of the PLAN_
+        // It is already there on mouseover the code itself and is printed in reports//faxes, so it was removed here
+        //  obj.IMPPLAN_items[IMP_target].plan = codedesc+"\r"+obj.IMPPLAN_items[IMP_target].plan;
     
     if (obj.IMPPLAN_items[IMP_target].PMSFH_link > '') {
         var data = obj.IMPPLAN_items[IMP_target].PMSFH_link.match(/(.*)_(.*)/);
@@ -1483,7 +1483,7 @@ function update_PMSFH_code(the_issue,new_code){
     $.ajax({
            type         : 'POST',
            url          :  url,
-           data 		: {
+           data     : {
            action       : 'code_PMSFH',
            pid          : $('#pid').val(),
            form_id      : $('#form_id').val(),
@@ -1513,7 +1513,7 @@ function store_IMPPLAN(storage,nodisplay) {
                type         : 'POST',
                url          :  url,
                dataType     : 'json',
-               data 		: {
+               data     : {
                parameter     : formData,
                action        : 'store_IMPPLAN',
                pid           : $('#pid').val(),
@@ -1527,9 +1527,9 @@ function store_IMPPLAN(storage,nodisplay) {
                        return;
                        }
                        if (typeof display === "undefined") {
-                        obj.IMPPLAN_items = result;
-                        build_IMPPLAN(obj.IMPPLAN_items);
-                      }
+                       obj.IMPPLAN_items = result;
+                       build_IMPPLAN(obj.IMPPLAN_items);
+                       }
                        });
     }
 }
@@ -1547,7 +1547,7 @@ function CODING_to_feesheet(CODING_items) {
         $.ajax({
                type         : 'POST',
                url          :  url,
-               data 		: {
+               data     : {
                parameter     : formData,
                action        : 'code_visit',
                pid           : $('#pid').val(),
@@ -1773,10 +1773,10 @@ function update_READONLY() {
         // yet it is updating every 10-15 seconds if another user is making changes.
     top.restoreSession();
     $.ajax({
-           type 	: 'POST',
+           type   : 'POST',
            dataType : 'json',
            url      :  "../../forms/eye_mag/save.php?copy=READONLY",
-           data 	: data,
+           data   : data,
            success  : function(result) {
            $.map(result, function(valhere, keyhere) {
                  if ($("#"+keyhere).val() != valhere) {
@@ -1883,20 +1883,20 @@ shortcut.add("Meta+K",function() {
              show_KB();
              });
 $(function(){
-    /*
-     * this swallows backspace keys on any non-input element.
-     * stops backspace -> back a page in the browser, a very annoying thing indeed.
-     */
-    var rx = /INPUT|SELECT|TEXTAREA|SPAN|DIV/i;
-
-    $(document).bind("keydown keypress", function(e){
-        if( e.which == 8 ){ // 8 == backspace
-            if(!rx.test(e.target.tagName) || e.target.disabled || e.target.readOnly ){
-                e.preventDefault();
-            }
-        }
-    });
-});
+  /*
+   * this swallows backspace keys on any non-input element.
+   * stops backspace -> back a page in the browser, a very annoying thing indeed.
+   */
+  var rx = /INPUT|SELECT|TEXTAREA|SPAN|DIV/i;
+  
+  $(document).bind("keydown keypress", function(e){
+                   if( e.which == 8 ){ // 8 == backspace
+                   if(!rx.test(e.target.tagName) || e.target.disabled || e.target.readOnly ){
+                   e.preventDefault();
+                   }
+                   }
+                   });
+  });
 /* Undo feature
  *  RIGHT NOW THIS WORKS PER FIELD ONLY in FF. In Chrome it works great.  Not sure about IE at all.
  *  In FF, you select a field and CTRL-Z reverses/Shift-Ctrl-Z forwards value
@@ -1916,7 +1916,7 @@ function update_DOCS() {
     $.ajax({
            type         : 'POST',
            url          :  url,
-           data 		: {
+           data     : {
            action       : 'docs',
            pid          : $('#pid').val(),
            pcp          : $('#form_PCP').val(),
@@ -1938,76 +1938,76 @@ function update_DOCS() {
  *
  */
 function reverse_cylinder(target) {
-  //target can be revW1-5,AR,MR,CR,CTL,
-  var prefix;
-  var suffix;
-  if (target.match(/^(AR|MR|CR|CTL)$/)) {
-    prefix = target;
-    suffix = '';
-  }
-  if (target.match(/^revW[1-5]{1}$/)) { //matches on digit only, here 1-5
-    target = target.replace("revW","");
-    prefix = '';
-    suffix = '_'+target;
-  }
-  var Rsph  = $('#'+prefix+'ODSPH'+suffix).val();
-  var Rcyl  = $('#'+prefix+'ODCYL'+suffix).val();
-  var Raxis = $('#'+prefix+'ODAXIS'+suffix).val();
-  var Lsph  = $('#'+prefix+'OSSPH'+suffix).val();
-  var Lcyl  = $('#'+prefix+'OSCYL'+suffix).val();
-  var Laxis = $('#'+prefix+'OSAXIS'+suffix).val();
-  if (Rsph=='' && Rcyl =='' && Lsph=='' && lcyl =='') return;
-  if ((!Rcyl.match(/SPH/i)) && (Rcyl >'')) {
-      if (Rsph.match(/plano/i)) Rsph ='0';
-      Rsph = Number(Rsph);
-      Rcyl = Number(Rcyl);
-      Rnewsph = Rsph + Rcyl;
-      if (Rnewsph ==0) Rnewsph ="PLANO";
-      Rnewcyl = Rcyl * -1;
-      if (Rnewcyl > 0) Rnewcyl = "+"+Rnewcyl;
-      if (parseInt(Raxis) < 90) {
-          Rnewaxis = parseInt(Raxis) + 90;
-      } else {
-          Rnewaxis = parseInt(Raxis) - 90;
-      }
-      if (Rnewcyl=='0') Rnewcyl = "SPH";
-      if (Rnewsph =='0') {
-          Rnewsph ="PLANO";
-          if (Rnewcyl =="SPH") Rnewcyl = '';
-      }
-      $('#'+prefix+'ODSPH'+suffix).val(Rnewsph);
-      $('#'+prefix+'ODCYL'+suffix).val(Rnewcyl);
-      $('#'+prefix+'ODAXIS'+suffix).val(Rnewaxis);
-      $('#'+prefix+'ODAXIS'+suffix).trigger('blur');
-      $('#'+prefix+'ODSPH'+suffix).trigger('blur');
-      $('#'+prefix+'ODCYL'+suffix).trigger('blur');
-  }
-  if ((!Lcyl.match(/SPH/i)) && (Lcyl >'')) {
-      if (!Lsph.match(/\d/)) Lsph ='0';
-      Lsph = Number(Lsph);
-      Lcyl = Number(Lcyl);
-      Lnewsph = Lsph + Lcyl;
-      Lnewcyl = Lcyl * -1;
-      if (Lnewcyl > 0) Lnewcyl = "+"+ Lnewcyl;
-      if (parseInt(Laxis) < 90) {
-          Lnewaxis = parseInt(Laxis) + 90;
-      } else {
-          Lnewaxis = parseInt(Laxis) - 90;
-      }
-
-      if (Lnewcyl=='0') Lnewcyl = "SPH";
-      if (Lnewsph =='0') {
-          Lnewsph ="PLANO";
-          if (Lnewcyl =="SPH") Lnewcyl = '';
-      }
-      
-      $('#'+prefix+'OSSPH'+suffix).val(Lnewsph);
-      $('#'+prefix+'OSCYL'+suffix).val(Lnewcyl);
-      $('#'+prefix+'OSAXIS'+suffix).val(Lnewaxis);
-      $('#'+prefix+'OSAXIS'+suffix).trigger('blur');
-      $('#'+prefix+'OSSPH'+suffix).trigger('blur');
-      $('#'+prefix+'OSCYL'+suffix).trigger('blur');
-  } 
+        //target can be revW1-5,AR,MR,CR,CTL,
+    var prefix;
+    var suffix;
+    if (target.match(/^(AR|MR|CR|CTL)$/)) {
+        prefix = target;
+        suffix = '';
+    }
+    if (target.match(/^revW[1-5]{1}$/)) { //matches on digit only, here 1-5
+        target = target.replace("revW","");
+        prefix = '';
+        suffix = '_'+target;
+    }
+    var Rsph  = $('#'+prefix+'ODSPH'+suffix).val();
+    var Rcyl  = $('#'+prefix+'ODCYL'+suffix).val();
+    var Raxis = $('#'+prefix+'ODAXIS'+suffix).val();
+    var Lsph  = $('#'+prefix+'OSSPH'+suffix).val();
+    var Lcyl  = $('#'+prefix+'OSCYL'+suffix).val();
+    var Laxis = $('#'+prefix+'OSAXIS'+suffix).val();
+    if (Rsph=='' && Rcyl =='' && Lsph=='' && lcyl =='') return;
+    if ((!Rcyl.match(/SPH/i)) && (Rcyl >'')) {
+        if (Rsph.match(/plano/i)) Rsph ='0';
+        Rsph = Number(Rsph);
+        Rcyl = Number(Rcyl);
+        Rnewsph = Rsph + Rcyl;
+        if (Rnewsph ==0) Rnewsph ="PLANO";
+        Rnewcyl = Rcyl * -1;
+        if (Rnewcyl > 0) Rnewcyl = "+"+Rnewcyl;
+        if (parseInt(Raxis) < 90) {
+            Rnewaxis = parseInt(Raxis) + 90;
+        } else {
+            Rnewaxis = parseInt(Raxis) - 90;
+        }
+        if (Rnewcyl=='0') Rnewcyl = "SPH";
+        if (Rnewsph =='0') {
+            Rnewsph ="PLANO";
+            if (Rnewcyl =="SPH") Rnewcyl = '';
+        }
+        $('#'+prefix+'ODSPH'+suffix).val(Rnewsph);
+        $('#'+prefix+'ODCYL'+suffix).val(Rnewcyl);
+        $('#'+prefix+'ODAXIS'+suffix).val(Rnewaxis);
+        $('#'+prefix+'ODAXIS'+suffix).trigger('blur');
+        $('#'+prefix+'ODSPH'+suffix).trigger('blur');
+        $('#'+prefix+'ODCYL'+suffix).trigger('blur');
+    }
+    if ((!Lcyl.match(/SPH/i)) && (Lcyl >'')) {
+        if (!Lsph.match(/\d/)) Lsph ='0';
+        Lsph = Number(Lsph);
+        Lcyl = Number(Lcyl);
+        Lnewsph = Lsph + Lcyl;
+        Lnewcyl = Lcyl * -1;
+        if (Lnewcyl > 0) Lnewcyl = "+"+ Lnewcyl;
+        if (parseInt(Laxis) < 90) {
+            Lnewaxis = parseInt(Laxis) + 90;
+        } else {
+            Lnewaxis = parseInt(Laxis) - 90;
+        }
+        
+        if (Lnewcyl=='0') Lnewcyl = "SPH";
+        if (Lnewsph =='0') {
+            Lnewsph ="PLANO";
+            if (Lnewcyl =="SPH") Lnewcyl = '';
+        }
+        
+        $('#'+prefix+'OSSPH'+suffix).val(Lnewsph);
+        $('#'+prefix+'OSCYL'+suffix).val(Lnewcyl);
+        $('#'+prefix+'OSAXIS'+suffix).val(Lnewaxis);
+        $('#'+prefix+'OSAXIS'+suffix).trigger('blur');
+        $('#'+prefix+'OSSPH'+suffix).trigger('blur');
+        $('#'+prefix+'OSCYL'+suffix).trigger('blur');
+    }
 }
 
 $(document).ready(function() {
@@ -2073,7 +2073,7 @@ $(document).ready(function() {
                                            refresh_GFS();
                                            });
                   $('#ODIOPAP,#OSIOPAP,#ODIOPTARGET').change(function() {
-                  //this is failing if there is no config_by_day variable.
+                                                             //this is failing if there is no config_by_day variable.
                                                              refresh_GFS();
                                                              });
                   if ($("#PREFS_KB").val() =='1') {
@@ -2124,6 +2124,31 @@ $(document).ready(function() {
                                                                    $("#NEURO_defaults").trigger("click");
                                                                    continue;
                                                                    }
+                                                                   if (data_seg[index].match(/^DEXT($|;)/)) {
+                                                                   $("#EXT_defaults").trigger("click");
+                                                                   continue;
+                                                                   }
+                                                                   if (data_seg[index].match(/^DANTSEG($|;)/)) {
+                                                                   $("#ANTSEG_defaults").trigger("click");
+                                                                   continue;
+                                                                   }
+                                                                   if (data_seg[index].match(/^DAS($|;)/)) {
+                                                                   $("#ANTSEG_defaults").trigger("click");
+                                                                   continue;
+                                                                   }
+                                                                   if (data_seg[index].match(/^DRETINA($|;)/)) {
+                                                                   $("#RETINA_defaults").trigger("click");
+                                                                   continue;
+                                                                   }
+                                                                   if (data_seg[index].match(/^DRET($|;)/)) {
+                                                                   $("#RETINA_defaults").trigger("click");
+                                                                   continue;
+                                                                   }
+                                                                   if (data_seg[index].match(/^DNEURO($|;)/)) {
+                                                                   $("#NEURO_defaults").trigger("click");
+                                                                   continue;
+                                                                   }
+                                                                   
                                                                    appendix=".a";
                                                                    var data = data_seg[index].match(/^(\w*)\:?(.*)/);
                                                                    (data[2].match(/\.a$/))?(data[2] = data[2].replace(/\.a$/,'')):(appendix = "nope");
@@ -2345,8 +2370,8 @@ $(document).ready(function() {
                   $('input[class^="sphere"],input[name$="SPH"]').blur(function() {
                                                                       var mid = $(this).val();
                                                                       if (mid.match(/PLANO/i)) {
-                                                                        $(this).val('PLANO');
-                                                                        return;
+                                                                      $(this).val('PLANO');
+                                                                      return;
                                                                       }
                                                                       if (mid.match(/^[\+\-]?\d{1}$/)) {
                                                                       mid = mid+".00";
@@ -2462,12 +2487,12 @@ $(document).ready(function() {
                                                                         var group = this.name.replace("CYL", "SPH");;
                                                                         var sphere = $("#"+group).val();
                                                                         if (((mid.length == 0) && (sphere.length >  0))||(mid.match(/sph/i))) {
-                                                                          $(this).val('SPH'); 
-                                                                          if (sphere.match(/plano/i)) $(this).val(''); 
-                                                                          var axis = this.name.replace("CYL", "AXIS");
-                                                                          $("#"+axis).val('');
-                                                                          submit_form($(this));
-                                                                          return;
+                                                                        $(this).val('SPH');
+                                                                        if (sphere.match(/plano/i)) $(this).val('');
+                                                                        var axis = this.name.replace("CYL", "AXIS");
+                                                                        $("#"+axis).val('');
+                                                                        submit_form($(this));
+                                                                        return;
                                                                         } else if (sphere.length >  0) {
                                                                         if (mid.match(/^[\+\-]?\d{1}$/)) {
                                                                         mid = mid+".00";
@@ -2702,20 +2727,20 @@ $(document).ready(function() {
                                           $("#WOSADD2").removeClass('nodisplay');
                                           });
                   $("[name=W_width_display]").click(function() {
-                    if ($("#PREFS_W_width").val() !="1") {
-                      $("#PREFS_W_width").val('1');
-                      //make each display W wide
-                      $("[name=currentRX]").addClass('refraction_wide');
-                      $("[name=W_wide]").removeClass('nodisplay');
-                    } else {
-                      $("#PREFS_W_width").val('0');
-                      //make each display W narrow
-                      $("[name=currentRX]").removeClass('refraction_wide');
-                      $("[name=W_wide]").addClass('nodisplay');
-                    }
-                    update_PREFS();
-
-                  });
+                                                    if ($("#PREFS_W_width").val() !="1") {
+                                                    $("#PREFS_W_width").val('1');
+                                                    //make each display W wide
+                                                    $("[name=currentRX]").addClass('refraction_wide');
+                                                    $("[name=W_wide]").removeClass('nodisplay');
+                                                    } else {
+                                                    $("#PREFS_W_width").val('0');
+                                                    //make each display W narrow
+                                                    $("[name=currentRX]").removeClass('refraction_wide');
+                                                    $("[name=W_wide]").addClass('nodisplay');
+                                                    }
+                                                    update_PREFS();
+                                                    
+                                                    });
                   ($("#PREFS_W_width").val() == '1') ? $("[name=W_wide]").removeClass('nodisplay') : $("[name=W_wide]").addClass('nodisplay');
                   $("#Amsler-Normal").change(function() {
                                              if ($(this).is(':checked')) {
@@ -2952,7 +2977,7 @@ $(document).ready(function() {
                                                   }
                                                   $(this).removeClass("buttonRefraction_selected");
                                                   }
-                                                  $(this).css( 'cursor', 'pointer' ); 
+                                                  $(this).css( 'cursor', 'pointer' );
                                                   update_PREFS();
                                                   });
                   
@@ -3500,10 +3525,10 @@ $(document).ready(function() {
                                             }
                                             top.restoreSession();
                                             $.ajax({
-                                                   type 	: 'POST',
+                                                   type   : 'POST',
                                                    dataType : 'json',
                                                    url      :  "../../forms/eye_mag/save.php",
-                                                   data 	: data,
+                                                   data   : data,
                                                    success  : function(result) {
                                                    //we have to process impplan differently
                                                    if (zone =='IMPPLAN') {
@@ -3807,9 +3832,9 @@ $(document).ready(function() {
                                           }
                                           });
                   $("[name='reverseme']").click(function() {
-                                              var target = this.id;
-                                              reverse_cylinder(target);
-                                            });
+                                                var target = this.id;
+                                                reverse_cylinder(target);
+                                                });
                   
                   $('#code_me_now').click(function(event) {
                                           event.preventDefault();
@@ -3825,9 +3850,9 @@ $(document).ready(function() {
                   check_CPT_92060();
                   check_exam_detail();
                   if ($("#PRIOR_ALL").value == "undefined") {
-                    var Code_new_est="New";
+                  var Code_new_est="New";
                   } else {
-                    var Code_new_est="Est";
+                  var Code_new_est="Est";
                   }
                   Suggest_visit_code();
                   $('#visit_codes').change(function() {
@@ -3836,7 +3861,7 @@ $(document).ready(function() {
                                            visit_code = data[2];
                                            visit_type = data[1];
                                            });
-
+                  
                   show_QP_section('IMPPLAN');
                   build_IMPPLAN(obj.IMPPLAN_items);
                   //
