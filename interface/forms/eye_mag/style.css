@@ -241,7 +241,8 @@ input[type=text] {
     font-family: Arial, Arial,sans-serif;
 }
 .refraction_wide {
-    width:95%;
+    width: 90%;
+    max-width: 800px;
 }
 .refraction td {
     text-align:center;

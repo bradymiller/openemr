@@ -3534,7 +3534,7 @@ if ($refresh and $refresh != 'fullscreen') {
                                         $last_category = $fs_category;
                                         echo "    <option value=''> " . text(substr($fs_category, 1)) . "</option>\n";
                                       }
-                                      $code_text = (strlen(substr($fs_option, 1)) > 15) ? substr(substr($fs_option, 1),0,13).'...' : substr($fs_option, 1); 
+                                      $code_text = (strlen(substr($fs_option, 1)) > 18) ? substr(substr($fs_option, 1),0,16).'...' : substr($fs_option, 1); 
                                     
                                       echo "    <option value='" . attr($fs_codes) . "'>" . text($code)." ".text(substr($fs_category, 1)).": ".text($code_text) . "</option>\n";
                                     }
