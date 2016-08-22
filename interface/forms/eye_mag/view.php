@@ -3335,4 +3335,539 @@ if ($refresh and $refresh != 'fullscreen') {
                         <div style="position:absolute;top:3px;right:4px;">
                           <input type="checkbox" id="inc_PE" name="inc_PE" checked><label for='inc_PE' class='input-helper input-helper--checkbox'><?php echo xlt('Exam{{Physical Exam}}'); ?></label>&nbsp;
                           <input type="checkbox" id="inc_POH" name="inc_POH" checked><label for='inc_POH' class='input-helper input-helper--checkbox'><?php echo xlt('POH{{Past Ocular History abbreviation}}'); ?></label>&nbsp;
-                          <input type="checkbox" id="inc_PMH" name="inc_PMH"><label for='inc_PMH' class='input-helper input-helper--checkbox
+                          <input type="checkbox" id="inc_PMH" name="inc_PMH"><label for='inc_PMH' class='input-helper input-helper--checkbox'><?php echo xlt('PMH{{Past Medical History abbreviation}}') ?></label>&nbsp;
+                        </div>
+                      </dt>  
+                        <dd id="IMP_start_acc" name="IMP_start_acc">
+                          <ol id="build_DX_list" name="build_DX_list" style="padding-right:20px;padding-left:20px;">
+                          <?php  
+                          $i=0;
+                          if ($total_DX == '1') {
+                            foreach ($PMSFH[0]['POH'] as $k => $v) {
+                              $insert_code='';
+                              if ($v['diagnosis'] >''){
+                                $insert_code = "<code class='pull-right' style='padding-top:7px;padding-right:4px;'>".$v['diagnosis']."</code>";
+                              }
+                              $k = xla($k);
+                              $v['title'] = xlt($v['title']);
+                              $insert_code = text($insert_code);
+                              echo "<li class='ui-widget-content'> <span id='DX_POH_".$k."' name='DX_POH_".$k."'>".$v['title']."</span> ".$insert_code."</li>";
+                            }
+                            foreach ($PMSFH[0]['POS'] as $k => $v) {
+                              $insert_code='';
+                              if ($v['diagnosis'] >''){
+                                $insert_code = "<code class='pull-right' style='padding-top:7px;padding-right:4px;'>".$v['diagnosis']."</code>";
+                              }
+                              $k = xla($k);
+                              $v['title'] = xlt($v['title']);
+                              $insert_code = text($insert_code);
+                              echo "<li class='ui-widget-content'> <span id='DX_POS_".$k."' name='DX_POS_".$k."'>".$v['title']."</span> ".$insert_code."</li>";
+                            }
+                            foreach ($PMSFH[0]['medical_problem'] as $k => $v) {
+                              $insert_code='';
+                              if ($v['diagnosis'] >''){
+                                $insert_code = "<code class='pull-right' style='padding-top:7px;padding-right:4px;'>".$v['diagnosis']."</code>";
+                              }
+                              $k = xla($k);
+                              $v['title'] = xlt($v['title']);
+                              $insert_code = text($insert_code);
+                              echo "<li class='ui-widget-content'> <span id='DX_PMH_".$k."' name='DX_PMH_".$k."'>".$v['title']."</span> ".$insert_code."</li>";
+                            }
+                          } else {
+                            echo "<br /><span class='bold'>";
+                            echo xlt("The Past Ocular History (POH) and Past Medical History (PMH) are negative.");
+                            echo xlt('and').' '.xlt('no diagnosis was auto-generated from the clinical findings.');
+                            echo "</span><br /><br>";
+                            echo xlt("Update the chart to activate the Builder.")."<br />";
+                            
+                          }
+                            ?>
+                          </ol>
+                        </dd>
+                      
+                        <?php 
+                      /*
+                      *  This a provider-specific PLAN list of items that the user can define. 
+                      *  Pencil icon links to 'list_options' in DB which opens in the RTop frame.
+                      *  If the provider-specific list does not exist, create it and populate it 
+                      *  with generic starter items from list_options list "Eye_todo_done_defaults".
+                      *  This list is used to create the plan for the next visit.  Anything with a CODE
+                      *  is also listed as a billable item/TEST in the CODING ENGINE.
+                      */
+                      $query = "select * from list_options where list_id=? and activity='1' order by seq";
+                      $TODO_data = sqlStatement($query,array("Eye_todo_done_".$providerID));
+                      if (sqlNumRows($TODO_data) < '1') {
+                        // Provider list is not created yet, or was deleted.
+                        // Create it fom defaults...
+                        $query = "INSERT INTO `openemr`.`list_options` (`list_id`, `option_id`, `title`, `seq`, `is_default`, `option_value`, `mapping`, `notes`, `codes`, `activity`) VALUES ('lists', ?, ?, '0', '1', '0', '', '', '', '0')";
+                        sqlStatement($query,array('Eye_todo_done_'.$providerID,'Eye Orders '.$prov_data['lname']));
+                        $SQL_INSERT = "INSERT INTO `openemr`.`list_options` (`list_id`, `option_id`, `title`, `seq`, `mapping`, `notes`, `codes`, `activity`, `subtype`) VALUES ";
+                        $number_rows=0;
+                        $query = "SELECT * FROM list_options where list_id =? ORDER BY seq";
+                        $TODO_data = sqlStatement($query,array("Eye_todo_done_defaults"));
+                        while ($TODO= sqlFetchArray($TODO_data))   {
+                          if ($number_rows > 0) $SQL_INSERT .= ",
+                            ";
+                          $SQL_INSERT .= "('Eye_todo_done_".$providerID."','".$TODO['option_id']."','".$TODO['title']."','".$TODO['seq']."','".$TODO['mapping']."','".$TODO['notes']."','".$TODO['codes']."','".$TODO['activity']."','".$TODO['subtype']."')";
+                          $number_rows++;
+                        }
+                        sqlStatement($SQL_INSERT.";");
+                      }
+                        ?>
+                      <dt class="borderShadow">
+                        <span><?php echo xlt('Next Visit Orders'); ?></span> 
+                        <a href="<?php echo $GLOBALS['webroot']; ?>/interface/super/edit_list.php?list_id=Eye_todo_done_<?php echo attr($providerID); ?>" target="RTop" 
+                              title="<?php echo xla('Click here to Edit this Doctor\'s Plan options'); ?>" 
+                              name="provider_todo" style="color:black;font-weight:600;"><i class="fa fa-pencil fa-fw"></i> </a>
+                      </dt>  
+                      <dd>
+                          <table>
+                            <tr class="" style="vertical-align:bottom;margin: 10px;;">
+                              <td></td>
+                          </tr>
+                            <tr>
+                                <td style="padding-right:20px;padding-left:20px;">
+                              <?php 
+                              // Iterate through this "provider's" PLAN/to_do list of options.
+                              //could maybe use options.inc checkbox type 21?
+                              $count=0;
+                              $counter=0;
+                              $PLAN_arr = explode("|",$PLAN);
+                              while ($row = sqlFetchArray($TODO_data)) {
+                                $arrPLAN[$counter]['option_id'] = $row['option_id'];
+                                $arrPLAN[$counter]['title'] = $row['title'];
+                                $arrPLAN[$counter]['option_value'] = $row['option_value'];
+                                $arrPLAN[$counter]['mapping'] = $row['mapping'];
+                                $arrPLAN[$counter]['notes'] = $row['notes'];
+                                $arrPLAN[$counter]['codes'] = $row['codes'];
+                                $arrPLAN[$counter]['subtype'] = $row['subtype'];
+                                $checked ='';
+                                $title=$row['title'];
+                                if (in_array($title,$PLAN_arr)) {
+                                  $checked = "checked='yes'";
+                                }
+                               // <!-- <i title="Build your plan." class="fa fa-share-square-o fa-flip-horizontal" id="make_blank_PLAN" name="make_blank_PLAN"></i>--> 
+                                echo "<input type='checkbox' id='PLAN$counter' name='PLAN[]' $checked value='".attr($row[title])."'> ";
+                                $label = text(substr($row['title'],0,30));
+                                echo "<label for='PLAN$counter' class='input-helper input-helper--checkbox' title='".attr($row['notes'])."'>";
+                                echo $label."</label><br />";
+                                $count++;$counter++;
+                                if ($count =="3") {
+                                  echo '</td><tr><td style="padding-right:20px;padding-left:20px;">';
+                                  $count='0';
+                                } else { 
+                                  echo "</td><td>";
+                                }
+                              }
+                                ?>
+                                <script>
+                                var PLANoptions = <?php echo json_encode($arrPLAN); ?>; 
+                                </script>
+                                </td>
+                            </tr>
+                            <tr>
+                              <td colspan="3" style="padding-left:20px;padding-top:4px;">
+                                <textarea id="Plan<?php echo $counter; ?>" name="PLAN[]"><?php if (($PLAN) && ($PLAN_arr[count($PLAN_arr)-1] > '')) echo $PLAN_arr[count($PLAN_arr)-1]; ?></textarea>
+                              </td>
+                            </tr>
+                          </table>
+                      </dd>
+                        <?php 
+                        /* 
+                         *  The goal here is to auto-code the encounter and link it directly to the billing module.  
+                         *  Select Visit Type from dropdown (CPT4) built from practice's fee_sheet_options table.
+                         *  Active coding system = $default_search_type;
+                         *  We present the $default_search_type codes found in the Imp/Plan.
+                         *  Perhaps a minor procedure/test was performed? 
+                         *  Select options drawn from Eye_todo_done_".$providerID list with a CODE
+                         *  TODO: Finally we have the "Prior Visit" functionality of the form. 
+                         *  We should be able to look past codes and perhaps carry this forward?  
+                         */
+                        ?>
+                        <script>
+                          var default_search_type = '<?php echo text($default_search_type); ?>';
+                        </script>
+
+                      <dt class="borderShadow"><span><?php echo xlt('Coding Engine'); ?></span></dt>
+                      <dd>
+                        <div style="padding:5px 10px 5px 10px;">
+                          <table style="width:100%;">
+                             <tr>
+                              <td style="" colspan="2"><b><?php echo xlt('Diagnostic'). " ".xlt('Codes'); ?>:</b>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td colspan="3" style="padding-top:5px;padding-left:15px;"><span id="Coding_DX_Codes"><br /></span>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td style="padding-top:5px;vertical-align:top;"><b><?php echo xlt('Visit'); echo " ".xlt('Codes'); ?>:</b></td>
+                              <td colspan="2" style="text-align:right;padding:left:20px;">
+                                <span class="CODE_LOW" title="<?php echo xla('Documentation for a Detailed HPI requires').":\n ".xla('> 3 HPI elements')."\n ".
+                                   xla('OR{{as in AND/OR, ie. not an abbreviation}}')."\n ".
+                                   xla('the status of three chronic/inactive problems'); ?>">
+                                  <i class="fa fa-check"></i> <?php 
+                                    echo xlt('Limited HPI');
+                                    ?> </span><span class="CODE_HIGH nodisplay"><i class="fa fa-check"></i> <?php 
+                                    echo xlt('Detailed HPI'); ?></span><span class="EXAM_LOW">, <?php echo xlt('Limited Exam'); ?></span>
+                                <span class="DIL_RISKS nodisplay"><i class="fa fa-check"></i> <?php echo xlt('Detailed exam'); ?></span>
+                                <span id="Coding_Visit_Codes"></span></td>
+                              </tr>
+                              <tr>
+                              <td colspan="3" style="padding-top:5px;padding-left:15px;">
+ 
+                                <div class="ui-widget">
+                                  <select id="visit_codes" size=5>
+                                    <?php
+                                    $i = 0;
+                                    $last_category = '';
+
+                                    // Create drop-lists based on the fee_sheet_options table.
+                                    $res = sqlStatement("SELECT * FROM fee_sheet_options " .
+                                      "ORDER BY fs_category, fs_option");
+                                    while ($row = sqlFetchArray($res)) {
+                                      $fs_category = $row['fs_category'];
+                                      $fs_option   = $row['fs_option'];
+                                      $fs_codes    = $row['fs_codes'];
+                                      list($code_type_here,$code) = explode("|",$fs_codes);
+                                      if($fs_category !== $last_category) {
+                                        $last_category = $fs_category;
+                                        echo "    <option value=''> " . text(substr($fs_category, 1)) . "</option>\n";
+                                      }
+                                      $code_text = (strlen(substr($fs_option, 1)) > 15) ? substr(substr($fs_option, 1),0,13).'...' : substr($fs_option, 1); 
+                                    
+                                      echo "    <option value='" . attr($fs_codes) . "'>" . text($code)." ".text(substr($fs_category, 1)).": ".text($code_text) . "</option>\n";
+                                    }
+                                    // Create drop-lists based on categories defined within the codes.
+                                    $pres = sqlStatement("SELECT option_id, title FROM list_options " .
+                                      "WHERE list_id = 'superbill' ORDER BY seq");
+                                    while ($prow = sqlFetchArray($pres)) {
+                                      global $code_types;
+                                       echo "    <option value=''> " . text($prow['title']) . "\n";
+                                      $res = sqlStatement("SELECT code_type, code, code_text,modifier FROM codes " .
+                                        "WHERE superbill = ? AND active = 1 " .
+                                        "ORDER BY code_text", array($prow['option_id']) );
+                                      while ($row = sqlFetchArray($res)) {
+                                        $ctkey = alphaCodeType($row['code_type']);
+                                        if ($code_types[$ctkey]['nofs']) continue;
+                                        $code_text = (strlen($row['code_text']) > 15) ? substr($row['code_text'],0,13).'...' : $row['code_text']; 
+                                      echo "    <option value='" . attr($ctkey) . "|" .
+                                          attr($row['code']) . ':'. attr($row['modifier']) . "|'>" . text($code_text) . "</option>\n";
+                                      }
+                                    }
+                                    ?>
+                                  </select>
+                                </div>
+                              </td>
+                            </tr>
+                                
+                            <tr id="neurosens_code" name="neurosens_code" class="nodisplay">
+                              <td colspan="3" style="padding-top:5px;padding-left:15px;"><input type="hidden" id="neurosens" style="width:50px;" value="92060" class="">
+                               <i class="fa fa-check"></i> <?php echo xlt('92060 Sensorimotor Exam - no modifier required'); ?>.
+                              </td>
+                            </tr>
+                          
+                            <tr>
+                              <td style="padding-top:5px;" colspan="3"><b><?php echo xlt('Tests Performed'); echo " / ".xlt('Codes'); ?>:</b>&nbsp;
+                                <a href="<?php echo $GLOBALS['webroot']; ?>/interface/super/edit_list.php?list_id=Eye_todo_done_<?php echo attr($providerID); ?>" target="RTop" 
+                              title="<?php echo xla('Click here to Edit this Doctor\'s Plan options').". \n". xlt('Only entries with a Code are billable').". "; ?>" 
+                              name="provider_testing_codes" style="color:black;font-weight:600;"><i class="fa fa-pencil fa-fw"></i> </a>
+                            </td>
+                            </tr>
+                            <tr>
+                              <td colspan="3">
+                                <table>
+                                  <tr>
+                                    <td style="padding-right:20px;padding-left:20px;">
+                                    <?php
+                                    
+                                    $counter='0';
+                                    $count='0';
+                                    $arrTESTS = explode("|",$Resource); //form_eye_mag:Resource = billable things (not visit code) performed today 
+                                    $query = "select * from list_options where list_id=? and activity='1' order by seq";
+                                    $TODO_data = sqlStatement($query,array("Eye_todo_done_".$providerID));
+                                    while ($row = sqlFetchArray($TODO_data)) {
+                                      if ($row['codes'] ==='') continue;
+                                      list($code_type_here,$code) = explode(":",$row['codes']);
+                                      $codedesc = lookup_code_descriptions($row['codes']);
+                                      $order   = array("\r\n", "\n","\r");
+                                      $codedesc = str_replace($order,'',$codedesc);
+                                      if ($codedesc =='') $codedesc = $row['title'];
+                                      $codetext = $codedesc ." (".$row['codes'].")";
+                                      $checked ='';
+                                      if (in_array($row['codes'],$arrTESTS)) { 
+                                        $checked = "checked='yes'";
+                                      }
+                                      /**
+                                       *  This will link to a report generator for billable procedures/tests.  
+                                       *  They items need to be read/interpreted/dictated/documented to be billable.
+                                       *  The reading may already be documented within the scanned item itself.  
+                                       *  Thus this will be optional.
+                                       *  If needed, these reports should be categoriezed and filed ala the document engine.
+                                       *  If a procedure/test has a document category and there is a document uploaded for today's encounter
+                                       *  an icon should be displayed linked to the test/interpretation.
+                                       *  Procedures/surgeries performed will need an op-note like format.
+                                       *  This will be another series of forms then.
+                                       *  echo "<i class='fa fa-file-word-o'></i>";
+                                       */
+                                      echo "<input type='checkbox' class='TESTS' id='TEST_$counter' codetext='".attr($codetext)."' title='".attr($codedesc)."' name='TEST[]' $checked value='". attr($row['codes']) ."'> ";
+                                      $label = text(substr($codedesc,0,25));
+                                      echo "<label for='TEST_$counter' class='input-helper input-helper--checkbox'>";
+                                      echo $label."</label>";
+                                      $count++;$counter++;
+                                      if ($count =="2") {
+                                        echo '</td><tr><td style="padding-right:20px;padding-left:20px;">';
+                                        $count='0';
+                                      } else { 
+                                        echo "</td><td>";
+                                      }
+                                    }
+
+                                    ?>
+                                    </td>
+                                  </tr>
+                                </table>
+                              </td>
+                            </tr>
+                            
+                           
+                            <tr>
+                              <td colspan="3" style="padding-top:5px;text-align:center;"> 
+                                <button id="code_me_now"><?php echo xlt('Populate Fee Sheet'); ?></button>
+                              </td>
+                            </tr>
+                          </table>
+                        </div>
+                      </dd>
+                      <dt class="borderShadow"><span><?php echo xlt('Communication Engine'); ?></span></dt>
+                      <dd>
+                        <div style="padding:5px 20px 5px 20px;">
+                        <?php 
+                          $query ="SELECT * FROM users WHERE id=?";
+                          $pcp_data =  sqlQuery($query,array($pat_data['providerID']));
+                          $ref_data =  sqlQuery($query,array($pat_data['ref_providerID']));
+                        ?>
+                         <table style="width:100%;">
+                            <tr>
+                              <td class="bold underline" style="min-width:50px;"></td>
+                              <td class="bold underline" style="min-width:100px;">PCP</td>
+                              <td class="bold underline" style="min-width:100px;">Referrer</td>
+                            </tr>
+                            <tr>
+                              <td></td>
+                              <td class="bold"><?php echo text($pcp_data['fname'])." ".text($pcp_data['lname']); ?></td>
+                              <td class="bold"><?php echo text($ref_data['fname'])." ".text($ref_data['lname']); ?></td>
+                            </tr>
+                            <tr>
+                              <td class="bold top"><?php echo xlt('Phone'); ?>:</td>
+                              <td>
+                                <?php echo text($pcp_data['phonew1']); if ($pcp_data['phonew2']) echo "<br />". text($pcp_data['phonew2']); ?>
+                              </td>
+                              <td>
+                                <?php echo text($ref_data['phonew1']); if ($pcp_data['phonew2']) echo "<br />". text($pcp_data['phonew2']); ?>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td class="bold top"><?php echo xlt('Fax'); ?>:</td>
+                              <td class="bold">
+                                <?php  
+                                  if ($pcp_data['fax'] > '') { 
+                                    // does the fax already exist?
+                                    $query = "SELECT * FROM documents where encounter_id=? and foreign_id=? and url like '%Fax_".$encounter."_".$pat_data['providerID']."%'";
+                                    $FAX_PCP = sqlQuery($query,array($encounter,$pid));
+                                    if ($FAX_PCP['id']) { //it is here already, make them print and manually fax it.  Show icon
+                                      echo text($pcp_data['fax'])."&nbsp;&nbsp;
+                                      <span id='status_Fax_pcp'>
+                                      <a href='".$webroot."/controller.php?document&view&patient_id=".$pid."&doc_id=".$FAX_PCP['id']."'
+                                      target='_blank' title='".xla('View the Summay Report sent to Fax Server.')."''>
+                                      <i class='fa fa-file-pdf-o fa-fw'></i></a>
+                                      <i class='fa fa-repeat fa-fw' 
+                                        onclick=\"top.restoreSession(); create_task('".attr($pat_data['providerID'])."','Fax-resend','ref'); return false;\">
+                                        </i>";
+                                    } else { ?>
+                                      <a href="#" onclick="top.restoreSession(); create_task('<?php echo attr($pat_data['providerID']); ?>','Fax','pcp'); return false;">
+                                      <?php echo text($pcp_data['fax']); ?></a>&nbsp;&nbsp;
+                                      <span id="status_Fax_pcp"><i class="fa fa-fax fa-fw"></i></span>
+                                      <?php 
+                                    } 
+                                  } ?>
+                              </td>
+                              <td class="bold">
+                                <?php if ($ref_data['fax'] > '') { 
+                                    // does the fax already exist?
+                                    $query = "SELECT * FROM documents where encounter_id=? and foreign_id=? and url like '%Fax_".$encounter."_".$pat_data['ref_providerID']."%'";
+                                    $FAX_REF = sqlQuery($query,array($encounter,$pid));
+                                    if ($FAX_REF['id']) { //it is here already, make them print and manually fax it.  Show icon
+                                      echo text($ref_data['fax'])."&nbsp;&nbsp;
+                                      <span id='status_Fax_ref'>
+                                      <a href='".$webroot."/controller.php?document&view&patient_id=".$pid."&doc_id=".$FAX_REF['id']."'
+                                      target='_blank' title='".xla('View the Summay Report sent to Fax Server.')."''>
+                                      <i class='fa fa-file-pdf-o fa-fw'></i></a>
+                                      <i class='fa fa-repeat fa-fw' 
+                                        onclick=\"top.restoreSession(); create_task('".attr($pat_data['ref_providerID'])."','Fax-resend','ref'); return false;\">
+                                        </i>";
+                                    } else { ?>
+                                      <a href="#" onclick="top.restoreSession(); create_task('<?php echo attr($pat_data['ref_providerID']); ?>','Fax','ref'); return false;">
+                                      <?php echo text($ref_data['fax']); ?></a>&nbsp;&nbsp;
+                                      <span id="status_Fax_ref"><i class="fa fa-fax fa-fw"></i></span>
+                                      <?php 
+                                    } 
+                                  } ?>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td class="top bold"><?php echo xlt('Address'); ?>:</td>
+                              <td class="top"><?php 
+                                  if ($pcp_data['organization'] >'') echo text($pcp_data['organization'])."<br />"; 
+                                  if ($pcp_data['street'] >'') echo text($pcp_data['street'])."<br />"; 
+                                  if ($pcp_data['streetb'] >'') echo text($pcp_data['streetb'])."<br />"; 
+                                  if ($pcp_data['city'] >'') echo text($pcp_data['city']).", "; 
+                                  if ($pcp_data['state'] >'') echo text($pcp_data['state'])." "; 
+                                  if ($pcp_data['zip'] >'') echo text($pcp_data['zip'])."<br />"; 
+                                  
+                                  if ($pcp_data['street2'] >'') echo "<br />".text($pcp_data['street2'])."<br />"; 
+                                  if ($pcp_data['streetb2'] >'') echo text($pcp_data['streetb2'])."<br />"; 
+                                  if ($pcp_data['city2'] >'') echo text($pcp_data['city2']).", "; 
+                                  if ($pcp_data['state2'] >'') echo text($pcp_data['state2'])." "; 
+                                  if ($pcp_data['zip2'] >'') echo text($pcp_data['zip2'])."<br />"; 
+                                  ?>
+                              </td>
+                              <td class="top"><?php 
+                                  if ($ref_data['organization'] >'') echo text($ref_data['organization'])."<br />"; 
+                                  if ($ref_data['street'] >'') echo text($ref_data['street'])."<br />"; 
+                                  if ($ref_data['streetb'] >'') echo text($ref_data['streetb'])."<br />"; 
+                                  if ($ref_data['city'] >'') echo text($ref_data['city']).", "; 
+                                  if ($ref_data['state'] >'') echo text($ref_data['state'])." "; 
+                                  if ($ref_data['zip'] >'') echo text($ref_data['zip'])."<br />"; 
+                                  
+                                  if ($ref_data['street2'] >'') echo "<br />".text($ref_data['street2'])."<br />"; 
+                                  if ($ref_data['streetb2'] >'') echo text($ref_data['streetb2'])."<br />"; 
+                                  if ($ref_data['city2'] >'') echo text($ref_data['city2']).", "; 
+                                  if ($ref_data['state2'] >'') echo text($ref_data['state2'])." "; 
+                                  if ($ref_data['zip2'] >'') echo text($ref_data['zip2'])."<br />"; 
+                                  ?>
+                              </td>
+                            </tr>
+                            
+                          </table>
+                        </div>
+                      </dd>
+                      </dl>
+                    </div>
+                  </div>   
+                </div>
+                <!-- END IMP/PLAN --> 
+              </div>
+              <br />  
+            </div>
+            <!-- end form_container for the main body of the form -->
+          </div> 
+          <!-- end Layer1 -->
+        </form>
+        <!-- end form -->
+      </div>    <!-- end Layer3 -->
+    </div>     <!-- end page wrapper -->
+    <?php
+    if ($display!="fullscreen") { 
+      // trial fullscreen will lead to tablet versions and bootstrap menu overhaul
+      // this function is in php/eye_mag_functions.php
+      $output = menu_overhaul_bottom($pid,$encounter);
+      echo $output;
+   } 
+    ?>
+    <script src="<?php echo $GLOBALS['assets_static_relative'] ?>/jquery-panelslider-0-1-1/jquery.panelslider.js"></script>
+    <script type="text/javascript" src="<?php echo $GLOBALS['assets_static_relative'] ?>/manual-added-packages/shortcut.js-2-01-B/shortcut.js"></script>   
+    <!-- Undo code -->
+    <script src="<?php echo $GLOBALS['assets_static_relative'] ?>/undone.js-0-0-1/undone.js"></script>
+    <script src="<?php echo $GLOBALS['assets_static_relative'] ?>/undone.js-0-0-1/jquery.undone.js"></script>
+    <script>
+        $.undone();
+
+        $("#undo, #redo, #clear").click(function(){
+          $.undone(this.id);
+        });
+
+        $(document).on("mouseenter", ".toggle", function () {
+          var self = $(this);
+          $.undone("register",
+              function () { self.addClass("hidden"); },
+              function () { self.removeClass("hidden"); }
+          );
+        });
+
+        $(document).keydown(function (e) {
+          var key = e.which;
+          if (e.ctrlKey) { // ctrl
+              if (key === 90) $.undone("undo"); // z
+              if (key === 89) $.undone("redo"); // y
+          }
+        });
+
+        $(window).on("undone:change", function(e, name, undoLen, redoLen){
+          $("#undo").prop("disabled", !undoLen);
+          $("#redo").prop("disabled", !redoLen);
+          $("input").val(undoLen)
+        });
+
+        // create the items
+        var items = 800;
+        while(items--) {
+          var a = document.createElement("a");
+          a.href = "#";
+          a.className = "toggle";
+          document.getElementsByTagName("div")[0].appendChild(a);
+        }
+        var base = '<?php echo $GLOBALS['webroot']; ?>';
+    </script>
+  
+    <script type="text/javascript" src="<?php echo $GLOBALS['webroot']; ?>/interface/forms/<?php echo $form_folder; ?>/js/shorthand_eye.js"></script>
+    <script type="text/javascript" src="<?php echo $GLOBALS['webroot']; ?>/interface/forms/<?php echo $form_folder; ?>/js/eye_base.php?enc=<?php echo attr($encounter); ?>&providerID=<?php echo attr($providerID); ?>"></script>
+    <script type="text/javascript" src="<?php echo $GLOBALS['webroot']; ?>/interface/forms/<?php echo $form_folder; ?>/js/canvasdraw.js"></script>
+    <script type="text/javascript" src="<?php echo $GLOBALS['webroot']; ?>/library/dialog.js"></script>
+    <div id="right-panel" name="right-panel" class="panel_side">
+      <div style="margin-top:20px;text-align:center;font-size:1.2em;">
+        <span class="fa fa-file-text-o" id="PANEL_TEXT" name="PANEL_TEXT" style="margin:2px;"></span>
+        <span class="fa fa-database" id="PANEL_QP" name="PANEL_QP" style="margin:2px;"></span>
+        <span class="fa fa-paint-brush" id="PANEL_DRAW" name="PANEL_DRAW" style="margin:2px;"></span>
+        <span class="fa fa-user-md fa-sm" style="margin:2px;" name="Shorthand_kb"></span>
+        <span class="fa fa-close" id="close-panel-bt" style="margin:2px;"></span>
+      </div>
+      <div id="right_panel_refresh" data-role="panel" name="right_panel_refresh">
+        <?php 
+        // We are building the panel bar with the patient medical info
+        // Since the "lists" table has a "subtype" field now
+        // each section could be customized, like SOCHx, subtype "smoking"
+        // However openEMR stores most of this SocHx data in the layout_options table with
+        // the form_id='HIS' and group_name='4Lifestyle' fields.  
+        // So we need to conform and pull this information out of the current "History" fields.
+        // We do this in the eye_mag_functions.php file by creating a new array $PMSFH 
+        // pulling in the issues, Social History, FH and ROS into one place.
+        // Eye Form uses $PMSFH to build two display options:
+        // 1. PMH_QP (square panel)
+        //      - function display_PRIOR_section("PMSFH",$id,$id,$pid) in php/eye_mag_functions.php 
+        //      - creates/populates the PMSFH values to the right of the PMH zone, in the PMH_2: QP zone.  
+        // 2. Right Panel
+        //      - function show_PMSFH_panel($PMSFH) in php/eye_mag_functions.php
+        //      - creates/populates the right panel NavBar 
+        echo $output_PMSFH_panel = show_PMSFH_panel($PMSFH);  
+        ?>
+      </div>
+    </div>
+    <script>
+      $('#left-panel-link').panelslider({side: 'left', clickClose: false, duration: 600, easingOpen: 'easeInBack', easingClose: 'easeOutBack'});
+      $('#right-panel-link').panelslider({side: 'right', clickClose: false, duration: 600, easingOpen: 'easeInBack', easingClose: 'easeOutBack'});
+      $('#right-panel-link_2').panelslider({side: 'right', clickClose: false, duration: 600, easingOpen: 'easeInBack', easingClose: 'easeOutBack'});
+      $('#close-panel-bt').click(function() {
+      $.panelslider.close();
+      });
+      <?php 
+      if ($PANEL_RIGHT >'0') { ?>
+        $("#right-panel-link").trigger("click");
+        <?php 
+      } 
+      ?>
+    </script>
+    <script src="<?php echo $GLOBALS['assets_static_relative'] ?>/jquery-ui-1-11-4/jquery-ui.min.js"></script>
+
+  </body>   
+</html>
