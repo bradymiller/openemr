@@ -1839,7 +1839,7 @@ if ($refresh and $refresh != 'fullscreen') {
                       <span class="closeButton fa fa-paint-brush" title="<?php echo xla('Open/Close the External drawing panel'); ?>" id="BUTTON_DRAW_EXT" name="BUTTON_DRAW_EXT"></span>
                       <i class="closeButton_2 fa fa-database" title="<?php echo xla('Open/Close the External Exam Quick Picks panel'); ?>" id="BUTTON_QP_EXT" name="BUTTON_QP_EXT"></i>
                       <i class="closeButton_3 fa fa-user-md fa-sm fa-2" name="Shorthand_kb" title="<?php echo xla("Open/Close the Shorthand Window and display Shorthand Codes"); ?>"></i>
-                      <b><?php echo xlt('External Exam'); ?>:</b><br />
+                      <b><?php echo xlt('External Exam'); ?>:</b><div class="kb kb_left" title="<?php echo xla("External Exam Default Values"); ?>"><?php echo text('DEXT'); ?></div><br />
                       <div style="position:relative;float:right;top:0.2in;text-align:right;">
                         <table style="text-align:center;font-weight:600;font-size:0.8em;">
                            <?php 
@@ -2041,7 +2041,7 @@ if ($refresh and $refresh != 'fullscreen') {
                       <span class="closeButton fa fa-paint-brush" title="<?php echo xla('Open/Close the Anterior Segment drawing panel'); ?>" id="BUTTON_DRAW_ANTSEG" name="BUTTON_DRAW_ANTSEG"></span>
                       <i class="closeButton_2 fa fa-database"title="<?php echo xla('Open/Close the Anterior Segment Exam Quick Picks panel'); ?>" id="BUTTON_QP_ANTSEG" name="BUTTON_QP_ANTSEG"></i>
                       <i class="closeButton_3 fa fa-user-md fa-sm fa-2" name="Shorthand_kb" title="<?php echo xla("Open/Close the Shorthand Window and display Shorthand Codes"); ?>"></i>
-                      <b><?php echo xlt('Anterior Segment'); ?>:</b><br />
+                      <b><?php echo xlt('Anterior Segment'); ?>:</b><div class="kb kb_left" title="<?php echo xla("Anterior Segment Default Values"); ?>"><?php echo text('DAS'); ?></div><br />
                       <div class="text_clinical" style="position:relative;float:right;top:0.2in;">
                             <table style="text-align:center;font-weight:600;font-size:0.8em;">
                               <?php 
@@ -2273,7 +2273,7 @@ if ($refresh and $refresh != 'fullscreen') {
                       <i class="closeButton_2 fa fa-database"title="<?php echo xla('Open/Close the Retinal Exam Quick Picks panel'); ?>" id="BUTTON_QP_RETINA" name="BUTTON_QP_RETINA"></i>
                       <i class="closeButton_3 fa fa-user-md fa-sm fa-2" name="Shorthand_kb" title="<?php echo xla("Open/Close the Shorthand Window and display Shorthand Codes"); ?>"></i>
                 
-                      <b><?php echo xlt('Retina'); ?>:</b>
+                      <b><?php echo xlt('Retina'); ?>:</b><div class="kb kb_left" title="<?php echo xla("Retina Default Values"); ?>"><?php echo text('DRET'); ?></div>
                               <?php
                             /*
                                   OCT, FA/ICG,Photos - External,Photos - AntSeg,Optic Disc,Photos - Retina,Radiology, VF
@@ -2463,7 +2463,7 @@ if ($refresh and $refresh != 'fullscreen') {
 
                         <i class="closeButton_3 fa fa-user-md fa-sm fa-2" name="Shorthand_kb" title="<?php echo xla("Open/Close the Shorthand Window and display Shorthand Codes"); ?>"></i>
                         <div class="TEXT_class" id="NEURO_left_text" name="NEURO_left_text" style="margin:auto 5;min-height: 2.5in;text-align:left;">
-                            <b><?php echo xlt('Neuro'); ?>:</b>
+                            <b><?php echo xlt('Neuro'); ?>:</b><div class="kb kb_left" title="<?php echo xla("Neuro/Phys Exam Default Values")." ".xlt('including CVF{{Confrontational Visual Fields}} and Pupils'); ?>"><?php echo text('DNEURO'); ?></div>
                             <div style="float:left;margin-top:8px;font-size:0.8em;">
                                 <div id="NEURO_text_list" class="borderShadow" style="border:1pt solid black;float:left;width:175px;padding:5px;text-align:center;margin:2 2;font-weight:bold;">
                                     <table style="font-weight:600;font-size:1.0em;">
@@ -3517,7 +3517,7 @@ if ($refresh and $refresh != 'fullscreen') {
                               <td colspan="3" style="padding-top:5px;padding-left:15px;">
  
                                 <div class="ui-widget">
-                                  <select id="visit_codes" size=5>
+                                  <select id="visit_codes">
                                     <?php
                                     $i = 0;
                                     $last_category = '';

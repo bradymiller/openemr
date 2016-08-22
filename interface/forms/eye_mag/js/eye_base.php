@@ -2156,6 +2156,7 @@ $(document).ready(function() {
                                                                    if ((data_seg[index].match(/^CLEARAS($|;)/i))||
                                                                        (data_seg[index].match(/^CLEARANTSEG($|;)/i))||
                                                                        (data_seg[index].match(/^CANTSEG($|;)/i))||
+                                                                       (data_seg[index].match(/^CANT($|;)/i))||
                                                                        (data_seg[index].match(/^CAS($|;)/i))) {
                                                                           $(".ANTSEG").val('');
                                                                           continue;
