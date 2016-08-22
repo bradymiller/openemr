@@ -2114,39 +2114,58 @@ $(document).ready(function() {
                                                                    var appendix =".a";
                                                                    var zone;
                                                                    for (index=0; index < data_seg.length; ++index) {
-                                                                   if (data_seg[index] =='') continue;
-                                                                   data_seg[index] = data_seg[index].replace(/^[\n\v\f\r\x85\u2028\u2029\W]*/,'');
-                                                                   data_seg[index] = data_seg[index].replace(/^[\s]*/,'');
-                                                                   if (data_seg[index].match(/^D($|;)/)) {
-                                                                   $("#EXT_defaults").trigger("click");
-                                                                   $("#ANTSEG_defaults").trigger("click");
-                                                                   $("#RETINA_defaults").trigger("click");
-                                                                   $("#NEURO_defaults").trigger("click");
-                                                                   continue;
+                                                                     if (data_seg[index] =='') continue;
+                                                                     data_seg[index] = data_seg[index].replace(/^[\n\v\f\r\x85\u2028\u2029\W]*/,'');
+                                                                     data_seg[index] = data_seg[index].replace(/^[\s]*/,'');
+                                                                     if (data_seg[index].match(/^D($|;)/i)) {
+                                                                     $("#EXT_defaults").trigger("click");
+                                                                     $("#ANTSEG_defaults").trigger("click");
+                                                                     $("#RETINA_defaults").trigger("click");
+                                                                     $("#NEURO_defaults").trigger("click");
+                                                                     continue;
+                                                                     }
+                                                                     if (data_seg[index].match(/^DEXT($|;)/i)) {
+                                                                     $("#EXT_defaults").trigger("click");
+                                                                     continue;
+                                                                     }
+                                                                     if (data_seg[index].match(/^DANTSEG($|;)/i)) {
+                                                                     $("#ANTSEG_defaults").trigger("click");
+                                                                     continue;
+                                                                     }
+                                                                     if (data_seg[index].match(/^DAS($|;)/i)) {
+                                                                     $("#ANTSEG_defaults").trigger("click");
+                                                                     continue;
+                                                                     }
+                                                                     if (data_seg[index].match(/^DRETINA($|;)/i)) {
+                                                                     $("#RETINA_defaults").trigger("click");
+                                                                     continue;
+                                                                     }
+                                                                     if (data_seg[index].match(/^DRET($|;)/i)) {
+                                                                     $("#RETINA_defaults").trigger("click");
+                                                                     continue;
+                                                                     }
+                                                                     if (data_seg[index].match(/^DNEURO($|;)/i)) {
+                                                                     $("#NEURO_defaults").trigger("click");
+                                                                     continue;
+                                                                    }
+                                                                   if ((data_seg[index].match(/^CLEAREXT($|;)/i))||
+                                                                       (data_seg[index].match(/^CEXT($|;)/i)))  {
+                                                                        $(".EXT").val('');
+                                                                        continue;
                                                                    }
-                                                                   if (data_seg[index].match(/^DEXT($|;)/)) {
-                                                                   $("#EXT_defaults").trigger("click");
-                                                                   continue;
-                                                                   }
-                                                                   if (data_seg[index].match(/^DANTSEG($|;)/)) {
-                                                                   $("#ANTSEG_defaults").trigger("click");
-                                                                   continue;
-                                                                   }
-                                                                   if (data_seg[index].match(/^DAS($|;)/)) {
-                                                                   $("#ANTSEG_defaults").trigger("click");
-                                                                   continue;
-                                                                   }
-                                                                   if (data_seg[index].match(/^DRETINA($|;)/)) {
-                                                                   $("#RETINA_defaults").trigger("click");
-                                                                   continue;
-                                                                   }
-                                                                   if (data_seg[index].match(/^DRET($|;)/)) {
-                                                                   $("#RETINA_defaults").trigger("click");
-                                                                   continue;
-                                                                   }
-                                                                   if (data_seg[index].match(/^DNEURO($|;)/)) {
-                                                                   $("#NEURO_defaults").trigger("click");
-                                                                   continue;
+                                                                   if ((data_seg[index].match(/^CLEARAS($|;)/i))||
+                                                                       (data_seg[index].match(/^CLEARANTSEG($|;)/i))||
+                                                                       (data_seg[index].match(/^CANTSEG($|;)/i))||
+                                                                       (data_seg[index].match(/^CAS($|;)/i))) {
+                                                                          $(".ANTSEG").val('');
+                                                                          continue;
+                                                                   } 
+                                                                   if ((data_seg[index].match(/^CLEARRET($|;)/i))||
+                                                                       (data_seg[index].match(/^CRET($|;)/i)) ||
+                                                                       (data_seg[index].match(/^CLEARRETINA($|;)/i))||
+                                                                       (data_seg[index].match(/^CRETINA($|;)/i)))  {
+                                                                        $(".RETINA").val('');
+                                                                        continue;
                                                                    }
                                                                    
                                                                    appendix=".a";
