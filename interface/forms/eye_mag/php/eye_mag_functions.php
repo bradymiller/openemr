@@ -2551,11 +2551,11 @@ function display_QP($zone,$providerID){
  *  
  *  Otherwise a "BASE" image is pulled from the images directory of the form...  Customizable.
  *
- * @param string $zone options ALL,EXT,ANTSEG,RETINA,NEURO 
- * @param string $visit_date Future functionality to limit result set. UTC DATE Formatted 
- * @param string $pid value = patient id
- * @param string OU by default.  Future functionality will allow OD and OS values- not implemented yet.
- * @return true : when called directly outputs the ZONE specific HTML5 CANVAS widget 
+ *  @param string $zone options ALL,EXT,ANTSEG,RETINA,NEURO 
+ *  @param string $visit_date Future functionality to limit result set. UTC DATE Formatted 
+ *  @param string $pid value = patient id
+ *  @param string OU by default.  Future functionality will allow OD and OS values- not implemented yet.
+ *  @return true : when called directly outputs the ZONE specific HTML5 CANVAS widget 
  */ 
 function display_draw_section($zone,$encounter,$pid,$side ='OU',$counter='') {
     global $form_folder;
@@ -2633,7 +2633,7 @@ function display_draw_section($zone,$encounter,$pid,$side ='OU',$counter='') {
 }
 
 /**
- *  This function returns HTML to replace a requested section with copy_forward values (3 input values)
+ *  This function returns a JSON object to replace a requested section with copy_forward values (3 input values)
  *  It will also replace the drawings if ALL is selected
  *  
  * @param string $zone options ALL,EXT,ANTSEG,RETINA,NEURO, EXT_DRAW, ANTSEG_DRAW, RETINA_DRAW, NEURO_DRAW 
@@ -3790,7 +3790,7 @@ function report_header($pid,$direction='shell') {
  *      the text value for the form_field (Notes) (found in the list Coding_Eye_Form_Fields: Notes)
  *      and the codebase is searched for a match.
  *  For example: the term "ptosis" is found in the RUL clinical field, and there is no Code value in the 
- *      Coding_Eye_Form_Terms Code(s) field.  Thus openEMR Ophthalmology searches the active codebases for a match.
+ *      Coding_Eye_Form_Terms Code(s) field.  Thus openEMR Eye Form searches the active codebases for a match.
  *      The codebases are determined in Administration->Lists->Code Types and includes those Codesets flagged 
  *      as active and as Diagnostic codes.  The terms "ptosis right upper eyelid" are sent to the
  *      standard openEMR code search engine.
@@ -3834,7 +3834,7 @@ function start_your_engines($FIELDS) {//pass an assoc array of fields with terms
         $option_values="";
         $term="";
         $code_found = array();
-        if (stripos($amihere['term'],":") !== false) { //options are store here code:option_values 
+        if (stripos($amihere['term'],":") !== false) { //options are stored here code:option_values 
             list ($term,$option_values) = explode(":",$amihere['term']);
         } else { 
             $term = $amihere['term'];
