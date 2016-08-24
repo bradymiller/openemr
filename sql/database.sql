@@ -2918,7 +2918,7 @@ CREATE TABLE `list_options` (
   `toggle_setting_1` tinyint(1) NOT NULL default '0',
   `toggle_setting_2` tinyint(1) NOT NULL default '0',
   `activity` TINYINT DEFAULT 1 NOT NULL,
-  `subtype` varchar(31) NOT NULL DEFAULT '',
+  `subtype` varchar(10) DEFAULT NULL,
   PRIMARY KEY  (`list_id`,`option_id`)
 ) ENGINE=InnoDB;
 

@@ -1519,11 +1519,11 @@ function build_PMSFH($pid) {
             $subtype=" and subtype ='eye'";
         } elseif ($panel_type =='PMH') {
             $focusISSUE = "medical_problem"; //openEMR ISSUE_TYPE
-            $subtype=" and subtype = ''";
+            $subtype=" and (subtype = ' ' OR subtype IS NULL)"; //fee_sheet makes subtype=
             $PMSFH['CHRONIC'] = '';
         } elseif ($panel_type =='Surgery') {
             $focusISSUE = "surgery"; //openEMR ISSUE_TYPE
-            $subtype="  and subtype =''";
+            $subtype="  and (subtype = ' ' OR subtype IS NULL)";
             $order = "ORDER BY begdate DESC";
         } elseif ($panel_type =='Allergy') {
             $focusISSUE = "allergy"; //openEMR ISSUE_TYPE
