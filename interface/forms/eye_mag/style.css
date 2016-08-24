@@ -242,7 +242,7 @@ input[type=text] {
 }
 .refraction_wide {
     width: 95%;
-    max-width: 800px;
+    max-width: 890px;
 }
 .refraction td {
     text-align:center;
@@ -490,9 +490,9 @@ body
 
 /* Refraction Panel Defaults */
 #Layer1 {
-        border: 0px solid red;
+    border: 0px solid red;
     padding: 0px;
-    margin: 20 auto 0;
+    margin: 20px auto 100px;
     position:relative;
     width:100%;
 

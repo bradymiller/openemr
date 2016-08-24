@@ -1200,7 +1200,7 @@ if ($refresh and $refresh != 'fullscreen') {
               <!-- start of the refraction box -->
               <span class="anchor" id="REFRACTION_anchor"></span>
               <div class="loading" id="EXAM_sections_loading" name="REFRACTION_sections_loading"><i class="fa fa-spinner fa-spin"></i></div> 
-              <div id="REFRACTION_sections" name="REFRACTION_sections" class="row nodisplay clear_both" style="position:relative;display:inline-block;margin:5px auto;max-width:90%;margin:0px 100px;">
+              <div id="REFRACTION_sections" name="REFRACTION_sections" class="row nodisplay clear_both" style="position:relative;display:inline-block;margin:5px auto;max-width:90%;margin:0px 200px;">
                 <div id="LayerVision2" class="section" style="display:inline-block;text-align:center;width:100%;" >
                   <?php 
                     ($W ==1) ? ($display_W = "") : ($display_W = "nodisplay"); 
@@ -1802,7 +1802,7 @@ if ($refresh and $refresh != 'fullscreen') {
                   <span id="BAR_kb" name="BAR_kb" title="<?php echo xla('Click to display shorthand field names.'); ?>" class=""><b><?php echo xlt('Shorthand'); ?></b>
                   </span>
                   &nbsp;
-                  <a onclick="goto_url('<?php echo $GLOBALS['webroot']; ?>/interface/forms/eye_mag/help.php');">
+                  <a onclick="top.restoreSession(); goto_url('<?php echo $GLOBALS['webroot']; ?>/interface/forms/eye_mag/help.php');">
                     <i title="<?php echo xla('Click for Shorthand Help.'); ?>" class="fa fa-info-circle fa-1"></i>
                   </a>
                 </span>
@@ -1815,7 +1815,7 @@ if ($refresh and $refresh != 'fullscreen') {
                 <span class="BAR2_kb" title="<?php echo xla('Click to display shorthand field names.'); ?>" class="ke"><b><?php echo xlt('Shorthand'); ?></b>
                 </span>
                   
-                <a onclick="goto_url('<?php echo $GLOBALS['webroot']; ?>/interface/forms/eye_mag/help.php?zone=all');">
+                <a onclick="top.restoreSession();goto_url('<?php echo $GLOBALS['webroot']; ?>/interface/forms/eye_mag/help.php?zone=all');">
                 <i title="<?php echo xla('Click for Shorthand Help.'); ?>" class="fa fa-info-circle fa-1"></i>
                 </a><br />
                 <textarea id="ALL_keyboard_left" name="ALL_keyboard_left" style="color:#0C0C0C;size:0.6em;height: 6em;width:85%;margin:15px;z-index:100;" tabindex='1000'></textarea>
@@ -1969,7 +1969,7 @@ if ($refresh and $refresh != 'fullscreen') {
                       </div> 
                       <div class="QP_not nodisplay" id="EXT_keyboard_left" style="position: absolute;bottom:0.05in;right:0.1in;font-size:0.7em;text-align:left;padding-left:25px;">
                         <span id="EXT_kb" title="<?php echo xla('Click to display shorthand field names.'); ?>" class="ke"><b><?php echo xlt('Shorthand'); ?></b></span>
-                        &nbsp;<a onclick="goto_url('<?php echo $GLOBALS['webroot']; ?>/interface/forms/eye_mag/help.php?zone=ext');">
+                        &nbsp;<a onclick="top.restoreSession(); goto_url('<?php echo $GLOBALS['webroot']; ?>/interface/forms/eye_mag/help.php?zone=ext');">
                           <i title="<?php echo xla('Click for External shorthand Help.'); ?>" class="fa fa-info-circle fa-1"></i></a><br />
                           <textarea id="EXT_keyboard_left" name="EXT_keyboard_left" style="color:#0C0C0C;size:0.8em;height: 3em;" tabindex='1000'></textarea>
                       </div>
@@ -2035,8 +2035,8 @@ if ($refresh and $refresh != 'fullscreen') {
 
                 <!-- start Anterior Segment -->
                 <div id="ANTSEG_1" class="clear_both">
-                  <span class="anchor" id="ANTSEG_anchor"></span>
                   <div id="ANTSEG_left" name="ANTSEG_left" class="exam_section_left borderShadow">
+                    <span class="anchor" id="ANTSEG_anchor"></span>
                     <div class="TEXT_class" id="ANTSEG_left_text" style="height: 2.5in;text-align:left;">
                       <span class="closeButton fa fa-paint-brush" title="<?php echo xla('Open/Close the Anterior Segment drawing panel'); ?>" id="BUTTON_DRAW_ANTSEG" name="BUTTON_DRAW_ANTSEG"></span>
                       <i class="closeButton_2 fa fa-database"title="<?php echo xla('Open/Close the Anterior Segment Exam Quick Picks panel'); ?>" id="BUTTON_QP_ANTSEG" name="BUTTON_QP_ANTSEG"></i>
@@ -3629,14 +3629,19 @@ if ($refresh and $refresh != 'fullscreen') {
                                 </table>
                               </td>
                             </tr>
-                            
-                           
+                          </table>
+                          <table style="width:100%;"> 
                             <tr>
-                              <td colspan="3" style="padding-top:5px;text-align:center;"> 
+                              <td style="padding-top:5px;text-align:center;width:50%;"> 
                                 <button id="code_me_now"><?php echo xlt('Populate Fee Sheet'); ?></button>
+                              </td>
+                              <td style="padding-top:5px;text-align:center;width:50%;">
+                                <button id="goto_fee_sheet" class="nodisplay" tabindex="-1" onclick="top.restoreSession(); goto_url('<?php echo $GLOBALS['webroot']; ?>/interface/patient_file/encounter/load_form.php?formname=fee_sheet');">
+                                   Open Fee Sheet</button>
                               </td>
                             </tr>
                           </table>
+                          
                         </div>
                       </dd>
                       <dt class="borderShadow"><span><?php echo xlt('Communication Engine'); ?></span></dt>

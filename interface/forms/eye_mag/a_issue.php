@@ -453,7 +453,9 @@ function sel_diagnosis() {
   dlgopen('../../patient_file/encounter/find_code_popup.php?codetype=<?php echo attr(collect_codetypes("diagnosis","csv")) ?>&search_term='+term, '_blank', 500, 400);
     <?php
   }
-  ?>}
+  ?>
+  f.form_save.focus();
+}
 
 // Check for errors when the form is submitted.
 function validate() {
