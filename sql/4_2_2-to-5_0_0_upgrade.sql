@@ -713,6 +713,10 @@ INSERT INTO `list_options` (`list_id`, `option_id`, `title`, `seq`, `notes`, `ac
 #IfMissingColumn procedure_order history_order
 ALTER TABLE procedure_order ADD COLUMN history_order enum('0','1') DEFAULT '0';
 #EndIf
+ 
+#IfMissingColumn form_encounter pos_code
+       ALTER TABLE `form_encounter` ADD `pos_code` INT(2) NOT NULL ;
+#EndIf
 
 #IfMissingColumn amc_misc_data soc_provided
        ALTER TABLE `amc_misc_data` add column `soc_provided` DATETIME default NULL;
