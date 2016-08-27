@@ -7,6 +7,7 @@
  *  Will allow the collection of length of time spent in each status
  * 
  * Copyright (C) 2015 Terry Hill <terry@lillysystems.com> 
+ * Copyright (C) 2016 Brady Miller <brady.g.miller@gmail.com>
  * 
  * LICENSE: This program is free software; you can redistribute it and/or 
  * modify it under the terms of the GNU General Public License 
@@ -21,6 +22,7 @@
  * 
  * @package OpenEMR 
  * @author Terry Hill <terry@lilysystems.com> 
+ * @author Brady Miller <brady.g.miller@gmail.com>
  * @link http://www.open-emr.org 
  *  
  * Please help the overall project by sending changes you make to the author and to the OpenEMR community.
@@ -52,8 +54,13 @@ $chk_prov = array();  // list of providers with appointments
 
 // Scan appointments for additional info
 foreach ( $appointments as $apt ) {
-  $chk_prov['uprovider_id'] = $apt['ulname'] . ', ' . $apt['ufname'] . ' ' . $apt['umname'];
+  // collect provider names
+  $chk_prov[] = $apt['ulname'] . ', ' . $apt['ufname'] . ' ' . $apt['umname'];
 }
+
+// Count unique list of providers with providers
+$chk_prov_unique_count = count(array_count_values($chk_prov));
+
 ?>
 <html>
 <head>
@@ -159,8 +166,8 @@ function openNewTopWindow(newpid,newencounterid) {
  }
  ?>
 <div>
-  <?php if (count($chk_prov) == 1) {?>
-  <h2><span style='float: left'><?php echo xl('Appointments for'). ' : '. reset($chk_prov) ?></span></h2>
+  <?php if ($chk_prov_unique_count == 1) {?>
+   <h2><span style='float: left'><?php echo xlt('Appointments for'). ' : '. text($chk_prov[0]) ?></span></h2>
   <?php } ?>
  <span style='float: right'>
  <input type='hidden' name='setting_new_window' value='1' />
@@ -217,10 +224,10 @@ function openNewTopWindow(newpid,newencounterid) {
   <td class="dehead" align="center">
    <?php  echo xlt('Visit Type'); ?>
   </td>
-  <?php if (count($chk_prov) > 1) { ?>
-  <td class="dehead" align="center">
+  <?php if ($chk_prov_unique_count > 1) { ?>
+   <td class="dehead" align="center">
    <?php  echo xlt('Provider'); ?>
-  </td>
+   </td>
   <?php } ?>
  <td class="dehead" align="center">
    <?php  echo xlt('Total Time'); ?>
@@ -249,7 +256,7 @@ function openNewTopWindow(newpid,newencounterid) {
                 $date_squash = str_replace("-","",$date_appt);
 
                 # Collect variables and do some processing
-                $docname  = $chk_prov['uprovider_id'];
+                $docname  = $appointment['ulname'] . ', ' . $appointment['ufname'] . ' ' . $appointment['umname'];
                 if (strlen($docname)<= 3 ) continue;
                 $ptname = $appointment['lname'] . ', ' . $appointment['fname'] . ' ' . $appointment['mname'];
                 $appt_enc = $appointment['encounter'];
@@ -349,10 +356,10 @@ function openNewTopWindow(newpid,newencounterid) {
          <td class="detail" align="center">
          <?php echo text(xl_appt_category($appointment['pc_title'])) ?>
          </td>
-         <?php if (count($chk_prov) > 1) { ?>
-         <td class="detail" align="center">
-         <?php echo text($docname); ?>
-         </td>
+         <?php if ($chk_prov_unique_count > 1) { ?>
+           <td class="detail" align="center">
+           <?php echo text($docname); ?>
+           </td>
          <?php } ?>
          <td class="detail" align="center"> 
          <?php		 
