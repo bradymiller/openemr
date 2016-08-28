@@ -17,29 +17,37 @@
  * @link    http://www.open-emr.org
  */
 
-.appMenu div
-{
-    margin: 3px;
-}
 .appMenu > span
 {
     float: left;
+    padding:2px 5px;
+    white-space: nowrap;
+}
+.appMenu > span:hover 
+{
+    color: #fff;
+    text-decoration: none;
+    background-color: #1C5ECF;
+    text-shadow: none;
 }
 .appMenu ul
 {
     list-style:none;
     margin:0;
-    padding:0;
-    border: black solid 1px;
-    border-bottom: 0px;
+    padding: 1px 5px 2px 1px;
 }
 .appMenu li
 {
     width: 100%;
 }
-.menuHeader{
-    font-weight: bold;
+.appMenu li:hover
+{
+    color: #fff;
+    text-decoration: none;
+    background-color: #1C5ECF;
+    text-shadow: none;
 }
+
 .menuSection{
     position: relative;
 }
@@ -47,52 +55,54 @@
 {
     width: 100%;
 }
-.menuSection >.menuLabel
-{
-    font-weight: bold;
-}
 .menuSection > .menuEntries{
-    background-color:lightskyblue;
+    background-color:#C9DBF2;;
     display: none;
     position: absolute;
-    left: 0;
-    top: 100%;
+    left: -5px;
+    top: 23px;
     z-index:1000;
-    border: black solid 1px;
+    box-shadow: 0px 6px 12px rgba(0, 0, 0, 0.176);
 }
 
 .menuSection > .menuEntries .menuEntries {
     display: none;
     position: absolute;
-    top: 0;
-    left: 100%;
+    top: -6px;
+    left: 90px;
     z-index:10000;
 }
 .menuSection:hover > .menuEntries{
     display: block;
+    background-color: #c9dbf2;
+    color: black;
+    padding-top: 6px;
+    padding-left: 0px;
+    padding-right: 0px;
+    padding-bottom: 4px;
 }
-
 .menuLabel
 {
     cursor: pointer;
-}
-.menuLabel:hover
-{
-    color: red;
+    margin:0px 4px;
+    padding: 3px 7px 3px 8px;
 }
 .menuDisabled
 {
-    color:lightgray;
+    color:gray;
 }
 
 #username
 {
     cursor: pointer;
+    padding: 3px 8px;
 }
-#username > .userfunctions
+.userfunctions
 {
-    background-color:lightskyblue;
-    display: none;
+    min-width: 200px;
+}
+.body_top {
+    background-color: #C9DBF2;   
 }
 #username:hover > .userfunctions
 {

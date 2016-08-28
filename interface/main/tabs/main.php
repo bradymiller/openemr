@@ -74,8 +74,6 @@ var webroot_url="<?php echo $web_root; ?>";
 
 <script type="text/javascript" src="js/custom_bindings.js"></script>
 
-
-
 <script type="text/javascript" src="js/user_data_view_model.js"></script>
 <script type="text/javascript" src="js/patient_data_view_model.js"></script>
 <script type="text/javascript" src="js/tabs_view_model.js"></script>
@@ -107,7 +105,9 @@ var webroot_url="<?php echo $web_root; ?>";
 <div id="mainBox">
     <div id="dialogDiv"></div>
     <div class="body_top">
-        <span id="menu"  data-bind="template: {name: 'menu-template', data: application_data} "> </span>
+        <a href="http://www.open-emr.org" title="<?php echo xla("OpenEMR Website"); ?>"><img alt="openEMR small logo" style="float: left; margin:3px 4px 0px 2px;width:22px;height:18px;z-index:10000;" border="0" src="/openemr/sites/default/images/openEMR_smlogo.gif"></a>
+        <span id="menu"  data-bind="template: {name: 'menu-template', data: application_data} "><img src="/openemr/sites/default/images/openEMR_smlogo.gif" style="width:29px;height:25px;" />
+         </span>
         <span id="userData" data-bind="template: {name: 'user-data-template', data:application_data} "></span>
     </div>
     <div id="patientData" class="body_title" data-bind="template: {name: 'patient-data-template', data: application_data} "></div>
