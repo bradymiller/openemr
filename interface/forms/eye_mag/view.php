@@ -29,10 +29,9 @@ $fake_register_globals=false;
 $sanitize_all_escapes=true;
 
 require_once("../../globals.php");
-include_once("$srcdir/acl.inc");
-include_once("$srcdir/lists.inc");
-include_once("$srcdir/api.inc");
-//include_once("$srcdir/sql.inc");
+require_once("$srcdir/acl.inc");
+require_once("$srcdir/lists.inc");
+require_once("$srcdir/api.inc");
 require_once("$srcdir/formatting.inc.php");
 require_once("$srcdir/forms.inc");
 require_once("$srcdir/patient.inc");
@@ -42,8 +41,7 @@ $form_folder = "eye_mag";
 $Form_Name = "Eye Exam"; 
 
 include_once("../../forms/".$form_folder."/php/".$form_folder."_functions.php");
-//check to see if this is the first time this is run
-//if so, create the categories and lists we need to run the eye_form
+
 $form_id    = $_REQUEST['id']; 
 $action     = $_REQUEST['action'];
 $finalize   = $_REQUEST['finalize'];
@@ -215,7 +213,7 @@ if ($refresh and $refresh != 'fullscreen') {
     <link rel="stylesheet" href="<?php echo $GLOBALS['assets_static_relative'] ?>/font-awesome-4-6-3/css/font-awesome.min.css">
     <link rel="stylesheet" href="<?php echo $css_header;?>" type="text/css">
     <link rel="stylesheet" href="../../forms/<?php echo $form_folder; ?>/style.css" type="text/css"> 
-
+    <link rel="shortcut icon" href="<?php echo $webroot; ?>/sites/default/favicon.ico" />
     
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -2036,7 +2034,7 @@ if ($refresh and $refresh != 'fullscreen') {
                 <!-- start Anterior Segment -->
                 <div id="ANTSEG_1" class="clear_both">
                   <div id="ANTSEG_left" name="ANTSEG_left" class="exam_section_left borderShadow">
-                    <span class="anchor" id="ANTSEG_anchor"></span>
+                    <span class="anchor" id="ANTSEG_anchor" href="#ANTSEG_1">anchor</span>
                     <div class="TEXT_class" id="ANTSEG_left_text" style="height: 2.5in;text-align:left;">
                       <span class="closeButton fa fa-paint-brush" title="<?php echo xla('Open/Close the Anterior Segment drawing panel'); ?>" id="BUTTON_DRAW_ANTSEG" name="BUTTON_DRAW_ANTSEG"></span>
                       <i class="closeButton_2 fa fa-database"title="<?php echo xla('Open/Close the Anterior Segment Exam Quick Picks panel'); ?>" id="BUTTON_QP_ANTSEG" name="BUTTON_QP_ANTSEG"></i>
@@ -2100,10 +2098,11 @@ if ($refresh and $refresh != 'fullscreen') {
                                     <td colspan="3" rowspan="4" style="text-align:left;bottom:0px;width:75px;">
                                       <br />
                                       <span style="text-decoration:underline;font-size: 1.1em;"><?php echo xlt('Dilated with'); ?>:</span><br />
-                                      <?php //convert to list.  How about a jquery multiselect box, stored in DIL_MEDS field with "|" as a delimiter? OK...
+                                      <?php 
+                                      //TODO: convert to list.  How about a jquery multiselect box, stored in DIL_MEDS field with "|" as a delimiter? OK...
                                       //create a list of all our options for dilation Eye_Drug_Dilation
                                       //create the jquery selector.  Store results in DB.
-                                      //on loading page, and on RED-ONLY, need to convert DIL_MEDS to correct thing here.
+                                      //on loading page, and on READ-ONLY, need to convert DIL_MEDS to correct thing here.
                                       //We need times too...
                                       //OK. Second delimiter @ for time, within "|" delimiters
                                       //Do we know what time it is?  Yes from IOPTIME code?....
@@ -3636,8 +3635,11 @@ if ($refresh and $refresh != 'fullscreen') {
                                 <button id="code_me_now"><?php echo xlt('Populate Fee Sheet'); ?></button>
                               </td>
                               <td style="padding-top:5px;text-align:center;width:50%;">
-                                <button id="goto_fee_sheet" class="nodisplay" tabindex="-1" onclick="top.restoreSession(); goto_url('<?php echo $GLOBALS['webroot']; ?>/interface/patient_file/encounter/load_form.php?formname=fee_sheet');">
-                                   Open Fee Sheet</button>
+                                <input type="submit" id="goto_fee_sheet" 
+                                        class="nodisplay" 
+                                        tabindex="-1" 
+                                        target="RBot"
+                                   value="Open Fee Sheet">
                               </td>
                             </tr>
                           </table>

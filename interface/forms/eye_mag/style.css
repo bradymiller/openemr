@@ -1728,4 +1728,7 @@ li .handle { display: inline-block; padding: 0.4em; }
     line-height: inherit;
     vertical-align: top;
 }
+.tabHide {
+    Xdisplay: none;
+}
 

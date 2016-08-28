@@ -573,7 +573,7 @@ function negate_radio(section) {
 </script>
 </head>
 <body>
-  <div id="page">
+  <div id="page" style="text-align:center;">
     <form method='POST' name='theform' id='theform'
     action='a_issue.php?pid=<?php echo attr($pid); ?>&encounter=<?php echo attr($encounter); ?>'
      onsubmit='return validate();'
@@ -590,12 +590,12 @@ function negate_radio(section) {
           $checked = '';
           if ($key == "POH") {  $checked = " checked='checked' "; }
           $key_short_title = $key;
-          if ($key == "Medication") $key_short_title = "Meds";
-          if ($key == "Problem") $key_short_title = "PMH";
-          if ($key == "Surgery") $key_short_title = "Surg";
-          if ($key == "SOCH") $key_short_title = "Soc";
+          if ($key == "Medication") {$key_short_title = "Meds"; $title = "Medications"; }
+          if ($key == "Problem") {$key_short_title = "PMH"; $title = "Past Medical History"; }
+          if ($key == "Surgery") {$key_short_title = "Surg"; $title = "Surgery History"; }
+          if ($key == "SOCH") {$key_short_title = "Soc"; $title = "Social History"; }
           $HELLO[attr($key)] = '<input type="radio" name="form_type" id="PMSFH_'.attr($key).'" value="'.attr($key).'" '.$checked.' onclick="top.restoreSession();newtype(\''.attr($key).'\');" /><span style="margin-top:2px;font-weight:bold;">'.
-                          '<label class="input-helper input-helper--checkbox" for="PMSFH_'.attr($key).'" style="font-size:0.7em;">' . xlt($key_short_title) . '</label></span>&nbsp;';
+                          '<label class="input-helper input-helper--checkbox" for="PMSFH_'.attr($key).'" style="font-size:0.6em;" title="'.xla($title).'">' . xlt($key_short_title) . '</label></span>&nbsp;';
         }
         //put them in the desired display order  
         echo $HELLO['POH'].$HELLO['POS'].$HELLO['PMH'].$HELLO['Medication'].$HELLO['Surgery'].$HELLO['Allergy'].$HELLO['FH'].$HELLO['SOCH'].$HELLO['ROS'];
@@ -801,7 +801,7 @@ function negate_radio(section) {
                width:69px;
               }
               #form_box {
-                width:80px;
+                width:69px;
               }
             </style>
             
@@ -826,7 +826,7 @@ function negate_radio(section) {
                       <option value="16" <?php if ($result2['tobacco']['reslist'] =='16') echo "selected"; ?>><?php echo xlt('Light tobacco smoker'); ?></option>
                     </select>
                   </td>
-                  <td><u><?php echo xlt('N/A{{not applicable}}'); ?></u></td>
+                  <td>Never&nbsp;<u><?php echo xlt('N/A{{not applicable}}'); ?></u></td>
                 </tr>
 
                 <tr>
@@ -855,7 +855,7 @@ function negate_radio(section) {
                           <input type="radio" name="radio_tobacco" id="radio_tobacco[never]" value="nevertobacco" onclick="smoking_statusClicked(this)" <?php if ($result2['tobacco']['restype'] =='nevertobacco') echo "checked"; ?>><?php echo xlt('Never'); ?>&nbsp;
                         </td>
                         <td><input name="radio_tobacco" type="radio" id="radio_tobacco[not_applicable]" <?php if ($PMSFH[0]['SOCH']['tobacco']['restype'] =='not_applicable') echo "checked"; ?> value="not_applicabletobacco">
-                        <label class="fa fa-history input-helper" for="radio_tobacco[not_applicable]"></label>
+                        <label class="fa fa-history input-helper  nodisplay" for="radio_tobacco[not_applicable]"></label>
                         </td>
                       </tr>
                     </table>
@@ -875,7 +875,7 @@ function negate_radio(section) {
                       <td class="text"><input type="text" size="6" name="date_coffee" id="date_coffee" value="" title="<?php echo xla('Caffeine consumption'); ?>" onkeyup="datekeyup(this,mypcc)" onblur="dateblur(this,mypcc)"><img src="<?php echo $GLOBALS['webroot']; ?>/interface/pic/show_calendar.gif" align="absbottom" width="15" height="15" id="img_coffee" border="0" alt="[?]" style="cursor:pointer" title="<?php echo xla('Click here to choose a date'); ?>">&nbsp;</td>
                       <td class="text"><input type="radio" name="radio_coffee" id="radio_coffee[never]" value="nevercoffee" <?php if ($PMSFH[0]['SOCH']['coffee']['restype'] =='nevercoffee') echo "checked"; ?>><?php echo xlt('Never'); ?>&nbsp;</td>
                       <td><input name="radio_coffee" type="radio" id="radio_coffee[not_applicable]" <?php if ($PMSFH[0]['SOCH']['coffee']['restype'] =='not_applicable') echo "checked"; ?> value="not_applicablecoffee">
-                        <label class="fa fa-history input-helper" for="radio_coffee[not_applicable]"></label>
+                        <label class="fa fa-history input-helper nodisplay" for="radio_coffee[not_applicable]"></label>
                         </td>
                     </tr>
                   </tbody>
@@ -893,7 +893,7 @@ function negate_radio(section) {
                           <td class="text"><input type="text" size="6" name="date_alcohol" id="date_alcohol" value="" title="<?php echo xla('Alcohol consumption'); ?>" onkeyup="datekeyup(this,mypcc)" onblur="dateblur(this,mypcc)"><img src="<?php echo $GLOBALS['webroot']; ?>/interface/pic/show_calendar.gif" align="absbottom" width="15" height="15" id="img_alcohol" border="0" alt="[?]" style="cursor:pointer" title="<?php echo attr('Click here to choose a date'); ?>">&nbsp;</td>
                           <td class="text"><input type="radio" name="radio_alcohol" id="radio_alcohol[never]" value="neveralcohol" <?php if ($PMSFH[0]['SOCH']['alcohol']['restype'] =='neveralcohol') echo "checked"; ?>><?php echo xlt('Never'); ?>&nbsp;</td>
                           <td><input name="radio_alcohol" type="radio" id="radio_alcohol[not_applicable]" value="not_applicablealcohol" <?php if ($PMSFH[0]['SOCH']['alcohol']['restype'] =='not_applicable') echo "checked"; ?>>
-                        <label class="fa fa-history input-helper" for="radio_alcohol[not_applicable]"></label>
+                        <label class="fa fa-history input-helper nodisplay" for="radio_alcohol[not_applicable]"></label>
                         
                         </td>
                         </tr>
@@ -914,7 +914,7 @@ function negate_radio(section) {
                           <td class="text"><input type="text" size="6" name="date_recreational_drugs" id="date_recreational_drugs" value="" title="<?php echo xla('Recreational drug use'); ?>" onkeyup="datekeyup(this,mypcc)" onblur="dateblur(this,mypcc)"><img src="<?php echo $GLOBALS['webroot']; ?>/interface/pic/show_calendar.gif" align="absbottom" width="15" height="15" id="img_recreational_drugs" border="0" alt="[?]" style="cursor:pointer" title="<?php echo xla('Click here to choose a date'); ?>">&nbsp;</td> 
                           <td class="text"><input type="radio" name="radio_recreational_drugs" id="radio_recreational_drugs[never]" value="neverrecreational_drugs" <?php if ($PMSFH[0]['SOCH']['recreational_drugs']['restype'] =='neverrecreational_drugs') echo "checked"; ?>><?php echo xlt('Never'); ?>&nbsp;</td>
                           <td><input name="radio_recreational_drugs" type="radio" id="radio_recreational_drugs[not_applicable]" <?php if ($PMSFH[0]['SOCH']['recreational_drugs']['restype'] =='not_applicable') echo "checked"; ?> value="not_applicablerecreational_drugs">
-                        <label class="fa fa-history input-helper" for="radio_recreational_drugs[not_applicable]"></label>
+                        <label class="fa fa-history input-helper nodisplay" for="radio_recreational_drugs[not_applicable]"></label>
                       </td>
                         </tr>
                       </tbody>
@@ -927,7 +927,7 @@ function negate_radio(section) {
                   <td class="text"><input type="text" size="6" name="date_counseling" id="date_counseling" value="" title="<?php echo xla('Counseling activities') ?>" onkeyup="datekeyup(this,mypcc)" onblur="dateblur(this,mypcc)"><img src="<?php echo $GLOBALS['webroot']; ?>/interface/pic/show_calendar.gif" align="absbottom" width="15" height="15" id="img_counseling" border="0" alt="[?]" style="cursor:pointer" title="<?php echo xla('Click here to choose a date'); ?>">&nbsp;</td>
                   <td class="text"><input type="radio" name="radio_counseling" id="radio_counseling[never]" value="nevercounseling" <?php if ($PMSFH[0]['SOCH']['counseling']['restype'] =='nevercounseling') echo "checked"; ?>><?php echo xlt('Never'); ?>&nbsp;</td>
                   <td><input name="radio_counseling" type="radio" id="radio_counseling[not_applicable]" value="not_applicablecounseling" <?php if ($PMSFH[0]['SOCH']['counseling']['restype'] =='not_applicable') echo "checked"; ?>>
-                    <label class="fa fa-history input-helper" for="radio_counseling[not_applicable]"></label>
+                    <label class="fa fa-history input-helper nodisplay" for="radio_counseling[not_applicable]"></label>
                   </td>
                 </tr></tbody></table></td></tr>
             
@@ -935,7 +935,7 @@ function negate_radio(section) {
                   <td class="text"><input type="radio" name="radio_exercise_patterns" id="radio_exercise_patterns[quit]" value="quitexercise_patterns" <?php if ($PMSFH[0]['SOCH']['exercise_patterns']['restype'] =='quitexercise_patterns') echo "checked"; ?>><?php echo xlt('Quit') ?>&nbsp;</td>
                   <td class="text"><input type="text" name="date_exercise_patterns" id="date_exercise_patterns" value="" title="<?php echo xla('Exercise patterns') ?>" onkeyup="datekeyup(this,mypcc)" onblur="dateblur(this,mypcc)"><img src="<?php echo $GLOBALS['webroot']; ?>/interface/pic/show_calendar.gif" align="absbottom" width="15" height="15" id="img_exercise_patterns" border="0" alt="[?]" style="cursor:pointer" title="<?php echo xla('Click here to choose a date'); ?>">&nbsp;</td>
                   <td class="text"><input type="radio" name="radio_exercise_patterns" id="radio_exercise_patterns[never]" value="neverexercise_patterns"<?php if ($PMSFH[0]['SOCH']['exercise_patterns']['restype'] =='neverexercise_patterns') echo "checked"; ?>><?php echo xlt('Never') ?>&nbsp;</td>
-                  <td><input name="radio_exercise_patterns" type="radio" id="radio_exercise_patterns[not_applicable]" <?php if ($PMSFH[0]['SOCH']['exercise_patterns']['restype'] =='not_applicable') echo "checked"; ?> value="not_applicableexercise_patterns"><label class="fa fa-history input-helper" for="radio_exercise_patterns[not_applicable]"></label>
+                  <td><input name="radio_exercise_patterns" type="radio" id="radio_exercise_patterns[not_applicable]" <?php if ($PMSFH[0]['SOCH']['exercise_patterns']['restype'] =='not_applicable') echo "checked"; ?> value="not_applicableexercise_patterns"><label class="fa fa-history input-helper nodisplay" for="radio_exercise_patterns[not_applicable]"></label>
                   </td>
                 </tr></tbody></table></td></tr>
                 
@@ -943,7 +943,7 @@ function negate_radio(section) {
                   <td class="text"><input type="radio" name="radio_hazardous_activities" id="radio_hazardous_activities[quit]" value="quithazardous_activities" <?php if ($PMSFH[0]['SOCH']['hazardous_activities']['restype'] =='quithazardous_activities') echo "checked"; ?>><?php echo xlt('Quit') ?>&nbsp;</td>
                   <td class="text"><input type="text" name="date_hazardous_activities" id="date_hazardous_activities" value="" title="<?php echo xla('Hazardous activities') ?>" onkeyup="datekeyup(this,mypcc)" onblur="dateblur(this,mypcc)"><img src="<?php echo $GLOBALS['webroot']; ?>/interface/pic/show_calendar.gif" align="absbottom" width="15" height="15" id="img_hazardous_activities" border="0" alt="[?]" style="cursor:pointer" title="<?php echo xla('Click here to choose a date'); ?>">&nbsp;</td>
                   <td class="text"><input type="radio" name="radio_hazardous_activities" id="radio_hazardous_activities[never]" value="neverhazardous_activities" <?php if ($PMSFH[0]['SOCH']['hazardous_activities']['restype'] =='neverhazardous_activities') echo "checked"; ?>><?php echo xlt('Never') ?>&nbsp;</td>
-                  <td><input name="radio_hazardous_activities" type="radio" id="radio_hazardous_activities[not_applicable]" <?php if ($PMSFH[0]['SOCH']['hazardous_activities']['restype'] =='not_applicable') echo "checked"; ?> value="not_applicablehazardous_activities" onclick="hazardous_activities_statusClicked(this)"><label class="fa fa-history input-helper" for="radio_hazardous_activities[not_applicable]"></label>
+                  <td><input name="radio_hazardous_activities" type="radio" id="radio_hazardous_activities[not_applicable]" <?php if ($PMSFH[0]['SOCH']['hazardous_activities']['restype'] =='not_applicable') echo "checked"; ?> value="not_applicablehazardous_activities" onclick="hazardous_activities_statusClicked(this)"><label class="fa fa-history input-helper nodisplay" for="radio_hazardous_activities[not_applicable]"></label>
                   </td>
                 </tr></tbody></table></td></tr>
                

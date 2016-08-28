@@ -952,8 +952,8 @@ function show_QP_section(zone) {
     $("#"+zone+"_1").removeClass('nodisplay');
     $("#"+zone+"_left").removeClass('nodisplay');
     $("#PREFS_"+zone+"_RIGHT").val('QP');
-    if (zone == "PMH") {
-    }
+    $("#"+zone+"_anchor").trigger("click");
+//    $(document).scrollTop( $("#"+zone+"_anchor").offset().top -55);
 }
 /*
  * Function to hide all the DRAW panels of every section.
@@ -1053,7 +1053,7 @@ function menu_select(zone,che) {
     if (zone =='TEXT') show_TEXT();
     if (zone =='PMH') $(window).scrollTop( $("#PMH_anchor").offset().top -55);
     if (zone =='EXT') $(window).scrollTop( $("#EXT_anchor").offset().top -55);
-    if (zone =='ANTSEG') $(window).scrollTop( $("#ANTSEG_anchor").offset().top -55);
+    if (zone =='ANTSEG') $(document).scrollTop( $("#ANTSEG_anchor").offset().top -55);
     if (zone =='RETINA') $(window).scrollTop( $("#RETINA_anchor").offset().top -55);
     if (zone =='NEURO') $(window).scrollTop( $("#NEURO_anchor").offset().top -55);
     if (zone =='Right_Panel') $("#right-panel-link").trigger("click");
@@ -1406,8 +1406,8 @@ function build_IMPPLAN(items) {
                                     var item = this.id.match(/IMPRESSION_(.*)/)[1];
                                     var content = this.innerText || this.innerHTML;
                                     obj.IMPPLAN_items[item].title = content;
-                                    store_IMPPLAN(obj.IMPPLAN_items);
-                                    $(this).css('background-color','#F0F8FF');
+                                    store_IMPPLAN(obj.IMPPLAN_items,'1');
+                                    //$(this).css('background-color','#F0F8FF');
                                     return false;
                                     });
         $('[id^=CODE_]').blur(function() {
@@ -1526,9 +1526,9 @@ function store_IMPPLAN(storage,nodisplay) {
                        code_400(); //the user does not have write privileges!
                        return;
                        }
-                       if (typeof display === "undefined") {
                        obj.IMPPLAN_items = result;
-                       build_IMPPLAN(obj.IMPPLAN_items);
+                       if (typeof display === "undefined") {
+                          build_IMPPLAN(obj.IMPPLAN_items);
                        }
                        });
     }
@@ -1561,11 +1561,12 @@ function CODING_to_feesheet(CODING_items) {
                        return;
                        } else {
                        //ok to delete instead of translate...
-                       if (confirm("\tVoila! \t\n\tSelect OK to open the Fee Sheet to finish processing today's charges\t\n\t or CANCEL to remain on this page.\t")) {
+                       $("#goto_fee_sheet").removeClass('nodisplay');
+//                       if (confirm("\tVoila! \t\n\tSelect OK to open the Fee Sheet to finish processing today's charges\t\n\t or CANCEL to remain on this page.\t")) {
                        //open the Fee Sheet
-                       top.restoreSession();
-                       dopopup('<?php echo $GLOBALS['webroot']; ?>/interface/patient_file/encounter/load_form.php?formname=fee_sheet');
-                       }
+  //                     top.restoreSession();
+    //                   dopopup('<?php echo $GLOBALS['webroot']; ?>/interface/patient_file/encounter/load_form.php?formname=fee_sheet');
+      //                 }
                        }
                        });
     }
@@ -3387,8 +3388,8 @@ $(document).ready(function() {
                                                    }
                                                    } else {
                                                    $("#"+zone+"_right").addClass('nodisplay');
-                                                   $("#"+zone+"_COMMENTS_DIV").removeClass('QP_lengthen');
-                                                   $("#"+zone+"_keyboard_left").removeClass('nodisplay');
+                                                   //$("#"+zone+"_COMMENTS_DIV").removeClass('QP_lengthen');
+                                                   //$("#"+zone+"_keyboard_left").removeClass('nodisplay');
                                                    $("#PREFS_"+zone+"_RIGHT").val(1);
                                                    }
                                                    update_PREFS();
@@ -3665,6 +3666,8 @@ $(document).ready(function() {
                                                 show_QP_section('IMPPLAN');
                                                 update_PREFS();
                                                 }
+
+                                                
                                                 });
                   
                   // set default to ccDist.  Change as desired.
@@ -3865,6 +3868,25 @@ $(document).ready(function() {
                   .click(function( event ) {
                          event.preventDefault();
                          });
+                  //this gets the page to slow scroll to where we need it in our view.
+                  var hashTagActive = "";
+                  $(".anchor").click(function (event) {
+                                                        if(hashTagActive != $("#"+this.id).offset().top) { //this will prevent if the user click several times the same link to freeze the scroll.
+                                                            event.preventDefault();
+                                                            //calculate destination place
+                                                            var dest = 0;
+                                                        /*    alert($("#"+this.id).offset().top+' '+$(document).height()+' '+ $(window).height());
+                                                            if ($("#"+this.id).offset().top > $(document).height() - $(window).height()) {
+                                                                dest = $(document).height() - $(window).height();
+                                                            } else {
+                                                        */        dest = $("#"+this.id).offset().top -200;
+                                                         //   }
+                                                            //go to destination
+                                                          //  $("body,html,document").scrollTop( dest );
+                                                            
+                                                            hashTagActive = $("#"+this.id);
+                                                        }
+                  });
                   refresh_page();
                   // AUTO- CODING FEATURES
                   check_CPT_92060();
@@ -3885,7 +3907,10 @@ $(document).ready(function() {
                   show_QP_section('IMPPLAN');
                   build_IMPPLAN(obj.IMPPLAN_items);
                   //
-                  
+                  alert(tab_mode);
+                  if (tab_mode==true) {
+                    $("[class='tabHide']").css("display","none");
+                  }
                   $("input,textarea,text").focus(function(){
                                                  $(this).css("background-color","#ffff99");
                                                  });

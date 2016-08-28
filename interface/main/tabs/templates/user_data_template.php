@@ -21,13 +21,18 @@
 
 <script type="text/html" id="user-data-template">
     <!-- ko with: user -->
-        <div id="username">
-            <span data-bind="text:fname"></span>
-            <span data-bind="text:lname"></span>
-            <div class="userfunctions">
-                <div data-bind="click: editSettings"><?php echo xlt("Settings");?></div>
-                <div data-bind="click: changePassword"><?php echo xlt("Change Password");?></div>
-                <div data-bind="click: logout"><?php echo xlt("Logout");?></div>                
+        <div id="username" class="appMenu">
+            <div class="menuSection">
+                <div class='menuLabel'>
+                    <span data-bind="text:fname"></span>
+                    <span data-bind="text:lname"></span>
+                    </div>
+                    <ul class="menuEntries userfunctions">
+                        <li class="menuLabel" data-bind="click: editSettings"><?php echo xlt("Settings");?></li>
+                        <li class="menuLabel" data-bind="click: changePassword"><?php echo xlt("Change Password");?></li>
+                        <li class="menuLabel" data-bind="click: logout"><?php echo xlt("Logout");?></li>                
+                    </ul>
+                </div>
             </div>
         </div>
     <!-- /ko -->

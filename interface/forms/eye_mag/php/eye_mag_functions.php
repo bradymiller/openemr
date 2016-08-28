@@ -3267,8 +3267,11 @@ function menu_overhaul_top($pid,$encounter,$title="Eye Exam") {
     global $providerID;
 
     $providerNAME = $prov_data['fname']." ".$prov_data['lname'];
-
-    if ($_REQUEST['display'] == "fullscreen") { $fullscreen_disable = 'class="disabled"'; } else { $frame_disabled ='class="disabled"'; }
+    if ($prov_data['suffix']) $providerNAME.= ", ".$prov_data['suffix'];
+    if ($_REQUEST['display'] == "fullscreen") { $fullscreen_disable = 'disabled'; } else { 
+        $frame_disabled ='disabled';
+        echo "<style>.tabHide{ display:none; }</style>";
+    }
     ?> 
        <!-- Navigation -->
     <nav class="navbar-fixed-top navbar-custom navbar-bright navbar-inner" data-role="page banner navigation" style="margin-bottom: 0;z-index:1000000;font-size: 1.4em;">
@@ -3290,15 +3293,15 @@ function menu_overhaul_top($pid,$encounter,$title="Eye Exam") {
                     <li class="dropdown">
                         <a class="dropdown-toggle" data-toggle="dropdown" id="menu_dropdown_file" role="button" aria-expanded="true"><?php echo xlt("File"); ?> </a>
                         <ul class="dropdown-menu" role="menu">
-                            <li id="menu_PREFERENCES" name="menu_PREFERENCES" <?php echo $fullscreen_disabled; ?>><a id="BUTTON_PREFERENCES_menu" target="RTop" href="<?php echo $GLOBALS['webroot']; ?>/interface/super/edit_globals.php">
+                            <li id="menu_PREFERENCES"  name="menu_PREFERENCES" class="tabHide <?php echo $fullscreen_disabled; ?>"><a id="BUTTON_PREFERENCES_menu" target="RTop" href="<?php echo $GLOBALS['webroot']; ?>/interface/super/edit_globals.php">
                             <i class="fa fa-angle-double-up" title="<?php echo xla('Opens in Top frame'); ?>"></i>
                             <?php echo xlt("Preferences"); ?></a></li>
                             <li id="menu_PRINT_narrative" name="menu_PRINT_report"><a id="BUTTON_PRINT_report" target="_new" href="<?php echo $GLOBALS['webroot']; ?>/interface/patient_file/report/custom_report.php?printable=1&pdf=0&<?php echo $form_folder."_".$form_id."=".$encounter; ?>"><?php echo xlt("Print Report"); ?></a></li>
                             <li id="menu_PRINT_narrative_2" name="menu_PRINT_report_2"><a id="BUTTON_PRINT_report_2" target="_new" href="#" 
                                 onclick="top.restoreSession(); create_task('<?php echo attr($providerID); ?>','Report','menu'); return false;">
                                 <?php echo xlt("Save Report as PDF"); ?></a></li>
-                            <li class="divider"></li>
-                            <li id="menu_HPI" name="menu_HPI" <?php echo $frame_disable; ?>><a href="#" onclick='window.close();'><?php echo xlt("Quit"); ?></a></li>
+                            <li class="divider tabHide"></li>
+                            <li id="menu_HPI" name="menu_HPI" class="tabHide <?php echo $frame_disable; ?>"><a href="#" onclick='window.close();'><?php echo xlt("Quit"); ?></a></li>
                         </ul>
                     </li>
                     <li class="dropdown">
@@ -3312,7 +3315,7 @@ function menu_overhaul_top($pid,$encounter,$title="Eye Exam") {
                                 target="RTop" 
                                 title="<?php echo xla('Click here to Edit this Provider\'s Exam Default values'); ?>" 
                                 name="provider_todo"> 
-                                <i class="fa fa-angle-double-up" title="<?php echo xla('Opens in Top frame'); ?>"></i> &nbsp;
+                                <i class="fa fa-angle-double-up tabHide" title="<?php echo xla('Opens in Top frame'); ?>"></i> &nbsp;
                                 <?php echo xlt("My Default Values"); ?> &nbsp;
                                 <span class="menu_icon"><i class="fa fa-pencil fa-fw"></i> </span></a></li>
                         </ul>
@@ -3349,7 +3352,7 @@ function menu_overhaul_top($pid,$encounter,$title="Eye Exam") {
                             <?php } ?>
                         </ul>
                     </li> 
-                    <li class="dropdown">
+                    <li class="dropdown tabHide">
                         <a class="dropdown-toggle"  class="disabled" role="button" id="menu_dropdown_patients" data-toggle="dropdown"><?php echo xlt("Patients"); ?> </a>
                         <ul class="dropdown-menu" role="menu" aria-labelledby="menu1">
                           <li role="presentation"><a role="menuitem" tabindex="-1" target="RTop" href="<?php echo $GLOBALS['webroot']; ?>/interface/main/finder/dynamic_finder.php">
@@ -3404,7 +3407,7 @@ function menu_overhaul_top($pid,$encounter,$title="Eye Exam") {
                     <?php
                         $reg = Menu_myGetRegistered();
                         if (!empty($reg)) {
-                            $StringEcho= '<li class="dropdown">';
+                            $StringEcho= '<li class="dropdown tabHide">';
                             if ( $encounterLocked === false || !(isset($encounterLocked))) {
                                 foreach ($reg as $entry) {
                                     $new_category = trim($entry['category']);
@@ -3423,7 +3426,7 @@ function menu_overhaul_top($pid,$encounter,$title="Eye Exam") {
                                             ";
                                         }
                                       $StringEcho.= '
-                                      <a class="dropdown-toggle" data-toggle="dropdown" 
+                                      <a class="dropdown-toggle tabHide" data-toggle="dropdown" 
                                         id="menu_dropdown_'.xla($new_category_).'" role="button" 
                                         aria-expanded="false">'.xlt($new_category).' </a>
                                         <ul class="dropdown-menu" role="menu">
@@ -3448,17 +3451,17 @@ function menu_overhaul_top($pid,$encounter,$title="Eye Exam") {
                            id="menu_dropdown_library" role="button" 
                            aria-expanded="true"><?php echo xlt("Library"); ?> </a>
                         <ul class="dropdown-menu" role="menu">
-                            <li role="presentation"><a role="menuitem" tabindex="-1" target="RTop"  
+                            <li role="presentation" class=" tabHide"><a role="menuitem" tabindex="-1" target="RTop"  
                             href="<?php echo $GLOBALS['webroot']; ?>/interface/main/calendar/index.php?module=PostCalendar&viewtype=day&func=view&framewidth=1020">
                             <i class="fa fa-angle-double-up" title="<?php echo xla('Opens in Top frame'); ?>"></i>&nbsp;<?php echo xlt("Calendar"); ?><span class="menu_icon"><i class="fa fa-calendar"></i>  </span></a></li>
-                            <li role="presentation" class="divider"></li>
-                            <li role="presentation"><a target="RTop" role="menuitem" tabindex="-1" 
+                            <li role="presentation" class="divider tabHide"></li>
+                            <li role="presentation" class="tabHide"><a target="RTop" role="menuitem" tabindex="-1" 
                                 href="<?php echo $GLOBALS['webroot']; ?>/controller.php?document&list&patient_id=<?php echo xla($pid); ?>">
                                 <i class="fa fa-angle-double-up" title="<?php echo xla('Opens in Top frame'); ?>"></i>
                                 <?php echo xlt("Documents"); ?></a></li>
                                 <li><?php echo  $episode .= '<a href="'.$GLOBALS['webroot'].'/interface/forms/'.$form_folder.'/php/Anything_simple.php?display=i&encounter='.$encounter.'&category_name=OTHER&panel1-1">
                             Imaging<span class="menu_icon"><img src="'.$GLOBALS['webroot'].'/interface/forms/'.$form_folder.'/images/jpg.png" class="little_image" />'; ?></span></a></li>
-                            <li role="presentation" class="divider"></li>
+                            <li role="presentation" class="divider tabHide"></li>
                             <li id="menu_IOP_graph" name="menu_IOP_graph" ><a><?php echo xlt("IOP Graph"); ?></a></li>
                         </ul>
                     </li>
