@@ -27,8 +27,9 @@ require_once('../../globals.php');
 require_once $GLOBALS['srcdir'].'/ESign/Api.php';
 $esignApi = new Api();
 
-?>
-<!DOCTYPE html>
+?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html lang="en" dir="ltr">
+<head>
 <title><?php echo xlt("OpenEMR Tabs"); ?></title>
 <script type="text/javascript">
 <?php require($GLOBALS['srcdir'] . "/restoreSession.php"); ?>
@@ -68,13 +69,11 @@ var webroot_url="<?php echo $web_root; ?>";
 <link rel="stylesheet" href="<?php echo $css_header;?>" type="text/css">
 <link rel="stylesheet" type="text/css" href="css/tabs.css"/>
 <link rel="stylesheet" type="text/css" href="css/menu.css"/>
-
+<link rel="shortcut icon" href="<?php echo $webroot; ?>/sites/default/images/favicon.ico" />
 <script type="text/javascript" src="<?php echo $GLOBALS['assets_static_relative']; ?>/knockout-3-4-0/dist/knockout.js"></script>
 <script type="text/JavaScript" src="<?php echo $GLOBALS['assets_static_relative']; ?>/jquery-min-2-2-0/index.js"></script>
 
 <script type="text/javascript" src="js/custom_bindings.js"></script>
-
-
 
 <script type="text/javascript" src="js/user_data_view_model.js"></script>
 <script type="text/javascript" src="js/patient_data_view_model.js"></script>
@@ -104,10 +103,14 @@ var webroot_url="<?php echo $web_root; ?>";
                                                                   .',' . json_encode($userQuery['lname'])
                                                                   .',' . json_encode($_SESSION['authGroup']); ?>));
 </script>
+</head>
+<body>
 <div id="mainBox">
     <div id="dialogDiv"></div>
     <div class="body_top">
-        <span id="menu"  data-bind="template: {name: 'menu-template', data: application_data} "> </span>
+        <a href="http://www.open-emr.org" title="<?php echo xla("OpenEMR Website"); ?>"><img class="logo" alt="openEMR small logo" style="float: left; margin:3px 4px 0px 10px;width:20px;z-index:10000;" border="0" src="<?php echo $webroot; ?>/sites/default/images/favicon.ico"></a>
+        <span id="menu logo"  data-bind="template: {name: 'menu-template', data: application_data} ">
+         </span>
         <span id="userData" data-bind="template: {name: 'user-data-template', data:application_data} "></span>
     </div>
     <div id="patientData" class="body_title" data-bind="template: {name: 'patient-data-template', data: application_data} "></div>
@@ -122,3 +125,5 @@ var webroot_url="<?php echo $web_root; ?>";
     ko.applyBindings(app_view_model);
 
 </script>
+</body>
+</html>
