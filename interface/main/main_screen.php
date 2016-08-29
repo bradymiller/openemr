@@ -118,6 +118,8 @@ require_once("tabs/redirect.php");
 <title>
 <?php echo text($openemr_name) ?>
 </title>
+<link rel="shortcut icon" href="<?php echo $webroot; ?>/interface/pic/favicon.ico" />
+
 <script type="text/javascript" src="../../library/js/jquery-1.9.1.min.js"></script>
 <script type="text/javascript" src="../../library/topdialog.js"></script>
 
