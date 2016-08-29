@@ -107,6 +107,7 @@ body
     flex: 0 1 auto;
     white-space:nowrap;
     box-shadow: 0px 6px 12px rgba(0, 0, 0, 0.76);
+    overflow: visible;
 }
 
 .tabSpan:hover
