@@ -354,12 +354,13 @@ if ($refresh and $refresh != 'fullscreen') {
                           <div id="tabs_wrapper" >
                             <div id="tabs_container" style="z-index:3;margin-top:5px;">
                               <ul id="tabs">
+                                <li id="tab0_CC" class="inactive"></li>
                                 <li id="tab1_CC" class="active" ><a class="fa fa-check" href="#tab1"> <?php echo xlt('CC{{Chief Complaint}}'); ?> 1</a></li>
                                 <li id="tab2_CC"><a <?php if ($CC2 >'') echo 'class="fa fa-check"'; ?> href="#tab2"><?php echo xlt('CC{{Chief Complaint}}'); ?> 2</a></li>
                                 <li id="tab3_CC"><a <?php if ($CC3 >'') echo 'class="fa fa-check"'; ?> href="#tab3"><?php echo xlt('CC{{Chief Complaint}}'); ?> 3</a></li>
                               </ul>
                             </div>
-                            <div id="tabs_content_container" style="z-index:1;height:303px;" class="borderShadow">
+                            <div id="tabs_content_container" style="z-index:1;height:303px;margin: -1px 0px 0px 0px;" class="borderShadow">
                               <div id="tab1_CC_text" class="tab_content">
                                 <table border="0" width="100%" cellspacing="0" cellpadding="0" style="min-height: 2.0in;text-align:left;">
                                   <tr>

@@ -1,9 +1,9 @@
 <?php
 
 /** 
- * forms/eye_mag/css/AnythingSlider/simple.php 
+ * forms/eye_mag/php/Anything_simple.php 
  * 
- * Adaptation of AnythingSlider's simple.php to fit Eye Exam form
+ * Adaptation of AnythingSlider's Anything_simple.php to fit Eye Exam form
  * 
  * Copyright (C) 2016 Raymond Magauran <magauran@MedFetch.com> 
  * 
@@ -341,12 +341,12 @@
 					      				if ($count!=1) {$s =xla('s{{suffix to make Document plural, ie. Documents}}');} else {$s='';}
 					      			$response[$zone[0][value]] = '<a title="'.$count.' '.xla('Document'). $s.'" 
 										class="'.$class.' " 
-										href="simple.php?display=i&encounter='.attr($encounter).'&category_name='.attr($zone[0][value]).'">'.
+										href="Anything_simple.php?display=i&encounter='.attr($encounter).'&category_name='.attr($zone[0][value]).'">'.
 										text($name).'</a>
 										'.$append;
 										$menu[$zone[0][value]] = '<li><a title="'.$count.' '.xla('Document'). $s.'" 
 										class="'.$class.' " 
-										href="simple.php?display=i&encounter='.attr($encounter).'&category_name='.attr($zone[0][value]).'">'.
+										href="Anything_simple.php?display=i&encounter='.attr($encounter).'&category_name='.attr($zone[0][value]).'">'.
 										text($name).' <span class="menu_icon">+'.$count.'</span></a></li>';
 					    	  	} else {
 					      			$class="current";
@@ -356,7 +356,7 @@
 										';
 									$menu[$zone[0][value]] = '<li><a title="'.$count.' '.xla('Document'). $s.'" 
 										class="'.$class.'" 
-										href="simple.php?display=i&encounter='.attr($encounter).'&category_name='.attr($zone[0][value]).'">'.
+										href="Anything_simple.php?display=i&encounter='.attr($encounter).'&category_name='.attr($zone[0][value]).'">'.
 										text($name).'</a></li>';
 					      		}
 							}
@@ -365,7 +365,7 @@
 							if ($category_name == "OTHER") {$class='play'; } else { $class = "git"; }
 					    	echo '<li><a title="'.xla('Other Documents').'"  
 										class="'.$class.'"  style="'.$style.'"
-										href="simple.php?display=i&encounter='.attr($encounter).'&category_name=OTHER">
+										href="Anything_simple.php?display=i&encounter='.attr($encounter).'&category_name=OTHER">
 										'.xlt('OTHER').'<span class="menu_icon">+</span></a></li>
 										';
 							?>
@@ -501,7 +501,7 @@
 						} else {
 
 							echo ' <a '.$disabled.' title="'.$count.' '.xla('Document').$s.'" class="'.$class.'" 
-								href="simple.php?display=i&category_id='.$zone['id'].'&encounter='.$encounter.'&category_name='.$category_name.'">
+								href="Anything_simple.php?display=i&category_id='.$zone['id'].'&encounter='.$encounter.'&category_name='.$category_name.'">
 								<span  class="borderShadow">'.text($zone['name']).'</span></a> 
 								'.$append;	
 						}

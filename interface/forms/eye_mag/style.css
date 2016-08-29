@@ -651,6 +651,11 @@ textarea.ANTSEGTEXT {
   background-color: #eeeeee;
   border-bottom: none;
 }
+#tabs li.inactive {
+  background-color: #eeeeee;
+  border-bottom: 1pt solid black;
+  width:100%;
+}
 
 #tabs li a.icon_accept {
   background-image: url(accept.png);
