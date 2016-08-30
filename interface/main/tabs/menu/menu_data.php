@@ -43,7 +43,7 @@ $menu_json="[{\"label\":\"Calendar\",\"menu_id\":\"cal0\",\"target\":\"lst\",\"u
 {\"label\":\"Posting\",\"menu_id\":\"eob\",\"target\":\"pat\",\"url\":\"/interface/billing/sl_eob_search.php\",\"children\":[],\"requirement\":0,\"acl_req\":[\"acct\",\"eob\"]},
 {\"label\":\"EDI History\",\"menu_id\":\"edi0\",\"target\":\"pat\",\"url\":\"/interface/billing/edih_view.php\",\"children\":[],\"requirement\":0,\"acl_req\":[\"acct\",\"eob\"],\"global_req\":\"enable_edihistory_in_left_menu\"}],\"requirement\":0},
 {\"label\":\"Modules\",\"menu_id\":\"modimg\",\"children\":[{\"label\":\"Manage Modules\",\"menu_id\":\"adm0\",\"target\":\"pat\",\"url\":\"/interface/modules/zend_modules/public/Installer\",\"children\":[],\"requirement\":0}],\"requirement\":0},
-{\"label\":\"Procedures\",\"menu_id\":\"proimg\",\"children\":[{\"label\":\"Providers\",\"menu_id\":\"orl0\",\"target\":\"pat\",\"url\":\"/interface/orders/procedure_provider_list.php\",\"children\":[],\"requirement\":0},
+{\"label\":\"Laboratory\",\"menu_id\":\"proimg\",\"children\":[{\"label\":\"Providers\",\"menu_id\":\"orl0\",\"target\":\"pat\",\"url\":\"/interface/orders/procedure_provider_list.php\",\"children\":[],\"requirement\":0},
 {\"label\":\"Configuration\",\"menu_id\":\"ort0\",\"target\":\"pat\",\"url\":\"/interface/orders/types.php\",\"children\":[],\"requirement\":0},
 {\"label\":\"Load Compendium\",\"menu_id\":\"orc0\",\"target\":\"pat\",\"url\":\"/interface/orders/load_compendium.php\",\"children\":[],\"requirement\":0},
 {\"label\":\"Pending Review\",\"menu_id\":\"orp1\",\"target\":\"enc\",\"url\":\"/interface/orders/orders_results.php?review=1\",\"children\":[],\"requirement\":1},

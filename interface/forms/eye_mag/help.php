@@ -369,13 +369,18 @@ Choly 2010.Lap Band 2014.;All:sulfa - hives.PCN - SOB;</textarea>
 									<td>All fields with defined default values are <b>erased</b> and filled with default values.<br />Fields without defined default values are not affected. </td>
 								</tr>
 								<tr >
+									<td>Default External values</td><td>DEXT or dext</td>
+									<td><b style="color:red;">dext;</b><br /><b style="color:red;">DEXT;</b></td>
+									<td>All External Exam fields with defined default values are <b>erased</b> and filled with default values.<br />External Fields without defined default values and all other fields on the form are not affected. </td>
+								</tr>
+								<tr >
 									<td>Right Brow</td><td>rb or RB</td>
 									<td><b style="color:red;">rb</b>:1cm lat ptosis<br /><b style="color:red;">rb</b>:med 2cm SCC</td>
 									<td>1cm lateral ptosis<br />medial 2cm SCC</td>
 								</tr>
 								<tr>
-									<td>Left Brow</td><td>rb or RB</td>
-									<td><b style="color:red;">rb</b>:loss of lat brow follicles<br /><b style="color:red;">lb</b>:no rhytids from VIIth nerve palsy</td>
+									<td>Left Brow</td><td>lb or LB</td>
+									<td><b style="color:red;">lb</b>:loss of lat brow follicles<br /><b style="color:red;">lb</b>:no rhytids from VIIth nerve palsy</td>
 									<td>loss of lateral brow follicles<br />no rhytids from VIIth nerve palsy</td>
 								</tr>
 								<tr>
@@ -404,6 +409,16 @@ Choly 2010.Lap Band 2014.;All:sulfa - hives.PCN - SOB;</textarea>
 									<td>1cm lateral ptosis<br />medial 2cm SCC</td>
 								</tr>
 								<tr>
+									<td>Both Lower Lids</td><td>bll or BLL</td>
+									<td><b style="color:red;">lll</b>:0.5cm lat ptosis<br /><b style="color:red;">LLL</b>:med 2cm SCC</td>
+									<td>1cm lateral ptosis<br />medial 2cm SCC</td>
+								</tr>
+								<tr>
+									<td>All 4 Lids</td><td>4xl or 4XL</td>
+									<td><b style="color:red;">4xl</b>:+2 laxity<br /><b style="color:red;">4xL</b>:+2 dermato</td>
+									<td>+2 laxity<br />+2 dermatochalasis</td>
+								</tr>
+								<tr>
 									<td>Right Medial Canthus</td><td>rmc or RMC</td>
 									<td><b style="color:red;">rmc</b>:1cm bcc<br /><b style="color:red;">RMC</b>:healed dcr scar</td>
 									<td>1cm BCC<br />healed DCR scar</td>
@@ -414,14 +429,25 @@ Choly 2010.Lap Band 2014.;All:sulfa - hives.PCN - SOB;</textarea>
 									<td>acute dacryo, tender with purulent drainage<br />1.2cm x 8mm mass</td>
 								</tr>
 								<tr>
+									<td>Both Medial Canthi</td><td>bmc or BMC</td>
+									<td><b style="color:red;">bmc</b>:chronic dacryo, non-tender<br /><b style="color:red;">BMC</b>:scaling, ulcerated lesion</td>
+									<td>chronic dacryo, non-tender<br />scaling, ulcerated lesion</td>
+								</tr>
+								<tr>
 									<td>Right Adnexa</td><td>rad or RAD</td>
 									<td><b style="color:red;">rad</b>:1.8x2.0cm bcc lat<br /><b style="color:red;">RAD</b>:healed DCR scar</td>
 									<td>1cm BCC<br />healed DCR scar</td>
 								</tr>
+								
 								<tr>
 									<td>Left Adnexa</td><td>lad or LAD</td>
 									<td><b style="color:red;">lad</b>:1cm lacr cyst protruding under lid<br /><b style="color:red;">LAD</b>:1.2cm x 8mm mass</td>
 									<td>1cm lacrimal cyst protruding under lid<br />1.2cm x 8mm mass</td>
+								</tr>
+								<tr>
+									<td>Both Adnexae</td><td>bad or BAD</td>
+									<td><b style="color:red;">bad</b>:lacr gland prolapse<br /><b style="color:red;">BAD</b>:lat orb wall missing</td>
+									<td>lacrimal gland prolapse<br />lateral orbital wall missing</td>
 								</tr>
 							</table>
 							<br />*<i>case insensitive</i><br />
@@ -502,6 +528,11 @@ Choly 2010.Lap Band 2014.;All:sulfa - hives.PCN - SOB;</textarea>
 									<td>Default values</td><td>D or d</td>
 									<td><span class="field">d</span>;<br /><span class="field">D</span>;</td>
 									<td>All fields with defined default values are <b>erased</b> and filled with default values.<br />Fields without defined default values are not affected. </td>
+								</tr>
+								<tr >
+									<td>Default Anterior Segment values</td><td>DANTSEG or das</td>
+									<td><b style="color:red;">dantseg;</b><br /><b style="color:red;">DAS;</b></td>
+									<td>All Anterior Segment fields with defined default values are <b>erased</b> and filled with default values.<br />Anterior Segment Fields without defined default values and all other fields on the form are not affected. </td>
 								</tr>
 								<tr >
 									<td>Conjunctiva</td><td>Right = rc<br />Left = lc<br />Both = bc or c</td>
@@ -630,6 +661,11 @@ Choly 2010.Lap Band 2014.;All:sulfa - hives.PCN - SOB;</textarea>
 										<td>Default values</td><td>D or d</td>
 										<td><span class="field">d</span>;<br /><span class="field">D</span>;</td>
 										<td>All fields with defined default values are <b>erased</b> and filled with default values.<br />Fields without defined default values are not affected. </td>
+									</tr>
+									<tr >
+										<td>Default Retina values</td><td>DRET or dret</td>
+										<td><b style="color:red;">dext;</b><br /><b style="color:red;">DEXT;</b></td>
+										<td>All Retina/Posterior Segment Exam fields with defined default values are <b>erased</b> and filled with default values.<br />Retinal Fields without defined default values and all other fields on the form are not affected. </td>
 									</tr>
 									<tr >
 										<td>Disc</td>

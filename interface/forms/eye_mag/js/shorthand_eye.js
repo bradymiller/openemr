@@ -75,7 +75,7 @@ function expand_vocab(text) {
     .replace(/\bbdr(\b)/ig,"BDR")
     .replace(/\bppdr\b/g,'PPDR')
     .replace(/\bht\b/ig,"horseshoe tear")
-    .replace(/(\b)ab(\b)/ig,"air bubble")
+    .replace(/\bab\b/ig,"air bubble")
     .replace(/\bc3f8\b/ig,"C3F8")
     .replace(/\bma\b/ig,"macroaneurysm")
     .replace(/\bmias\b/ig,"microaneurysm")

@@ -63,6 +63,7 @@
     top: 23px;
     z-index:1000;
     box-shadow: 0px 6px 12px rgba(0, 0, 0, 0.176);
+    min-width: 125px;
 }
 
 .menuSection > .menuEntries .menuEntries {
@@ -103,6 +104,10 @@
 }
 .body_top {
     background-color: #C9DBF2;   
+    padding:0px;
+}
+.body_title {
+    color: black;
 }
 #username:hover > .userfunctions
 {

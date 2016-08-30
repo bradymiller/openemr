@@ -1809,7 +1809,7 @@ if ($refresh and $refresh != 'fullscreen') {
               <!-- end of the exam selection row -->
 
               <!-- start of the Shorthand Entry Box -->
-              <div style="margin: 0 auto;text-align: center;font-size:1.4em;Xmin-width:300px;" class="kb borderShadow nodisplay" id="EXAM_KB" name="EXAM_KB">   
+              <div style="margin: 0 auto;text-align: center;font-size:1.4em;" class="kb borderShadow nodisplay" id="EXAM_KB" name="EXAM_KB">   
                 <span class="closeButton fa fa-close" id="CLOSE_kb" name="CLOSE_kb"></span>
                 <span class="BAR2_kb" title="<?php echo xla('Click to display shorthand field names.'); ?>" class="ke"><b><?php echo xlt('Shorthand'); ?></b>
                 </span>

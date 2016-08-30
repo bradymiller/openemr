@@ -33,6 +33,7 @@ $esignApi = new Api();
 <html>
 <head>
 <title><?php echo xlt("OpenEMR Tabs"); ?></title>
+
 <script type="text/javascript">
 <?php require($GLOBALS['srcdir'] . "/restoreSession.php"); ?>
 
@@ -105,6 +106,7 @@ var webroot_url="<?php echo $web_root; ?>";
                                                                   .',' . json_encode($userQuery['lname'])
                                                                   .',' . json_encode($_SESSION['authGroup']); ?>));
 </script>
+
 </head>
 <body>
 <div id="mainBox">

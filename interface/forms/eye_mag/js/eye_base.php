@@ -3907,10 +3907,10 @@ $(document).ready(function() {
                   show_QP_section('IMPPLAN');
                   build_IMPPLAN(obj.IMPPLAN_items);
                   //
-                  alert(tab_mode);
+                  /*alert($(document).tab_mode);
                   if (tab_mode==true) {
                     $("[class='tabHide']").css("display","none");
-                  }
+                  }*/
                   $("input,textarea,text").focus(function(){
                                                  $(this).css("background-color","#ffff99");
                                                  });

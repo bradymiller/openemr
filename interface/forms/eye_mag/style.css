@@ -519,8 +519,8 @@ body
 .exam_section_left {
     top:0px; 
     float:left; 
-    min-height:375px;
-    width: 463px; 
+    min-height:385px;
+    width: 500px; 
     margin: 5 auto ;
     padding:10px;
 }
@@ -539,8 +539,8 @@ body
 .exam_section_right {
     top:0px; 
     float:left; 
-    min-height:375px;
-    width: 463px; 
+    min-height:385px;
+    width: 500px; 
     margin: 5 auto ;
     padding:10px;
 }
@@ -1075,12 +1075,12 @@ height: 18px;
         position:absolute;
         top:0.4in;
         left:0.1in;
-        width:2.6in;
+        width:3in;
         padding: 15px 10px 15px 5px;
     }
     .narrow_textarea textarea {
-        width:1.0in;
-        max-width: 1.0in;
+        width:1.1in;
+        max-width: 1.1in;
         max-height: 0.44in;
         height: 0.44in;
         font-size:0.7em;
@@ -1393,7 +1393,6 @@ filter: progid:DXImageTransform.Microsoft.BasicImage(rotation=3);
 }
 
 .little_image {
-    height:20px;
     width:20px;
 }
 
