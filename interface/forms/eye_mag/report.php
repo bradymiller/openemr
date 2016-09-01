@@ -2055,4 +2055,4 @@ function report_ACT($term) {
   $term = nl2br(htmlspecialchars($term,ENT_NOQUOTES));
   return $term."&nbsp;";
 }
-?> 
+?>

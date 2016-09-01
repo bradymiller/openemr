@@ -29,6 +29,7 @@
  $info_msg = "";
 
  function invalue($name) {
+  if (!$_POST[$name]) return "''";
   $fld = add_escape_custom(trim($_POST[$name]));
   return "'$fld'";
  }

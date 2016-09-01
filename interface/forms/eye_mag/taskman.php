@@ -1,6 +1,6 @@
 <?php
 /** 
- * forms/eye_mag/fax.php 
+ * forms/eye_mag/taskman.php
  * 
  * This file is the gateway to a practice's fax server.
  * It uses an email fax gateway that is behind the corporate
@@ -48,6 +48,7 @@ require_once("php/".$form_name."_functions.php");
 require_once("$srcdir/formatting.inc.php");
 require_once($srcdir . "/../controllers/C_Document.class.php");
 require_once($srcdir . "/documents.php");
+
 require_once("$srcdir/patient.inc");
 require_once("$srcdir/options.inc.php");
 require_once("$srcdir/acl.inc");
@@ -61,6 +62,7 @@ require_once("php/taskman_functions.php");
 require_once("report.php");
 require_once("$srcdir/formdata.inc.php");
 require_once("$srcdir/classes/postmaster.php");
+
 
 
 /**
@@ -98,6 +100,7 @@ global $send;
 $PDF_OUTPUT='1';
 // If this is a request to make a task, make it.
 $ajax_req = $_REQUEST;
+
 if ($_REQUEST['action']=='make_task') make_task($ajax_req);
 if ($_REQUEST['action']=='show_task') show_task($ajax_req);
 
