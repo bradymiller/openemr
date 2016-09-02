@@ -37,7 +37,6 @@ include_once("$srcdir/sql.inc");
 <?php html_header_show();?>
 <title><?php echo text($openemr_name) . " " . xlt('Login'); ?></title>
 <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-<link rel=stylesheet href="<?php echo $css_header;?>" type="text/css">
 <link rel=stylesheet href="../themes/login.css" type="text/css">
 <link rel="shortcut icon" href="<?php echo $webroot; ?>/interface/pic/favicon.ico" />
 
@@ -141,9 +140,9 @@ else {
 }
 ?>
 
-<table width="100%" height="90%">
+<table width="100%" height="99%">
 <td align='center' valign='middle' width='34%'>
-<div class="login-box"><img style="position:relative;top:0;left:0;"src=" <?php echo $GLOBALS['webroot']?>/interface/pic/logo-for-nav.png" />
+<div class="login-box"><img style="position:relative;top:0;left:0;"src="<?php echo $GLOBALS['webroot']?>/interface/pic/logo-for-nav.png" />
 <!--
 <div class="logo-left"><?php echo $logocode;?></div>
 -->
