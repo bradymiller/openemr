@@ -8,20 +8,22 @@ tr, td, th {
     text-align: left !important;
 
 }
-
+.body_image {
+	background-color: white;
+	background-repeat: repeat-x;
+}
 .login-box {
         margin: 0 auto;
 	padding: 20px 20px 25px 25px;
-	text-align: left;
+	text-align: center;
 	border: solid 1px #bebebe; 
 	border-radius: 8px; 
 	-webkit-border-radius: 8px; 
 	-moz-border-radius: 8px; 
-	background: #f0f0f0;
 	box-shadow: 0px 1px 2px #f3f3f3;
 	-webkit-box-shadow: 0px 1px 2px #f3f3f3;
 	-moz-box-shadow: 0px 1px 2px #f3f3f3;
-	width:	650px;
+	width:	450px;
 }
 
 .logo-left{ 
@@ -29,7 +31,7 @@ tr, td, th {
 }
 
 .table-right {
-	padding: 20px 20px;
+	padding: 20px 130px;
 	float: left;
 }
 

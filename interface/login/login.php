@@ -37,9 +37,9 @@ include_once("$srcdir/sql.inc");
 <?php html_header_show();?>
 <title><?php echo text($openemr_name) . " " . xlt('Login'); ?></title>
 <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-<link rel="shortcut icon" href="<?php echo $webroot; ?>/interface/pic/favicon.ico" />
 <link rel=stylesheet href="<?php echo $css_header;?>" type="text/css">
 <link rel=stylesheet href="../themes/login.css" type="text/css">
+<link rel="shortcut icon" href="<?php echo $webroot; ?>/interface/pic/favicon.ico" />
 
 <script language='JavaScript' src="../../library/js/jquery-1.4.3.min.js"></script>
 <script language='JavaScript'>
@@ -60,16 +60,19 @@ function imsubmitted() {
 </script>
 
 </head>
-<body onload="javascript:document.login_form.authUser.focus();">
+<body onload="javascript:document.login_form.authUser.focus();" class="body_image">
+<!--
 <div class="logobar">
     <img style="position:absolute;top:0;left:0;"src=" <?php echo $GLOBALS['webroot']?>/interface/pic/logo.gif" />
-</div>
+</div> 
+
 <div class="body_title">
     <span class="title_bar">
         <div class="title_name"><?php echo text($openemr_name); ?></div>
     </span>
     <br>
 </div>
+-->
 <span class="text"></span>
 <center>
 
@@ -140,9 +143,12 @@ else {
 
 <table width="100%" height="90%">
 <td align='center' valign='middle' width='34%'>
-<div class="login-box">
+<div class="login-box"><img style="position:relative;top:0;left:0;"src=" <?php echo $GLOBALS['webroot']?>/interface/pic/logo-for-nav.png" />
+<!--
 <div class="logo-left"><?php echo $logocode;?></div>
-
+-->
+      <div class="title_name"><?php echo text($openemr_name); ?></div>
+  
 <div class="table-right">
 <table width="100%">
 <?php if (count($result) != 1) { ?>
