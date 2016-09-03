@@ -23,13 +23,11 @@
     <div class='menuLabel' data-bind="text:label,click: menuActionClick,css: {menuDisabled: ! enabled()}"></div>
 </script>
 <script type="text/html" id="menu-header">
-    
     <div class="menuSection">
-        <div class='menuLabel' data-bind="text:label">
-        </div>
+        <div class='menuLabel' data-bind="text:label"></div>
         <ul class="menuEntries" data-bind="foreach: children">
            <li data-bind="template: {name:header ? 'menu-header' : 'menu-action', data: $data }"></li>
-        <ul>
+        </ul>
     </div>
 </script>
 <script type="text/html" id="menu-template">

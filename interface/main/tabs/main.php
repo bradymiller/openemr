@@ -25,7 +25,6 @@ $sanitize_all_escapes=true;
 /* Include our required headers */
 require_once('../../globals.php');
 require_once $GLOBALS['srcdir'].'/ESign/Api.php';
-$GLOBALS['display'] = "tabs";
 
 $esignApi = new Api();
 
@@ -86,7 +85,8 @@ var webroot_url="<?php echo $web_root; ?>";
 <script type="text/javascript" src="js/dialog_utils.js"></script>
 
 <link rel='stylesheet' href='<?php echo $GLOBALS['assets_static_relative']; ?>/typicons-2-0-7/src/font/typicons.min.css' />
-
+<link rel="stylesheet" href="<?php echo $GLOBALS['assets_static_relative'] ?>/font-awesome-4-6-3/css/font-awesome.min.css">
+    
 <?php require_once("templates/tabs_template.php"); ?>
 <?php require_once("templates/menu_template.php"); ?>
 <?php require_once("templates/patient_data_template.php"); ?>
@@ -113,11 +113,11 @@ var webroot_url="<?php echo $web_root; ?>";
     <div id="dialogDiv"></div>
     <div class="body_top">
         <a href="http://www.open-emr.org" title="<?php echo xla("OpenEMR Website"); ?>" target="_blank"><img class="logo" alt="openEMR small logo" style="float: left; margin:3px 4px 0px 10px;width:20px;z-index:10000;" border="0" src="<?php echo $webroot; ?>/interface/pic/favicon.ico"></a>
-        <span id="menu logo"  data-bind="template: {name: 'menu-template', data: application_data} ">
-         </span>
+        <span id="menu logo" data-bind="template: {name: 'menu-template', data: application_data} "></span>
         <span id="userData" data-bind="template: {name: 'user-data-template', data:application_data} "></span>
     </div>
-    <div id="patientData" class="body_title" data-bind="template: {name: 'patient-data-template', data: application_data} "></div>
+    <div id="patientData" class="body_title acck" data-bind="template: {name: 'patient-data-template', data: application_data} ">
+    </div>
     <div class="body_title" data-bind="template: {name: 'tabs-controls', data: application_data} "> </div>
 
     <div class="mainFrames">
@@ -128,6 +128,15 @@ var webroot_url="<?php echo $web_root; ?>";
     $("#dialogDiv").hide();
     ko.applyBindings(app_view_model);
 
+    $(document).ready(function() {
+        $('#patient_panel').click(function() {
+           $('#patientData').slideToggle();
+            $('#patient_panel').css("-webkit-transform","rotate(180deg)").css("transform","rotate(180deg)");
+        });
+        $('[class="menuSection"]').click(function() {
+            $(this).find('#menuEntries').css("display","block");
+        });
+    });
 </script>
 </body>
 </html>
