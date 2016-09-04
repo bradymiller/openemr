@@ -227,7 +227,7 @@ $to_date = fixDate($selectedToDate, date('Y-m-d'));
         }
 
         // pass last parameter as Boolean,  which is getting the facility name in the resulted array 
-        $totalAppointmentSql = fetchAppointments($from_date, $to_date, null, $providerID, $facilityID, null, null, null, null, false, 0, 1);
+        $totalAppointmentSql = fetchAppointments($from_date, $to_date, null, $providerID, $facilityID);
         if (count($totalAppointmentSql) > 0) { // check if $totalAppointmentSql array has value
             foreach ($totalAppointmentSql as $appointment) {
                 
