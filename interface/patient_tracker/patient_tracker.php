@@ -153,8 +153,8 @@ function openNewTopWindow(newpid,newencounterid) {
  <div id= 'inanewwindow' class='inanewwindow'>
  <span style='float: right'>
    <a id='setting_cog'><i class="fa fa-cog fa-2x fa-fw">&nbsp;</i></a>
-   <input type='hidden' name='setting_new_window' id='setting_new_window' value='<?php echo $setting_new_window ?>' />
-   <label id='settings'><input type='checkbox' name='form_new_window' id='form_new_window' value='1'<?php echo $setting_new_window ?> >
+   <input type='hidden' name='setting_new_window' id='setting_new_window' value='<?php echo attr($setting_new_window) ?>' />
+   <label id='settings'><input type='checkbox' name='form_new_window' id='form_new_window' value='1'<?php echo attr($setting_new_window) ?> >
      <?php echo xlt('Open Patient in New Window'); ?></input></label>
    <a id='refreshme'><i class="fa fa-refresh fa-2x fa-fw">&nbsp;</i></a>
  </span>
