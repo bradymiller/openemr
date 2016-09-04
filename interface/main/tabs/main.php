@@ -134,7 +134,8 @@ var webroot_url="<?php echo $web_root; ?>";
             $('#patient_panel').css("-webkit-transform","rotate(180deg)").css("transform","rotate(180deg)");
         });
         $('[class="menuSection"]').click(function() {
-            $(this).find('#menuEntries').css("display","block");
+            var highlight = $(this).next;
+            $(this).next().css("display","block");
         });
     });
 </script>

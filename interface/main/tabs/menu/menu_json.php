@@ -54,6 +54,13 @@ menu_apply_restrictions($menu_parsed,$menu_restrictions);
             self.target=object.target;
         }
         self.requirement=object.requirement;
+        
+        if('icon' in object)
+        {
+            self.icon=object.icon;
+        }
+        self.icon=object.icon;
+        
         if(object.requirement===0)
         {
             self.enabled=ko.observable(true);

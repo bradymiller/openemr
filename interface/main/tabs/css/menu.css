@@ -20,7 +20,7 @@
 .appMenu > span
 {
     float: left;
-    padding:2px 5px;
+    padding:0px 0px;
     white-space: nowrap;
 }
 .appMenu > span:hover 
@@ -48,8 +48,8 @@
     text-shadow: none;
 }
 .appMenu li:hover > .menuDisabled
- {   background-color: ;
-
+ {   
+    background-color: transparent;
 }
 .menuSection{
     position: relative;
@@ -62,11 +62,10 @@
     background-color:#C9DBF2;
     display: none;
     position: absolute;
-    left: -5px;
     top: 22px;
     z-index:1000;
     box-shadow: 0px 6px 12px rgba(0, 0, 0, 0.176);
-    min-width: 150px;
+    min-width: 175px;
     border: 0.5pt solid gray;
     border-radius: 0px 5px 5px 5px;
     color: black;
@@ -74,23 +73,25 @@
     padding-left: 0px;
     padding-right: 0px;
     padding-bottom: 4px;
+    whitespace:nowrap;
 }
 
 .menuSection > .menuEntries .menuEntries {
     display: none;
     position: absolute;
     top: -3px;
-    left: 136px;
+    left: 161px;
+    transition: 2s background-color;
 }
 .menuSection:hover > .menuEntries{
     display: block;
-    }
+}
 
 .menuLabel
 {
     cursor: pointer;
     margin:0px 4px;
-    padding: 3px 3px 1px;
+    padding: 5px 5px 3px;
 }
 .menuDisabled
 {
@@ -138,13 +139,20 @@
   -webkit-transform: rotate(360deg);
   transform: rotate(360deg);
 }
-.acck {
-    Xdisplay:none;
-}
+.acck {}
+
 .menu_arrow {
     bottom:0px;
     margin:     7px 7px 2px 7px;
 }
 .topToolbarRight {
     border-top:0pt;
+}
+
+.closeButton {
+        display:inline-block;
+        float:right;
+        position:relative;
+        top:6px;
+        right:5px;
 }

@@ -178,6 +178,7 @@ function menu_entry(label,link,menu_id)
     self.menu_id=menu_id;
     parse_link(link,self);
     self.children=[];
+    self.icon=icon;
     self.requirement=0;
     if(menu_id)
     {
