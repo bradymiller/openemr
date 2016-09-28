@@ -35,19 +35,7 @@ if(isset($_REQUEST['tabs']))
 }
 if ($tabs===true)
 {
-    if (!empty($_POST['patientID'])) {
-        $patientID = 0 + $_POST['patientID'];
-        if (empty($_POST['encounterID'])) {
-            // Send patient id (to allow opening of the patient by default)
-            $tabs_base_url = $web_root."/interface/main/tabs/main.php?patientID=".attr($patientID);
-        }
-        else {
-            // Send patient id and encounter id (to allow opening of the patient and encounter by default)
-            $encounterID = 0 + $_POST['encounterID'];
-            $tabs_base_url = $web_root."/interface/main/tabs/main.php?patientID=".attr($patientID)."&encounterID=".attr($encounterID);
-        }
-    }
-    else if (isset($_GET['mode']) && $_GET['mode'] == "loadcalendar") {
+    if (isset($_GET['mode']) && $_GET['mode'] == "loadcalendar") {
         $tabs_base_url = $web_root."/interface/main/tabs/main.php?pid=".attr($_GET['pid']);
         if (isset($_GET['date'])) $tabs_base_url .= "&date=" . attr($_GET['date']);
     }

@@ -70,6 +70,10 @@ if($GLOBALS['password_expiration_days'] != 0){
   }
 }
 
+// This is to allow use of below setting in tab and frames layout
+$_SESSION['patientID'] = $_POST['patientID'];
+$_SESSION['encounterID'] = $_POST['encounterID'];
+
 // This is where will decide whether to use tabs layout or non-tabs layout
 if (!$GLOBALS['new_tabs_layout']) {
   $_REQUEST['tabs'] = "false";

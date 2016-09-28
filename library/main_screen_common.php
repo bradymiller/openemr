@@ -39,16 +39,16 @@ function main_screen_default_frame() {
         $_SESSION['expiration_msg'] = 1;
         $_SESSION['process_password_is_expired'] = false;
     }
-    else if (!empty($_REQUEST['patientID'])) {
-        $patientID = 0 + $_REQUEST['patientID'];
-        if (empty($_REQUEST['encounterID'])) {
+    else if (!empty($_SESSION['patientID'])) {
+        $patientID = 0 + $_SESSION['patientID'];
+        if (empty($_SESSION['encounterID'])) {
             // Open patient summary screen (without a specific encounter)
             $frame1url = "../patient_file/summary/demographics.php?set_pid=".attr($patientID);
             $frame1target = "pat";
         }
         else {
             // Open patient summary screen with a specific encounter
-            $encounterID = 0 + $_REQUEST['encounterID'];
+            $encounterID = 0 + $_SESSION['encounterID'];
             $frame1url = "../patient_file/summary/demographics.php?set_pid=".attr($patientID)."&set_encounterid=".attr($encounterID);
             $frame1target = "pat";
         }
@@ -69,5 +69,10 @@ function main_screen_default_frame() {
             $frame1target = "cal";
         }
     }
+    //unset the session variable
+    unset($_SESSION['patientID']);
+    unset($_SESSION['encounterID'])
+
+    //return the default frame information
     return(array('url'=>$frame1url, 'target'=>$frame1target));
 }
