@@ -1,6 +1,7 @@
 <?php
 /**
  * Copyright (C) 2016 Kevin Yeh <kevin.y@integralemr.com>
+ * Copyright (C) 2016 Brady Miller <brady.g.miller@gmail.com>
  *
  * LICENSE: This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -15,6 +16,7 @@
  *
  * @package OpenEMR
  * @author  Kevin Yeh <kevin.y@integralemr.com>
+ * @author  Brady Miller <brady.g.miller@gmail.com>
  * @link    http://www.open-emr.org
  */
 
@@ -33,7 +35,21 @@ if(isset($_REQUEST['tabs']))
 }
 if ($tabs===true)
 {
-    $tabs_base_url=$web_root."/interface/main/tabs/main.php?url=".urlencode($frame1url);
+    if (!empty($_POST['patientID'])) {
+        $patientID = 0 + $_POST['patientID'];
+        if (empty($_POST['encounterID'])) {
+            // Send patient id (to allow opening of the patient by default)
+            $tabs_base_url = $web_root."/interface/main/tabs/main.php?set_pid=".attr($patientID);
+        }
+        else {
+            // Send patient id and encounter id (to allow opening of the patient and encounter by default)
+            $encounterID = 0 + $_POST['encounterID'];
+            $tabs_base_url = $web_root."/interface/main/tabs/main.php?set_pid=".attr($patientID)."&set_encounterid=".attr($encounterID);
+        }
+    }
+    else {
+        $tabs_base_url = $web_root."/interface/main/tabs/main.php";
+    }
     header('Location: '.$tabs_base_url);
     exit();
 }

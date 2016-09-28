@@ -24,6 +24,7 @@ $sanitize_all_escapes=true;
 /* Include our required headers */
 require_once('../globals.php');
 require_once("$srcdir/formdata.inc.php");
+require_once("$srcdir/main_screen_common.php");
 
 // Creates a new session id when load this outer frame
 // (allows creations of separate OpenEMR frames to view patients concurrently
@@ -43,59 +44,6 @@ else {
 
 $_SESSION["encounter"] = '';
 
-// Fetch the password expiration date
-$is_expired=false;
-if($GLOBALS['password_expiration_days'] != 0){
-  $is_expired=false;
-  $q= (isset($_POST['authUser'])) ? $_POST['authUser'] : '';
-  $result = sqlStatement("select pwd_expiration_date from users where username = ?", array($q));
-  $current_date = date('Y-m-d');
-  $pwd_expires_date = $current_date;
-  if($row = sqlFetchArray($result)) {
-    $pwd_expires_date = $row['pwd_expiration_date'];
-  }
-
-  // Display the password expiration message (starting from 7 days before the password gets expired)
-  $pwd_alert_date = date('Y-m-d', strtotime($pwd_expires_date . '-7 days'));
-
-  if (strtotime($pwd_alert_date) != '' &&
-      strtotime($current_date) >= strtotime($pwd_alert_date) &&
-      (!isset($_SESSION['expiration_msg'])
-      or $_SESSION['expiration_msg'] == 0)) {
-    $is_expired = true;
-    $_SESSION['expiration_msg'] = 1; // only show the expired message once
-  }
-}
-
-if ($is_expired) {
-  //display the php file containing the password expiration message.
-  $frame1url = "pwd_expires_alert.php";
-}
-else if (!empty($_POST['patientID'])) {
-  $patientID = 0 + $_POST['patientID'];
-  if (empty($_POST['encounterID'])) {
-    // Open patient summary screen (without a specific encounter)
-    $frame1url = "../patient_file/summary/demographics.php?set_pid=".attr($patientID);
-  }
-  else {
-    // Open patient summary screen with a specific encounter
-    $encounterID = 0 + $_POST['encounterID'];
-    $frame1url = "../patient_file/summary/demographics.php?set_pid=".attr($patientID)."&set_encounterid=".attr($encounterID);
-  }
-}
-else if (isset($_GET['mode']) && $_GET['mode'] == "loadcalendar") {
-  $frame1url = "calendar/index.php?pid=" . attr($_GET['pid']);
-  if (isset($_GET['date'])) $frame1url .= "&date=" . attr($_GET['date']);
-}
-else {
-  // standard layout
-  if ($GLOBALS['default_top_pane']) {
-    $frame1url=attr($GLOBALS['default_top_pane']);
-  } else {
-    $frame1url = "main_info.php";
-  }
-}
-
 $nav_area_width = '130';
 if (!empty($GLOBALS['gbl_nav_area_width'])) $nav_area_width = $GLOBALS['gbl_nav_area_width'];
 
@@ -104,6 +52,12 @@ if (!$GLOBALS['new_tabs_layout']) {
   $_REQUEST['tabs'] = "false";
 }
 require_once("tabs/redirect.php");
+
+// process the main screen common code and collect the default frame information
+$default_frame = main_screen_common();
+
+// set the default frame url
+$frame1url = $default_frame['url'];
 
 ?>
 <html>
@@ -148,7 +102,7 @@ $sidebar_tpl = "<frameset rows='*,0' frameborder='0' border='0' framespacing='0'
    <frame src='daemon_frame.php' name='Daemon' scrolling='no' frameborder='0'
     border='0' framespacing='0' />
   </frameset>";
-        
+
 $main_tpl = "<frameset rows='60%,*' id='fsright' bordercolor='#999999' frameborder='1'>" ;
 $main_tpl .= "<frame src='". $frame1url ."' name='RTop' scrolling='auto' />
    <frame src='messages/messages.php?form_active=1' name='RBot' scrolling='auto' /></frameset>";
@@ -162,19 +116,19 @@ $main_tpl .= "<frame src='". $frame1url ."' name='RTop' scrolling='auto' />
 <frameset rows='<?php echo attr($GLOBALS['titleBarHeight']) + 5 ?>,*' frameborder='1' border='1' framespacing='1' onunload='imclosing()'>
  <frame src='main_title.php' name='Title' scrolling='no' frameborder='1' noresize />
  <?php if($lang_dir != 'rtl'){ ?>
- 
+
      <frameset cols='<?php echo attr($nav_area_width) . ',*'; ?>' id='fsbody' frameborder='1' border='4' framespacing='4'>
      <?php echo $sidebar_tpl ?>
      <?php echo $main_tpl ?>
      </frameset>
- 
+
  <?php }else{ ?>
- 
+
      <frameset cols='<?php echo  '*,' . attr($nav_area_width); ?>' id='fsbody' frameborder='1' border='4' framespacing='4'>
      <?php echo $main_tpl ?>
      <?php echo $sidebar_tpl ?>
      </frameset>
- 
+
  <?php }?>
 
  </frameset>
