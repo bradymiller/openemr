@@ -129,9 +129,11 @@ var xl_strings_tabs_view_model = <?php echo json_encode( array(
 <?php $userQuery = sqlQuery("select * from users where username = ?", array($_SESSION['authUser'])); ?>
 <?php $default_iframe = main_screen_common(); // process the main screen common code and collect the default frame information?>
 
+<?php error_log("DEBUG1: ".print_r($default_iframe)); ?>
+
 <script type="text/javascript">
 app_view_model.application_data.tabs.tabsList()[0].url(<?php echo json_encode("../".($default_iframe['url'])); ?>);
-app_view_model.application_data.tabs.tabsList()[0].name(<?php echo json_encode("../".($default_iframe['target'])); ?>);
+app_view_model.application_data.tabs.tabsList()[0].name(<?php echo json_encode($default_iframe['target']); ?>);
 
 app_view_model.application_data.user(new user_data_view_model(<?php echo json_encode($_SESSION{"authUser"})
                                                                   .',' . json_encode($userQuery['fname'])

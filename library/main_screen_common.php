@@ -27,16 +27,16 @@ $map_paths_to_targets = array(
     '../new/new.php' => ('pat'),
     '../../interface/main/finder/dynamic_finder.php' => ('pat'),
     '../../interface/patient_tracker/patient_tracker.php?skip_timeout_reset=1' => ('flb')
-)
+);
 
 function main_screen_common() {
-	globals $map_paths_to_targets;
+	global $map_paths_to_targets;
 
     // Fetch the password expiration date
     $is_expired=false;
     if($GLOBALS['password_expiration_days'] != 0){
         $is_expired=false;
-        $q= (isset($_POST['authUser'])) ? $_POST['authUser'] : '';
+        $q= (isset($_REQUEST['authUser'])) ? $_REQUEST['authUser'] : '';
         $result = sqlStatement("select pwd_expiration_date from users where username = ?", array($q));
         $current_date = date('Y-m-d');
         $pwd_expires_date = $current_date;
@@ -61,16 +61,16 @@ function main_screen_common() {
         $frame1url = "pwd_expires_alert.php";
         $frame1target = "adm";
     }
-    else if (!empty($_POST['patientID'])) {
-        $patientID = 0 + $_POST['patientID'];
-        if (empty($_POST['encounterID'])) {
+    else if (!empty($_REQUEST['patientID'])) {
+        $patientID = 0 + $_REQUEST['patientID'];
+        if (empty($_REQUEST['encounterID'])) {
             // Open patient summary screen (without a specific encounter)
             $frame1url = "../patient_file/summary/demographics.php?set_pid=".attr($patientID);
             $frame1target = "pat";
         }
         else {
             // Open patient summary screen with a specific encounter
-            $encounterID = 0 + $_POST['encounterID'];
+            $encounterID = 0 + $_REQUEST['encounterID'];
             $frame1url = "../patient_file/summary/demographics.php?set_pid=".attr($patientID)."&set_encounterid=".attr($encounterID);
             $frame1target = "pat";
         }
@@ -85,7 +85,7 @@ function main_screen_common() {
         if ($GLOBALS['default_top_pane']) {
             $frame1url = attr($GLOBALS['default_top_pane']);
             $frame1target = $map_paths_to_targets[$GLOBALS['default_top_pane']];
-            if empty($frame1target) $frame1target = "msc";
+            if (empty($frame1target)) $frame1target = "msc";
         } else {
             $frame1url = "main_info.php";
             $frame1target = "cal";
