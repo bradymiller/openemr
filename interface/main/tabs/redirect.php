@@ -40,23 +40,19 @@ if ($tabs===true)
         if (empty($_POST['encounterID'])) {
             // Send patient id (to allow opening of the patient by default)
             $tabs_base_url = $web_root."/interface/main/tabs/main.php?patientID=".attr($patientID);
-            if (!empty($_REQUEST['authUser'])) $tabs_base_url .= "&authUser=" . attr($_REQUEST['authUser']);
         }
         else {
             // Send patient id and encounter id (to allow opening of the patient and encounter by default)
             $encounterID = 0 + $_POST['encounterID'];
             $tabs_base_url = $web_root."/interface/main/tabs/main.php?patientID=".attr($patientID)."&encounterID=".attr($encounterID);
-            if (!empty($_REQUEST['authUser'])) $tabs_base_url .= "&authUser=" . attr($_REQUEST['authUser']);
         }
     }
     else if (isset($_GET['mode']) && $_GET['mode'] == "loadcalendar") {
         $tabs_base_url = $web_root."/interface/main/tabs/main.php?pid=".attr($_GET['pid']);
         if (isset($_GET['date'])) $tabs_base_url .= "&date=" . attr($_GET['date']);
-        if (!empty($_REQUEST['authUser'])) $tabs_base_url .= "&authUser=" . attr($_REQUEST['authUser']);
     }
     else {
         $tabs_base_url = $web_root."/interface/main/tabs/main.php";
-        if (!empty($_REQUEST['authUser'])) $tabs_base_url .= "?authUser=" . attr($_REQUEST['authUser']);
     }
     header('Location: '.$tabs_base_url);
     exit();

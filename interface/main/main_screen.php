@@ -47,14 +47,37 @@ $_SESSION["encounter"] = '';
 $nav_area_width = '130';
 if (!empty($GLOBALS['gbl_nav_area_width'])) $nav_area_width = $GLOBALS['gbl_nav_area_width'];
 
+// Process if password is expired
+$_SESSION['process_password_is_expired'] = false;
+if($GLOBALS['password_expiration_days'] != 0){
+  $_SESSION['process_password_is_expired'] = false;
+  $q= (isset($_POST['authUser'])) ? $_POST['authUser'] : '';
+  $result = sqlStatement("select pwd_expiration_date from users where username = ?", array($q));
+  $current_date = date('Y-m-d');
+  $pwd_expires_date = $current_date;
+  if($row = sqlFetchArray($result)) {
+    $pwd_expires_date = $row['pwd_expiration_date'];
+  }
+  // Display the password expiration message (starting from 7 days before the password gets expired)
+  $pwd_alert_date = date('Y-m-d', strtotime($pwd_expires_date . '-7 days'));
+  if (strtotime($pwd_alert_date) != '' &&
+      strtotime($current_date) >= strtotime($pwd_alert_date) &&
+      (!isset($_SESSION['expiration_msg'])
+      or $_SESSION['expiration_msg'] == 0)) {
+    // this will be utilized by main_screen_default_frame function call in either frames or tabs mode
+    $_SESSION['process_password_is_expired'] = true;
+    $_SESSION['expiration_msg'] = 1; // only show the expired message once
+  }
+}
+
 // This is where will decide whether to use tabs layout or non-tabs layout
 if (!$GLOBALS['new_tabs_layout']) {
   $_REQUEST['tabs'] = "false";
 }
 require_once("tabs/redirect.php");
 
-// process the main screen common code and collect the default frame information
-$default_frame = main_screen_common();
+// collect the default frame information
+$default_frame = main_screen_default_frame();
 
 // set the default frame url
 $frame1url = $default_frame['url'];

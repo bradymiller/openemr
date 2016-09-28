@@ -127,7 +127,7 @@ var xl_strings_tabs_view_model = <?php echo json_encode( array(
 <?php require_once("menu/menu_json.php"); ?>
 
 <?php $userQuery = sqlQuery("select * from users where username = ?", array($_SESSION['authUser'])); ?>
-<?php $default_iframe = main_screen_common(); // process the main screen common code and collect the default frame information?>
+<?php $default_iframe = main_screen_default_frame(); // collect the default frame information?>
 
 <?php error_log("DEBUG1: ".print_r($default_iframe)); ?>
 

@@ -29,37 +29,15 @@ $map_paths_to_targets = array(
     '../../interface/patient_tracker/patient_tracker.php?skip_timeout_reset=1' => ('flb')
 );
 
-function main_screen_common() {
+function main_screen_default_frame() {
 	global $map_paths_to_targets;
 
-    // Fetch the password expiration date
-    $is_expired=false;
-    if($GLOBALS['password_expiration_days'] != 0){
-        $is_expired=false;
-        $q= (isset($_REQUEST['authUser'])) ? $_REQUEST['authUser'] : '';
-        $result = sqlStatement("select pwd_expiration_date from users where username = ?", array($q));
-        $current_date = date('Y-m-d');
-        $pwd_expires_date = $current_date;
-        if($row = sqlFetchArray($result)) {
-            $pwd_expires_date = $row['pwd_expiration_date'];
-        }
-
-        // Display the password expiration message (starting from 7 days before the password gets expired)
-        $pwd_alert_date = date('Y-m-d', strtotime($pwd_expires_date . '-7 days'));
-
-        if (strtotime($pwd_alert_date) != '' &&
-            strtotime($current_date) >= strtotime($pwd_alert_date) &&
-            (!isset($_SESSION['expiration_msg'])
-            or $_SESSION['expiration_msg'] == 0)) {
-            $is_expired = true;
-            $_SESSION['expiration_msg'] = 1; // only show the expired message once
-        }
-    }
-
-    if ($is_expired) {
+    if ($_SESSION['process_password_is_expired'] == true) {
         //display the php file containing the password expiration message.
         $frame1url = "pwd_expires_alert.php";
         $frame1target = "adm";
+        $_SESSION['expiration_msg'] = 1;
+        $_SESSION['process_password_is_expired'] = false;
     }
     else if (!empty($_REQUEST['patientID'])) {
         $patientID = 0 + $_REQUEST['patientID'];
