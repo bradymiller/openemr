@@ -27,16 +27,16 @@
                 <?php echo xlt("Patient"); ?>:
                 <!-- ko if: patient -->
                     <a class="ptName" data-bind="click:refreshPatient,with: patient" href="#">
-                        <span data-bind="text: pname()"></span>(<span data-bind="text: pubpid"></span>)
+                        <span data-bind="text: pname()"></span>&nbsp;(<span data-bind="text: pubpid"></span>)
                     </a>
                 <!-- /ko -->
                 <!-- ko ifnot: patient -->
                     <?php echo xlt("None");?>
                 <!-- /ko -->
                 <!-- ko if: patient -->
-                    <strong><a href="#" class="clear" data-bind="click:clearPatient" title="<?php echo xlt("Clear") ?>">
-                        <i class="fa fa-times"></i>
-                    </a></strong>
+                    <a class="css_button_small" href="#" class="clear" data-bind="click:clearPatient" title="<?php echo xlt("Clear") ?>">
+                        <i style="font-size:150%;" class="fa fa-times"></i>
+                    </a>
                 <!-- /ko -->
             </div>
             <div class="patientInfo">
@@ -46,49 +46,54 @@
             </div>
             </span>
             <span class="patientDataColumn">
-                &nbsp;
                  <!-- ko if: patient -->
                 <!-- ko with: patient -->
-                <div>
-                    <span>Selected Encounter:</span>
+                    <div data-bind="click: clickNewEncounter">
+                        <a class="css_button_small" title="<?php echo xlt("New Encounter");?>">
+                        <i style="font-size:150%;" class="fa fa-plus"></i>
+                        </a>
+                    </div>
+                <div class="Info">
+                    <span><?php echo xlt("Open Encounter") ?>:</span>
+                    <strong>
                     <!-- ko if:selectedEncounter() -->
-                        <span data-bind="text:selectedEncounter().date()"></span>
-                        (<span data-bind="text:selectedEncounter().id()"></span>)
+                        <a data-bind="click: refreshEncounter" href="#">
+                            <span data-bind="text:selectedEncounter().date()"></span>&nbsp;(<span data-bind="text:selectedEncounter().id()"></span>)
+                        </a>
                     <!-- /ko -->
                     <!-- ko if:!selectedEncounter() -->
                         <?php echo xlt("None") ?>
                     <!-- /ko -->
+                    </strong>
                 </div>
-                <!-- /ko -->
-                <!-- /ko -->
-            </span>
-            <span class="patientDataColumn patientEncountersColumn">
-                <!-- ko if: patient -->
-                <!-- ko with: patient -->
-
-                <span class="patientEncounterList" >
-                    <div data-bind="click: clickNewEncounter"><?php echo xlt("New Encounter");?></div>
-                    <div data-bind="click: clickEncounterList"><?php echo xlt("Past Encounter List");?>
-                        (<span data-bind="text:encounterArray().length"></span>)
-                    </div>
-                    <table class="encounters">
+                <!-- ko if:encounterArray().length > 0 -->
+                <div class="patientInfo">
+                <span class="patientEncounterList">
+                    <a data-bind="click: clickEncounterList">
+                        <?php echo xlt("View Past Encounters") ?>&nbsp;(<label data-bind="text:encounterArray().length"></label>)
+                    </a>
+                    <table class="encounters report_results">
                         <tbody>
                         <!-- ko  foreach:encounterArray -->
                             <tr >
                                 <td data-bind="click: chooseEncounterEvent">
                                     <span data-bind="text:date"></span>
+                                </td>
+                                <td data-bind="click: chooseEncounterEvent">
                                     <span data-bind="text:category"></span>
                                 </td>
-                                <td class="review" data-bind="click: reviewEncounterEvent">Review
+                                <td class="review" title="<?php echo xlt("Review") ?>" data-bind="click: reviewEncounterEvent">
+                                    <i style="font-size:150%;" class="fa fa-file-text-o"></i>
                                 </td>
                             </tr>
                         <!-- /ko -->
                         </tbody>
                     </table>
                 </span>
+                </div>
                 <!-- /ko -->
                 <!-- /ko -->
-
+                <!-- /ko -->
             </span>
         </div>
     <!-- /ko -->
