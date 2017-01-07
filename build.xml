@@ -42,6 +42,9 @@
     <delete dir="${dir.vendor}/doctrine/inflector/tests" verbose="true"/>
     <delete dir="${dir.vendor}/doctrine/instantiator/tests" verbose="true"/>
     <delete dir="${dir.vendor}/doctrine/orm/docs" verbose="true"/>
+    <delete dir="${dir.vendor}/setasign/fpdf/doc" verbose="true"/>
+    <delete dir="${dir.vendor}/setasign/fpdf/tutorial" verbose="true"/>
+    <delete dir="${dir.vendor}/setasign/fpdf/makefont" verbose="true"/>
     <delete dir="${dir.vendor}/symfony/console/Tester" verbose="true"/>
     <delete dir="${dir.vendor}/symfony/console/Tests" verbose="true"/>
     <delete dir="${dir.vendor}/symfony/debug/Resources/ext/tests" verbose="true"/>

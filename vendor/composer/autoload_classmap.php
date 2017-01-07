@@ -820,6 +820,7 @@ return array(
     'Dompdf\\Renderer\\TableRowGroup' => $vendorDir . '/dompdf/dompdf/src/Renderer/TableRowGroup.php',
     'Dompdf\\Renderer\\Text' => $vendorDir . '/dompdf/dompdf/src/Renderer/Text.php',
     'EasyPeasyICS' => $vendorDir . '/phpmailer/phpmailer/extras/EasyPeasyICS.php',
+    'FPDF' => $vendorDir . '/setasign/fpdf/fpdf.php',
     'FontLib\\AdobeFontMetrics' => $vendorDir . '/phenx/php-font-lib/src/FontLib/AdobeFontMetrics.php',
     'FontLib\\Autoloader' => $vendorDir . '/phenx/php-font-lib/src/FontLib/Autoloader.php',
     'FontLib\\BinaryStream' => $vendorDir . '/phenx/php-font-lib/src/FontLib/BinaryStream.php',
