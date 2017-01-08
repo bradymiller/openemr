@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "17f4e208fadb4ffce848223257b2e2bc",
-    "content-hash": "84c34f471e8c00cc2d02a027e9eaf0f9",
+    "hash": "9fd38d74a80ba75302c0f6f4e5112b85",
+    "content-hash": "0dee169fb3a2a7f5f04e308bfd5cffdc",
     "packages": [
         {
             "name": "adodb/adodb-php",
@@ -1099,16 +1099,16 @@
         },
         {
             "name": "setasign/fpdf",
-            "version": "1.8.1",
+            "version": "1.7",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Setasign/FPDF.git",
-                "reference": "2c68c9e6c034ac3187d25968790139a73184cdb1"
+                "reference": "08de62a76d5860e0fd679a3fb4f8e2b7e6019ea1"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Setasign/FPDF/zipball/2c68c9e6c034ac3187d25968790139a73184cdb1",
-                "reference": "2c68c9e6c034ac3187d25968790139a73184cdb1",
+                "url": "https://api.github.com/repos/Setasign/FPDF/zipball/08de62a76d5860e0fd679a3fb4f8e2b7e6019ea1",
+                "reference": "08de62a76d5860e0fd679a3fb4f8e2b7e6019ea1",
                 "shasum": ""
             },
             "type": "library",
@@ -1134,7 +1134,7 @@
                 "fpdf",
                 "pdf"
             ],
-            "time": "2016-01-01 17:47:15"
+            "time": "2015-05-11 08:23:28"
         },
         {
             "name": "smarty/smarty",
