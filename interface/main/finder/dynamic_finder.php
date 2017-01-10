@@ -43,11 +43,8 @@ while ($row = sqlFetchArray($res)) {
     <title><?php echo xlt("Patient Finder"); ?></title>
 <link rel="stylesheet" href="<?php echo $css_header; ?>" type="text/css">
 
-<style type="text/css">
-@import "../../../library/css/demo_page.css";
-@import "../../../library/css/demo_table.css";
-.mytopdiv { float: left; margin-right: 1em; }
-</style>
+<link rel="stylesheet" href="<?php echo $GLOBALS['assets_static_relative']; ?>/datatables.net-dt-1-10-13/css/jquery.dataTables.min.css" type="text/css">
+<link rel="stylesheet" href="<?php echo $GLOBALS['assets_static_relative']; ?>/datatables.net-colreorder-dt-1-3-2/css/colReorder.dataTables.min.css" type="text/css">
 
 <script type="text/javascript" src="<?php echo $GLOBALS['assets_static_relative']; ?>/jquery-min-1-10-2/index.js"></script>
 <script type="text/javascript" src="<?php echo $GLOBALS['assets_static_relative']; ?>/datatables.net-1-10-13/js/jquery.dataTables.min.js"></script>
