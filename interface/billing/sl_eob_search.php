@@ -46,7 +46,63 @@ $alertmsg = '';
 $where = '';
 $eraname = '';
 $eracount = 0;
-
+/* Load dependencies only if we need them */
+if( ( isset($GLOBALS['portal_onsite_enable'])) || ($GLOBALS['portal_onsite_enable']) ){
+	require_once("$srcdir/pnotes.inc");
+	require_once("../../patients/lib/appsql.class.php");
+	
+	function is_auth_portal( $pid = 0){
+		if ($pData = sqlQuery("SELECT * FROM `patient_data` WHERE `pid` = ?", array($pid) )) {
+			if($pData['allow_patient_portal'] != "YES")
+				return false;
+				else return true;
+		}
+		else return false;
+	}
+	function notify_portal($thispid, array $invoices, $template, $invid){
+		$builddir = $GLOBALS['OE_SITE_DIR'] .  '/onsite_portal_documents/templates/' . $thispid;
+		if( ! is_dir($builddir) )
+			mkdir($builddir, 0755, true);
+		if( fixup_invoice($template, $builddir.'/invoice'.$invid.'.tpl') != true ) return false; 
+		if( SavePatientAudit( $thispid, $invoices ) != true ) return false; // this is all the invoice data for new invoicing feature to come
+		$note =  xl('You have an invoice due for payment. You may view and pay in your Patient Documents.');
+		addPnote($thispid, $note,1,1, xlt('Bill/Collect'), '-patient-');
+		return true;
+	}
+	function fixup_invoice($template, $ifile){
+		$data = file_get_contents($template);
+		if($data == "") return false;
+		if( !file_put_contents($ifile, $data) ) return false;
+		return true;
+	}
+	function SavePatientAudit( $pid, $invs ){
+		$appsql = new ApplicationTable();
+		try{
+			$audit = Array ();
+			$audit['patient_id'] = $pid;
+			$audit['activity'] = "invoice";
+			$audit['require_audit'] = "0";
+			$audit['pending_action'] = "payment";
+			$audit['action_taken'] = "";
+			$audit['status'] = "waiting transaction";
+			$audit['narrative'] = "Request patient online payment.";
+			$audit['table_action'] = '';
+			$audit['table_args'] =  json_encode($invs);
+			$audit['action_user'] = $pid;
+			$audit['action_taken_time'] = "";
+			$audit['checksum'] = "";
+			$edata = $appsql->getPortalAudit( $pid, 'payment', 'invoice', "waiting transaction", 0 );
+			//$audit['date'] = $edata['date'];
+			if( $edata['id'] > 0 ) $appsql->portalAudit( 'update', $edata['id'], $audit );
+			else{
+				$appsql->portalAudit( 'insert', '', $audit );
+			}
+		} catch( Exception $ex ){
+			return $ex;
+		}
+		return true;
+	}
+}
 // This is called back by parse_era() if we are processing X12 835's.
 function era_callback(&$out) {
   global $where, $eracount, $eraname;
@@ -170,7 +226,7 @@ function upload_file_to_client_pdf($file_to_send) {
 $today = date("Y-m-d");
   // Print or download statements if requested.
   //
-if (($_POST['form_print'] || $_POST['form_download'] || $_POST['form_pdf']) && $_POST['form_cb']) {
+if (($_POST['form_print'] || $_POST['form_download'] || $_POST['form_pdf']) || $_POST['form_portalnotify'] && $_POST['form_cb']) {
 
   $fhprint = fopen($STMT_TEMP_FILE, 'w');
   $sqlBindArray = array();
@@ -282,19 +338,37 @@ if (($_POST['form_print'] || $_POST['form_download'] || $_POST['form_pdf']) && $
         "last_stmt_date = '$today', stmt_count = stmt_count + 1 " .
         "WHERE id = " . $row['id']);
     }
-    fwrite($fhprint, make_statement($stmt));
+    if ($_POST['form_portalnotify']) {
+    	if( ! is_auth_portal($stmt['pid']) ){
+    		$alertmsg = xlt('Notification FAILED: Not Portal Authorized');
+    		break;
+    	}
+    	$inv_count += 1;
+    	$pvoice[] = $stmt;
+    	$c = count($form_cb);
+    	if($inv_count == $c){
+    		fwrite($fhprint, make_statement($stmt));
+    		if( !notify_portal($stmt['pid'], $pvoice, $STMT_TEMP_FILE, $stmt['pid'] . "-" . $stmt['encounter']))
+    			$alertmsg = xlt('Notification FAILED');
+    	}
+    	else	continue;
+    }
+    else
+    	fwrite($fhprint, make_statement($stmt));
 
   } // end while
 
     if (!empty($stmt)) ++$stmt_count;
     fclose($fhprint);
     sleep(1);
-
     // Download or print the file, as selected
     if ($_POST['form_download']) {
       upload_file_to_client($STMT_TEMP_FILE);
     } elseif ($_POST['form_pdf']) {
       upload_file_to_client_pdf($STMT_TEMP_FILE);
+    } elseif ($_POST['form_portalnotify']) {
+    	if($alertmsg == "")
+    		$alertmsg = xl('Sending Invoice to Patient Portal Completed');
     } else { // Must be print!
       if ($DEBUG) {
         $alertmsg = xl("Printing skipped; see test output in") .' '. $STMT_TEMP_FILE;
@@ -708,6 +782,7 @@ while ($row = sqlFetchArray($t_res)) {
    <td class="detail" align="left">
      <input type='checkbox' name='form_cb[<?php echo($row['id']) ?>]'<?php echo $isduept ?> />
      <?php if ($in_collections) echo "<b><font color='red'>IC</font></b>"; ?>
+     <?php if ( function_exists('is_auth_portal') ? is_auth_portal( $row['pid'] ) : false){ echo ' PPt'; $is_portal = true;}?>
    </td>
    <?php } ?>
  </tr>
@@ -730,7 +805,9 @@ while ($row = sqlFetchArray($t_res)) {
     <input type='submit' name='form_download' value='<?php xl('Download Selected Statements','e'); ?>' /> &nbsp;
   <?php } ?>
   <input type='submit' name='form_pdf' value='<?php xl('PDF Download Selected Statements','e'); ?>' /> &nbsp;
-  <?php } ?>
+<?php if ($is_portal ){?>
+  <input type='submit' name='form_portalnotify' value='<?php xl('Notify via Patient Portal','e'); ?>' /> &nbsp;
+  <?php } }?>
   <input type='checkbox' name='form_without' value='1' /> <?php xl('Without Update','e'); ?>
 </p>
 
