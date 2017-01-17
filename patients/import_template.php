@@ -43,7 +43,7 @@ if (!empty($_FILES["tplFile"])) {
     $tplFile = $_FILES["tplFile"];
 
     if ($tplFile["error"] !== UPLOAD_ERR_OK) {
-        echo "<p>". xl("An error occurred: Missing file to upload: Use back button!") . "</p>";
+        echo "<p>". xlt("An error occurred: Missing file to upload: Use back button!") . "</p>";
         exit;
     }
     // ensure a safe filename
@@ -60,7 +60,7 @@ if (!empty($_FILES["tplFile"])) {
     // preserve file from temporary directory
     $success = move_uploaded_file($tplFile["tmp_name"], UPLOAD_DIR . $name);
     if (!$success) {
-        echo "<p>". xl("Unable to save file: Use back button!") . "</p>";
+        echo "<p>". xlt("Unable to save file: Use back button!") . "</p>";
         exit;
     }
     // set proper permissions on the new file

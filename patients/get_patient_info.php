@@ -53,6 +53,25 @@ $logit = new ApplicationTable();
         }
     //
 
+
+    // Need to include this before the autoloader in below globals.php include
+    // since need to use the getLanguageDir() function.
+    require_once("../library/translation.inc.php");
+
+    // set the language
+    if (!empty($_POST['languageChoice'])) {
+        $_SESSION['language_choice'] = (int)$_POST['languageChoice'];
+    }
+    else if (empty($_SESSION['language_choice'])) {
+        // just in case both are empty, then use english
+        $_SESSION['language_choice'] = 1;
+    }
+    else {
+        // keep the current session language token
+    }
+    $_SESSION['language_direction'] = getLanguageDir( $_SESSION['language_choice'] );
+
+
     //SANITIZE ALL ESCAPES
     $fake_register_globals=false;
 
@@ -70,17 +89,7 @@ $logit = new ApplicationTable();
     $password_update=isset($_SESSION['password_update']);
     unset($_SESSION['password_update']);
     $plain_code= $_POST['pass'];
-    // set the language
-    if (!empty($_POST['languageChoice'])) {
-            $_SESSION['language_choice'] = $_POST['languageChoice'];
-    }
-    else if (empty($_SESSION['language_choice'])) {
-            // just in case both are empty, then use english
-            $_SESSION['language_choice'] = 1;
-    }
-    else {
-            // keep the current session language token
-    }
+
 
     $authorizedPortal=false; //flag
     DEFINE("TBL_PAT_ACC_ON","patient_access_onsite");
