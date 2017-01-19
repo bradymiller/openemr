@@ -20,7 +20,10 @@
  * @author Jerry Padgett <sjpadgett@gmail.com>
  * @link http://www.open-emr.org
  */
- 
+
+$sanitize_all_escapes=true;
+$fake_register_globals=false;
+
 $ignoreAuth = true;
 require_once ( "../../../interface/globals.php" );
 require_once 'sigconvert.php';
