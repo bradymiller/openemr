@@ -20,8 +20,7 @@
  * @author Jerry Padgett <sjpadgett@gmail.com>
  * @link http://www.open-emr.org
  */
-?>
-<?php
+
 $this->assign( 'title', 'Portal Dashboard | Home' );
 $this->assign( 'nav', 'home' );
 $this->display( '_ProviderHeader.tpl.php' );

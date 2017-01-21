@@ -20,8 +20,7 @@
  * @author Jerry Padgett <sjpadgett@gmail.com>
  * @link http://www.open-emr.org
  */
-?>
-<?php
+
 	$this->assign('title','Patient Portal Secure');
 	$this->assign('nav','secureapp');
 
