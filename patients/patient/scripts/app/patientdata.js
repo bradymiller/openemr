@@ -98,14 +98,6 @@ var page = {
 		
 		this.modelView.on('rendered',function(){ // model rendered
 			
-			$(function (){
-				$('.date-picker').datetimepicker({
-					defaultDate: moment(),
-					sideBySide: false,
-					format: 'YYYY-MM-DD'
-				});
-				
-			});
 			// initialize any special controls
 			// populate the dropdown options for provider and referer
 			var examinerIdValues = new model.UserCollection();

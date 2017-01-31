@@ -43,6 +43,11 @@
     $LAB.script("scripts/app/patientdata.js?v=<?php echo $GLOBALS['v_js_includes']; ?>").wait(function(){
         $(document).ready(function(){
             page.init();
+
+            $('.date-picker').datetimepicker({
+               //dummy picker without settings (does not need settings to work)
+            });
+
         });
         // hack for browsers or slow sessions which may respond inconsistently with document.ready-second chance at init
         setTimeout(function(){
@@ -113,10 +118,7 @@
                 <div class="form-group inline" id="dobInputContainer">
                     <label class="control-label" for="dob"><?php echo xlt('Birth Date')?></label>
                     <div class="controls inline-inputs">
-                        <div class="input-group date date-picker" data-date-format="yyyy-mm-dd">
-                            <input id="dob" type="text" class="form-control" value="<%= item.get('dob') %>" />
-                            <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
-                        </div>
+                        <input id="dob" type="text" class="form-control date-picker" value="<%= item.get('dob') %>" />
                         <span class="help-inline"></span>
                     </div>
                 </div>
