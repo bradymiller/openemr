@@ -1931,7 +1931,7 @@ INSERT INTO `geo_country_reference` VALUES (147, 'Namibia', 'NA', 'NAM');
 INSERT INTO `geo_country_reference` VALUES (148, 'Nauru', 'NR', 'NRU');
 INSERT INTO `geo_country_reference` VALUES (149, 'Nepal', 'NP', 'NPL');
 INSERT INTO `geo_country_reference` VALUES (150, 'Netherlands', 'NL', 'NLD');
-INSERT INTO `geo_country_reference` VALUES (151, 'Netherlands Antilles', 'AN', 'ANT');
+INSERT INTO `geo_country_reference` VALUES (151, 'Curacao', 'CW', 'CUR');
 INSERT INTO `geo_country_reference` VALUES (152, 'New Caledonia', 'NC', 'NCL');
 INSERT INTO `geo_country_reference` VALUES (153, 'New Zealand', 'NZ', 'NZL');
 INSERT INTO `geo_country_reference` VALUES (154, 'Nicaragua', 'NI', 'NIC');
