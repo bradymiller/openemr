@@ -97,8 +97,15 @@ $GLOBALS['OE_SITES_BASE'] = "$webserver_root/sites";
 // Now that restore_session() is implemented in javaScript, session IDs are
 // effectively saved in the top level browser window and there is no longer
 // any need to change the session name for different OpenEMR instances.
+// On 4/6/2017, also added cookie_path setting to prevent session conflicts
+// when using different OpenEMR instances on separate paths from the same
+// server: see https://github.com/openemr/openemr/pull/613 for details.
+if (!empty($web_root)) {
+  ini_set('session.cookie_path', $web_root);
+} else {
+  ini_set('session.cookie_path', '/');
+}
 session_name("OpenEMR");
-
 session_start();
 
 // Set the site ID if required.  This must be done before any database
