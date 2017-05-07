@@ -34,77 +34,9 @@ if ($is_group && !acl_check("groups", "glog", false, array('view', 'write'))) {
     <?php
     html_header_show();
 
-    /**
-     * Generate a script tag based on array of elements
-     *
-     * ```php
-     * $options = [
-     *     [
-     *         'src' => 'Source path of the file to include',
-     *         'basePath' => 'Defaults to $GLOBALS['assets_static_relative']',
-     *         'atts' => ['Array of attributes. Not currently supported, future use'],
-     *     ]];
-     * ```
-     *
-     * Options can also be an array of strings in which case each string
-     * represents the path (basePath will be prepended), in which case:
-     *
-     * ```php
-     * $options = ['jquery-latest/jquery.js', 'bootstrap-latest/bootstrap.js'];
-     * ```
-     *
-     * @param $options array Array of items
-     * @return string
-     */
-    function generateScriptElements($options)
-    {
-        $template = '<script src="{src}"></script>';
-        $return = [];
-        $basePath = $GLOBALS['assets_static_relative'] . '/';
-        foreach ($options as $element) {
-            if (is_array($element)) {
-                if (array_key_exists('basePath', $element) && $element['basePath'] !== false) {
-                    $basePath = $element['basePath'];
-                } else if (array_key_exists('basePath', $element) && $element['basePath'] === false) {
-                    // If basePath gets passed in but is false, ensure it's not appended
-                    $basePath = "";
-                }
-                $str = str_replace("{src}", $basePath . $element['src'], $template);
-            } else {
-                $str = str_replace("{src}", $element, $template);
-            }
-            $return[] = $str;
-        }
-        return implode("\n", $return);
-    }
-
-    $libraryDir = $GLOBALS['webroot'] . '/library/';
-    $scripts = [
-        ['src' => 'jquery-min-1-7-2/index.js'],
-        ['basePath' => $libraryDir, 'src' => 'dialog.js?v=' . $v_js_includes],
-        ['basePath' => $libraryDir, 'src' => 'textformat.js'],
-        ['basePath' => $libraryDir, 'src' => 'dynarch_calendar.js'],
-        ['basePath' => $libraryDir, 'src' => 'dynarch_calendar_setup.js'],
-        ['basePath' => $libraryDir, 'src' => 'js/common.js'],
-        ['basePath' => $libraryDir, 'src' => 'js/fancybox-1.3.4/jquery.fancybox-1.3.4.js'],
-        ['basePath' => $libraryDir, 'src' => 'ESign/js/jquery.esign.js'],
-        ['basePath' => $libraryDir, 'src' => 'openflashchart/js/json/json2.js'],
-        ['basePath' => $libraryDir, 'src' => 'openflashchart/js/swfobject.js'],
-    ];
-
+    $include_standard_style_js = array("sidebar","esign","openflashchart");
     require_once "{$GLOBALS['srcdir']}/templates/standard_header_template.php";
-    ?>
-    <link rel="stylesheet" type="text/css"
-          href="../../../library/js/fancybox-1.3.4/jquery.fancybox-1.3.4.css"
-          media="screen"/>
-    <style type="text/css">@import url(../../../library/dynarch_calendar.css);</style>
 
-    <!-- supporting javascript code -->
-    <?php include_once("{$GLOBALS['srcdir']}/dynarch_calendar_en.inc.php"); ?>
-    <link rel="stylesheet" type="text/css"
-          href="<?php echo $GLOBALS['webroot'] ?>/library/ESign/css/esign.css"/>
-
-    <?php
     $esignApi = new Api();
 
     // include generic js support for graphing ?>
@@ -136,7 +68,6 @@ if ($is_group && !acl_check("groups", "glog", false, array('view', 'write'))) {
         }
     }
 
-    echo generateScriptElements($scripts);
     ?>
 
     <script type="text/javascript">
@@ -419,8 +350,6 @@ $(document).ready(function(){
 });
 </script>
 
-<link rel="stylesheet" href="<?php echo $GLOBALS['assets_static_relative'];?>/bootstrap-sidebar-0-2-2/dist/css/sidebar.css">
-<script type="text/javascript" src="<?php echo $GLOBALS['assets_static_relative'];?>/bootstrap-sidebar-0-2-2/dist/js/sidebar.js"></script>
 <div class="container-fluid">
     <div class="row">
         <div class="col-xs-12 col-sm-2 sidebar sidebar-md-show <?php echo $_SESSION['language_direction'] == 'rtl' ? 'sidebar-right' : 'sidebar-left'; ?>">
