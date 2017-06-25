@@ -19,6 +19,14 @@ use OpenEMR\Core\Header;
 <head>
     <title><?php echo xlt('Dictation'); ?></title>
     <?php Header::setupHeader('ckeditor'); ?>
+    <script src="<?php echo $GLOBALS['webroot'] ?>/library/js/custom/ckeditor_config.js?v=<?php echo $v_js_includes; ?>" type="text/javascript"></script>
+    <script type="text/javascript" language="JavaScript">
+        $(document).ready(function(){
+            CKEDITOR.replace( 'dictation', {
+                customConfig: '<?php echo $GLOBALS['webroot'] ?>/library/js/custom/ckeditor_config.js'
+            });
+        });
+    </script>
 </head>
 <body class="body_top">
     <div class="container">
@@ -34,7 +42,7 @@ use OpenEMR\Core\Header;
                 <form method=post action="<?php echo $rootdir;?>/forms/dictation/save.php?mode=new" name="my_form" onsubmit="return top.restoreSession()">
                     <div class="form-group">
                         <label for="dictation"><?php echo xlt('Dictation: '); ?></label>
-                        <textarea class="form-control ckeditor" id="dictation" name="dictation" ></textarea>
+                        <textarea class="form-control" id="dictation" name="dictation" ></textarea>
                     </div>
                     <div class="form-group">
                         <label for="additional_notes"><?php echo xlt('Additional Notes:'); ?> </label>
