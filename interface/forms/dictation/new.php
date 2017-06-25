@@ -5,16 +5,15 @@
  * @package OpenEMR
  * @link    http://www.open-emr.org
  * @author  Sherwin Gaddis <sherwingaddis@gmail.com>
- * @license https://github.com/openemr/openemr/blob/master/LICENSE GNU General Public License 3
+ * @author  Brady Miller <brady.g.miller@gmail.com>
  * @copyright Copyright (c) 2017 Sherwin Gaddis <sherwingaddis@gmail.com>
+ * @copyright Copyright (c) 2017 Brady Miller <brady.g.miller@gmail.com>
+ * @license https://github.com/openemr/openemr/blob/master/LICENSE GNU General Public License 3
  *
  */
 
-use OpenEMR\Core\Header;
-
 include_once("../../globals.php");
-
-$returnurl = 'encounter_top.php';
+use OpenEMR\Core\Header;
 ?>
 <html>
 <head>
@@ -32,7 +31,7 @@ $returnurl = 'encounter_top.php';
         </div>
         <div class="row">
             <div class="col-xs-12">
-                <form method=post class="form-horizontal" action="<?php echo $rootdir;?>/forms/dictation/save.php?mode=new" name="my_form" onclick="top.restoreSession()">
+                <form method=post action="<?php echo $rootdir;?>/forms/dictation/save.php?mode=new" name="my_form" onsubmit="return top.restoreSession()">
                     <div class="form-group">
                         <label for="dictation"><?php echo xlt('Dictation: '); ?></label>
                         <textarea class="form-control ckeditor" id="dictation" name="dictation" ></textarea>
@@ -46,7 +45,7 @@ $returnurl = 'encounter_top.php';
                             <button type="submit" class="btn btn-default btn-save">
                                 <?php echo xlt('Save'); ?>
                             </button>
-                            <a href="<?php echo "$rootdir/patient_file/encounter/$returnurl";?>" class="btn btn-cancel btn-link" onclick="top.restoreSession()">
+                            <a href="<?php echo "$rootdir/patient_file/encounter/encounter_top.php";?>" class="btn btn-cancel btn-link" onclick="top.restoreSession()">
                                 <?php echo xlt('Cancel'); ?>
                             </a>
                         </div>
