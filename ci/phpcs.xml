@@ -10,7 +10,6 @@
     <exclude name="PEAR.Functions.ValidDefaultValue"/>
     <exclude name="PSR2.Classes.PropertyDeclaration"/>
     <exclude name="Generic.NamingConventions.UpperCaseConstantName"/>
-    <exclude name="Squiz.WhiteSpace.ScopeClosingBrace"/> <!-- ~100 files need fixing from this -->
   </rule>
 
   <!-- Checks that the opening PHP tag is the first content in a file. -->
