@@ -105,6 +105,7 @@ for ($i=1; $i < count($argv); $i++) {
     $index = $indexandvalue[0];
     $value = $indexandvalue[1];
     $installSettings[$index] = $value;
+    echo $index . "is" . $value;
 }
 
 // Convert BLANK settings to empty
