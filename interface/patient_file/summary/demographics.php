@@ -630,6 +630,9 @@ if ($GLOBALS['patient_id_category_name']) {
           |
           <a href="../../reports/external_data.php" onclick='top.restoreSession()'>
           <?php echo xlt('External Data'); ?></a>
+          |
+          <a href="../../reports/pro.php" onclick='top.restoreSession()'>
+          <?php echo xlt('Patient Reported Outcomes'); ?></a>
 
 <!-- DISPLAYING HOOKS STARTS HERE -->
 <?php
