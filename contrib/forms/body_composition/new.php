@@ -68,40 +68,25 @@ if ($_POST['bn_save']) {
  // If updating an existing form...
  //
     if ($formid) {
-        $query = "UPDATE form_body_composition SET "      .
-         "body_type = "             . rbvalue('form_body_type') . ", "  .
-         "height = '"               . form2db($_POST['form_height'])     . "', " .
-         "weight = '"               . form2db($_POST['form_weight'])     . "', " .
-         "bmi = '"                  . form2db($_POST['form_bmi'])        . "', " .
-         "bmr = '"                  . form2db($_POST['form_bmr'])        . "', " .
-         "impedance = '"            . form2db($_POST['form_impedance'])  . "', " .
-         "fat_pct = '"              . form2db($_POST['form_fat_pct'])    . "', " .
-         "fat_mass = '"             . form2db($_POST['form_fat_mass'])   . "', " .
-         "ffm = '"                  . form2db($_POST['form_ffm'])        . "', " .
-         "tbw = '"                  . form2db($_POST['form_tbw'])        . "', " .
-         "other = '"                . form2db($_POST['form_other'])      . "' "  .
-         "WHERE id = '$formid'";
-        sqlStatement($query);
+        $query = "UPDATE form_body_composition SET 
+        body_type = ?, height = ?, weight = ?, bmi = ?, bmr = ?, impedance = ?, 
+        fat_pct = ?, fat_mass = ?, ffm = ?, tbw = ?, other = ? WHERE id = ?";
+         
+        sqlStatement($query, array(rbvalue('form_body_type'),  form2db($_POST['form_height']), form2db($_POST['form_weight']), form2db($_POST['form_bmi']), 
+         form2db($_POST['form_bmr']), form2db($_POST['form_impedance']), form2db($_POST['form_fat_pct']), form2db($_POST['form_fat_mass']),  form2db($_POST['form_ffm']), 
+         form2db($_POST['form_tbw']), form2db($_POST['form_other']), $formid ));
+         
     } // If adding a new form...
- //
+ //"
     else {
-        $query = "INSERT INTO form_body_composition ( " .
-         "body_type, height, weight, bmi, bmr, impedance, fat_pct, " .
-         "fat_mass, ffm, tbw, other " .
-         ") VALUES ( " .
-         rbvalue('form_body_type')      . ", "  .
-         "'" . form2db($_POST['form_height'])    . "', " .
-         "'" . form2db($_POST['form_weight'])    . "', " .
-         "'" . form2db($_POST['form_bmi'])       . "', " .
-         "'" . form2db($_POST['form_bmr'])       . "', " .
-         "'" . form2db($_POST['form_impedance']) . "', " .
-         "'" . form2db($_POST['form_fat_pct'])   . "', " .
-         "'" . form2db($_POST['form_fat_mass'])  . "', " .
-         "'" . form2db($_POST['form_ffm'])       . "', " .
-         "'" . form2db($_POST['form_tbw'])       . "', " .
-         "'" . form2db($_POST['form_other'])     . "' "  .
-         ")";
-        $newid = sqlInsert($query);
+        $query = 'INSERT INTO form_body_composition (
+         body_type, height, weight, bmi, bmr, impedance, fat_pct, fat_mass, ffm, tbw, other
+         ) VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)';
+         
+        $newid = sqlInsert($query, array(rbvalue('form_body_type'), form2db($_POST['form_height']), form2db($_POST['form_weight']), form2db($_POST['form_bmi']), 
+         form2db($_POST['form_bmr']), form2db($_POST['form_impedance']), form2db($_POST['form_fat_pct']), form2db($_POST['form_fat_mass']), 
+         form2db($_POST['form_ffm']), form2db($_POST['form_tbw']), form2db($_POST['form_other'])));
+         
         addForm($encounter, "Body Composition", $newid, "body_composition", $pid, $userauthorized);
     }
 
