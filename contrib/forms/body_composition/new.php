@@ -18,9 +18,9 @@
 // as published by the Free Software Foundation; either version 2
 // of the License, or (at your option) any later version.
 
-include_once("../../globals.php");
-include_once("$srcdir/api.inc");
-include_once("$srcdir/forms.inc");
+require_once("../../globals.php");
+require_once("$srcdir/api.inc");
+require_once("$srcdir/forms.inc");
 
 $scale_file_name = '/tmp/tanita_scale.txt';
 $scale_file_age = -1;
@@ -98,7 +98,7 @@ if ($_POST['bn_save']) {
 
 if ($formid) {
     $row = sqlQuery("SELECT * FROM form_body_composition WHERE " .
-    "id = '$formid' AND activity = '1'") ;
+    "id = ? AND activity = '1'", array($formid));
 } else {
  // Get the most recent scale reading.
     $items = explode(',', trim(file_get_contents($scale_file_name)));
@@ -120,13 +120,13 @@ if ($formid) {
 <html>
 <head>
 <?php html_header_show();?>
-<link rel=stylesheet href="<?php echo $css_header;?>" type="text/css">
+<link rel=stylesheet href="<?php echo attr($css_header);?>" type="text/css">
 <script language="JavaScript">
 </script>
 </head>
 
 <body <?php echo $top_bg_line;?> topmargin="0" rightmargin="0" leftmargin="2" bottommargin="0" marginwidth="2" marginheight="0">
-<form method="post" action="<?php echo $rootdir ?>/forms/body_composition/new.php?id=<?php echo $formid ?>"
+<form method="post" action="<?php echo att($rootdir) ?>/forms/body_composition/new.php?id=<?php echo attr($formid) ?>"
  onsubmit="return top.restoreSession()">
 
 <center>
@@ -141,8 +141,8 @@ if ($formid) {
  <tr>
   <td width='5%' nowrap>Body Type</td>
   <td colspan='2' nowrap>
-    <?php echo rbinput('form_body_type', 'Standard', 'Standard', 'body_type') ?>&nbsp;
-    <?php echo rbinput('form_body_type', 'Athletic', 'Athletic', 'body_type') ?>&nbsp;
+    <?php echo text('form_body_type', 'Standard', 'Standard', 'body_type') ?>&nbsp;
+    <?php echo text('form_body_type', 'Athletic', 'Athletic', 'body_type') ?>&nbsp;
   </td>
  </tr>
 
@@ -150,7 +150,7 @@ if ($formid) {
   <td nowrap>Height in inches</td>
   <td nowrap>
    <input type='text' name='form_height' size='6'
-    value='<?php echo addslashes($row['height']) ?>' /> &nbsp;
+    value='<?php echo attr($row['height']) ?>' /> &nbsp;
   </td>
   <td nowrap>
    &nbsp;
@@ -161,12 +161,12 @@ if ($formid) {
   <td nowrap>Weight in pounds</td>
   <td nowrap>
    <input type='text' name='form_weight' size='6'
-    value='<?php echo addslashes($row['weight']) ?>' /> &nbsp;
+    value='<?php echo attr($row['weight']) ?>' /> &nbsp;
   </td>
   <td align='center' nowrap>
 <?php
 if ($scale_file_age >= 0) {
-    echo "<font color='blue'>This reading was taken $scale_file_age minutes ago.</font>\n";
+    echo "<font color='blue'>This reading was taken" . text($scale_file_age) . "minutes ago.</font>\n";
 } else {
     echo "&nbsp;\n";
 }
@@ -178,7 +178,7 @@ if ($scale_file_age >= 0) {
   <td nowrap>BMI</td>
   <td nowrap>
    <input type='text' name='form_bmi' size='6'
-    value='<?php echo addslashes($row['bmi']) ?>' /> &nbsp;
+    value='<?php echo attr($row['bmi']) ?>' /> &nbsp;
   </td>
   <td nowrap>
    &nbsp;
@@ -189,7 +189,7 @@ if ($scale_file_age >= 0) {
   <td nowrap>BMR in kj</td>
   <td nowrap>
    <input type='text' name='form_bmr' size='6'
-    value='<?php echo addslashes($row['bmr']) ?>' /> &nbsp;
+    value='<?php echo attr($row['bmr']) ?>' /> &nbsp;
   </td>
   <td nowrap>
    &nbsp;
@@ -200,7 +200,7 @@ if ($scale_file_age >= 0) {
   <td nowrap>Impedance in ohms</td>
   <td nowrap>
    <input type='text' name='form_impedance' size='6'
-    value='<?php echo addslashes($row['impedance']) ?>' /> &nbsp;
+    value='<?php echo attr($row['impedance']) ?>' /> &nbsp;
   </td>
   <td nowrap>
    &nbsp;
@@ -211,7 +211,7 @@ if ($scale_file_age >= 0) {
   <td nowrap>Fat %</td>
   <td nowrap>
    <input type='text' name='form_fat_pct' size='6'
-    value='<?php echo addslashes($row['fat_pct']) ?>' /> &nbsp;
+    value='<?php echo attr($row['fat_pct']) ?>' /> &nbsp;
   </td>
   <td nowrap>
    &nbsp;
@@ -222,7 +222,7 @@ if ($scale_file_age >= 0) {
   <td nowrap>Fat Mass in pounds</td>
   <td nowrap>
    <input type='text' name='form_fat_mass' size='6'
-    value='<?php echo addslashes($row['fat_mass']) ?>' /> &nbsp;
+    value='<?php echo attr($row['fat_mass']) ?>' /> &nbsp;
   </td>
   <td nowrap>
    &nbsp;
@@ -233,7 +233,7 @@ if ($scale_file_age >= 0) {
   <td nowrap>FFM in pounds</td>
   <td nowrap>
    <input type='text' name='form_ffm' size='6'
-    value='<?php echo addslashes($row['ffm']) ?>' /> &nbsp;
+    value='<?php echo attr($row['ffm']) ?>' /> &nbsp;
   </td>
   <td nowrap>
    &nbsp;
@@ -244,7 +244,7 @@ if ($scale_file_age >= 0) {
   <td nowrap>TBW in pounds</td>
   <td nowrap>
    <input type='text' name='form_tbw' size='6'
-    value='<?php echo addslashes($row['tbw']) ?>' /> &nbsp;
+    value='<?php echo attr($row['tbw']) ?>' /> &nbsp;
   </td>
   <td nowrap>
    &nbsp;
@@ -254,7 +254,7 @@ if ($scale_file_age >= 0) {
  <tr>
   <td nowrap>Notes</td>
   <td colspan='2' nowrap>
-   <textarea name='form_other' rows='8' style='width:100%'><?php echo $row['other'] ?></textarea>
+   <textarea name='form_other' rows='8' style='width:100%'><?php echo text($row['other']) ?></textarea>
   </td>
  </tr>
 
