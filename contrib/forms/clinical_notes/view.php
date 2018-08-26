@@ -18,9 +18,9 @@
 // as published by the Free Software Foundation; either version 2
 // of the License, or (at your option) any later version.
 
-include_once("../../globals.php");
-include_once("$srcdir/api.inc");
-include_once("$srcdir/forms.inc");
+require_once("../../globals.php");
+require_once("$srcdir/api.inc");
+require_once("$srcdir/forms.inc");
 
 $row = array();
 
@@ -46,7 +46,7 @@ function cbvalue($cbname)
 function rbinput($name, $value, $desc, $colname)
 {
     global $row;
-    $ret  = "<input type='radio' name='$name' value='$value'";
+    $ret  = "<input type='radio' name=".attr($name)." value="attr($value);
     if ($row[$colname] == $value) {
         $ret .= " checked";
     }
@@ -63,7 +63,7 @@ function rbcell($name, $value, $desc, $colname)
 function cbinput($name, $colname)
 {
     global $row;
-    $ret  = "<input type='checkbox' name='$name' value='1'";
+    $ret  = "<input type='checkbox' name=".attr($name)." value='1'";
     if ($row[$colname]) {
         $ret .= " checked";
     }
