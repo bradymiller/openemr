@@ -35,7 +35,7 @@ function rbvalue($rbname)
         $tmp = '0';
     }
 
-    return "'$tmp'";
+    return "$tmp";
 }
 
 function cbvalue($cbname)

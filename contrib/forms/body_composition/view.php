@@ -30,14 +30,6 @@ if (! $encounter) { // comes from globals.php
     die("Internal error: we do not seem to be in an encounter!");
 }
 
-// encode a string from a form field for database writing.
-function form2db($fldval)
-{
-    $fldval = trim($fldval);
-    $fldval = formDataCore($fldval);
-    return $fldval;
-}
-
 function rbvalue($rbname)
 {
     $tmp = $_POST[$rbname];
@@ -45,13 +37,13 @@ function rbvalue($rbname)
         return "NULL";
     }
 
-    return "'$tmp'";
+    return "$tmp";
 }
 
 function rbinput($name, $value, $desc, $colname)
 {
     global $row;
-    $ret  = "<input type='radio' name='$name' value='$value'";
+    $ret  = "<input type='radio' name=" . attr($name) . " value=" . attr($value);
     if ($row[$colname] == $value) {
         $ret .= " checked";
     }
@@ -72,9 +64,9 @@ if ($_POST['bn_save']) {
         body_type = ?, height = ?, weight = ?, bmi = ?, bmr = ?, impedance = ?, 
         fat_pct = ?, fat_mass = ?, ffm = ?, tbw = ?, other = ? WHERE id = ?";
          
-        sqlStatement($query, array(rbvalue('form_body_type'),  form2db($_POST['form_height']), form2db($_POST['form_weight']), form2db($_POST['form_bmi']), 
-         form2db($_POST['form_bmr']), form2db($_POST['form_impedance']), form2db($_POST['form_fat_pct']), form2db($_POST['form_fat_mass']),  form2db($_POST['form_ffm']), 
-         form2db($_POST['form_tbw']), form2db($_POST['form_other']), $formid ));
+        sqlStatement($query, array(rbvalue('form_body_type'),  trim($_POST['form_height']), trim($_POST['form_weight']), trim($_POST['form_bmi']), 
+         trim($_POST['form_bmr']), trim($_POST['form_impedance']), trim($_POST['form_fat_pct']), trim($_POST['form_fat_mass']),  trim($_POST['form_ffm']), 
+         trim($_POST['form_tbw']), trim($_POST['form_other']), $formid ));
          
         sqlStatement($query);
     } // If adding a new form...
@@ -86,9 +78,9 @@ if ($_POST['bn_save']) {
           fat_pct, fat_mass, ffm, tbw, other ) 
           VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
          
-        $newid = sqlInsert($query, array(rbvalue('form_body_type'),  form2db($_POST['form_height']), form2db($_POST['form_weight']), form2db($_POST['form_bmi']), 
-         form2db($_POST['form_bmr']), form2db($_POST['form_impedance']), form2db($_POST['form_fat_pct']), form2db($_POST['form_fat_mass']),  form2db($_POST['form_ffm']), 
-         form2db($_POST['form_tbw']), form2db($_POST['form_other'])));
+        $newid = sqlInsert($query, array(rbvalue('form_body_type'),  trim($_POST['form_height']), trim($_POST['form_weight']), trim($_POST['form_bmi']), 
+         trim($_POST['form_bmr']), trim($_POST['form_impedance']), trim($_POST['form_fat_pct']), trim($_POST['form_fat_mass']),  trim($_POST['form_ffm']), 
+         trim($_POST['form_tbw']), trim($_POST['form_other'])));
          
         addForm($encounter, "Body Composition", $newid, "body_composition", $pid, $userauthorized);
     }
