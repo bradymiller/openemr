@@ -23,10 +23,10 @@ formHeader("Form: contacts");
 ?>
 <html><head>
 <?php html_header_show();?>
-<link rel=stylesheet href="<?php echo attr($css_header);?>" type="text/css">
+<link rel=stylesheet href="<?php echo $css_header;?>" type="text/css">
 </head>
 <body <?php echo attr($top_bg_line);?> topmargin=0 rightmargin=0 leftmargin=2 bottommargin=0 marginwidth=2 marginheight=0>
-<form method=post action="<?php echo attr($rootdir);?>/forms/contacts/save.php?mode=new" name="my_form">
+<form method=post action="<?php echo $rootdir;?>/forms/contacts/save.php?mode=new" name="my_form">
 <span class="title">Contacts</span><br><br>
 <table>
 <tr>
@@ -71,7 +71,7 @@ formHeader("Form: contacts");
 <br>
 <a href="javascript:top.restoreSession();document.my_form.submit();" class="link_submit">[Save]</a>
 <br>
-<a href="<?php echo attr($GLOBALS['form_exit_url']); ?>" class="link"
+<a href="<?php echo $GLOBALS['form_exit_url']; ?>" class="link"
  onclick="top.restoreSession()">[Don't Save]</a>
 </form>
 <?php

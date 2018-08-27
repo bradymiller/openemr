@@ -51,12 +51,11 @@ function rbvalue($rbname)
 function rbinput($name, $value, $desc, $colname)
 {
     global $row;
-    $ret  = "<input type='radio' name='$name' value='$value'";
+    $ret  = "<input type='radio' name='" . attr($name) . "' value='" . attr($value) . "'";
     if ($row[$colname] == $value) {
         $ret .= " checked";
     }
-
-    $ret .= " />$desc";
+    $ret .= " />" . text($desc);
     return $ret;
 }
 
@@ -120,13 +119,13 @@ if ($formid) {
 <html>
 <head>
 <?php html_header_show();?>
-<link rel=stylesheet href="<?php echo attr($css_header);?>" type="text/css">
+<link rel=stylesheet href="<?php echo $css_header;?>" type="text/css">
 <script language="JavaScript">
 </script>
 </head>
 
 <body <?php echo $top_bg_line;?> topmargin="0" rightmargin="0" leftmargin="2" bottommargin="0" marginwidth="2" marginheight="0">
-<form method="post" action="<?php echo att($rootdir) ?>/forms/body_composition/new.php?id=<?php echo attr($formid) ?>"
+<form method="post" action="<?php echo $rootdir ?>/forms/body_composition/new.php?id=<?php echo attr($formid) ?>"
  onsubmit="return top.restoreSession()">
 
 <center>
@@ -141,8 +140,8 @@ if ($formid) {
  <tr>
   <td width='5%' nowrap>Body Type</td>
   <td colspan='2' nowrap>
-    <?php echo text('form_body_type', 'Standard', 'Standard', 'body_type') ?>&nbsp;
-    <?php echo text('form_body_type', 'Athletic', 'Athletic', 'body_type') ?>&nbsp;
+    <?php echo rbinput('form_body_type', 'Standard', 'Standard', 'body_type') ?>&nbsp;
+    <?php echo rbinput('form_body_type', 'Athletic', 'Athletic', 'body_type') ?>&nbsp;
   </td>
  </tr>
 
@@ -166,7 +165,7 @@ if ($formid) {
   <td align='center' nowrap>
 <?php
 if ($scale_file_age >= 0) {
-    echo "<font color='blue'>This reading was taken" . text($scale_file_age) . "minutes ago.</font>\n";
+    echo "<font color='blue'>This reading was taken " . text($scale_file_age) . "minutes ago.</font>\n";
 } else {
     echo "&nbsp;\n";
 }

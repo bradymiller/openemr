@@ -101,7 +101,7 @@ if ($_POST['bn_save']) {
 
 if ($formid) {
     $row = sqlQuery("SELECT * FROM form_body_composition WHERE " .
-    "id = ? AND activity = '1'", array($formid) ;
+    "id = ? AND activity = '1'", array($formid));
 } else {
  // Get the most recent scale reading.
     $items = explode(',', trim(file_get_contents($scale_file_name)));
@@ -129,7 +129,7 @@ if ($formid) {
 </head>
 
 <body <?php echo attr($top_bg_line);?> topmargin="0" rightmargin="0" leftmargin="2" bottommargin="0" marginwidth="2" marginheight="0">
-<form method="post" action="<?php echo attr($rootdir) ?>/forms/body_composition/new.php?id=<?php echo attr($formid) ?>"
+<form method="post" action="<?php echo $rootdir ?>/forms/body_composition/new.php?id=<?php echo attr($formid) ?>"
  onsubmit="return top.restoreSession()">
 
 <center>

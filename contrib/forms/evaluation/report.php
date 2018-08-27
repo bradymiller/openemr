@@ -10,7 +10,7 @@ function evaluation_report($pid, $encounter, $cols, $id)
     $results = sqlQ($sql, array(add_escape_custom($id)));
     $data2 = array();
     while ($row = sqlFetchArray($results)) {
-        $data2[] = $row['name'];
+        $data2[] = text($row['name']);
     }
 
     $data = array_merge($data, $data2);

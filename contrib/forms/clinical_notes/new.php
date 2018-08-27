@@ -46,7 +46,7 @@ function cbvalue($cbname)
 function rbinput($name, $value, $desc, $colname)
 {
     global $row;
-    $ret  = "<input type='radio' name='$name' value='$value'";
+    $ret  = "<input type='radio' name=" . attr($name) . " value=" . attr($value);
     if ($row[$colname] == $value) {
         $ret .= " checked";
     }
@@ -130,7 +130,7 @@ if ($formid) {
 
 <body <?php echo $top_bg_line;?> topmargin="0" rightmargin="0" leftmargin="2"
  bottommargin="0" marginwidth="2" marginheight="0">
-<form method="post" action="<?php echo attr($rootdir) ?>/forms/clinical_notes/new.php?id=<?php echo attr($formid) ?>"
+<form method="post" action="<?php echo $rootdir ?>/forms/clinical_notes/new.php?id=<?php echo attr($formid) ?>"
  onsubmit="return top.restoreSession()">
 
 <center>
