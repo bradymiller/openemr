@@ -97,9 +97,11 @@ function aes256Encrypt($sValue, $customPassword = null)
         $sSecretKey = aes256PrepKey("two", "a");
         $sSecretKeyHmac = aes256PrepKey("two", "b");
     } else {
-        // Turn the password into a hash(note use binary) to use as the keys
-        $sSecretKey = hash("sha256", $customPassword, true);
-        $sSecretKeyHmac = $sSecretKey;
+        // customPassword mode, so turn the password into hashes (note use binary) to use as the keys
+        $sSaltKey = random_bytes(32);
+        $sSecretKey = hash_pbkdf2('sha384', $customPassword, $sSaltKey, 100000, 32, true);
+        $sSaltHmac = random_bytes(32);
+        $sSecretKeyHmac = hash_pbkdf2('sha384', $customPassword, $sSaltHmac, 100000, 32, true);
     }
 
     if (empty($sSecretKey) || empty($sSecretKeyHmac)) {
@@ -128,8 +130,13 @@ function aes256Encrypt($sValue, $customPassword = null)
         error_log("OpenEMR Error : Encryption is not working.");
     }
 
-    // prepend the encrypted value with the $hmacHash and $iv
-    $completedValue = $hmacHash . $iv . $processedValue;
+    if (empty($customPassword)) {
+        // prepend the encrypted value with the $hmacHash and $iv
+        $completedValue = $hmacHash . $iv . $processedValue;
+    } else {
+        // customPassword mode, so prepend the encrypted value with the salts, $hmacHash and $iv
+        $completedValue = $sSaltKey . $sSaltHmac . $hmacHash . $iv . $processedValue;
+    }
 
     return base64_encode($completedValue);
 }
