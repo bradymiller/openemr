@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %} Welcome {% endblock %}</title>
+    {{ header_setup(['common', 'report-helper']) }}
+
+    <link rel="stylesheet" href="../../public/assets/datatables.net-dt/css/jquery.dataTables.css" type="text/css">
+    <script type="text/javascript" src="../../public/assets/datatables.net/js/jquery.dataTables.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function() {
+            $('#transactions').DataTable({
+                "order": [[ 3, "desc" ]]
+            });
+        } );
+    </script>
+
+</head>
+<body>
+{% block body %}{% endblock %}
+</body>
+{% block javascripts %}{% endblock %}
+</html>

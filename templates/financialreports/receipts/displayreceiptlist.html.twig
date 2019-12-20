@@ -1,0 +1,45 @@
+{% extends 'layout.html.twig' %}
+
+{% block title %} Credit Card Transactions {% endblock %}
+
+{% block body %}
+
+    {#{ dump(transactions) }#}
+    <div class="container center">
+        <h3>Credit Card Transactions</h3>
+        <table class="display" id="transactions">
+            <thead>
+            <tr>
+                <th>Transaction ID</th>
+                <th>Amount</th>
+                <th>Account Code</th>
+                <th>Charge Date</th>
+                <th>Processed</th>
+                <th>Process Date</th>
+                <th>Encounter</th>
+                <th>Patient Name</th>
+                <th>Email</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for transaction in transactions %}
+
+                <tr>
+                    <td>{{ transaction.trans_id }}</td>
+                    <td>{{ transaction.pay_amount }}</td>
+                    <td>{{ transaction.account_code }}</td>
+                    <td>{{ transaction.chrg_date.date|trim|date('Y-m-d') }}</td>
+                    <td>{{ transaction.processed }}</td>
+                    <td>{{ transaction.process_date.date|trim|date('Y-m-d') }}</td>
+                    <td>{{ transaction.encounter }}</td>
+                    <td>{{ transaction.lname}},{{ transaction.fname }} </td>
+                    <td>{{ transaction.email }}</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+
+
+    </div>{# --end of container div--  #}
+
+{% endblock %}
