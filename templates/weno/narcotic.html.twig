@@ -1,4 +1,4 @@
-{% extends 'layout.html.twig' %}
+{% extends 'weno/layout.html.twig' %}
 {% block title %}{{ tabtitle }}{% endblock %}
 
 {% block javascripts %}
@@ -16,43 +16,43 @@
     {#{ dump(referrer) }#}
     {% set ids = [] %}
 
-    <h3>{{ pagetitle }}</h3>
+    <h3>{{ pagetitle|text }}</h3>
     <table class="table table-striped" id="prescriptions">
         <thead>
         <tr>
-            <th>Drug</th>
-            <th>Dosage</th>
-            <th>Quantity</th>
-            <th>Size</th>
-            <th>Refills</th>
+            <th>{{ "Drug"|xlt }}</th>
+            <th>{{ "Dosage"|xlt }}</th>
+            <th>{{ "Quantity"|xlt }}</th>
+            <th>{{ "Size"|xlt }}</th>
+            <th>{{ "Refills"|xlt }}</th>
         </tr>
         </thead>
         {% if prescriptions %}
     {% for prescription in prescriptions  %}{% set ids = ids|merge([prescription.id]) %}
         <tr>
-            <td>{{ prescription.drug }}</td>
-            <td>{{ prescription.dosage }}</td>
-            <td>{{ prescription.quantity }}</td>
-            <td>{{ prescription.size }}</td>
-            <td>{{ prescription.refills }}</td>
+            <td>{{ prescription.drug|text }}</td>
+            <td>{{ prescription.dosage|text }}</td>
+            <td>{{ prescription.quantity|text }}</td>
+            <td>{{ prescription.size|text }}</td>
+            <td>{{ prescription.refills|text }}</td>
         </tr>
     {% endfor %}
         {% else %}
-        <h3>No prescriptions have been marked. Please click the send checkbox </h3>
+        <h3>{{ "No prescriptions have been marked. Please click the send checkbox"|xlt }}</h3>
         {% endif %}
     </table>
     <form class="form">
     <div id="pharmacyselect" data-autocomplete-url="{{ url }}" class="form-group">
-        <input type="text" id="pharmacy-autocomplete" class="form-control" name="savePharmacy" value="{{ pharmacy }}" placeholder="No pharmacy on file">
+        <input type="text" id="pharmacy-autocomplete" class="form-control" name="savePharmacy" value="{{ pharmacy|attr }}" placeholder="{{ "No pharmacy on file"|xla }}">
     </div>
     </form>
     {% if prescriptions %}
 
 
     {% endif %}
-    <a class="btn btn-primary" href='{{ referrer }}' >Cancel</a>
-    <a class="btn btn-primary" href="#" id="savePharmacy">Confirm</a>
-    <a class="btn btn-warning" href="#" id="sendScript">Transmit</a>
+    <a class="btn btn-primary" href='{{ referrer }}'>{{ "Cancel"|xlt }}</a>
+    <a class="btn btn-primary" href="#" id="savePharmacy">{{ "Confirm"|xlt }}</a>
+    <a class="btn btn-warning" href="#" id="sendScript">{{ "Transmit"|xlt }}</a>
     <div id="success"></div>
 </div>{# --end of container div--  #}
     <div id="prescriptIds" data-ids="{{ ids | json_encode() }}"></div>

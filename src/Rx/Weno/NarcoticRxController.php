@@ -17,10 +17,6 @@ use OpenEMR\Core\Controller;
 use OpenEMR\Common\Database\Connector;
 use OpenEMR\Entities\PatientData;
 use OpenEMR\Entities\Prescriptions;
-use Twig\Environment;
-use Twig\Extension\DebugExtension;
-use Twig\HeaderExtension;
-use Twig\Loader\FilesystemLoader;
 
 class NarcoticRxController extends Controller
 {
@@ -47,17 +43,10 @@ class NarcoticRxController extends Controller
         $prescriptions = self::getPrescriptions();
         $pharmacyOnFile = self::getPharmacy();
 
-        $loader = new FilesystemLoader('../../templates/weno');
-        $twig = new Environment($loader, [
-          'debug' => true,
-        ]);
-        $twig->addExtension(new HeaderExtension());
-        $twig->addExtension(new DebugExtension());
-
-        return $twig->render('narcotic.html.twig', [
+        return $GLOBALS['twig']->render('weno/narcotic.html.twig', [
             'referrer' => $referrer,
-            'tabtitle' => 'Prescrition Order',
-            'pagetitle' => 'Prescription Confirm & Transmit',
+            'tabtitle' => xl('Prescription Order'),
+            'pagetitle' => xl('Prescription Confirm & Transmit'),
             'prescriptions' => $prescriptions,
             'pharmacy' => $pharmacyOnFile,
             'url' => '../../src/Rx/Weno/SetPharmacyController.php',

@@ -2,8 +2,8 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>{% block title %} Welcome {% endblock %}</title>
-    {{ header_setup(['jquery-ui', 'jquery-ui-sunny']) }}
+    <title>{% block title %} {{ "Welcome"|xlt }} {% endblock %}</title>
+    {{ setupHeader(['jquery-ui', 'jquery-ui-sunny']) }}
 
 </head>
 <body>
