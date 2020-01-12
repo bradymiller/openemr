@@ -115,7 +115,7 @@ class Controller_edit extends BaseController
 
         $rule = $this->getRuleManager()->getRule($ruleId);
         $this->viewBean->rule = $rule;
-        $this->set_view("view_summary.php","undecorated.php");
+        $this->set_view("view_summary.php", "undecorated.php");
     }
 
     function _action_filter()
@@ -224,7 +224,7 @@ class Controller_edit extends BaseController
         $rt_uid = _post('rt_uid');
         $type = _post('type');
         $criteriaTypeCode = _post('criteriaTypeCode');
-        if ( ($type == "filter") && (!empty($rf_uid)) ) {
+        if (($type == "filter") && (!empty($rf_uid))) {
             $criteria = $this->getRuleManager()->getRuleFilterCriteria($rule, $rf_uid);
         } else if (!empty($rt_uid)) { //then it looks like it must be a target ...
             $criteria = $this->getRuleManager()->getRuleTargetCriteria($rule, $rt_uid);
@@ -237,7 +237,6 @@ class Controller_edit extends BaseController
             } else {
                 $criteria = $this->getRuleManager()->createTargetRuleCriteria($rule, $criteriaType);
             }
-    
         }
      
         if (!is_null($criteria)) {
@@ -262,7 +261,7 @@ class Controller_edit extends BaseController
         $this->viewBean->action = $action;
         $this->viewBean->rule = $rule;
         $this->addHelper("common.php");
-        $this->set_view("action.php","undecorated.php");
+        $this->set_view("action.php", "undecorated.php");
     }
 
     function _action_delete_action()
@@ -274,7 +273,8 @@ class Controller_edit extends BaseController
         $this->redirect("index.php?action=detail!view&id=" . urlencode($ruleId));
     }
     
-    function _action_delete_rule() {
+    function _action_delete_rule()
+    {
         $ruleId = _get('id');
         if (!is_null($ruleId)) {
             $this->getRuleManager()->deleteRuleTotally($ruleId);
@@ -355,7 +355,7 @@ class Controller_edit extends BaseController
         $this->viewBean->rule_id = $ruleId;
         $this->viewBean->groupId = $groupId;
         $this->addHelper("common.php");
-        $this->set_view("add_criteria.php","criteria_".$type.".php");
+        $this->set_view("add_criteria.php", "criteria_".$type.".php");
     }
 
     function _action_choose_criteria()

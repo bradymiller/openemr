@@ -493,23 +493,26 @@ class RuleManager
 
     function deleteRuleTarget($rule, $rt_uid)
     {
-        sqlStatement("DELETE FROM rule_target WHERE rt_uid= ?", array($rt_uid) );
+        sqlStatement("DELETE FROM rule_target WHERE rt_uid= ?", array($rt_uid));
     }
 
     function deleteRuleFilter($rule, $rf_uid)
     {
-        sqlStatement("DELETE FROM rule_filter WHERE rf_uid = ?", array($rf_uid) );
+        sqlStatement("DELETE FROM rule_filter WHERE rf_uid = ?", array($rf_uid));
     }
     
-    function deleteRuleTotally($ruleId) {
+    function deleteRuleTotally($ruleId)
+    {
         if ($ruleId) {
             sqlStatement("DELETE FROM rule_action WHERE id=?", array($ruleId));
             sqlStatement("DELETE FROM rule_target WHERE id=?", array($ruleId));
             sqlStatement("DELETE FROM rule_filter WHERE id=?", array($ruleId));
             sqlStatement("DELETE from rule_reminder where id=?", array($ruleId));
             sqlStatement("DELETE from clinical_plans_rules where rule_id=?", array($ruleId));
-            sqlStatement("DELETE from list_options where list_id='clinical_rules' and option_id=?",
-                array($ruleId));
+            sqlStatement(
+                "DELETE from list_options where list_id='clinical_rules' and option_id=?",
+                array($ruleId)
+            );
             sqlStatement("DELETE from clinical_rules WHERE id=?", array($ruleId));
         }
     }

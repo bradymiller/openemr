@@ -98,7 +98,7 @@ require_once("$phpgacl_location/gacl_api.class.php");
                                 <?php } ?>
                                 <td>&nbsp;</td>
                                 <?php if ($GLOBALS['medex_enable'] == '1') { ?>
-                                <?php if ($rule->provider_alert_flag() == "1") { ?>
+                                    <?php if ($rule->provider_alert_flag() == "1") { ?>
                                     <td class="text-center"><input type="checkbox" name="provider[<?php echo attr($index); ?>]" checked="yes"></td>
                                 <?php } else {?>
                                     <td class="text-center"><input type="checkbox" name="provider[<?php echo attr($index); ?>]"></td>
@@ -109,27 +109,27 @@ require_once("$phpgacl_location/gacl_api.class.php");
                                     <?php //Place the ACO selector here
                                         $gacl_temp = new gacl_api();
                                         $list_aco_objects = $gacl_temp->get_objects(null, 0, 'ACO');
-                                        foreach ($list_aco_objects as $key => $value) {
-                                            asort($list_aco_objects[$key]);
-                                        }
+                                    foreach ($list_aco_objects as $key => $value) {
+                                        asort($list_aco_objects[$key]);
+                                    }
                                 
                                         echo "<select name='access_control[" . $index . "]'>";
-                                        foreach ($list_aco_objects as $section => $array_acos) {
-                                            $aco_section_data = $gacl_temp->get_section_data($section, 'ACO');
-                                            $aco_section_title = $aco_section_data[3];
-                                            foreach ($array_acos as $aco) {
-                                                $aco_id = $gacl_temp->get_object_id($section, $aco, 'ACO');
-                                                $aco_data = $gacl_temp->get_object_data($aco_id, 'ACO');
-                                                $aco_title = $aco_data[0][3];
-                                                $select = '';
-                                                if ($rule->access_control() == $section.":".$aco) {
-                                                    $select = 'selected';
-                                                }
-                                                $start_title = xlt($aco_title);
-                                                $show_title =  substr($start_title,0,25)."...";
-                                                echo "<option value='" . attr($section) . ":" . attr($aco) . "' " . $select . "> " . xlt($aco_section_title) . ": " . $show_title  . "</option>";
+                                    foreach ($list_aco_objects as $section => $array_acos) {
+                                        $aco_section_data = $gacl_temp->get_section_data($section, 'ACO');
+                                        $aco_section_title = $aco_section_data[3];
+                                        foreach ($array_acos as $aco) {
+                                            $aco_id = $gacl_temp->get_object_id($section, $aco, 'ACO');
+                                            $aco_data = $gacl_temp->get_object_data($aco_id, 'ACO');
+                                            $aco_title = $aco_data[0][3];
+                                            $select = '';
+                                            if ($rule->access_control() == $section.":".$aco) {
+                                                $select = 'selected';
                                             }
+                                            $start_title = xlt($aco_title);
+                                            $show_title =  substr($start_title, 0, 25)."...";
+                                            echo "<option value='" . attr($section) . ":" . attr($aco) . "' " . $select . "> " . xlt($aco_section_title) . ": " . $show_title  . "</option>";
                                         }
+                                    }
                                 
                                         echo "</select>";
                                     ?>

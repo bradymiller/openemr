@@ -59,7 +59,9 @@ General Helpers
 
 <?php }
 
-function textfield_simple($args) { ?>
+function textfield_simple($args)
+{
+    ?>
     <input id="<?php echo $args['id'] ? attr($args['id']) : ""?>"
                data-grp-tgt="<?php echo attr($args['target']); ?>" class="form-control <?php echo attr($args['class']); ?>"
                type="text"
@@ -96,7 +98,7 @@ Compound Helpers
                 <?php echo timeunit_select(array( "context"=>"rule_target_intervals", "target"=>"fld_target_interval_", "name" => "fld_target_interval_type", "value" => $criteria->intervalType )); ?>
             </td>
         </tr>
-    <?php
+        <?php
     } ?>
     <tr>
         <td class="text-right" rowspan="3">

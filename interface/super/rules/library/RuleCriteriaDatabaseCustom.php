@@ -53,7 +53,8 @@ class RuleCriteriaDatabaseCustom extends RuleCriteria
 
         $requirements .= xl("Occurs") . ": ";
         $requirements .= text($this->decodeComparator($this->frequencyComparator) . " " . $this->frequency). " time";
-        if ($this->frequency <> '1') { echo "s"; }
+        if ($this->frequency <> '1') {
+            echo "s"; }
 
         return $requirements;
     }

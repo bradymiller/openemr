@@ -16,7 +16,7 @@
 <?php $ruleId = $viewBean->id;
    
     $ruleId = $viewBean->id;
-    ?>
+?>
 <?php $groupId = $viewBean->groupId;?>
 
 <?php
@@ -27,7 +27,7 @@ if ($viewBean->type != 'filter') { ?>
         This is a powerful search tool allowing criteria like  "if present", "if not present", "if it occurred more than a year ago", etc.
         You can add multiple criteria to finely hone when this alert(s) will fire.</p>
     </div>
-    <?php }  else { ?>
+    <?php } else { ?>
         <div class="col-12 text-justify ">
         
             Each <B>Clinical Reminder</B> can target one or more sub-groups of patients.

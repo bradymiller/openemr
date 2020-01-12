@@ -17,12 +17,13 @@
             <?php // this will display the TAB title
             echo xlt('CR{{Clinical Reminder abbreviation}}'); ?>:
     <?php
-         if ($rule->title) {
-             $in = text($rule->title);
-             echo strlen($in) > 10 ? substr($in, 0, 10) . "..." : $in;
-         } else { echo xlt('Manager');
-         }
-        ?>
+    if ($rule->title) {
+        $in = text($rule->title);
+        echo strlen($in) > 10 ? substr($in, 0, 10) . "..." : $in;
+    } else {
+        echo xlt('Manager');
+    }
+    ?>
 </div>
 
 <input type="hidden" id="ruleId" name="ruleId" value="<?php echo attr($rule->id); ?>">
@@ -71,45 +72,45 @@
                                 <?php
                                     $intervals = $rule->reminderIntervals;
                                     $provider = $intervals->getDetailFor('provider');
-                                    foreach (ReminderIntervalType::values() as $type) {
-                                        foreach (ReminderIntervalRange::values() as $range) {
-                                            $first = true;
-                                            $detail = $intervals->getDetailFor($type, $range);
-                                            $detail->timeUnit;
-                                            $timings[$type->code][$range->code]['timeUnit'] =  $detail->timeUnit->code;
-                                            $timings[$type->code][$range->code]['amount'] = $detail->amount;
-                                            if ($timings[$type->code][$range->code]['amount'] >'1') {
-                                                $timings[$type->code][$range->code]['timeUnit2'] =$timings[$type->code][$range->code]['timeUnit']."s";
-                                            } else {
-                                                $timings[$type->code][$range->code]['timeUnit2']= $timings[$type->code][$range->code]['timeUnit'];
-                                            }
+                                foreach (ReminderIntervalType::values() as $type) {
+                                    foreach (ReminderIntervalRange::values() as $range) {
+                                        $first = true;
+                                        $detail = $intervals->getDetailFor($type, $range);
+                                        $detail->timeUnit;
+                                        $timings[$type->code][$range->code]['timeUnit'] =  $detail->timeUnit->code;
+                                        $timings[$type->code][$range->code]['amount'] = $detail->amount;
+                                        if ($timings[$type->code][$range->code]['amount'] >'1') {
+                                            $timings[$type->code][$range->code]['timeUnit2'] =$timings[$type->code][$range->code]['timeUnit']."s";
+                                        } else {
+                                            $timings[$type->code][$range->code]['timeUnit2']= $timings[$type->code][$range->code]['timeUnit'];
                                         }
                                     }
+                                }
                                     
                                     $more='';
                                     $something=0;
                                     
-                                    foreach (RuleType::values() as $type) {
-                                        if ($rule->hasRuleType(RuleType::from($type))) {
-                                            $something++;
-                                        }
+                                foreach (RuleType::values() as $type) {
+                                    if ($rule->hasRuleType(RuleType::from($type))) {
+                                        $something++;
                                     }
-                                    ?>
+                                }
+                                ?>
                                 <span class="underline"><?php
-                                        if ($something > '1') {
-                                            echo xlt('Alert Types');
-                                        } else {
-                                            echo xlt('Alert Type');
-                                        }
-                                        ?>:</span></td>
+                                if ($something > '1') {
+                                    echo xlt('Alert Types');
+                                } else {
+                                    echo xlt('Alert Type');
+                                }
+                                ?>:</span></td>
                             <td colspan="3"><?php
                                     
-                                    if ($something) {
-                                        if ($rule->hasRuleType(RuleType::from('activealert')) || $rule->hasRuleType(RuleType::from('passivealert'))) {
-                                            $clinical = '1';
-                                        }
-                                        if ($rule->hasRuleType(RuleType::from('activealert')) && $rule->hasRuleType(RuleType::from('passivealert'))) {
-                                            $timing = "<div>".xlt('This CR has both an')."
+                            if ($something) {
+                                if ($rule->hasRuleType(RuleType::from('activealert')) || $rule->hasRuleType(RuleType::from('passivealert'))) {
+                                    $clinical = '1';
+                                }
+                                if ($rule->hasRuleType(RuleType::from('activealert')) && $rule->hasRuleType(RuleType::from('passivealert'))) {
+                                    $timing = "<div>".xlt('This CR has both an')."
                                                             <span class='bold'
                                                                   data-toggle='popover'
                                                                   data-trigger='hover'
@@ -126,58 +127,58 @@
                                                                   data-content='".xla('These alerts appear on the Dashboard page inside the CR widget').".'>
                                                                   ". xlt('Passive Alert').".<br />
                                                             </span>";
-                                            // Look at Custom input in actions to see if true.  How do we find that in this OOP goop?  Help Brady please...
-                                            //$timing .=" If any Treatment Goal in this CR needs to be marked 'Completed', a link in the CR widget will open a pop-up to do this and/or add a note.<br />";
-                                            $timing .= $timings['clinical']['pre']['amount'] . " " . $timings['clinical']['pre']['timeUnit2'] . " ".xlt('before its Due date, this CR is marked ')."<span class='due_soon bolder'>".xlt('Due Soon')."</span>.<br />";
-                                            $timing .= xlt('Then for ')." ".$timings['clinical']['post']['amount'] . " " . $timings['clinical']['post']['timeUnit2'] ." ".xlt('it is ')."<span class='due_now'>".xlt('Due')."</span>. ".xlt('After this, it is marked as ')."<span class='past_due'>".xlt('Past due')."</span>.<br />";
-                                            $timing .= "</div>";
-                                        } elseif ($rule->hasRuleType(RuleType::from('activealert'))) {
-                                            //how to translate this?
-                                            $timing .= "<div>An <span class='bold'>Active Alert</span> will pop-up daily listing any Treatment Goals needing attention.</div>";
-                                            if (empty($dueDate)) {
-                                                $dueDate = " ".xlt('will no longer pop-up or appear in the')." <a href='#'
+                                    // Look at Custom input in actions to see if true.  How do we find that in this OOP goop?  Help Brady please...
+                                    //$timing .=" If any Treatment Goal in this CR needs to be marked 'Completed', a link in the CR widget will open a pop-up to do this and/or add a note.<br />";
+                                    $timing .= $timings['clinical']['pre']['amount'] . " " . $timings['clinical']['pre']['timeUnit2'] . " ".xlt('before its Due date, this CR is marked ')."<span class='due_soon bolder'>".xlt('Due Soon')."</span>.<br />";
+                                    $timing .= xlt('Then for ')." ".$timings['clinical']['post']['amount'] . " " . $timings['clinical']['post']['timeUnit2'] ." ".xlt('it is ')."<span class='due_now'>".xlt('Due')."</span>. ".xlt('After this, it is marked as ')."<span class='past_due'>".xlt('Past due')."</span>.<br />";
+                                    $timing .= "</div>";
+                                } elseif ($rule->hasRuleType(RuleType::from('activealert'))) {
+                                    //how to translate this?
+                                    $timing .= "<div>An <span class='bold'>Active Alert</span> will pop-up daily listing any Treatment Goals needing attention.</div>";
+                                    if (empty($dueDate)) {
+                                        $dueDate = " ".xlt('will no longer pop-up or appear in the')." <a href='#'
                                                                     data-toggle='popover'
                                                                     data-trigger='hover'
                                                                     data-placement='auto'
                                                                     title='".xla('Clinical Reminders Widget')."'
                                                                     data-content='".xla('The CR Widget is located on the demographics page.')."'>".xlt('CR Widget')."</a>";
-                                           }
-                                            echo "</div>";
-                                        } elseif ($rule->hasRuleType(RuleType::from('passivealert'))) {
-                                            $timing .= "<div class='indent10'>A <span class='bold'>Passive Alert</span> will appear in the
+                                    }
+                                    echo "</div>";
+                                } elseif ($rule->hasRuleType(RuleType::from('passivealert'))) {
+                                    $timing .= "<div class='indent10'>A <span class='bold'>Passive Alert</span> will appear in the
                                                 <a href='#' data-toggle='popover'
                                                             data-trigger='hover'
                                                             data-placement='auto'
                                                             title='Clinical Reminders Widget(CR)'
                                                             data-content='The CR Widget is located on the demographics page.'>CR Widget</a> ";
                                             
-                                            $timing .= $timings['clinical']['pre']['amount']." ".$timings['clinical']['pre']['timeUnit2']." ".xla('before it is due (Due soon)').". ";
-                                            $timing .= $timings['clinical']['post']['amount']." ".$timings['clinical']['post']['timeUnit2']." ".xla('after the Due Date, it is marked Past Due').".<br />";
-                                            $timing .= xla("Alerts stop when their Treatment Goals are completed.");
-                                            $timing .= "</span></div>";
-                                        }
-                                        if ($rule->hasRuleType(RuleType::from('patientreminder'))) {
-                                            $timing .= "<div>".xlt('This CR')." ";
-                                            if ($clinical=='1') {
-                                                $timing .= xlt('also'). " ";
-                                            }
-                                            $timing .= xlt('triggers a ')."<span class='bold'>".xlt('Patient Reminder')."</span>.</div>";
-                                        
-                                            $timing .= "<div class='indent10'><span class='bold'>Patient Reminder</span>: A message will ".$more." be sent to the patient. ";
-                                            if ($GLOBALS['medex_enable'] == '1') {
-                                                $timing .="<br /><a href='https://medexbank.com/'>MedEx</a> will send an e-mail, SMS text and/or a voice message as requested.</div>";
-                                            }
-                                        }
-                                        if ($rule->hasRuleType(RuleType::from('provideralert'))) {
-                                            $timing .= "<div><span class='bolder red'>This CR has a Provider Alert!</span></div>";
-                                            $timing .= "<div class='indent10'><span class='bold'>Provider Alert</span>: A message will be sent to the provider.";
-                                            if ($GLOBALS['medex_enable'] == '1') {
-                                                $timing .="<br /><a href='https://medexbank.com/'>MedEx</a> will send an e-mail, SMS text and/or a voice message as requested.</div>";
-                                            }
-                                        }
-                                    } else {
-                                        $timing = "<span class='bold'>".xlt('None.  Edit this CR to create an Alert!')."</span><br />";
+                                    $timing .= $timings['clinical']['pre']['amount']." ".$timings['clinical']['pre']['timeUnit2']." ".xla('before it is due (Due soon)').". ";
+                                    $timing .= $timings['clinical']['post']['amount']." ".$timings['clinical']['post']['timeUnit2']." ".xla('after the Due Date, it is marked Past Due').".<br />";
+                                    $timing .= xla("Alerts stop when their Treatment Goals are completed.");
+                                    $timing .= "</span></div>";
+                                }
+                                if ($rule->hasRuleType(RuleType::from('patientreminder'))) {
+                                    $timing .= "<div>".xlt('This CR')." ";
+                                    if ($clinical=='1') {
+                                        $timing .= xlt('also'). " ";
                                     }
+                                    $timing .= xlt('triggers a ')."<span class='bold'>".xlt('Patient Reminder')."</span>.</div>";
+                                        
+                                    $timing .= "<div class='indent10'><span class='bold'>Patient Reminder</span>: A message will ".$more." be sent to the patient. ";
+                                    if ($GLOBALS['medex_enable'] == '1') {
+                                        $timing .="<br /><a href='https://medexbank.com/'>MedEx</a> will send an e-mail, SMS text and/or a voice message as requested.</div>";
+                                    }
+                                }
+                                if ($rule->hasRuleType(RuleType::from('provideralert'))) {
+                                    $timing .= "<div><span class='bolder red'>This CR has a Provider Alert!</span></div>";
+                                    $timing .= "<div class='indent10'><span class='bold'>Provider Alert</span>: A message will be sent to the provider.";
+                                    if ($GLOBALS['medex_enable'] == '1') {
+                                        $timing .="<br /><a href='https://medexbank.com/'>MedEx</a> will send an e-mail, SMS text and/or a voice message as requested.</div>";
+                                    }
+                                }
+                            } else {
+                                $timing = "<span class='bold'>".xlt('None.  Edit this CR to create an Alert!')."</span><br />";
+                            }
                                     
                                     
                                     
@@ -211,23 +212,23 @@
                                       <hr>This clickable link leads to the url specified here.
                                       It is suggested to link out to relevant clinical information, perhaps a government publication explaining why this CR exists.
                                       However, you can link to anything desired. <?php
-                                      if ($rule->web_ref) {
-                                          echo xla('Currently this reference links to '). attr($rule->web_ref);
-                                      } else {
-                                          echo xla('Currently this reference does not link to anything.');
-                                      } ?>
+                                        if ($rule->web_ref) {
+                                            echo xla('Currently this reference links to '). attr($rule->web_ref);
+                                        } else {
+                                            echo xla('Currently this reference does not link to anything.');
+                                        } ?>
                                       '>
                                     <i class="fa fa-link"></i> <?php echo xlt('Reference'); ?>:</span>
                                 </span>
                             </td>
                             <td><a href="<?php echo attr($rule->web_ref); ?>"><?php
-                                 if ($rule->web_ref) {
-                                     $in = attr($rule->web_ref);
-                                     echo strlen($in) > 30 ? substr($in, 0, 25) . "..." : $in;
-                                 } else {
-                                     echo "None";
-                                 }
-                                 ?></a></td>
+                            if ($rule->web_ref) {
+                                $in = attr($rule->web_ref);
+                                echo strlen($in) > 30 ? substr($in, 0, 25) . "..." : $in;
+                            } else {
+                                echo "None";
+                            }
+                            ?></a></td>
                         </tr>
                         <tr>
                             <td class="text-right">
@@ -278,10 +279,10 @@
                             </td>
                             <td>
                                 <?php
-                                    foreach (RuleType::values() as $type) {
-                                        if (($GLOBALS['medex_enable'] !='1') && ($type =="provideralert") ) {
-                                            continue;
-                                        }?>
+                                foreach (RuleType::values() as $type) {
+                                    if (($GLOBALS['medex_enable'] !='1') && ($type =="provideralert")) {
+                                        continue;
+                                    }?>
                                         <label><input name="fld_ruleTypes[]"
                                                       value="<?php echo attr($type); ?>"
                                                       type="checkbox" <?php echo $rule->hasRuleType(RuleType::from($type)) ? "CHECKED": "" ?>>
@@ -401,10 +402,8 @@
                             </thead>
                             <tbody>
                             <?php
-                                if ($filters->criteria) {
-                                    
-                                    foreach ($filters->criteria as $criteria) { ?>
-
+                            if ($filters->criteria) {
+                                foreach ($filters->criteria as $criteria) { ?>
                                         <tr>
                                             <td scope="row">
                                                 <button id="edit_filter_<?php echo attr_url($criteria->uid); ?>"
@@ -439,9 +438,9 @@
                     $nextGroupId = 0;
                     //we cannot use count.  If two new groups are created, group 1&2, and group 1 is deleted
                     //newgroup will still be 3, not count(groups) + 1
-                    foreach ($rule->groups as $group) {
-                        $nextGroupId = $group->groupId + 1;
-                    }
+                foreach ($rule->groups as $group) {
+                    $nextGroupId = $group->groupId + 1;
+                }
                 ?>
                 <div class="col-12">
                     <button type="button"
@@ -477,8 +476,8 @@
                     <span class="title text-left"><?php echo xlt('Step 2').": ".xlt('When will this CR fire?'); ?></span>
                 </div>
                 <?php
-                    foreach ($rule->groups as $group) {
-                        ?>
+                foreach ($rule->groups as $group) {
+                    ?>
                         <div class="row" id="show_group_<?php echo xla($group->groupId); ?>">
                             <div class="col-6 inline">
                                 <div class="col-12 title2"> <?php echo xlt('If we need this to happen'); ?>:</div>
@@ -492,29 +491,29 @@
                                         <thead>
                                         <tr>
                                             <td class="text-center underline">
-                                                <?php echo xlt('Edit'); ?>
+                                            <?php echo xlt('Edit'); ?>
                                             </td>
                                             <td class="text-center underline">
-                                                <?php echo xlt('Delete'); ?>
+                                            <?php echo xlt('Delete'); ?>
                                             </td>
                                             <td class="text-center underline" colspan="3">
-                                                <?php echo xlt('Look at:'); ?>
+                                            <?php echo xlt('Look at:'); ?>
                                             </td>
                                             <td class="text-center underline" colspan="3">
-                                                <?php echo xlt('Look for:'); ?>
+                                            <?php echo xlt('Look for:'); ?>
                                             </td>
                                             <td class="text-center underline" colspan="3">
-                                                <?php echo xlt('Cohort:'); ?>
+                                            <?php echo xlt('Cohort:'); ?>
                                             </td>
                                         </tr>
                                         </thead>
                                         <!-- rule target criteria -->
-                                        <?php
-                                            //$groupId = $group->groupId;
-                                            $targets = $group->ruleTargets;
-                                            if ($targets) {
-                                                if ($targets->criteria) {
-                                                    foreach ($targets->criteria as $criteria) { ?>
+                                    <?php
+                                        //$groupId = $group->groupId;
+                                        $targets = $group->ruleTargets;
+                                    if ($targets) {
+                                        if ($targets->criteria) {
+                                            foreach ($targets->criteria as $criteria) { ?>
                                                         <tr>
                                                             <td class="text-center">
                                                                 <button id="edit_target_<?php echo attr_url($group->groupId); ?>_<?php echo attr_url($criteria->uid); ?>"
@@ -531,19 +530,19 @@
                                                             </td>
                                                             <td colspan="3" class="text-center"><?php echo(text($criteria->getTitle())); ?></td>
                                                             <td colspan="3" class="nowrap"><?php
-                                                                    echo $criteria->getRequirements(); //escaped in interface/super/rules/library/RuleCriteriaDatabaseBucket.php
-                                                                    ?>
-                                                                <?php echo is_null($criteria->getInterval()) ? "" : " <br /> " . xlt('every') . " " . text($criteria->getInterval()); ?>
+                                                            echo $criteria->getRequirements(); //escaped in interface/super/rules/library/RuleCriteriaDatabaseBucket.php
+                                                            ?>
+                                                            <?php echo is_null($criteria->getInterval()) ? "" : " <br /> " . xlt('every') . " " . text($criteria->getInterval()); ?>
                                                             </td>
                                                             <td colspan="3" class="text-center"><?php echo(text($criteria->getCharacteristics())); ?></td>
 
                                                         </tr>
                                                     <?php }
-                                                } else { ?>
+                                        } else { ?>
                                                     <tr><td><?php echo xlt('None defined'); ?></td></tr>
                                                     <?php
-                                                }
-                                            } ?>
+                                        }
+                                    } ?>
                                     </table>
                                 </div>
                                 <div id="show_targets_edit_<?php echo xla($group->groupId); ?>"></div>
@@ -553,24 +552,23 @@
                                 <span class="title2 bold text-center">
                                 <?php
     
-                                    if (!$something) {
-                                        echo "<br /><span class='bold'>".xlt('There are no Alerts selected!')."</span><br />";
-                                    } else {
-                                        if ($rule->hasRuleType(RuleType::from('activealert'))) {
-                                            echo "Active alert<br />";
-                                        }
-                                        if ($rule->hasRuleType(RuleType::from('passivealert'))) {
-                                            echo "<br />Passive alert<br />";
-                                        }
-                                        if ($rule->hasRuleType(RuleType::from('patientreminder'))) {
-                                            echo "<br />Patient Reminder<br />";
-                                        }
-                                        if ($rule->hasRuleType(RuleType::from('provideralert'))) {
-                                            echo "<br />Provider alert<br />";
-                                        }
-        
+                                if (!$something) {
+                                    echo "<br /><span class='bold'>".xlt('There are no Alerts selected!')."</span><br />";
+                                } else {
+                                    if ($rule->hasRuleType(RuleType::from('activealert'))) {
+                                        echo "Active alert<br />";
                                     }
-                                    //echo $timing;
+                                    if ($rule->hasRuleType(RuleType::from('passivealert'))) {
+                                        echo "<br />Passive alert<br />";
+                                    }
+                                    if ($rule->hasRuleType(RuleType::from('patientreminder'))) {
+                                        echo "<br />Patient Reminder<br />";
+                                    }
+                                    if ($rule->hasRuleType(RuleType::from('provideralert'))) {
+                                        echo "<br />Provider alert<br />";
+                                    }
+                                }
+                                //echo $timing;
                                 ?><br />
                                 </span>
                             </div>
@@ -590,13 +588,13 @@
                                         <thead>
                                         <tr>
                                             <td class="underline">
-                                                <?php echo xlt('Edit'); ?>
+                                            <?php echo xlt('Edit'); ?>
                                             </td>
                                             <td class="underline">
-                                                <?php echo xlt('Delete'); ?>
+                                            <?php echo xlt('Delete'); ?>
                                             </td>
                                             <td class="underline" colspan="4">
-                                                <?php echo xlt('Treatment Goal'); ?>
+                                            <?php echo xlt('Treatment Goal'); ?>
                                             </td>
                                             <td class="underline">
                                                 Confirm pop-up?
@@ -604,12 +602,11 @@
                                             <td class="underline">Link Out</td>
                                         </tr>
                                         </thead>
-                                        <?php
-                                            $actions = $group->ruleActions;
+                                    <?php
+                                        $actions = $group->ruleActions;
                                             
-                                            if ($actions->actions) {
-                                                
-                                                foreach ($actions->actions as $action) {   ?>
+                                    if ($actions->actions) {
+                                        foreach ($actions->actions as $action) {   ?>
                                                     <tr class="baseboard">
                                                         <td>
                                                             <button id="edit_action_<?php echo attr_url($group->groupId); ?>_<?php echo attr_url($action->ra_uid); ?>"
@@ -629,32 +626,32 @@
                                                         </td>
                                                         <td>
                                                             <?php
-                                                                if ($action->customRulesInput==1) {
-                                                                    echo xlt('Yes');
-                                                                } else {
-                                                                    echo xlt('No');
-                                                                } ?>
+                                                            if ($action->customRulesInput==1) {
+                                                                echo xlt('Yes');
+                                                            } else {
+                                                                echo xlt('No');
+                                                            } ?>
                                                         </td>
                                                         <td>
                                                             <?php
-                                                                if (!empty($action->reminderLink)) {
-                                                                    echo "<a href='".attr_url('$action->reminderLink')."' target='_blank'>".xlt('Yes')."</a>";
-                                                                } else {
-                                                                    echo xlt('No');
-                                                                } ?>
+                                                            if (!empty($action->reminderLink)) {
+                                                                echo "<a href='".attr_url('$action->reminderLink')."' target='_blank'>".xlt('Yes')."</a>";
+                                                            } else {
+                                                                echo xlt('No');
+                                                            } ?>
                                                         </td>
                                                     </tr>
                                                     <?php
-                                                }
-                                            } else { ?>
+                                        }
+                                    } else { ?>
                                                 <tr>
                                                     <td class="text-center" colspan="6">
-                                                        <?php echo xlt('None defined'); ?>
+                                                    <?php echo xlt('None defined'); ?>
                                                     </td>
                                                 </tr>
                                                 <?php
-                                            }
-                                        ?>
+                                    }
+                                    ?>
                                     </table>
                                 </div>
                                 <div class="col-12"
@@ -663,7 +660,7 @@
                             </div>
                         </div>
                         <?php
-                    } // iteration over groups
+                } // iteration over groups
                 ?>
                 <div class="row col-12" id="show_group_<?php echo xla($nextGroupId); ?>">
                     
@@ -690,23 +687,22 @@
                         <span class="title2 bold text-center">
                                 <?php
     
-                                    if (!$something) {
-                                        echo "<br /><span class='bold'>".xlt('There are no Alerts selected!')."</span><br />";
-                                    } else {
-                                        if ($rule->hasRuleType(RuleType::from('activealert'))) {
-                                            echo "Active alert<br />";
-                                        }
-                                        if ($rule->hasRuleType(RuleType::from('passivealert'))) {
-                                            echo "<br />Passive alert<br />";
-                                        }
-                                        if ($rule->hasRuleType(RuleType::from('patientreminder'))) {
-                                            echo "<br />Patient Reminder<br />";
-                                        }
-                                        if ($rule->hasRuleType(RuleType::from('provideralert'))) {
-                                            echo "<br />Provider alert<br />";
-                                        }
-        
+                                if (!$something) {
+                                    echo "<br /><span class='bold'>".xlt('There are no Alerts selected!')."</span><br />";
+                                } else {
+                                    if ($rule->hasRuleType(RuleType::from('activealert'))) {
+                                        echo "Active alert<br />";
                                     }
+                                    if ($rule->hasRuleType(RuleType::from('passivealert'))) {
+                                        echo "<br />Passive alert<br />";
+                                    }
+                                    if ($rule->hasRuleType(RuleType::from('patientreminder'))) {
+                                        echo "<br />Patient Reminder<br />";
+                                    }
+                                    if ($rule->hasRuleType(RuleType::from('provideralert'))) {
+                                        echo "<br />Provider alert<br />";
+                                    }
+                                }
                                     //echo $timing;
                                 ?><br />
                             </span>
@@ -911,8 +907,9 @@
                                     'small',
                                     '',
                                     "clinical-pre-timeunit",
-                                    array( "data-grp-tgt" => "clinical" ));
-                            ?>
+                                    array( "data-grp-tgt" => "clinical" )
+                                );
+                                ?>
                         </div>
                         <div class="col-2 text-center alert-primary bold tight"><input data-grp-tgt="clinical" type="text" id="clinical-post" value="<?php echo attr($timings['clinical']['pre']['amount']); ?>">
                             <?php
@@ -925,8 +922,9 @@
                                     'small',
                                     "",
                                     "clinical-post-timeunit",
-                                    array( "data-grp-tgt" => "clinical" ));
-                            ?></div>
+                                    array( "data-grp-tgt" => "clinical" )
+                                );
+                                ?></div>
                         <div class="col-2 text-center alert-danger text-nowrap"><span style="position:relative;left:-20px;"> </div>
                         <div class="col-1"></div>
 
@@ -956,7 +954,7 @@
                                  * So it apears that the reminder pre and post values are not used?
                                 <span class="tight"><input data-grp-tgt="patient" type="text" id="patient-pre" value="<?php echo attr($timings['patient']['pre']['amount']); ?>">
                                 <?php
-            
+
                                echo  generate_select_list(
                                     "patient",
                                     "rule_reminder_intervals",
@@ -974,11 +972,11 @@
                         </div>
                         <div class="col-2 text-center alert-primary">
                             <?php
-                                if (!$GLOBALS['medex_enable']) {
-                                    echo xlt('Patient Reminders are not delivered until you actively initiate the "Process Reminders" task');
-                                } else {
-                                    echo xlt("MedEx sends out email, SMS and/or Voice messages as configured");
-                                }
+                            if (!$GLOBALS['medex_enable']) {
+                                echo xlt('Patient Reminders are not delivered until you actively initiate the "Process Reminders" task');
+                            } else {
+                                echo xlt("MedEx sends out email, SMS and/or Voice messages as configured");
+                            }
                             ?>
                         </div>
                         <div class="col-2 alert-danger"><span class="tight">
@@ -998,36 +996,36 @@
                                             ?></span><br />
                                         <?php echo xlt('If you have an over-due message configured for this CR, it will be sent this long after the due date'); ?>*</span>
                                    */
-                              ?>
+                                ?>
                         </div>
 
                         <?php
-                            if ($GLOBALS['medex_enable']) { ?>
+                        if ($GLOBALS['medex_enable']) { ?>
                                 <div class="col-11 offset-1 text-center">&nbsp;</div>
 
                                 <div class="col-2 text-center offset-3 text-right title3"><?php echo xlt('Provider Reminders'); ?>: </div>
                         <div class="col-2 alert-warning text-center">
                             <?php
-                                /*
-                                 * Currently OpenEMR only sends one reminder for an action and its timing is set by
-                                 * GLOBALS::Notifications::Email/SMS Notification Hours
-                                 * So it apears that the reminder pre and post values are not used?
-                                <span class="tight"><input data-grp-tgt="provider" type="text" id="provider-pre" value="<?php echo attr($timings['provider']['pre']['amount']); ?>">
-                                <?php
-            
-                               echo  generate_select_list(
-                                    "provider",
-                                    "rule_reminder_intervals",
-                                    $timings['provider']['pre']['timeUnit']."",
-                                    'provider-pre-timeunit',
-                                    '',
-                                    'small',
-                                    "",
-                                    "provider-pre-timeunit",
-                                    array( "data-grp-tgt" => "provider" ));
+                            /*
+                             * Currently OpenEMR only sends one reminder for an action and its timing is set by
+                             * GLOBALS::Notifications::Email/SMS Notification Hours
+                             * So it apears that the reminder pre and post values are not used?
+                            <span class="tight"><input data-grp-tgt="provider" type="text" id="provider-pre" value="<?php echo attr($timings['provider']['pre']['amount']); ?>">
+                            <?php
+
+                           echo  generate_select_list(
+                                "provider",
+                                "rule_reminder_intervals",
+                                $timings['provider']['pre']['timeUnit']."",
+                                'provider-pre-timeunit',
+                                '',
+                                'small',
+                                "",
+                                "provider-pre-timeunit",
+                                array( "data-grp-tgt" => "provider" ));
                             ?></span><br />
-                                        <?php echo xlt('If configured, a Message is sent informing the patient there is a Treatment Goal coming due soon.'); ?>*
-                                */
+                                    <?php echo xlt('If configured, a Message is sent informing the patient there is a Treatment Goal coming due soon.'); ?>*
+                            */
                             ?>
                         </div>
                         <div class="col-2 text-center alert-primary">
@@ -1051,7 +1049,7 @@
                                             ?></span><br />
                                         <?php echo xlt('If you have an over-due message configured for this CR, it will be sent this long after the due date'); ?>*</span>
                                    */
-                              ?>
+                                ?>
                         </div>
                     </div>
                 </div>
@@ -1116,8 +1114,9 @@
                                             'small',
                                             '',
                                             "clinical-pre-timeunit",
-                                            array( "data-grp-tgt" => "clinical" ));
-                                    ?>
+                                            array( "data-grp-tgt" => "clinical" )
+                                        );
+                                        ?>
                                 </td>
                                 <td class="text-center tight" nowrap>
                                     <?php echo xlt('Pop-ups stop'); ?>
@@ -1139,8 +1138,9 @@
                                             'small',
                                             "",
                                             "clinical-post-timeunit",
-                                            array( "data-grp-tgt" => "clinical" ));
-                                    ?>
+                                            array( "data-grp-tgt" => "clinical" )
+                                        );
+                                        ?>
                                 </td>
                                 <td class="text-center">
                                 
@@ -1181,8 +1181,9 @@
                                             'small',
                                             "",
                                             "patient-pre-timeunit",
-                                            array( "data-grp-tgt" => "patient" ));
-                                    ?>
+                                            array( "data-grp-tgt" => "patient" )
+                                        );
+                                        ?>
                                 </td>
                                 <td><?php echo xlt('Reminder is sent'); ?></td>
                                 <td><?php echo xlt('Alert is sent'); ?></td>
@@ -1200,8 +1201,9 @@
                                             'small',
                                             '',
                                             "patient-post-timeunit",
-                                            array( "data-grp-tgt" => "patient" ));
-                                    ?>
+                                            array( "data-grp-tgt" => "patient" )
+                                        );
+                                        ?>
 
 
                                 </td>

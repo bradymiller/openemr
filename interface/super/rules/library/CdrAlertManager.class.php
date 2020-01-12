@@ -46,7 +46,7 @@ class CdrAlertManager
                 
         foreach ($rules as $rowRule) {
             $rule_id = $rowRule['id'];
-            $cdra[] = new CdrResults($rule_id, $rowRule['active_alert_flag'], $rowRule['passive_alert_flag'], $rowRule['patient_reminder_flag'],$rowRule['provider_alert_flag'], $rowRule['access_control']);
+            $cdra[] = new CdrResults($rule_id, $rowRule['active_alert_flag'], $rowRule['passive_alert_flag'], $rowRule['patient_reminder_flag'], $rowRule['provider_alert_flag'], $rowRule['access_control']);
         }
         return $cdra;
     }
@@ -61,7 +61,7 @@ class CdrAlertManager
             $patient_reminder_flag = $patient_reminder_flags[$index];
             $provider_alert_flag =  $provider_alert_flags[$index];
             $access_control = $access_controls[$index];
-            $cdra = new CdrResults($rule_id, $active_alert_flag, $passive_alert_flag, $patient_reminder_flag,  $provider_alert_flag, $access_control);
+            $cdra = new CdrResults($rule_id, $active_alert_flag, $passive_alert_flag, $patient_reminder_flag, $provider_alert_flag, $access_control);
             $cdra->update_table();
         }
     }

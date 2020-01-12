@@ -18,7 +18,7 @@ class Controller_detail extends BaseController
     {
         $ruleId = _get('id');
         $start  = _get('start');
-        if ( is_null($ruleId) && ($start) ) {
+        if (is_null($ruleId) && ($start)) {
             $rule = $this->getRuleManager()->newRule();
         } else {
             $rule = $this->getRuleManager()->getRule($ruleId);

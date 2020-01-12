@@ -43,8 +43,9 @@ class RuleCriteriaDatabaseBucket extends RuleCriteria
         $requirements .= $this->completed ? xl("Yes") : xl("No");
         $requirements .= "<br /> ";
         $requirements .= xl("Occurs") . ": ";
-        $requirements .= $this->decodeComparator($this->frequencyComparator) . " " .text($this->frequency ). " time";
-        if ($this->frequency <> '1') { echo "s"; }
+        $requirements .= $this->decodeComparator($this->frequencyComparator) . " " .text($this->frequency). " time";
+        if ($this->frequency <> '1') {
+            echo "s"; }
         return $requirements;
     }
 

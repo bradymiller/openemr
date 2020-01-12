@@ -22,8 +22,8 @@
             // this will display the TAB title
             echo xlt('Care Plans'); ?><?php
             $in = xlt($rule->title);
-            echo strlen($in) > 10 ? substr($in,0,10)."..." : $in;
-        ?></a>
+            echo strlen($in) > 10 ? substr($in, 0, 10)."..." : $in;
+?></a>
 </div>
 <br /><br />
 

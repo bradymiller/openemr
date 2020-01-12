@@ -16,42 +16,42 @@
     $more='';
     $something='';
     //$rule->getRuleTypeLabels()
-    foreach (RuleType::values() as $type) {
-        if ($rule->hasRuleType(RuleType::from($type))) {
-            $something=1;
-        }
-        //if this is a alert
+foreach (RuleType::values() as $type) {
+    if ($rule->hasRuleType(RuleType::from($type))) {
+        $something=1;
     }
-    if ($something) {
-        if ($rule->hasRuleType(RuleType::from('activealert')) || $rule->hasRuleType(RuleType::from('passivealert'))) {
-            echo "<br /><span class='bold'>". xlt('This is a Clinical Alert')."!</span><br />";
-            $more = 'also';
-        }
-        if ($rule->hasRuleType(RuleType::from('activealert'))) {
-            $timing .= "<span class='bold'>". xlt('Active Alert')."</span>
+    //if this is a alert
+}
+if ($something) {
+    if ($rule->hasRuleType(RuleType::from('activealert')) || $rule->hasRuleType(RuleType::from('passivealert'))) {
+        echo "<br /><span class='bold'>". xlt('This is a Clinical Alert')."!</span><br />";
+        $more = 'also';
+    }
+    if ($rule->hasRuleType(RuleType::from('activealert'))) {
+        $timing .= "<span class='bold'>". xlt('Active Alert')."</span>
                         <br />An active alert will fire when the chart is opened.";
-        }
-        if ($rule->hasRuleType(RuleType::from('passivealert'))) {
-            $timing .= "<br /><span class='bold'>". xlt('Passive Alert')."</span>
+    }
+    if ($rule->hasRuleType(RuleType::from('passivealert'))) {
+        $timing .= "<br /><span class='bold'>". xlt('Passive Alert')."</span>
                         <br />".xlt('A passive alert will ' . $more . ' appear in the CR widget').".
                             ".xlt('After X days/week it will be flagged as Past Due');
-        }
-        if ($rule->hasRuleType(RuleType::from('patientreminder'))) {
-            $timing .= "<br /><span class='bold'><?php xlt('Patient Reminder'); ?></span>
+    }
+    if ($rule->hasRuleType(RuleType::from('patientreminder'))) {
+        $timing .= "<br /><span class='bold'><?php xlt('Patient Reminder'); ?></span>
                         <br />". xlt('A message will '.$more.' be sent to the patient');
-            if ($GLOBALS['medex_enable'] == '1') {
-                $timing .="<br />MedEx will send an e-mail, SMS text and/or a voice message.";
-            }
+        if ($GLOBALS['medex_enable'] == '1') {
+            $timing .="<br />MedEx will send an e-mail, SMS text and/or a voice message.";
         }
-        if ($rule->hasRuleType(RuleType::from('provideralert'))) {
-            $timing .= "<br /><span class='bold'><?php xlt('Provider Alert'); ?></span>
+    }
+    if ($rule->hasRuleType(RuleType::from('provideralert'))) {
+        $timing .= "<br /><span class='bold'><?php xlt('Provider Alert'); ?></span>
                         <p>". xlt('A message will be sent to the provider');
             
-            $timing .="</p>";
-        }
-    } else {
-        $timing = "<br /><b>This CR is not active!</b><br />";
+        $timing .="</p>";
     }
+} else {
+    $timing = "<br /><b>This CR is not active!</b><br />";
+}
 
 
 ?> <!-- summary -->

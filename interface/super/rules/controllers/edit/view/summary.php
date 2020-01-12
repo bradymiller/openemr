@@ -18,7 +18,7 @@
         // this will display the TAB title
         echo xlt('CR{{Clinical Reminder abbreviation}} Builder'); ?><?php
         $in = xlt($rule->title);
-        echo strlen($in) > 10 ? substr($in,0,10)."..." : $in; ?>
+        echo strlen($in) > 10 ? substr($in, 0, 10)."..." : $in; ?>
 </div>
 
 <form action="index.php?action=edit!createCR" method="post" onsubmit="return top.restoreSession()">
@@ -51,15 +51,15 @@
                         </td>
                         <td>
                             <?php
-                                foreach (RuleType::values() as $type) {
-                                    if (($GLOBALS['medex_enable'] !='1') && ($type =="provideralert") ) {
-                                        continue;
-                                    }
-                                    ?>
+                            foreach (RuleType::values() as $type) {
+                                if (($GLOBALS['medex_enable'] !='1') && ($type =="provideralert")) {
+                                    continue;
+                                }
+                                ?>
                                     <label><input name="fld_ruleTypes[]"
                                                   value="<?php echo attr($type); ?>"
                                                   type="checkbox" <?php echo $rule->hasRuleType(RuleType::from($type)) ? "CHECKED": "" ?>>
-                                        <?php echo text(RuleType::from($type)->lbl); ?>
+                                    <?php echo text(RuleType::from($type)->lbl); ?>
                                     </label>
                                 <?php }
                             ?>
@@ -181,7 +181,7 @@
                                 </li>
                             </ul>
                             <?php
-                                if ($GLOBALS['medex_enable']==1) {?>
+                            if ($GLOBALS['medex_enable']==1) {?>
                             <h6 class="underline">Provider Alerts</h6>
                             <ul>
                                 <li> If a CR containing a <span class="bold">Provider Alert</span> is triggered,

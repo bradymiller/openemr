@@ -135,7 +135,8 @@
             $("#show_actions").show();
         });
         $("#submit_action").click(function() {
-            $("#frm_submit_<?php echo $viewBean->type; echo "_".attr($group_id); ?>").submit();
+            $("#frm_submit_<?php echo $viewBean->type;
+            echo "_".attr($group_id); ?>").submit();
         });
         $('[data-toggle="popover"]').popover();
     });

@@ -11,11 +11,11 @@
  * @license   https://github.com/openemr/openemr/blob/master/LICENSE GNU General Public License 3
  */
     
-    if ($criteria->getType()=='Min') {
-        $title = "Minimum Age";
-    } elseif ($criteria->getType()=='Max') {
-        $title = "Maximum Age";
-    }
+if ($criteria->getType()=='Min') {
+    $title = "Minimum Age";
+} elseif ($criteria->getType()=='Max') {
+    $title = "Maximum Age";
+}
 ?>
 <!-- age -->
 

@@ -12,8 +12,8 @@
  */
 
 ?>
-<?php 
-    $action = $viewBean->action; 
+<?php
+    $action = $viewBean->action;
     $rule = $viewBean->rule;    ?>
 
 <script language="javascript" src="<?php js_src('edit.js') ?>"></script>
@@ -36,11 +36,11 @@
                 </button>
           
         <span class="title3 text-left"><?php
-            if ($action->ra_uid) {
-                echo xlt('Edit this Action');
-            } else {
-                echo xlt('Add this Action');
-            }?>:</span>
+        if ($action->ra_uid) {
+            echo xlt('Edit this Action');
+        } else {
+            echo xlt('Add this Action');
+        }?>:</span>
     </div>
     <div class="col-12">
     

@@ -80,18 +80,18 @@ use OpenEMR\Core\Header;
 
 
 <i class="fa fa-caret-<?php
-    if ($setting_bootstrap_submenu == 'hide') {
-        echo 'down';
-    } else {
-        echo 'up';
-    } ?> menu_arrow" style="position:fixed;left:5px;top:5px;z-index:1099;" id="patient_caret" onclick='toggle_menu();' aria-hidden="true"></i>
+if ($setting_bootstrap_submenu == 'hide') {
+    echo 'down';
+} else {
+    echo 'up';
+} ?> menu_arrow" style="position:fixed;left:5px;top:5px;z-index:1099;" id="patient_caret" onclick='toggle_menu();' aria-hidden="true"></i>
 
 <div class="container">
 <?php
     require_once($GLOBALS["srcdir"] . "/../interface/super/rules/controllers/edit/helper/common.php");
     $rule = $viewBean->rule;
 
-    if (file_exists($viewBean->_view_body)) {
+if (file_exists($viewBean->_view_body)) {
     require_once($viewBean->_view_body);
 }
 ?>
