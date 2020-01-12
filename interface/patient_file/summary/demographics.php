@@ -22,9 +22,7 @@ require_once("$srcdir/patient.inc");
 require_once("$srcdir/acl.inc");
 require_once("$srcdir/options.inc.php");
 require_once("../history/history.inc.php");
-
 require_once("$srcdir/clinical_rules.php");
-
 require_once("$srcdir/options.js.php");
 require_once("$srcdir/group.inc");
 require_once(dirname(__FILE__)."/../../../library/appointments.inc.php");
@@ -169,9 +167,6 @@ if ($result3['provider']) {   // Use provider in case there is an ins record w/ 
 <html>
 
 <head>
-    <script src="<?php echo $GLOBALS['web_root']; ?>/interface/super/rules/www/js/BS4/popper.min.js"></script>
-
-    <script src="<?php echo $GLOBALS['web_root']; ?>/interface/super/rules/www/js/BS4/js/bootstrap.bundle.js.map"></script>
 
     <?php Header::setupHeader(['common']); ?>
 

@@ -10,13 +10,13 @@
      * @copyright Copyright (c) 2019 Brady Miller <brady.g.miller@gmail.com>
      * @license   https://github.com/openemr/openemr/blob/master/LICENSE GNU General Public License 3
      */
-    
+
     use OpenEMR\Core\Header;
 
 ?>
 <html>
 <head>
-    <?php Header::setupHeader(['no_bootstrap', 'no_fontawesome', 'no_textformat', 'no_dialog']); ?>
+    <?php Header::setupHeader(); ?>
 
     <link rel="stylesheet" href="<?php css_src('rules.css') ?>" type="text/css">
 </head>
@@ -83,7 +83,7 @@
             var h = $(this).data();
             var thisType = h.type;
             var thisCriteriaType = h.criteriatype;
-            
+
             top.restoreSession();
             var id = this.id.match(/edit_filter_(.*)/)[1];
             var url = 'index.php?action=edit!choose_criteria&id='+id+'&type='+thisType+'&criteriaType='+thisCriteriaType;
@@ -94,7 +94,7 @@
                    }).done(function (data) {
                 $("#show_filters_edit").html(data);
             });
-            
+
         });
         $("#form_filters_cancel").click(function() {
             $("#show_filters_edit").hide();

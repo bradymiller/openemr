@@ -6,25 +6,19 @@
  // as published by the Free Software Foundation; either version 2
  // of the License, or (at your option) any later version.
 
-require_once("../../globals.php");
 
 use OpenEMR\Core\Header;
-    
+
     $setting_bootstrap_submenu = prevSetting('', 'setting_bootstrap_submenu', 'setting_bootstrap_submenu', ' ');
 ?><!DOCTYPE html>
 <html>
 <head>
-   <meta charset="utf-8">
+    <meta charset="utf-8">
     <!-- Viewport Meta Tag -->
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <script src="<?php echo $GLOBALS['web_root']; ?>/interface/super/rules/www/js/BS4/popper.min.js"></script>
-    <?php Header::setupHeader([ 'jquery', 'jquery-ui','bootstrap', 'fontawesome', 'modals']); ?>
-    <script src="<?php echo $GLOBALS['web_root']; ?>/interface/super/rules/www/js/BS4/js/bootstrap.bundle.js.map"></script>
-
+    <?php Header::setupHeader('jquery-ui'); ?>
     <link rel="stylesheet" href="<?php echo $GLOBALS['web_root']; ?>/library/css/bootstrap_navbar.css?v=<?php echo $v_js_includes; ?>" type="text/css">
     <link rel="stylesheet" href="<?php css_src('rules.css') ?>?v=<?php echo $v_js_includes; ?>" type="text/css">
-    <link rel="stylesheet" href="<?php echo $GLOBALS['web_root']; ?>/interface/super/rules/www/js/BS4/css/bootstrap.css">
-  
 </head>
 
 <body class='body_top' style="font-size:0.9rem;">
@@ -71,7 +65,7 @@ use OpenEMR\Core\Header;
                     x.style.display = 'block';
                 }
             });
-            
+
         } else {
             $.post( "<?php echo $GLOBALS['webroot']."/interface/main/messages/messages.php"; ?>", {
                 'setting_bootstrap_submenu' : 'hide',
@@ -96,7 +90,7 @@ use OpenEMR\Core\Header;
 <?php
     require_once($GLOBALS["srcdir"] . "/../interface/super/rules/controllers/edit/helper/common.php");
     $rule = $viewBean->rule;
-    
+
     if (file_exists($viewBean->_view_body)) {
     require_once($viewBean->_view_body);
 }
