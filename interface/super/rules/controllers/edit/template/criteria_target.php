@@ -48,7 +48,7 @@
         id="show_target_help"
         data-toggle="modal"
         data-target="#help_targets"
-        title="Open the Help:: Who will this CR affect?"><i class="fa fa-question"></i>
+        title="<?php echo xla('Open the Help:: Who will this CR affect?'); ?>"><i class="fa fa-question"></i>
 </button>
 <div class="col-12">
     <form action="index.php?action=edit!submit_criteria" method="post" id="frm_submit_target_<?php echo attr($groupId); ?>" onsubmit="return top.restoreSession()">
@@ -84,19 +84,19 @@
             
             top.restoreSession();
             var id = this.id.match(/edit_target_(.*)/)[1];
-            var url = 'index.php?action=edit!choose_criteria&id='+id+'&type='+thisType+'&criteriaType='+thisCriteriaType+'&group_id='+group;
+            var url = 'index.php?action=edit!choose_criteria&id='+encodeURIComponent(id)+'&type='+encodeURIComponent(thisType)+'&criteriaType='+encodeURIComponent(thisCriteriaType)+'&group_id='+encodeURIComponent(group);
             $.ajax({
                        type: 'POST',
                        url: url,
                        data: {}
                    }).done(function (data) {
-                $("#show_targets_edit_<?php echo $groupId; ?>").html(data);
+                $("#show_targets_edit_<?php echo attr($groupId); ?>").html(data);
             });
             
         });
         $("[id^='frm_targets_save_']").click(function() {
             var group = this.id.match(/frm_targets_save_(.*)/)[1];
-            $("#frm_submit_target_"+group).submit();
+            $("#frm_submit_target_"+attr(group)).submit();
         });
     });
     

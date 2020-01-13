@@ -71,11 +71,11 @@
         $("#plan_status").click(function() {
             if (window.buttonStatus == "active")
             {
-                $("#plan_status").html('<i class="fa fa-bell"> Inactive</i>');
+                $("#plan_status").html('<i class="fa fa-bell"> <?php echo xla('Inactive'); ?></i>');
                 $deactivatePlan();
                 $togglePlanStatus(false);
             } else {
-                $("#plan_status").html('<i class="fa fa-bell"> Active</i>');
+                $("#plan_status").html('<i class="fa fa-bell"> <?php echo xla('Active'); ?></i>');
                 $activatePlan();
                 $togglePlanStatus(true);
             }
@@ -351,44 +351,27 @@
     }
     
     $activatePlan = function() {
-       /* $now_status = '<button class="btn btn-sm btn-info icon_2"><i class="fa fa-bell"> Active</i></button>';
-        //$("#plan-status-label").text('<?php echo xla('Status') . ': ' . xla('Active'); ?>');
-        $("#plan-status-label").html($now_status);
-        window.buttonStatus = "active";
-        $("#cdr-status").removeAttr("disabled");
-        //$("#cdr-status").text('<?php echo xla('Deactivate'); ?>');
-        $("#cdr-status").html('<button class="btn btn-sm btn-warning">Deactivate</button>');
-        */
         window.buttonStatus = "active";
         $("#delete_plan").show();
-        $("#plan_status").html('<i class="fa fa-bell"> Activated</i>').show();
+        $("#plan_status").html('<i class="fa fa-bell"> <?php echo xlt('Activated'(; ?></i>').show();
     
         $("#cdr-rules_cont").removeClass("overlay");
     }
     
     $deactivatePlan = function() {
-        /*$now_status = '<button class="btn btn-sm btn-warning icon_2"><i class="fa fa-bell"> Inactive</i></button>';
-    
-       // $("#plan-status-label").text('<?php echo xla('Status') . ': ' . xla('Inactive'); ?>');
-        $("#plan-status-label").html($now_status);
-       
-        $("#cdr-status").removeAttr("disabled");
-       // $("#cdr-status").text('<?php echo xla('Activate'); ?>');
-        $("#cdr-status").html('<button class="btn btn-sm btn-primary">Activate</button>');
-        */
         window.buttonStatus = "inactive";
         $("#delete_plan").show();
-        $("#plan_status").html('<i class="fa fa-bell-slash"> Inactive</i>').show();
+        $("#plan_status").html('<i class="fa fa-bell-slash"><?php echo xlt('Inactive'); ?></i>').show();
     
         $("#cdr-rules_cont").addClass("overlay");
     }
 
 </script>
-<div class="title" style="display:none"><a href="https://www.oculoplasticsllc.com/openemr/interface/super/rules/index.php?browse!plans_config"><?php
+<div class="title" style="display:none"><a href="<?php echo $GLOBALS['webroot']; ?>/interface/super/rules/index.php?browse!plans_config"><?php
             // this will display the TAB title
             echo xlt('Care Plans'); ?><?php
             $in = xlt($rule->title);
-            echo strlen($in) > 10 ? substr($in, 0, 10)."..." : $in;
+            echo mb_strlen($in) > 10 ? mb_substr($in, 0, 10)."..." : $in;
 ?></a>
 </div>
 <br /><br />
@@ -417,7 +400,7 @@
                 <button id="plan_status"
                         title="<?php echo xla('Plan Status: Active or Inactive'); ?>"
                         class="btn btn-sm btn-primary icon_2X">
-                    <i class="fa fa-bell">Activate</i>
+                    <i class="fa fa-bell"><?php echo xlt('Activate'); ?></i>
                 </button>
                 <div  class="plan-status_div">
                 </div>

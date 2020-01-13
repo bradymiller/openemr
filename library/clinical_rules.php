@@ -164,10 +164,10 @@ function clinical_summary_widget($patient_id, $mode, $dateTarget = '', $organize
             $last_run = new DateTime($last_run);
             $last_run = $last_run->format('Y-m-d');
             $last_run_oe = oeFormatShortDate($last_run);
-            $last_run_oe = "Last performed " . $last_run_oe.".";
+            $last_run_oe = xl("Last performed ") . $last_run_oe.".";
             $was_run='1';
         } else {
-            $last_run_oe = "There is no record this has happened.";
+            $last_run_oe = xl("There is no record this has happened.");
             $was_run='';
         }
         
@@ -176,17 +176,17 @@ function clinical_summary_widget($patient_id, $mode, $dateTarget = '', $organize
                                   data-html='true'
                                   data-trigger='hover'
                                   data-placement='auto'
-                                  data-content='<span class=\"bold\">".xla($last_run_oe)."</span><br />
+                                  data-content='<span class=\"bold\">".attr($last_run_oe)."</span><br />
                                   ".xla('It should be performed')." ";
         if ($interval[0]['value'] == 'flu_season') {
             $interval[0]['value'] = "Flu Season";
         }
         if ($interval[0]['interval']=='1') {
-            echo xla("once per " . $interval[0]['value']).".<br />";
+            echo xla("once per")." " . attr($interval[0]['value']).".<br />";
         } else {
-            echo xla("every ".$interval[0]['interval']." ".$interval[0]['value']);
-            if ($interval[0]['interval'] <> '1') {
-                echo xla("s{{add 's' to make noun plural}}");
+            echo xla("every")." ".attr($interval[0]['interval'])." ".attr($interval[0]['value']);
+            if ( ($GLOBALS['language_default'] =='English (Standard)') && ($interval[0]['interval'] <> '1') ) {
+                echo "s";
             }
             echo ".<br />";
         }
@@ -194,13 +194,13 @@ function clinical_summary_widget($patient_id, $mode, $dateTarget = '', $organize
         if (!empty($was_run)) {
             $effectiveDate = strtotime("+1 ".$interval[0]['value'], strtotime($last_run)); // returns timestamp
             $date_here = date('Y-m-d', $effectiveDate);
-            echo '<span class="bold">'.xla('Due Date') . '</span>: ' . oeFormatShortDate($date_here) . '<br /> ';
+            echo '<span class="bold">'.xla('Due Date') . '</span>: ' . text(oeFormatShortDate($date_here)) . '<br /> ';
             //past due date is date_here + clinical_reminder_post interval (different than $interval above...)
             $res = resolve_reminder_sql($action['rule_id'], 'clinical_reminder_post');
             $effectiveDate = strtotime("+".$res[0]['value']." ".$res[0]['method_detail'], strtotime($date_here)); // returns timestamp
             $past_due_date = date('Y-m-d', $effectiveDate);
             if (!empty($past_due_date)) {
-                echo '<span class="bold">'.xla('Past Due') . '</span>: ' . oeFormatShortDate($past_due_date);
+                echo '<span class="bold">'.xla('Past Due') . '</span>: ' . text(oeFormatShortDate($past_due_date));
             }
         }
         echo "'>";

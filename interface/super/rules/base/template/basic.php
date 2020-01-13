@@ -16,7 +16,7 @@ use OpenEMR\Core\Header;
     <meta charset="utf-8">
     <!-- Viewport Meta Tag -->
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <?php Header::setupHeader('jquery-ui'); ?>
+    <?php Header::setupHeader(); ?>
     <link rel="stylesheet" href="<?php echo $GLOBALS['web_root']; ?>/library/css/bootstrap_navbar.css?v=<?php echo $v_js_includes; ?>" type="text/css">
     <link rel="stylesheet" href="<?php css_src('rules.css') ?>?v=<?php echo $v_js_includes; ?>" type="text/css">
 </head>
@@ -59,14 +59,15 @@ use OpenEMR\Core\Header;
     function toggle_menu() {
         var x = document.getElementById('hide_nav');
         if (x.style.display === 'none') {
+            top.restoreSession();
             $.post( "<?php echo $GLOBALS['webroot']."/interface/main/messages/messages.php"; ?>", {
                 'setting_bootstrap_submenu' : 'show',
                 success: function (data) {
                     x.style.display = 'block';
                 }
             });
-
         } else {
+            top.restoreSession();
             $.post( "<?php echo $GLOBALS['webroot']."/interface/main/messages/messages.php"; ?>", {
                 'setting_bootstrap_submenu' : 'hide',
                 success: function (data) {

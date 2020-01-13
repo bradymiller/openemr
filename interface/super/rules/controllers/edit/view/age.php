@@ -12,16 +12,16 @@
  */
     
 if ($criteria->getType()=='Min') {
-    $title = "Minimum Age";
+    $title = xl("Minimum Age");
 } elseif ($criteria->getType()=='Max') {
-    $title = "Maximum Age";
+    $title = xl("Maximum Age");
 }
 ?>
 <!-- age -->
 
 <div class="row">
     <div class="col-12">
-        <span class="title2"><?php echo xlt($title); ?></span>
+        <span class="title2"><?php echo text($title); ?></span>
     </div>
 
     <div class="col-8 offset-2">

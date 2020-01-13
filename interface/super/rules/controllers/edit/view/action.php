@@ -63,14 +63,8 @@
                               data-toggle='popover'
                               data-trigger="hover"
                               data-placement="left"
-                              title='Action Categories'
-                              data-content='A CR exists to reminder you to perform an action.  Actions can be grouped into familiar categories,
-                              such as "Perform an Assessment" or "Measure a Value".
-                              For this action, choose the category which best describes what you are prompting the medical staff to complete.
-                              You can select this category from a list of pre-existing Categories by clicking the Pencil icon or
-                              you can create a new category by simply typing into this text box.
-                              Newly created categories are added to the list "Clinical Rule Action Category".
-                              The pre-existing categories are drawn from this list.  '>
+                              title='<?php echo xla('Action Categories'); ?>
+                              data-content='<?php echo xla('A CR exists to reminder you to perform an action. Actions can be grouped into familiar categories, such as "Perform an Assessment" or "Measure a Value". For this action, choose the category which best describes what you are prompting the medical staff to complete. You can select this category from a list of pre-existing Categories by clicking the Pencil icon or you can create a new category by simply typing into this text box. Newly created categories are added to the list "Clinical Rule Action Category". The pre-existing categories are drawn from this list.'); ?>'>
                             <?php echo xlt('Action Category'); ?></span><br />
     
                         <input id="fld_category_lbl_action"
@@ -91,8 +85,8 @@
                               data-toggle='popover'
                               data-trigger="hover"
                               data-placement="auto, right"
-                              title='Action Items'
-                              data-content='Items are the actual thing you want the user to do.  Measure the Systolic BP, do an EKG, get a colonoscopy, perform a smoking intervention...'>
+                              title='<?php echo xla('Action Items'); ?>
+                              data-content='<?php echo xla('Items are the actual thing you want the user to do. Measure the Systolic BP, do an EKG, get a colonoscopy, perform a smoking intervention...'); ?>'>
                             <?php echo xlt('Action Item'); ?>
                         </span><br />
                         <input id="fld_item_lbl_action"
@@ -112,13 +106,13 @@
                               data-trigger="hover"
                               data-placement="auto, top"
                               container="body"
-                              title='Completing Passive Alerts'
+                              title='<?php echo xla('Completing Passive Alerts'); ?>'
                               data-html="true"
-                              data-content='A Passive Alert is displayed in the CR widget with the values of "Category:Item".
+                              data-content='<?php echo xlas('A Passive Alert is displayed in the CR widget with the values of "Category:Item".
                               These words can be linked to a pop-up to add a note and/or mark it completed if required.
                               If the pop-up not required, you can change this to display <b>no</b> link ("Category:Item" will be black) or
                               link to anything desired by entering that url as an Action link.
-                              This does not affect the References Link <i class="fa fa-link"></i> created in the CR Summary.
+                              This does not affect the References Link <i class="fa fa-link"></i> created in the CR Summary.'); ?>'
                               <img width="250px" src="<?php echo $GLOBAL['webroot'];?>/public/images/CR_widget.png">'>
                             <?php echo xlt('Passive Alerts'); ?></span>
                         <br />
@@ -152,7 +146,7 @@
                               data-trigger="hover"
                               data-placement="auto, top"
                               container="body"
-                              title='Delivering Patient Reminders'
+                              title=''<?php echo xla('Delivering Patient Reminders'); ?>
                               data-html="true"
                               data-content=''>
                             <?php echo xlt('Patient Reminders'); ?></span>

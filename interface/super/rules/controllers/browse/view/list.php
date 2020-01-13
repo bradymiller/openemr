@@ -18,11 +18,11 @@
     var list = new list_rules();
     list.init();
 </script>
-<div class="title" style="display:none"><a href="https://www.oculoplasticsllc.com/openemr/interface/super/rules/index.php?action=browse!list"><?php
+<div class="title" style="display:none"><a href="<?php echo $GLOBALS['webroot']; ?>/interface/super/rules/index.php?action=browse!list"><?php
             // this will display the TAB title
             echo xlt('Care Plans'); ?><?php
             $in = xlt($rule->title);
-            echo strlen($in) > 10 ? substr($in, 0, 10)."..." : $in;
+            echo mb_strlen($in) > 10 ? mb_substr($in, 0, 10)."..." : $in;
 ?></a>
 </div>
 <br /><br />
@@ -64,7 +64,7 @@
 <script>
     $(function() {
         $('.rule_delete').click(function() {
-            return window.confirm("Are you sure you want to delete this Rule, forever?");
+            return window.confirm(<?php echo xlj('Are you sure you want to delete this Rule, forever?'); ?>");
         });
     });
 </script>

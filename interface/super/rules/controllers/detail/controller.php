@@ -27,9 +27,6 @@ class Controller_detail extends BaseController
     
         if (is_null($rule)) {
             $this->redirect("index.php?action=browse!list");
-        } elseif ($summary) {
-            $this->viewBean->rule = $rule;
-            $this->set_view("view_summary.php", "undecorated.php");
         } else {
             $this->viewBean->rule = $rule;
             $this->set_view("view.php");

@@ -19,6 +19,7 @@ require_once("$phpgacl_location/gacl_api.class.php");
 <div class="title" style="display:none">
     <?php echo xlt('CR Manager'); ?>
 </div>
+
 <div class="container">
     <div class="row">
         <div class="col-12">
@@ -67,7 +68,7 @@ require_once("$phpgacl_location/gacl_api.class.php");
                         <?php $index = -1; ?>
                         <?php foreach ($viewBean->rules as $rule) {?>
                             <?php $index++; ?>
-                            <tr height="22">
+                            <tr height="22" id="CR_<?php echo xla($rule->id); ?>">
                                 
                                 <td class="text-left"><?php echo $rule->get_rule();?></td>
                                 <td>&nbsp;</td>
@@ -126,7 +127,7 @@ require_once("$phpgacl_location/gacl_api.class.php");
                                                 $select = 'selected';
                                             }
                                             $start_title = xlt($aco_title);
-                                            $show_title =  substr($start_title, 0, 25)."...";
+                                            $show_title =  mb_substr($start_title, 0, 25)."...";
                                             echo "<option value='" . attr($section) . ":" . attr($aco) . "' " . $select . "> " . xlt($aco_section_title) . ": " . $show_title  . "</option>";
                                         }
                                     }
@@ -138,7 +139,11 @@ require_once("$phpgacl_location/gacl_api.class.php");
                                 <td class="text-center">
                                     <button class="btn btn-sm btn-danger"
                                             type="button"
-                                            onclick="top.restoreSession();location.href='index.php?action=edit!delete_rule&amp;id=<?php echo attr($rule->id); ?>'">
+                                            data-ruleid="<?php echo attr($rule->id); ?>"
+                                            data-record-title="<?php echo attr($rule->get_rule()); ?>"
+                                            data-toggle="modal"
+                                            data-target="#confirm-delete"
+                                            id="CR_delete">
                                         <i class="fa fa-trash"></i>
                                     </button>
                                 </td>
@@ -150,3 +155,58 @@ require_once("$phpgacl_location/gacl_api.class.php");
         </div>
     </div>
 </div>
+<div class="modal fade" id="confirm-delete" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="myModalLabel"><?php echo xlt('Confirm Delete'); ?></h4>
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-12">
+                        <div class="title2"><?php echo xlt('You are about to delete the Clinical Reminder'); ?>:</div>
+                    </div>
+                    <div class="col-12">
+                        <div class="bold indent10"><i class="title"></i></div>
+                    </div>
+                    <div class="col-11 offset-1">
+                        <p><?php echo xlt('This action is not reversible.  Do you want to proceed?'); ?></p>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-danger btn-ok">Delete</button>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    $(function() {
+        $('#confirm-delete').on('click', '.btn-ok', function (e) {
+            var $modalDiv = $(e.delegateTarget);
+            var id = $(this).data('ruleid');
+            top.restoreSession();
+            $.ajax({
+                       url: "index.php?action=edit!delete_rule",
+                       type: "post",
+                       data: {
+                           id: id
+                       }
+                   });
+            $modalDiv.addClass('loading');
+            setTimeout(function () {
+                $modalDiv.modal('hide').removeClass('loading');
+            }, 1000);
+            $("#CR_" + id).hide();
+        });
+        $('#confirm-delete').on('show.bs.modal', function (e) {
+            var data = $(e.relatedTarget).data();
+            $('.title', this).text(data.recordTitle);
+            $('.btn-ok', this).data('ruleid', data.ruleid);
+        });
+    });
+    
+</script>
+

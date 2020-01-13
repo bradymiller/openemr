@@ -112,7 +112,7 @@ class Controller_edit extends BaseController
         if ($change) {
             $this->getRuleManager()->updateIntervals($rule, $intervals);
         }
-
+        
         $rule = $this->getRuleManager()->getRule($ruleId);
         $this->viewBean->rule = $rule;
         $this->set_view("view_summary.php", "undecorated.php");
@@ -275,7 +275,7 @@ class Controller_edit extends BaseController
     
     function _action_delete_rule()
     {
-        $ruleId = _get('id');
+        $ruleId = _post('id');
         if (!is_null($ruleId)) {
             $this->getRuleManager()->deleteRuleTotally($ruleId);
             $this->redirect("index.php?action=alerts!listactmgr");

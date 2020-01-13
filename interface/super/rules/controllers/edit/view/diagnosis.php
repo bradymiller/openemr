@@ -35,14 +35,12 @@
 
 <!-- diagnosis -->
 <div class="col-12">
-    <span class="title2">Add a  <?php echo text($criteria->getTitle()); ?></span>
+    <span class="title2"><?php echo xlt('Add a'); ?> <?php echo text($criteria->getTitle()); ?></span>
 </div>
 <div class="col-12 indent10 text">
-    <span class="bold" data-fld="fld_diagnosis">
-        <?php //echo text($criteria->getTitle()); ?></span>
     <span class="indent10"><input id="fld_value" type="text"
                                   name="fld_value" class="field"
-                                  placeholder="click to search for codes"
+                                  placeholder="</php echo xla('click to search for codes'); ?>"
                                   onclick="sel_diagnosis()" value="<?php echo attr($criteria->getRequirements()); ?>"></span>
 </div>
 

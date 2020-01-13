@@ -102,7 +102,7 @@ Compound Helpers
     } ?>
     <tr>
         <td class="text-right" rowspan="3">
-            Patients matching these criteria:
+            <?php echo xlt('Patients matching these criteria'); ?>:
             <br />
         </td>
     </tr>

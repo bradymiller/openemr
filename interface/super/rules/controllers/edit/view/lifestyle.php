@@ -13,7 +13,7 @@
 ?>
 
     <div class="col-12">
-        <span class="title2"><?php echo xlt($criteria->getTitle()); ?>: Social History</span>
+        <span class="title2"><?php echo xlt($criteria->getTitle()); ?>: <?php echo xlt('Social History'); ?></span>
     </div>
 
     <div class="col-12">
@@ -29,7 +29,7 @@
             </tr>
             <tr>
                 <td rowspan="2" class="text-right">
-                    <span class="req"><?php echo xlt('Given the Social History category selected above, we are looking at this value:'); ?></span>
+                    <span class="req"><?php echo xlt('Given the Social History category selected above, we are looking at this value'); ?>:</span>
                 </td>
                 <td class="text-nowrap">
                     <input type="radio" name="fld_value_type" class="" value="match"

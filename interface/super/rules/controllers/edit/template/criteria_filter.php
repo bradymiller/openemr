@@ -35,17 +35,17 @@
 <button type="submit" form="frm_submit"
         class="btn btn-sm btn-primary icon_3"
         id="frm_filters_save"
-        title="Save"><i class="fa fa-save"></i>
+        title="<?php echo xla('Save'); ?>"><i class="fa fa-save"></i>
 </button>
 <button id="form_filters_cancel"
         class="btn btn-sm btn-primary icon_2"
-        title="Cancel"><i class="fa fa-times"></i>
+        title="<?php echo xla('Cancel'); ?>"><i class="fa fa-times"></i>
 </button>
 <button class="btn btn-sm btn-primary icon_1"
         id="show_filters_help"
         data-toggle="modal"
         data-target="#help_filters"
-        title="Open the Help:: Who will this CR affect?"><i class="fa fa-question"></i>
+        title="<?php echo xla('Open the Help:: Who will this CR affect?'); ?>"><i class="fa fa-question"></i>
 </button>
 
 <div class="col-12">
@@ -86,7 +86,7 @@
 
             top.restoreSession();
             var id = this.id.match(/edit_filter_(.*)/)[1];
-            var url = 'index.php?action=edit!choose_criteria&id='+id+'&type='+thisType+'&criteriaType='+thisCriteriaType;
+            var url = 'index.php?action=edit!choose_criteria&id='+encodeURIComponent(id)+'&type='+encodeURIComponent(thisType)+'&criteriaType='+encodeURIComponent(thisCriteriaType);
             $.ajax({
                        type: 'POST',
                        url: url,
