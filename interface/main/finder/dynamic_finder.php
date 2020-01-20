@@ -59,10 +59,10 @@ $loading = "<i class='fa fa-refresh fa-2x fa-spin'></i>";
 <head>
     <?php Header::setupHeader();?>
     <title><?php echo xlt("Patient Finder"); ?></title>
-    <link rel="stylesheet" href="<?php echo $GLOBALS['assets_static_relative']; ?>/datatables.net-dt/css/jquery.dataTables.css" type="text/css">
-    <link rel="stylesheet" href="<?php echo $GLOBALS['assets_static_relative']; ?>/datatables.net-colreorder-dt/css/colReorder.dataTables.css" type="text/css">
-    <script type="text/javascript" src="<?php echo $GLOBALS['assets_static_relative']; ?>/datatables.net/js/jquery.dataTables.js"></script>
-    <script type="text/javascript" src="<?php echo $GLOBALS['assets_static_relative']; ?>/datatables.net-colreorder/js/dataTables.colReorder.js"></script>
+    <link rel="stylesheet" href="<?php echo $GLOBALS['assets_static_relative']; ?>/datatables.net-dt/css/jquery.dataTables.min.css" type="text/css">
+    <link rel="stylesheet" href="<?php echo $GLOBALS['assets_static_relative']; ?>/datatables.net-colreorder-dt/css/colReorder.dataTables.min.css" type="text/css">
+    <script type="text/javascript" src="<?php echo $GLOBALS['assets_static_relative']; ?>/datatables.net/js/jquery.dataTables.min.js"></script>
+    <script type="text/javascript" src="<?php echo $GLOBALS['assets_static_relative']; ?>/datatables.net-colreorder/js/dataTables.colReorder.min.js"></script>
 <style>
     /* Finder Processing style */
     div.dataTables_wrapper div.dataTables_processing {
@@ -78,9 +78,24 @@ $loading = "<i class='fa fa-refresh fa-2x fa-spin'></i>";
             text-align: justify;
         }
     }
+    .dataTables_wrapper .dataTables_length,
+    .dataTables_wrapper .dataTables_filter,
+    .dataTables_wrapper .dataTables_info,
+    .dataTables_wrapper .dataTables_processing,
+    .dataTables_wrapper .dataTables_paginate {
+        color: var(--dark) !important;
+    }
+    .dataTables_wrapper .dataTables_paginate .paginate_button {
+        color: var(--dark) !important;
+    }
     
+    .dataTables_wrapper .dataTables_paginate .paginate_button.disabled,
+    .dataTables_wrapper .dataTables_paginate .paginate_button.disabled:hover,
+    .dataTables_wrapper .dataTables_paginate .paginate_button.disabled:active {
+        color: var(--gray) !important;
+    }
 </style>
-<script language="JavaScript">
+<script type="text/javascript">
 
     var uspfx = '<?php echo attr($uspfx); ?>';
 
@@ -198,7 +213,7 @@ $loading = "<i class='fa fa-refresh fa-2x fa-spin'></i>";
         <div class="row">
             <div class="col-sm-12">
                 <?php if (acl_check('patients', 'demo', '', array('write','addonly'))) { ?>
-                    <button id="create_patient_btn1" class="btn btn-default btn-add" onclick="top.restoreSession();top.RTop.location = '<?php echo $web_root ?>/interface/new/new.php'"><?php echo xlt('Add New Patient'); ?></button>
+                    <button id="create_patient_btn1" class="btn btn-secondary btn-add" onclick="top.restoreSession();top.RTop.location = '<?php echo $web_root ?>/interface/new/new.php'"><?php echo xlt('Add New Patient'); ?></button>
                 <?php } ?>
             </div>
             </div>

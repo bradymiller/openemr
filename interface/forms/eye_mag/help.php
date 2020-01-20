@@ -40,7 +40,7 @@ if ($showit=='ext') {
 
     <?php Header::setupHeader(['jquery-ui', 'jquery-ui-excite-bike']); ?>
 
-    <link rel="stylesheet" href="<?php echo $GLOBALS['assets_static_relative'] ?>/pure/0.5.0/pure-min.css">
+    <link rel="stylesheet" href="<?php echo $GLOBALS['assets_static_relative'] ?>/purecss/pure-min.css">
     <link rel="stylesheet" href="../../forms/<?php echo $form_folder; ?>/css/style.css" type="text/css">
 
     <script>
@@ -488,7 +488,7 @@ Choly 2010.Lap Band 2014.;All:sulfa - hives.PCN - SOB;</textarea>
                             <br />
                             Output:
                             <br /><br />
-                            <div class="output_EMR well-sm">
+                            <div class="output_EMR  card">
                                 <h4>Eye Exam</h4>
                                 <img src="<?php echo $GLOBALS['webroot']; ?>/interface/forms/eye_mag/images/sh_antseg_EMR.png" width="90%" alt="Shorthand Example: openEMR">
                             </div>

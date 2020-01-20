@@ -181,14 +181,14 @@ if ($_POST['form_csvexport']) {
             <td>
                 <div class="text-center">
           <div class="btn-group" role="group">
-                      <a href='#' class='btn btn-default btn-save' onclick='$("#form_refresh").attr("value","true"); $("#form_csvexport").attr("value",""); $("#theform").submit();'>
+                      <a href='#' class='btn btn-secondary btn-save' onclick='$("#form_refresh").attr("value","true"); $("#form_csvexport").attr("value",""); $("#theform").submit();'>
                             <?php echo xlt('Submit'); ?>
                       </a>
                         <?php if ($_POST['form_refresh'] || $_POST['form_csvexport']) { ?>
-                        <a href='#' class='btn btn-default btn-print' id='printbutton'>
+                        <a href='#' class='btn btn-secondary btn-print' id='printbutton'>
                                 <?php echo xlt('Print'); ?>
                         </a>
-                        <a href='#' class='btn btn-default btn-transmit' onclick='$("#form_refresh").attr("value",""); $("#form_csvexport").attr("value","true"); $("#theform").submit();'>
+                        <a href='#' class='btn btn-secondary btn-transmit' onclick='$("#form_refresh").attr("value",""); $("#form_csvexport").attr("value","true"); $("#theform").submit();'>
                                 <?php echo xlt('CSV Export'); ?>
                         </a>
                         <?php } ?>
@@ -330,7 +330,7 @@ if ($_POST['form_refresh'] || $_POST['form_csvexport']) {
     }
 
     if (!$_POST['form_csvexport']) {
-        echo "<tr bgcolor='#ffffff'>\n";
+        echo "<tr bgcolor='var(--white)'>\n";
         echo " <td class='detail'>" . xlt("Grand Total") . "</td>\n";
         echo " <td class='detail'>" . text($grand_total_units) . "</td>\n";
         echo " <td class='detail'>" .

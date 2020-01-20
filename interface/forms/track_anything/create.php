@@ -10,18 +10,19 @@
  */
 
 
-require_once("../../globals.php");
+require_once(__DIR__ . "/../../globals.php");
 require_once("$srcdir/api.inc");
 require_once("$srcdir/forms.inc");
 require_once("$srcdir/acl.inc");
+
+use OpenEMR\Core\Header;
 
 formHeader("Form: Track anything");
 
 
 ?>
 <head>
-<link rel="stylesheet" href="<?php echo $css_header;?>" type="text/css">
-<link rel="stylesheet" href="<?php echo $web_root; ?>/interface/forms/track_anything/style.css" type="text/css">
+    <?php Header::setupHeader('track-anything'); ?>
 <?php
 echo "<div id='ta_type'>";
 

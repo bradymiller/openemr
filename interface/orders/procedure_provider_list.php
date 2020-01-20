@@ -33,7 +33,7 @@ $res = sqlStatement($query);
 <title><?php echo xlt('Procedure Providers'); ?></title>
 
 <?php if ($popup) { ?>
-<script type="text/javascript" src="../../library/topdialog.js"></script>
+    <?php Header::setupAssets('topdialog'); ?>
 <?php } ?>
 
 <script language="JavaScript">
@@ -88,8 +88,8 @@ function doedclick_edit(ppid) {
             <div class="col-sm-12">
                <form method='post' action='procedure_provider_list.php'>
                     <div class="btn-group">
-                        <button type="button" name="form_search" class="btn btn-default btn-refresh" onclick="refreshme()"><?php echo xlt('Refresh');?></button>
-                        <button type="button" class="btn btn-default btn-add" onclick="doedclick_add()"><?php echo xlt('Add New{{Provider}}');?></button>
+                        <button type="button" name="form_search" class="btn btn-secondary btn-refresh" onclick="refreshme()"><?php echo xlt('Refresh');?></button>
+                        <button type="button" class="btn btn-secondary btn-add" onclick="doedclick_add()"><?php echo xlt('Add New{{Provider}}');?></button>
                     </div>
                     <br>
                     <br>
@@ -111,7 +111,7 @@ function doedclick_edit(ppid) {
                                 echo "  <td>" . text($row['protocol']) . "</td>\n";
                                 if (acl_check('admin', 'practice')) {
                                         $trTitle = xl('Edit') . ' ' . $row['name'];
-                                        echo "  <td class=\"text-center\"><span style=\"color:#000000; cursor: pointer;\"  onclick='doedclick_edit(" . attr_js($row['ppid']) . ")' class=\"haskids fa fa-pencil\" title='" . attr($trTitle) . "'></span></td>\n";
+                                        echo "  <td class=\"text-center\"><span style=\"color:var(--black); cursor: pointer;\"  onclick='doedclick_edit(" . attr_js($row['ppid']) . ")' class=\"haskids fa fa-pencil\" title='" . attr($trTitle) . "'></span></td>\n";
                                 } else {
                                         $trTitle = xl("Not Allowed to Edit") . ' ' . $row['name'];
                                         echo "  <td class=\"text-center\"><span style=\"color:#CACFD2;cursor: no-drop;\"  class=\"haskids fa fa-pencil\" title='" . attr($trTitle) . "'></span></td>\n";

@@ -371,15 +371,19 @@ function validate_file() {
     display: flex !important;
     flex-flow: column !important;
 }
+
 #oe-nav-ul.tabNav.tabWidthFull {
     width: 10%;
 }
+
 #oe-nav-ul.tabNav.tabWidthUser {
     width: 12%;
 }
+
 #oe-nav-ul.tabNav.tabWidthWide {
     width: 15%;
 }
+
 #oe-nav-ul.tabNav.tabWidthVertical {
     width: 25%;
 }
@@ -406,9 +410,9 @@ $oemr_ui = new OemrUI($arrOeUiSettings);
 </head>
 
 <?php if ($userMode) { ?>
-    <body class="body_top" style="min-width: 700px; margin:0 !important">
+    <body class="body_top m-0" style="min-width: 700px;">
 <?php } else { ?>
-    <div class="body_top" style="margin:0 !important">
+    <div class="body_top m-0">
 <?php } ?>
 
     <div id="container_div" class="<?php echo $oemr_ui->oeContainer();?>">
@@ -429,7 +433,7 @@ $oemr_ui = new OemrUI($arrOeUiSettings);
                     <input type="hidden" name="csrf_token_form" value="<?php echo attr(CsrfUtils::collectCsrfToken()); ?>" />
                     <div class="clearfix">
                         <div class="btn-group oe-margin-b-10">
-                            <button type='submit' class='btn btn-default btn-save oe-pull-toward' name='form_save' value='<?php echo xla('Save'); ?>'><?php echo xlt('Save'); ?></button>
+                            <button type='submit' class='btn btn-secondary btn-save oe-pull-toward' name='form_save' value='<?php echo xla('Save'); ?>'><?php echo xlt('Save'); ?></button>
                         </div>
                         <div class="input-group col-sm-4 oe-pull-away">
                         <?php // mdsupport - Optional server based searching mechanism for large number of fields on this screen.
@@ -441,7 +445,7 @@ $oemr_ui = new OemrUI($arrOeUiSettings);
                         ?>
                           <input name='srch_desc' id='srch_desc' class='form-control' type='text' placeholder='<?php echo $placeholder; ?>' value='<?php echo (!empty($_POST['srch_desc']) ? attr($_POST['srch_desc']) : '') ?>' />
                         <span class="input-group-btn">
-                            <button class="btn btn-default btn-search" type='submit' id='globals_form_search' name='form_search'><?php echo xlt('Search'); ?></button>
+                            <button class="btn btn-secondary btn-search" type='submit' id='globals_form_search' name='form_search'><?php echo xlt('Search'); ?></button>
                         </span>
                         </div><!-- /input-group -->
                     </div>
@@ -466,12 +470,11 @@ $oemr_ui = new OemrUI($arrOeUiSettings);
                             $srch_item = 0;
                             foreach ($GLOBALS_METADATA as $grpname => $grparr) {
                                 if (!$userMode || in_array($grpname, $USER_SPECIFIC_TABS)) {
-                                    echo " <div class='tab" . ($i ? "" : " current") .
-                                      "' style='height:auto;width:100%;font-size:0.9em'>\n";
+                                    echo " <div class='tab w-100 h-auto" . ($i ? "" : " current") . "' style='font-size: 0.9rem'>\n";
 
                                     echo "<div class=''>";
                                     $addendum = $grpname == 'Appearance' ? ' (*'. xl("need to logout/login after changing these settings") .')' : '';
-                                    echo "<div class='col-sm-12 oe-global-tab-heading'><div class='oe-pull-toward' style='font-size: 1.4em'>". xlt($grpname) ." &nbsp;</div><div style='margin-top: 5px'>" . text($addendum) ."</div></div>";
+                                    echo "<div class='col-sm-12 oe-global-tab-heading'><div class='oe-pull-toward' style='font-size: 1.4rem'>". xlt($grpname) ." &nbsp;</div><div style='margin-top: 5px'>" . text($addendum) ."</div></div>";
                                     echo "<div class='clearfix'></div>";
                                     if ($userMode) {
                                         echo "<div class='row'>";
@@ -519,9 +522,9 @@ $oemr_ui = new OemrUI($arrOeUiSettings);
                                             }
 
                                             if ($userMode) {
-                                                echo " <div class='row form-group" . $srch_cl  . "'><div class='col-sm-4 control-label'><b>" . text($fldname) . "</b></div><div class='col-sm-4 oe-input'  title='" . attr($flddesc) ."'>\n";
+                                                echo " <div class='row form-group" . $srch_cl  . "'><div class='col-sm-4 font-weight-bold'>" . text($fldname) . "</div><div class='col-sm-4 oe-input' title='" . attr($flddesc) ."'>\n";
                                             } else {
-                                                echo " <div class='row form-group" . $srch_cl . "'><div class='col-sm-6 control-label'><b>" . text($fldname) . "</b></div><div class='col-sm-6 oe-input'  title='" . attr($flddesc) ."'>\n";
+                                                echo " <div class='row form-group" . $srch_cl . "'><div class='col-sm-6 font-weight-bold'>" . text($fldname) . "</div><div class='col-sm-6 oe-input' title='" . attr($flddesc) ."'>\n";
                                             }
 
                                             if (is_array($fldtype)) {
@@ -819,7 +822,6 @@ $oemr_ui = new OemrUI($arrOeUiSettings);
     </div><!--End of container div-->
 <?php $oemr_ui->oeBelowContainerDiv();?>
 </div>
-</body>
 <?php
 $post_srch_desc = $_POST['srch_desc'];
 if (!empty($post_srch_desc) && $srch_item == 0) {
@@ -827,7 +829,7 @@ if (!empty($post_srch_desc) && $srch_item == 0) {
 }
 ?>
 
-<script language="JavaScript">
+<script>
 $(function() {
     tabbify();
     <?php // mdsupport - Highlight search results ?>
@@ -880,13 +882,13 @@ $(window).on('resize', function() {
     if (winWidth > 1024) {
         if (!userMode) {
             $('.row  .control-label, .row  .oe-input').removeClass('col-sm-6');
-            $('.row  .control-label').addClass('col-sm-4 col-sm-offset-1');
+            $('.row  .control-label').addClass('col-sm-4 offset-sm-1');
             $('.row  .oe-input').addClass('col-sm-4');
         }
     } else {
         if (!userMode) {
             $('.row  .control-label, .row  .oe-input').addClass('col-sm-6');
-            $('.row  .control-label').removeClass('col-sm-4 col-sm-offset-1');
+            $('.row  .control-label').removeClass('col-sm-4 offset-sm-1');
             $('.row  .oe-input').removeClass('col-sm-4');
         }
     }
@@ -912,5 +914,6 @@ $('.scroll').click(function() {
     return false;
 });
 </script>
+</body>
 </html>
 

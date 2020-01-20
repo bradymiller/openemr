@@ -46,7 +46,7 @@ if (isset($_SESSION['pid']) && isset($_SESSION['patient_portal_onsite_two'])) {
 define('C_USER', IS_PORTAL ?  IS_PORTAL : IS_DASHBOARD);
 
 if (isset($_REQUEST['fullscreen'])) {
-    $_SESSION['whereto'] = 'messagespanel';
+    $_SESSION['whereto'] = 'messagescard';
     define('IS_FULLSCREEN', true);
 } else {
     define('IS_FULLSCREEN', false);
@@ -504,10 +504,10 @@ $msgApp = new Controller();
 
     <link href="<?php echo $GLOBALS['assets_static_relative']; ?>/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
     <?php if ($_SESSION['language_direction'] == 'rtl') { ?>
-        <link href="<?php echo $GLOBALS['assets_static_relative']; ?>/bootstrap-rtl/dist/css/bootstrap-rtl.min.css" rel="stylesheet" type="text/css" />
+        <link href="<?php echo $GLOBALS['assets_static_relative']; ?>/bootstrap-v4-rtl/dist/css/bootstrap-rtl.min.css" rel="stylesheet" type="text/css" />
     <?php } ?>
 
-    <script type='text/javascript' src="<?php echo $GLOBALS['assets_static_relative']; ?>/bootstrap/dist/js/bootstrap.min.js"></script>
+    <script type='text/javascript' src="<?php echo $GLOBALS['assets_static_relative']; ?>/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
 
     <link rel="stylesheet" href="<?php echo $GLOBALS['assets_static_relative']; ?>/summernote/dist/summernote.css" />
     <script type='text/javascript' src="<?php echo $GLOBALS['assets_static_relative']; ?>/summernote/dist/summernote.js"></script>
@@ -676,8 +676,9 @@ $msgApp = new Controller();
                 url: $scope.urlSaveMessage,
                 data: data,
                 headers: {'Content-Type': 'application/x-www-form-urlencoded'}
-            }).success(function(data) {
+            }).then(function successCallback(response) {
                 $scope.listMessages(true);
+            }, function errorCallback(response) {
             });
         };
 
@@ -718,9 +719,9 @@ $msgApp = new Controller();
         };
 
         $scope.listMessages = function(wasListingForMySubmission) {
-            return $http.post($scope.urlListMessages, {}).success(function(data) {
+            return $http.post($scope.urlListMessages, {}).then(function successCallback(response) {
                 $scope.messages = [];
-                angular.forEach(data, function(message) {
+                angular.forEach(response.data, function(message) {
                     message.message = $scope.replaceShortcodes(message.message);
                     $scope.messages.push(message);
                 });
@@ -733,15 +734,16 @@ $msgApp = new Controller();
                 }
                 $scope.lastMessageId = lastMessageId;
                 if($scope.pusers === ''){ // refresh current in chat list.
-                   angular.forEach($filter('unique')($scope.messages,'sender_id'), function(m,k){
-                   var flg = false;
-                   angular.forEach($scope.pusers, function(id) {
-                           if(id === m.sender_id){ flg = true; }
-                       });
-                      if(!flg) $scope.pusers.push(m.sender_id);
-                   });
-               }
+                    angular.forEach($filter('unique')($scope.messages,'sender_id'), function(m,k){
+                        var flg = false;
+                        angular.forEach($scope.pusers, function(id) {
+                            if(id === m.sender_id){ flg = true; }
+                        });
+                        if(!flg) $scope.pusers.push(m.sender_id);
+                    });
+                }
                 $scope.getOnlines();
+            }, function errorCallback(response) {
             });
         };
 
@@ -759,21 +761,23 @@ $msgApp = new Controller();
 
         $scope.getAuthUsers = function() {
             $scope.chatusers = [];
-            return $http.post($scope.urlGetAuthUsers, {}).success(function(data) {
-                $scope.chatusers = data;
+            return $http.post($scope.urlGetAuthUsers, {}).then(function successCallback(response) {
+                $scope.chatusers = response.data;
+            }, function errorCallback(response) {
             });
         };
 
         $scope.pingServer = function(msgItem) {
-            return $http.post($scope.urlListOnlines+'&username='+$scope.user, {}).success(function(data) {
-                $scope.online = data;
+            return $http.post($scope.urlListOnlines+'&username='+$scope.user, {}).then(function successCallback(response) {
+                $scope.online = response.data;
+            }, function errorCallback(response) {
             });
-
         };
 
         $scope.getOnlines = function() {
-            return $http.post($scope.urlListOnlines+'&username=currentol', {}).success(function(data) {
-                $scope.onlines = data;
+            return $http.post($scope.urlListOnlines+'&username=currentol', {}).then(function successCallback(response) {
+                $scope.onlines = response.data;
+            }, function errorCallback(response) {
             });
         };
 
@@ -972,7 +976,7 @@ background:#fff;
 
 <body ng-controller="MsgAppCtrl">
     <div class="container">
-        <!-- <h2 class="hidden-xs">Secure Chat</h2> -->
+        <!-- <h2 class="d-none">Secure Chat</h2> -->
         <div class="row">
             <div class="col-md-2 sidebar">
                 <h5><span class="label label-default"><?php echo xlt('Current Recipients'); ?></span></h5>
@@ -981,29 +985,29 @@ background:#fff;
                 </label>
                 <h5><span class="label label-default"><?php echo xlt('Available Recipients'); ?></span></h5>
                 <span>
-                    <button id="chkall" class="btn btn-xs btn-success" ng-show="!isPortal" ng-click="checkAll()" type="button"><?php echo xlt('All{{Recipients}}'); ?></button>
-                    <button id="chknone" class="btn btn-xs btn-success" ng-show="!isPortal" ng-click="uncheckAll()" type="button"><?php echo xlt('None{{Recipients}}'); ?></button>
+                    <button id="chkall" class="btn btn-sm btn-success" ng-show="!isPortal" ng-click="checkAll()" type="button"><?php echo xlt('All{{Recipients}}'); ?></button>
+                    <button id="chknone" class="btn btn-sm btn-success" ng-show="!isPortal" ng-click="uncheckAll()" type="button"><?php echo xlt('None{{Recipients}}'); ?></button>
                 </span>
                 <label ng-repeat="user in chatusers | unique : 'username'" ng-show="!isPortal || (isPortal && user.dash)">
                     <input type="checkbox" data-checklist-model="pusers" data-checklist-value="user.recip_id"> {{user.username}}
                 </label>
             </div>
             <div class="col-md-8 fixed-panel">
-                <div class="panel direct-chat direct-chat-warning">
-                    <div class="panel-heading">
+                <div class="card direct-chat direct-chat-warning">
+                    <div class="card-heading">
                         <div class="clearfix">
                             <a class="btn btn-sm btn-primary ml10" href=""
                                 data-toggle="modal" data-target="#clear-history"><?php echo xlt('Clear history'); ?></a>
-                            <a class="btn btn-sm btn-success pull-left ml10" href="./../patient/provider" ng-show="!isPortal"><?php echo xlt('Home'); ?></a>
-                            <a class="btn btn-sm btn-success pull-left ml10" href="./../home.php" ng-show="isFullScreen"><?php echo xlt('Home'); ?></a>
+                            <a class="btn btn-sm btn-success float-left ml10" href="./../patient/provider" ng-show="!isPortal"><?php echo xlt('Home'); ?></a>
+                            <a class="btn btn-sm btn-success float-left ml10" href="./../home.php" ng-show="isFullScreen"><?php echo xlt('Home'); ?></a>
                         </div>
                     </div>
-                    <div class="panel-body">
+                    <div class="card-body">
                         <div class="direct-chat-messages">
                             <div class="direct-chat-msg" ng-repeat="message in messages" ng-if="historyFromId < message.id" ng-class="{'right':!message.me}">
                                 <div class="direct-chat-info clearfix">
-                                    <span class="direct-chat-name" ng-class="{'pull-left':message.me,'pull-right':!message.me}">{{message.username }}</span>
-                                    <span class="direct-chat-timestamp " ng-class="{'pull-left':!message.me,'pull-right':message.me}">{{message.date }}</span>
+                                    <span class="direct-chat-name" ng-class="{'float-left':message.me,'float-right':!message.me}">{{message.username }}</span>
+                                    <span class="direct-chat-timestamp " ng-class="{'float-left':!message.me,'float-right':message.me}">{{message.date }}</span>
                                 </div>
                                 <i class="direct-chat-img glyphicon glyphicon-hand-left"
                                    style="cursor: pointer;font-size:24px" ng-show="!message.me"
@@ -1022,7 +1026,7 @@ background:#fff;
                                 </div>
                             </div>
                         </div>
-                        <div class="panel-footer box-footer-hide">
+                        <div class="card-footer box-footer-hide">
                             <form id='msgfrm' ng-submit="saveMessage()">
                                 <div class="input-group">
                                     <input type="text" placeholder="<?php echo xla('Type Message...'); ?>" id="msgedit" autofocus="autofocus"
@@ -1083,7 +1087,7 @@ background:#fff;
                         <label class="radio"><?php echo xlt('Are you sure to clear chat history?'); ?></label>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-sm btn-default" data-dismiss="modal"><?php echo xlt('Cancel'); ?></button>
+                        <button type="button" class="btn btn-sm btn-secondary" data-dismiss="modal"><?php echo xlt('Cancel'); ?></button>
                         <button type="button" class="btn btn-sm btn-primary" data-dismiss="modal" ng-click="clearHistory()"><?php echo xlt('Accept'); ?></button>
                     </div>
                 </form>

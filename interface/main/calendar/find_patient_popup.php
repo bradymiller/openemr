@@ -58,16 +58,12 @@ form {
 }
 #searchResultsHeader {
     width: 100%;
-    /*background-color: #fff;*/
     border-collapse: collapse;
-}
-#searchResultsHeader th {
-    /*font-size: 0.7em;*/
 }
 #searchResults {
     width: 100%;
     border-collapse: collapse;
-    background-color: white;
+    background-color: var(--white);
     overflow: auto;
 }
 
@@ -77,10 +73,12 @@ form {
 }
 #searchResults td {
     /*font-size: 0.7em;*/
-    border-bottom: 1px solid #eee;
+    border-bottom: 1px solid var(--light);
 }
-.oneResult { }
-.billing { color: red; font-weight: bold; }
+.billing { 
+    color: var(--danger);
+    font-weight: bold; 
+}
 
 /* for search results or 'searching' notification */
 #searchstatus {
@@ -88,7 +86,7 @@ form {
     font-weight: bold;
     padding: 1px 1px 10px 1px;
     font-style: italic;
-    color: black;
+    color: var(--black);
     text-align: center;
 }
 #searchspinner {
@@ -99,7 +97,7 @@ form {
 /* highlight for the mouse-over */
 .highlight {
     background-color: #336699;
-    color: white;
+    color: var(--white);
 }
 </style>
 
@@ -107,7 +105,7 @@ form {
 <?php
 if (isset($_GET["res"])) {
     echo '
-<script language="Javascript">
+<script>
     // Pass the variable to parent hidden type and submit
     opener.document.theform.resname.value = "noresult";
     opener.document.theform.submit();
@@ -118,23 +116,11 @@ if (isset($_GET["res"])) {
 ?>
 <!-- ViSolve: Verify the noresult parameter -->
 
-<script language="JavaScript">
-
- function selpid(pid, lname, fname, dob) {
-  if (opener.closed || ! opener.setpatient)
-   alert("<?php echo htmlspecialchars(xl('The destination form was closed; I cannot act on your selection.'), ENT_QUOTES); ?>");
-  else
-   opener.setpatient(pid, lname, fname, dob);
-  dlgclose();
-  return false;
- }
-
-</script>
 </head>
 
 <body class="body_top">
 <div class="container-responsive">
-<div id="searchCriteria" class="bg-info">
+<div id="searchCriteria" class="bg-light">
 <form class="form-inline" method='post' name='theform' id="theform" action='find_patient_popup.php?<?php if (isset($_GET['pflag'])) {
     echo "pflag=0";
                                                                                                    } ?>'>
@@ -159,7 +145,7 @@ if (isset($_GET["res"])) {
    <input type='text' class="input-sm" id='searchparm' name='searchparm' size='12' value='<?php echo htmlspecialchars($_REQUEST['searchparm'], ENT_QUOTES); ?>'
     title='<?php echo htmlspecialchars(xl('If name, any part of lastname or lastname,firstname'), ENT_QUOTES); ?>'>
    &nbsp;
-   <input type='submit' id="submitbtn" value='<?php echo htmlspecialchars(xl('Search'), ENT_QUOTES); ?>'>
+   <input class='btn btn-primary' type='submit' id="submitbtn" value='<?php echo htmlspecialchars(xl('Search'), ENT_QUOTES); ?>' />
    <div id="searchspinner"><img src="<?php echo $GLOBALS['webroot'] ?>/interface/pic/ajax-loader.gif"></div>
 </form>
 </div>
@@ -170,10 +156,10 @@ if (isset($_GET["res"])) {
 <div id="searchstatus" class="bg-danger"><?php echo htmlspecialchars(xl('No records found. Please expand your search criteria.'), ENT_NOQUOTES); ?>
 <br>
 <!--VicarePlus :: If pflag is set the new patient create link will not be displayed -->
-<a class="noresult" href='find_patient_popup.php?res=noresult' 
+<a class="noresult" href='find_patient_popup.php?res=noresult'
     <?php
     if (isset($_GET['pflag']) || (!acl_check('patients', 'demo', '', array('write','addonly')))) {
-        ?> style="display:none;" 
+        ?> style="display:none;"
         <?php
     }
     ?>  >
@@ -186,7 +172,7 @@ if (isset($_GET["res"])) {
 <?php endif; ?>
 
 <?php if (isset($result)) : ?>
-<table class="table table-condensed">
+<table class="table table-sm">
 <thead id="searchResultsHeader" class="head">
  <tr>
   <th class="srName"><?php echo htmlspecialchars(xl('Name'), ENT_NOQUOTES); ?></th>
@@ -232,7 +218,7 @@ if (isset($_GET["res"])) {
 
 <?php endif; ?>
 
-<script language="javascript">
+<script>
 
 // jQuery stuff to make the page a little easier to use
 
@@ -261,6 +247,15 @@ $(function(){
         }
     });
 });
+
+function selpid(pid, lname, fname, dob) {
+    if (opener.closed || ! opener.setpatient)
+        alert("<?php echo htmlspecialchars(xl('The destination form was closed; I cannot act on your selection.'), ENT_QUOTES); ?>");
+    else
+        opener.setpatient(pid, lname, fname, dob);
+    dlgclose();
+    return false;
+}
 
 // show the 'searching...' status and submit the form
 var SubmitForm = function(eObj) {

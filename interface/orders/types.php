@@ -70,21 +70,19 @@ if ($popup && $_POST['form_save']) {
 
     <title><?php echo xlt('Configure Orders and Results'); ?></title>
 
-    <style type="text/css">
+    <style>
         #con0 table {
             margin: 0;
             padding: 0;
             width: 100%;
         }
         #con0 td {
-            /*padding: 0;*/
             font-family: sans-serif;
             font-size: 11px;
             line-height: 25px;
         }
         .plusminus {
             font-family: monospace;
-            /*font-size: 11px;*/
         }
         .haskids {
             color: #0000dd;
@@ -93,14 +91,14 @@ if ($popup && $_POST['form_save']) {
         }
         tr.head {
             font-size: 14px;
-            background-color: #cccccc;
+            background-color: var(--light);
             font-weight: bold;
         }
         tr.evenrow {
-            background-color: #ddddff;
+            background-color: var(--light);
         }
         tr.oddrow {
-            background-color: #ffffff;
+            background-color: var(--white);
         }
         tr.outertr {
             padding: 0px 0px 0px 10px;
@@ -109,40 +107,33 @@ if ($popup && $_POST['form_save']) {
             line-height: 25px;
         }
         .col1 {
-            width: 33%
+            width: 33%;
         }
         .col2 {
-            width: 12%
+            width: 12%;
         }
         .col3 {
-            width: 8%
+            width: 8%;
         }
         .col4 {
-            width: 28%
+            width: 28%;
         }
         .col5 {
-            width: 5%
+            width: 5%;
         }
         .col6 {
-            width: 8%
+            width: 8%;
         }
-
-        @media only screen and (max-width: 768px) {
-           [class*="col-"] {
-           width: 100%;
-           }
-        }
-
     </style>
 
 
     <?php
     if ($popup) { ?>
-        <script type="text/javascript" src="../../library/topdialog.js"></script>
+        <?php Header::setupAssets('topdialog'); ?>
     <?php } ?>
 
 
-    <script language="JavaScript">
+    <script type="text/javascript">
 
     <?php
     if ($popup) {
@@ -283,7 +274,7 @@ if ($popup && $_POST['form_save']) {
 
 </head>
 
-<body class="body_nav">
+<body>
     <?php
     if ($GLOBALS['enable_help'] == 1) {
         $help_icon = '<a class="oe-pull-away oe-help-redirect" data-target="#myModal" data-toggle="modal" href="#" id="help-href" name="help-href" style="color:#676666" title="' . xla("Click to view Help") . '"><i class="fa fa-question-circle" aria-hidden="true"></i></a>';
@@ -315,13 +306,13 @@ if ($popup && $_POST['form_save']) {
                     }
                     ?>'>
                     <div class="btn-group">
-                        <button type="button" name="form_search" class="btn btn-default btn-refresh" onclick="refreshme()"><?php echo xlt('Refresh');?></button>
-                        <button type="button" class="btn btn-default btn-add" name='add_node_btn' id='add_node_button'  onclick='handleNode(0,"","")'><?php echo xlt('Add Top Level');?></button>
+                        <button type="button" name="form_search" class="btn btn-secondary btn-refresh" onclick="refreshme()"><?php echo xlt('Refresh');?></button>
+                        <button type="button" class="btn btn-secondary btn-add" name='add_node_btn' id='add_node_button'  onclick='handleNode(0,"","")'><?php echo xlt('Add Top Level');?></button>
                     </div>
                     <br>
                     <br>
                     <div class = "table-responsive">
-                        <table class="table" style="margin-bottom:0">
+                        <table class="table mb-0">
                             <thead>
                                 <tr class='head'>
                                     <td class='col1' align='left'>&nbsp;&nbsp;<?php echo xlt('Name') ?> <i id="name-tooltip" class="fa fa-info-circle oe-text-black" aria-hidden="true"></i></td>
@@ -341,7 +332,7 @@ if ($popup && $_POST['form_save']) {
                         <div class="col-sm-12 text-left position-override">
                             <div class="btn-group btn-group-pinch" role="group">
                                 <?php if ($popup) { ?>
-                                    <button type="submit" class="btn btn-default btn-save" name='form_save' value='<?php echo xla('Save'); ?>'><?php echo xlt('Save');?></button>
+                                    <button type="submit" class="btn btn-secondary btn-save" name='form_save' value='<?php echo xla('Save'); ?>'><?php echo xlt('Save');?></button>
                                     <button class="btn btn-link btn-cancel btn-separate-left" onclick="CancelDistribute()"><?php echo xlt('Cancel');?></button>
                                 <?php } ?>
                             </div>

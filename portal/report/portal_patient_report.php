@@ -38,6 +38,8 @@ require_once("$srcdir/acl.inc");
 require_once("$srcdir/forms.inc");
 require_once("$srcdir/patient.inc");
 
+use OpenEMR\Core\Header;
+
 // get various authorization levels
 $auth_notes_a  = true; //acl_check('encounters', 'notes_a');
 $auth_notes    = true; //acl_check('encounters', 'notes');
@@ -56,7 +58,7 @@ if ($GLOBALS['gbl_portal_cms_enable']) {
 $ignoreAuth = 1;
 ?>
 
-<script type="text/javascript" src="../library/textformat.js?v=<?php echo $v_js_includes; ?>"></script>
+<?php Header::setupAssets('textformat'); ?>
 
 <style>
 input[type="checkbox"], input[type="radio"] {
@@ -247,7 +249,7 @@ var mypcc = '<?php echo $GLOBALS['phone_country_code']; ?>';
 </div>
 <br>
 
-<!-- <button data-target="#reportdialog" data-toggle="modal" class="btn btn-default">
+<!-- <button data-target="#reportdialog" data-toggle="modal" class="btn btn-secondary">
     <?php //echo xla('Generate Report'); ?></button> -->
 <input type="button" class="generateCCR" value="<?php echo xla('Generate Report'); ?>" />
 <!-- <input type="button" class="generateCCR_download_h" value="<?php echo xl('Download')." (Hybrid)"; ?>" /> -->
@@ -310,7 +312,7 @@ var mypcc = '<?php echo $GLOBALS['phone_country_code']; ?>';
 
 <form name='report_form' id="report_form" method='post' action='./report/portal_custom_report.php'>
 
-<span class='panel-heading'><?php echo xlt('Patient Report'); ?></span>&nbsp;&nbsp;
+<span class='card-heading'><?php echo xlt('Patient Report'); ?></span>&nbsp;&nbsp;
 <a class="link_submit" href="#" onclick="return checkAll(true)"><?php echo xlt('Check All'); ?></a>
 |
 <a class="link_submit" href="#" onclick="return checkAll(false)"><?php echo xlt('Clear All'); ?></a>
@@ -625,10 +627,11 @@ while ($result && !$result->EOF) {
 
 // jQuery stuff to make the page a little easier to use
 initReport = function(){
-    $(".genreport").click(function() {
+    $("body").on("click", ".genreport", function() {
           document.report_form.pdf.value = 0;
           showCustom();
-          /*$("#report_form").submit();*/
+
+          return false;
          });
     $(".genpdfrep").click(function() {  document.report_form.pdf.value = 1; $("#report_form").submit(); });
     $(".genportal").click(function() {  document.report_form.pdf.value = 2; $("#report_form").submit(); });
@@ -638,53 +641,34 @@ initReport = function(){
 
     // check/uncheck all Forms of an encounter
     $(".encounter").click(function() { SelectForms($(this)); });
-    function showCCR() {
-        var title = 'CCR Report';
-        var params = {
-            buttons: [
-               { text: 'Close', close: true, style: 'danger' },
-               { text: 'Print', close: false, style: 'success', click: showCCR }
-            ],
 
-            size: eModal.size.lg,
-            title: title,
-            type: "POST",
-            url: '../ccr/createCCR.php',
-            data:{'portal_auth':'1','ccrAction':'generate','raw':'yes'}
-        };
-
-        return eModal
-            .ajax(params)
-            .then(function () {  });
-    }
     function showCustom(){
         var formval = $( "#report_form" ).serializeArray();
         var title = 'Custom Reports';
         var params = {
             buttons: [
                { text: 'Close', close: true, style: 'danger' },
-               //{ text: 'Print', close: false, style: 'success', click: showCustom }
             ],
-
-            size: eModal.size.lg,
+            sizeHeight: 'full', // @todo fix this lazy bones in dialog to allow any height!
+            size: 'modal-lg',
             title: title,
-            //type: "POST",
+            type: "POST",
             url: './report/portal_custom_report.php',
             data: formval
         };
 
-        return eModal
-            .ajax(params)
-            .then(function () {  });
+        // returns a promise after dialog closes. Just an empty fulfill for an example.
+        // Could do an alert or confirm etc.
+        return dialog.ajax(params).then(function () {});
     }
     $(".generateCCR").click(
         function() {
-                if(document.getElementById('show_date').checked == true){
-                    if(document.getElementById('Start').value == '' || document.getElementById('End').value == ''){
-                       alert(<?php echo xlj('Please select a start date and end date'); ?>);
-                            return false;
-                    }
+            if(document.getElementById('show_date').checked == true){
+                if(document.getElementById('Start').value == '' || document.getElementById('End').value == ''){
+                   alert(<?php echo xlj('Please select a start date and end date'); ?>);
+                        return false;
                 }
+            }
         var ccrAction = document.getElementsByName('ccrAction');
         ccrAction[0].value = 'generate';
         var raw = document.getElementsByName('raw');
@@ -692,8 +676,6 @@ initReport = function(){
 
         ccr_form.setAttribute("target", "_blank");
         $("#ccr_form").submit();
-        //showCCR();
-
         ccr_form.setAttribute("target", "");
     });
         $(".generateCCR_raw").click(
@@ -718,40 +700,40 @@ initReport = function(){
         });
         $(".generateCCR_download_p").click(
         function() {
-                if(document.getElementById('show_date').checked == true){
-                        if(document.getElementById('Start').value == '' || document.getElementById('End').value == ''){
-                                alert(<?php echo xlj('Please select a start date and end date'); ?>);
-                                return false;
-                        }
+            if(document.getElementById('show_date').checked === true){
+                if(document.getElementById('Start').value === '' || document.getElementById('End').value === ''){
+                        alert(<?php echo xlj('Please select a start date and end date'); ?>);
+                        return false;
                 }
-                var ccrAction = document.getElementsByName('ccrAction');
-                ccrAction[0].value = 'generate';
-                var raw = document.getElementsByName('raw');
-                raw[0].value = 'pure';
+            }
+            var ccrAction = document.getElementsByName('ccrAction');
+            ccrAction[0].value = 'generate';
+            var raw = document.getElementsByName('raw');
+            raw[0].value = 'pure';
 
-                $("#ccr_form").submit();
+            $("#ccr_form").submit();
         });
     $(".viewCCD").click(
     function() {
         var ccrAction = document.getElementsByName('ccrAction');
         ccrAction[0].value = 'viewccd';
-                var raw = document.getElementsByName('raw');
-                raw[0].value = 'no';
+            var raw = document.getElementsByName('raw');
+            raw[0].value = 'no';
 
-                ccr_form.setAttribute("target", "_blank");
+            ccr_form.setAttribute("target", "_blank");
         $("#ccr_form").submit();
                 ccr_form.setAttribute("target", "");
     });
         $(".viewCCD_raw").click(
         function() {
-                var ccrAction = document.getElementsByName('ccrAction');
-                ccrAction[0].value = 'viewccd';
-                var raw = document.getElementsByName('raw');
-                raw[0].value = 'yes';
+            var ccrAction = document.getElementsByName('ccrAction');
+            ccrAction[0].value = 'viewccd';
+            var raw = document.getElementsByName('raw');
+            raw[0].value = 'yes';
 
-                ccr_form.setAttribute("target", "_blank");
-                $("#ccr_form").submit();
-                ccr_form.setAttribute("target", "");
+            ccr_form.setAttribute("target", "_blank");
+            $("#ccr_form").submit();
+            ccr_form.setAttribute("target", "");
         });
         $(".viewCCD_download").click(
         function() {
@@ -774,7 +756,7 @@ initReport = function(){
                 var ccrRecipient = $("#ccr_send_to").val();
                 var raw = document.getElementsByName('raw');
                 raw[0].value = 'send '+ccrRecipient;
-                if(ccrRecipient=="") {
+                if(ccrRecipient === "") {
                   $("#ccr_send_message").html("<?php
                     echo xla('Please enter a valid Direct Address above.'); ?>");
                   $("#ccr_send_result").show();
@@ -786,7 +768,7 @@ initReport = function(){
                   var action=$("#ccr_form").attr('action');
                   $.post(action, {ccrAction:'generate',raw:'send '+ccrRecipient,requested_by:'user'},
                      function(data) {
-                       if(data=="SUCCESS") {
+                       if(data === "SUCCESS") {
                          $("#ccr_send_message").html("<?php
                             echo xla('Your message was submitted for delivery to');
                             ?> "+ccrRecipient);
@@ -813,7 +795,7 @@ if ($GLOBALS['phimail_enable']==true && $GLOBALS['phimail_ccd_enable']==true) { 
                 var ccdRecipient = $("#ccd_send_to").val();
                 var raw = document.getElementsByName('raw');
                 raw[0].value = 'send '+ccdRecipient;
-                if(ccdRecipient=="") {
+                if(ccdRecipient === "") {
                   $("#ccd_send_message").html("<?php
                     echo xla('Please enter a valid Direct Address above.'); ?>");
                   $("#ccd_send_result").show();
@@ -825,7 +807,7 @@ if ($GLOBALS['phimail_enable']==true && $GLOBALS['phimail_ccd_enable']==true) { 
                   var action=$("#ccr_form").attr('action');
                   $.post(action, {ccrAction:'viewccd',raw:'send '+ccdRecipient,requested_by:'user'},
                      function(data) {
-                       if(data=="SUCCESS") {
+                       if(data === "SUCCESS") {
                          $("#ccd_send_message").html("<?php
                             echo xla('Your message was submitted for delivery to');
                             ?> "+ccdRecipient);
@@ -838,17 +820,16 @@ if ($GLOBALS['phimail_enable']==true && $GLOBALS['phimail_ccd_enable']==true) { 
                 }
         });
 <?php } ?>
-/* */
-
 }; // end initReport
+
 $(function(){
-        initReport();
+
+    initReport();
 
     $('.datepicker').datetimepicker({
         <?php $datetimepicker_timepicker = false; ?>
         <?php $datetimepicker_formatInput = false; ?>
         <?php require($GLOBALS['srcdir'] . '/js/xl/jquery-datetimepicker-2-5-4.js.php'); ?>
-        <?php // can add any additional javascript settings to datetimepicker here; need to prepend first setting with a comma ?>
     });
 });
 

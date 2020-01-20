@@ -1128,7 +1128,7 @@ function writeITLine($it_array)
     </div>
 </nav>
 
-<table class="table table-striped table-condensed" style="margin-top:55px;">
+<table class="table table-striped table-sm" style="margin-top:55px;">
     <thead>
     <tr>
         <?php if ($list_id == 'feesheet') : ?>
@@ -1362,7 +1362,7 @@ function writeITLine($it_array)
 
 <p>
     <button type="submit" name='form_save' id='form_save'
-            class="btn btn-default btn-save"><?php echo xlt('Save'); ?></button>
+            class="btn btn-secondary btn-save"><?php echo xlt('Save'); ?></button>
 </p>
 
 </form>
@@ -1390,7 +1390,7 @@ function writeITLine($it_array)
                 </div>
                 <div class="modal-footer text-right">
                     <button type="submit"
-                            class="btn btn-default btn-save"><?php echo xlt('Save'); ?></button>
+                            class="btn btn-secondary btn-save"><?php echo xlt('Save'); ?></button>
                     <button type="button" class="btn btn-link btn-cancel"
                             data-dismiss="modal"><?php echo xlt('Cancel'); ?></button>
                 </div>

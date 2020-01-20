@@ -23,7 +23,7 @@
         <!-- Styles -->
         <link href="<?php echo $GLOBALS['assets_static_relative']; ?>/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
         <?php if ($_SESSION['language_direction'] == 'rtl') { ?>
-            <link href="<?php echo $GLOBALS['assets_static_relative']; ?>/bootstrap-rtl/dist/css/bootstrap-rtl.min.css" rel="stylesheet" type="text/css" />
+            <link href="<?php echo $GLOBALS['assets_static_relative']; ?>/bootstrap-v4-rtl/dist/css/bootstrap-rtl.min.css" rel="stylesheet" type="text/css" />
         <?php } ?>
 
         <link href="<?php echo $GLOBALS['web_root']; ?>/portal/patient/styles/style.css?v=<?php echo $GLOBALS['v_js_includes']; ?>" rel="stylesheet" />
@@ -31,7 +31,7 @@
         <link href="<?php echo $GLOBALS['web_root']; ?>/portal/sign/css/signer_modal.css?v=<?php echo $GLOBALS['v_js_includes']; ?>" rel="stylesheet" type="text/css" />
 
         <script src="<?php echo $GLOBALS['assets_static_relative']; ?>/jquery/dist/jquery.min.js" type="text/javascript"></script>
-        <script src="<?php echo $GLOBALS['assets_static_relative']; ?>/bootstrap/dist/js/bootstrap.min.js" type="text/javascript"></script>
+        <script src="<?php echo $GLOBALS['assets_static_relative']; ?>/bootstrap/dist/js/bootstrap.bundle.min.js" type="text/javascript"></script>
         <script src="<?php echo $GLOBALS['web_root']; ?>/portal/sign/assets/signature_pad.umd.js?v=<?php echo $GLOBALS['v_js_includes']; ?>" type="text/javascript"></script>
         <script src="<?php echo $GLOBALS['web_root']; ?>/portal/sign/assets/signer_api.js?v=<?php echo $GLOBALS['v_js_includes']; ?>" type="text/javascript"></script>
 
@@ -50,7 +50,7 @@
         <div class="navbar navbar-default navbar-fixed-top">
             <div class="container">
                     <div class="navbar-header"><a class="navbar-brand" href="<?php echo $GLOBALS['web_root']; ?>/portal/patient/provider"><?php echo xlt('Home'); ?></a>
-                        <a class="navbar-toggle btn-default" data-toggle="collapse" data-target=".navbar-collapse">
+                        <a class="navbar-toggle btn-secondary" data-toggle="collapse" data-target=".navbar-collapse">
                             <span class="glyphicon glyphicon-bar"></span>
                             <span class="glyphicon glyphicon-bar"></span>
                             <span class="glyphicon glyphicon-bar"></span>

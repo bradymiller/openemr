@@ -17,6 +17,7 @@ require_once('../globals.php');
 require_once($GLOBALS['srcdir'].'/acl.inc');
 
 use OpenEMR\Common\Csrf\CsrfUtils;
+use OpenEMR\Core\Header;
 
 if (!acl_check('admin', 'super')) {
     die(xlt('Not authorized'));
@@ -227,11 +228,12 @@ if ($GLOBALS['secure_upload']) {
 
 <head>
 <title><?php echo xlt('File management'); ?></title>
-<link rel="stylesheet" href='<?php echo $css_header ?>' type='text/css'>
+
+    <?php Header::setupHeader(); ?>
 
 <style type="text/css">
- .dehead { color:#000000; font-family:sans-serif; font-size:10pt; font-weight:bold }
- .detail { color:#000000; font-family:sans-serif; font-size:10pt; font-weight:normal }
+ .dehead { color:var(--black); font-family:sans-serif; font-size:10pt; font-weight:bold }
+ .detail { color:var(--black); font-family:sans-serif; font-size:10pt; font-weight:normal }
  #generate_thumb, #file_type_whitelist{
      width: 95%;
      margin: 50px auto;
@@ -246,8 +248,6 @@ if ($GLOBALS['secure_upload']) {
      padding: 0 15px;
  }
 </style>
-
-<script type="text/javascript" src="<?php echo $GLOBALS['assets_static_relative'] ?>/jquery/dist/jquery.min.js"></script>
 
 <script language="JavaScript">
 // This is invoked when a filename selection changes in the drop-list.

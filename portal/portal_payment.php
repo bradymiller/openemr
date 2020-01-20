@@ -487,9 +487,8 @@ if ($_POST['form_save'] || $_REQUEST['receipt']) {
             <br><?php echo text($frow['city'] . ', ' . $frow['state']) . ' ' . text($frow['postal_code']) ?>
             <br><?php echo text($frow['phone']) ?>
         <p>
-        <div style="text-align: center; margin: auto;">
-            <table border='0' cellspacing='8'
-                   style="text-align: center; margin: auto;">
+        <div class="text-center" style="margin: auto;">
+            <table border='0' cellspacing='8' class="text-center" style="margin: auto;">
                 <tr>
                     <td><?php echo xlt('Date'); ?>:</td>
                     <td><?php echo text(oeFormatSDFT(strtotime($payrow['dtime']))) ?></td>
@@ -1057,7 +1056,7 @@ if ($_POST['form_save'] || $_REQUEST['receipt']) {
                 <td><input class="form-control" type='text' name='form_prepayment' style=''/></td>
             </tr>
         </table>
-        <table id="table_display" style="width: 100%; background: #eee;" class="table table-condensed table-striped table-bordered">
+        <table id="table_display" style="width: 100%; background: #eee;" class="table table-sm table-striped table-bordered">
             <thead>
             </thead>
             <tbody>
@@ -1232,21 +1231,21 @@ if ($_POST['form_save'] || $_REQUEST['receipt']) {
         </table>
         <?php
         if (isset($ccdata["cardHolderName"])) {
-            echo '<div class="col-xs-5"><div class="panel panel-default height">';
+            echo '<div class="col-5"><div class="card panel-default height">';
             if (!isset($_SESSION['authUserID'])) {
-                echo '<div class="panel-heading">' . xlt("Payment Information") .
+                echo '<div class="card-heading">' . xlt("Payment Information") .
                     '<span style="color:#cc0000"><em> ' . xlt("Pending Auth since") . ': </em>' . text($edata["date"]) . '</span></div>';
             } else {
-                echo '<div class="panel-heading">' . xlt("Audit Payment") .
+                echo '<div class="card-heading">' . xlt("Audit Payment") .
                     '<span style="color:#cc0000"><em> ' . xlt("Pending since") . ': </em>' . text($edata["date"]) . '</span>' .
                     ' <button type="button" class="btn btn-warning btn-sm" onclick="getAuth()">' . xlt("Authorize") . '</button></div>';
             }
         } else {
-            echo '<div style="display:none" class="col-xs-6"><div class="panel panel-default height">' .
-                '<div class="panel-heading">' . xlt("Payment Information") . ' </div>';
+            echo '<div style="display:none" class="col-6"><div class="card panel-default height">' .
+                '<div class="card-heading">' . xlt("Payment Information") . ' </div>';
         }
         ?>
-        <div class="panel-body">
+        <div class="card-body">
             <strong><?php echo xlt('Card Name'); ?>: </strong><span id="cn"><?php echo text($ccdata["cc_type"]) ?></span><br>
             <strong><?php echo xlt('Name on Card'); ?>: </strong><span id="nc"><?php echo text($ccdata["cardHolderName"]) ?></span>
             <strong><?php echo xlt('Card Holder Zip'); ?>: </strong><span id="czip"><?php echo text($ccdata["zip"]) ?></span><br>
@@ -1440,7 +1439,7 @@ if ($_POST['form_save'] || $_REQUEST['receipt']) {
                 <!-- Body  -->
                 <div class="modal-footer">
                     <div class="button-group">
-                        <button type="button" class="btn btn-default" data-dismiss="modal"><?php echo xlt('Cancel'); ?></button>
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal"><?php echo xlt('Cancel'); ?></button>
                         <?php
                         if ($GLOBALS['payment_gateway'] == 'InHouse') { ?>
                             <button id="paySubmit" class="btn btn-primary"><?php echo xlt('Send Payment'); ?></button>

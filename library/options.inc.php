@@ -2038,8 +2038,7 @@ function generate_display_field($frow, $currvalue)
         }
         // If match is not found in main and backup lists, return the key with exclamation mark
         if ($s == '') {
-            $s = nl2br(text(xl_list_label($currvalue))).
-            '<sup> <i class="fa fas fa-exclamation-circle ml-1"></i></sup>';
+            $s = nl2br(text(xl_list_label($currvalue)));
         }
     } elseif ($data_type == 2) { // simple text field
         $s = nl2br(htmlspecialchars($currvalue, ENT_NOQUOTES));
@@ -3955,8 +3954,8 @@ function lbf_canvas_head($small = true)
 {
     $s = <<<EOD
 <link  href="{$GLOBALS['assets_static_relative']}/literallycanvas/css/literallycanvas.css" rel="stylesheet" />
-<script src="{$GLOBALS['assets_static_relative']}/react-15-1-0/build/react-with-addons.min.js"></script>
-<script src="{$GLOBALS['assets_static_relative']}/react-15-1-0/build/react-dom.min.js"></script>
+<script src="{$GLOBALS['assets_static_relative']}/react/build/react-with-addons.min.js"></script>
+<script src="{$GLOBALS['assets_static_relative']}/react/build/react-dom.min.js"></script>
 <script src="{$GLOBALS['assets_static_relative']}/literallycanvas/js/literallycanvas.min.js"></script>
 EOD;
     if ($small) {

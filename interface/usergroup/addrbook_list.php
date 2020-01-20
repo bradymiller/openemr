@@ -144,7 +144,7 @@ $res = sqlStatement($query, $sqlBindArray);
     </div>
     </div>
 <div style="margin-top: 110px;" class="table-responsive">
-<table class="table table-condensed table-bordered table-striped table-hover">
+<table class="table table-sm table-bordered table-striped table-hover">
  <thead>
   <th title='<?php echo xla('Click to view or edit'); ?>'><?php echo xlt('Organization'); ?></th>
   <th><?php echo xlt('Name'); ?></th>
@@ -205,10 +205,8 @@ while ($row = sqlFetchArray($res)) {
 </div>
 
 <?php if ($popup) { ?>
-<script type="text/javascript" src="../../library/topdialog.js"></script>
+    <?php Header::setupAssets('topdialog'); ?>
 <?php } ?>
-<script type="text/javascript" src="../../library/dialog.js?v=<?php echo $v_js_includes; ?>"></script>
-
 <script language="JavaScript">
 
 <?php if ($popup) {

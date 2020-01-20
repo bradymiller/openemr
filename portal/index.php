@@ -139,13 +139,8 @@ if (!(isset($_SESSION['password_update']) || isset($_GET['requestNew']))) {
     <title><?php echo xlt('Patient Portal Login'); ?></title>
     <meta content='width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no' name='viewport'>
     <?php
-    Header::setupHeader(['no_main-theme', 'datetime-picker']);
+    Header::setupHeader(['no_main-theme', 'datetime-picker', 'jquery-gritter', 'patientportal-base', 'patientportal-register']);
     ?>
-    <script type="text/javascript" src="<?php echo $GLOBALS['assets_static_relative']; ?>/gritter/js/jquery.gritter.min.js"></script>
-    <link rel="stylesheet" type="text/css" href="<?php echo $GLOBALS['assets_static_relative']; ?>/gritter/css/jquery.gritter.css" />
-    <script type="text/javascript" src="<?php echo $GLOBALS['assets_static_relative']; ?>/emodal/dist/eModal.min.js"></script>
-    <link rel="stylesheet" type="text/css" href="assets/css/base.css?v=<?php echo $v_js_includes; ?>" />
-    <link rel="stylesheet" type="text/css" href="assets/css/register.css?v=<?php echo $v_js_includes; ?>" />
     <script type="text/javascript">
         function checkUserName() {
             let vacct = document.getElementById('uname').value;
@@ -294,7 +289,7 @@ if (!(isset($_SESSION['password_update']) || isset($_GET['requestNew']))) {
                                     </div>
                                 <?php } ?>
                             </div>
-                            <div class="btn-group pull-right">
+                            <div class="btn-group float-right">
                                 <input class="btn" type="button" onclick="document.location.replace('./index.php?woops=1');" value="<?php echo xla('Cancel'); ?>" />
                                 <input class="btn btn-primary" type="submit" value="<?php echo xla('Log In'); ?>" />
                             </div>
@@ -304,7 +299,7 @@ if (!(isset($_SESSION['password_update']) || isset($_GET['requestNew']))) {
                             <div class="text-center">
                                 <fieldset>
                                     <legend class='bg-primary'><h3><?php echo xlt('Patient Credentials Reset') ?></h3></legend>
-                                    <div class="well">
+                                    <div class="jumbotron">
                                         <div class="form-group inline">
                                             <label class="control-label" for="fname"><?php echo xlt('First Name') ?></label>
                                             <div class="controls inline-inputs">
@@ -332,8 +327,8 @@ if (!(isset($_SESSION['password_update']) || isset($_GET['requestNew']))) {
                                             </div>
                                         </div>
                                     </div>
-                                    <input class="btn pull-left" type="button" onclick="document.location.replace('./index.php?woops=1');" value="<?php echo xla('Cancel'); ?>" />
-                                    <button id="submitRequest" class="btn btn-primary nextBtn pull-right" type="submit"><?php echo xlt('Verify') ?></button>
+                                    <input class="btn float-left" type="button" onclick="document.location.replace('./index.php?woops=1');" value="<?php echo xla('Cancel'); ?>" />
+                                    <button id="submitRequest" class="btn btn-primary nextBtn float-right" type="submit"><?php echo xlt('Verify') ?></button>
                                 </fieldset>
                             </div>
                         </form>
@@ -343,7 +338,7 @@ if (!(isset($_SESSION['password_update']) || isset($_GET['requestNew']))) {
                     <form class="text-center" action="get_patient_info.php" method="POST" onsubmit="return process()">
                                 <fieldset>
                                     <legend class="bg-primary"><h3><?php echo xlt('Patient Portal Login'); ?></h3></legend>
-                                    <div class="well">
+                                    <div class="jumbotron">
                                         <div class="form-inline">
                                             <div class="form-group">
                                                 <label class="control-label" for="uname"><?php echo xlt('Username') ?></label>
@@ -399,14 +394,14 @@ if (!(isset($_SESSION['password_update']) || isset($_GET['requestNew']))) {
                                         } ?>
                                     </div>
                                     <div class="row">
-                                        <div class="col-xs-12">
+                                        <div class="col-12">
                                             <?php if ($GLOBALS['portal_onsite_two_register']) { ?>
-                                                <button class="btn btn-default pull-left" onclick="location.replace('./account/register.php')"><?php echo xlt('Register'); ?></button>
+                                                <button class="btn btn-light float-left" onclick="location.replace('./account/register.php')"><?php echo xlt('Register'); ?></button>
                                             <?php } ?>
                                             <?php if ($GLOBALS['portal_two_pass_reset'] && isset($_GET['w']) && (isset($_GET['u']) || isset($_GET['p']))) { ?>
                                                 <button class="btn btn-danger" onclick="location.replace('./index.php?requestNew=1')" style="margin-left:10px"><?php echo xlt('Reset Credentials'); ?></button>
                                             <?php } ?>
-                                                <button class="btn btn-success pull-right" type="submit"><?php echo xlt('Log In'); ?></button>
+                                                <button class="btn btn-success float-right" type="submit"><?php echo xlt('Log In'); ?></button>
                                         </div>
                                     </div>
                                     </fieldset>
@@ -414,13 +409,20 @@ if (!(isset($_SESSION['password_update']) || isset($_GET['requestNew']))) {
                             echo $hiddenLanguageField;
                         } ?>
                     </form>
-            
+
         </div><!-- div wrapper -->
                 <?php } ?> <!--  logon wrapper -->
 
     <script type="text/javascript">
-        $(function () {
+        var tab_mode = true;
+        var webroot_url = <?php echo js_escape($GLOBALS['web_root']) ?>;
+        function restoreSession(){
+            //dummy functions so the dlgopen function will work in the patient portal
+            return true;
+        }
+        var isPortal = 1;
 
+        $(function () {
             <?php // if something went wrong
             if (isset($_GET['requestNew'])) {
                 $_SESSION['register'] = true;
@@ -474,33 +476,32 @@ if (!(isset($_SESSION['password_update']) || isset($_GET['requestNew']))) {
                 'first': $("#fname").val(),
                 'email': $("#emailInput").val()
             };
-            if (action == 'do_signup') {
+            if (action === 'do_signup') {
                 data = {
                     'action': action,
                     'pid': value
                 };
-            } else if (action == 'notify_admin') {
+            } else if (action === 'notify_admin') {
                 data = {
                     'action': action,
                     'pid': value,
                     'provider': value2
                 };
-            } else if (action == 'cleanup') {
+            } else if (action === 'cleanup') {
                 data = {
                     'action': action
                 }
             }
-            ;
             $.ajax({
                 type: 'GET',
                 url: './account/account.php',
                 data: data
             }).done(function (rtn) {
-                if (action == "cleanup") {
+                if (action === "cleanup") {
                     window.location.href = "./index.php" // Goto landing page.
-                } else if (action == "userIsUnique") {
+                } else if (action === "userIsUnique") {
                     return rtn === '1' ? true : false;
-                } else if (action == "is_new") {
+                } else if (action === "is_new") {
                     if (parseInt(rtn) !== 0) {
                         var yes = confirm(<?php echo xlj("Account is validated. Send new credentials?") ?>);
                         if (!yes)
@@ -511,19 +512,22 @@ if (!(isset($_SESSION['password_update']) || isset($_GET['requestNew']))) {
                         // After error alert app exit to landing page.
                         var message = <?php echo xlj('Unable to find your records. Be sure to use your correct Dob, First and Last name and Email of record.') ?>;
                         message += "<br>" + <?php echo xlj('All search inputs are case sensitive and must match entries in your profile.'); ?>;
-                        eModal.alert(message);
+                        dialog.alert(message, <?php echo xlj("Alert") ?>)
+                            .then(function(result) {
+                                console.error('Reset failed to vaidate');
+                            });
                         return false;
                     }
-                } else if (action == 'do_signup') {
+                } else if (action === 'do_signup') {
                     if (rtn.indexOf('ERROR') !== -1) {
                         var message = <?php echo xlj('Unable to either create credentials or send email.'); ?>;
                         message += "<br><br>" + <?php echo xlj('Here is what we do know.'); ?> +": " + rtn + "<br>";
-                        eModal.alert(message);
+                        dialog.alert(message);
                         return false;
                     }
                     //alert(rtn); // sync alert.. rtn holds username and password for testing.
                     var message = <?php echo xlj("Your new credentials have been sent. Check your email inbox and also possibly your spam folder. Once you log into your patient portal feel free to make an appointment or send us a secure message. We look forward to seeing you soon."); ?>;
-                    eModal.alert(message); // This is an async call. The modal close event exits us to portal landing page after cleanup.
+                    dialog.alert(message); // This is an async call. The modal close event exits us to portal landing page after cleanup.
                     return false;
                 }
             }).fail(function (err) {

@@ -12,6 +12,9 @@
  */
 
 require_once("../interface/globals.php");
+
+use OpenEMR\Core\Header;
+
 $getdir = isset($_POST['sel_pt']) ? $_POST['sel_pt'] : 0;
 if ($getdir > 0) {
     $tdir = $GLOBALS['OE_SITE_DIR'] .  '/documents/onsite_portal_documents/templates/' . convert_safe_file_dir_name($getdir) . '/';
@@ -74,19 +77,8 @@ function getTemplateList($dir)
 <title><?php echo xlt('OpenEMR Portal'); ?> | <?php echo xlt('Import'); ?></title>
 <meta content='width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no' name='viewport'>
 <meta name="description" content="Developed By sjpadgett@gmail.com">
+<?php Header::setupHeader(['no_main-theme', 'datetime-picker', 'summernote', 'dialog', 'summernote-ext-nugget', 'patientportal-style']); ?>
 
-<link href="<?php echo $GLOBALS['assets_static_relative']; ?>/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css" />
-<link href="<?php echo $GLOBALS['assets_static_relative']; ?>/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
-<?php if ($_SESSION['language_direction'] == 'rtl') { ?>
-    <link href="<?php echo $GLOBALS['assets_static_relative']; ?>/bootstrap-rtl/dist/css/bootstrap-rtl.min.css" rel="stylesheet" type="text/css" />
-<?php } ?>
-<link href="assets/css/style.css?v=<?php echo $v_js_includes; ?>" rel="stylesheet" type="text/css" />
-<script src="<?php echo $GLOBALS['assets_static_relative']; ?>/jquery/dist/jquery.min.js" type="text/javascript"></script>
-<script src="<?php echo $GLOBALS['assets_static_relative']; ?>/bootstrap/dist/js/bootstrap.min.js" type="text/javascript"></script>
-<script src="<?php echo $GLOBALS['assets_static_relative']; ?>/library/dialog.js?v=<?php echo $v_js_includes; ?>" type="text/javascript"></script>
-<link  href="<?php echo $GLOBALS['assets_static_relative']; ?>/summernote/dist/summernote.css" rel="stylesheet" type="text/css" />
-<script type='text/javascript' src="<?php echo $GLOBALS['assets_static_relative']; ?>/summernote/dist/summernote.js"></script>
-<script type='text/javascript' src="<?php echo $GLOBALS['assets_static_relative']; ?>/summernote-nugget/plugins/nugget/summernote-ext-nugget.js"></script>
 </head>
 <script>
 var currentEdit = "";
@@ -161,12 +153,13 @@ function getDocument(docname, mode, content) {
 }
 </script>
 <style>
-.modal.modal-wide .modal-dialog {
-  width: 55%;
-}
-.modal-wide .modal-body {
-  overflow-y: auto;
-}
+    .modal.modal-wide .modal-dialog {
+        width: 55%;
+    }
+
+    .modal-wide .modal-body {
+        overflow-y: auto;
+    }
 </style>
 <body class="skin-blue">
 <div  class='container' style='display: block;'>
@@ -202,7 +195,7 @@ foreach ($ppt as $pt) {
 }
 
 echo "</select></div>";
-echo '<button type="submit" class="btn btn-default">' . xlt('Refresh') . '</button>';
+echo '<button type="submit" class="btn btn-secondary">' . xlt('Refresh') . '</button>';
 echo '</form></div>';
 $dirlist = getTemplateList($tdir);
 echo "<table  class='table table-striped table-bordered'>";
@@ -214,7 +207,7 @@ foreach ($dirlist as $file) {
     $t =  $file['pathname'];
     echo "<tr>";
     echo '<td><button id="tedit' . attr($t) . '" class="btn btn-sm btn-primary" onclick="tedit(' . attr_js($t) . ')" type="button">' . text($file['name']) . '</button>
- 		<button id="tdelete' . attr($t) . '" class="btn btn-xs btn-danger" onclick="tdelete(' . attr_js($t) . ')" type="button">' . xlt("Delete") . '</button></td>';
+ 		<button id="tdelete' . attr($t) . '" class="btn btn-sm btn-danger" onclick="tdelete(' . attr_js($t) . ')" type="button">' . xlt("Delete") . '</button></td>';
     echo "<td>" . text($file['size']) . "</td>";
     echo "<td>" . text(date('r', $file['lastmod'])) . "</td>";
     echo "</tr>";
@@ -250,8 +243,8 @@ $(function(){
                 <div class="edittpl" id="templatecontent"></div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-danger btn-xs" data-dismiss="modal"><?php echo xlt('Dismiss'); ?></button>
-                <button type="button" class="btn btn-success btn-xs" data-dismiss="modal" onclick="tsave()"><?php echo xlt('Save'); ?></button>
+                <button type="button" class="btn btn-danger btn-sm" data-dismiss="modal"><?php echo xlt('Dismiss'); ?></button>
+                <button type="button" class="btn btn-success btn-sm" data-dismiss="modal" onclick="tsave()"><?php echo xlt('Save'); ?></button>
             </div>
         </div>
     </div>

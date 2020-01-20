@@ -19,7 +19,7 @@
  */
 
 
-require_once("../../globals.php");
+require_once(__DIR__ . "/../../globals.php");
 require_once("$srcdir/options.inc.php");
 require_once("$srcdir/api.inc");
 require_once("date_qualifier_options.php");
@@ -252,17 +252,17 @@ $obj = $formid ? formFetch("form_misc_billing_options", $formid) : array();
                 <fieldset>
                     <legend><?php echo xlt('Additional Notes'); ?></legend>
                     <div class="form-group">
-                        <div class="col-sm-10 col-sm-offset-1">
+                        <div class="col-sm-10 offset-sm-1">
                             <textarea name="comments" id="comments" class="form-control" cols="80"
                                       rows="3"><?php echo text($obj["comments"]); ?></textarea>
                         </div>
                     </div>
                 </fieldset>
                 <div class="form-group clearfix">
-                    <div class="col-sm-offset-1 col-sm-12 position-override">
+                    <div class="offset-sm-1 col-sm-12 position-override">
                         <div class="btn-group btn-pinch" role="group">
                             <!-- Save/Cancel buttons -->
-                            <button type="submit" class="btn btn-default btn-save save"><?php echo xlt('Save'); ?></button>
+                            <button type="submit" class="btn btn-secondary btn-save save"><?php echo xlt('Save'); ?></button>
                             <button type="button"
                                     class="dontsave btn btn-link btn-cancel btn-separate-left"><?php echo xlt('Cancel'); ?></button>
                         </div>
