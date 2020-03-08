@@ -38,6 +38,7 @@
 
         <!-- ko  foreach: tabs.tabsList -->
         <div class="frameDisplay" data-bind="visible:visible">
+            <h5 class="text-center position-relative" style="top:50%;" data-bind="text: loading_text,visible:loader"></h5>
             <iframe data-bind="location: $data, iframeName: $data.name, ">
 
             </iframe>

@@ -10,7 +10,7 @@
  * @license   https://github.com/openemr/openemr/blob/master/LICENSE GNU General Public License 3
  */
 
-function tabStatus(title,url,name,closable,visible,locked)
+function tabStatus(title,url,name,label,closable,visible,locked)
 {
     var self=this;
     self.visible=ko.observable(visible);
@@ -19,6 +19,11 @@ function tabStatus(title,url,name,closable,visible,locked)
     self.title=ko.observable(title);
     self.url=ko.observable(url);
     self.name=ko.observable(name);
+    self.loading_text=ko.observable((xl("Loading") + " " + xl(label) + "..."));
+    self.loader = ko.observable(true);
+    self.title.subscribe(function() {
+        self.loader(false);
+    });
     self.window=null;
     return this;
 }
@@ -111,7 +116,7 @@ function tabCloseByName(name)
     }
 }
 
-function navigateTab(url,name,afterLoadFunction)
+function navigateTab(url,name,afterLoadFunction,label='')
 {
 
     top.restoreSession();
@@ -305,6 +310,7 @@ function menuActionClick(data,evt)
 
         // Fixups for loading a new encounter form, as these are now in tabs.
         var dataurl = data.url();
+        var dataLabel = data.label()
         var matches = dataurl.match(/load_form.php\?formname=(\w+)/);
         if (matches) {
           // If the encounter frameset already exists, just tell it to add a tab for this form.
@@ -319,10 +325,9 @@ function menuActionClick(data,evt)
           dataurl = '/interface/patient_file/encounter/encounter_top.php?formname=' +
             matches[1] + '&formdesc=' + encodeURIComponent(data.label());
         }
-
         navigateTab(webroot_url + dataurl, data.target, function () {
             activateTabByName(data.target,true);
-        });
+        },dataLabel);
 
         var par = $(evt.currentTarget).closest("ul.menuEntries");
         par.wrap("<ul class='timedReplace' style='display:none;'></ul>");
