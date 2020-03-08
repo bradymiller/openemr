@@ -26,8 +26,8 @@ function tabStatus(title,url,name,closable,visible,locked)
 function tabs_view_model()
 {
     this.tabsList=ko.observableArray();
-    this.tabsList.push(new tabStatus("Loading...",webroot_url+"/interface/main/main_info.php","cal",true,true,false));
-    this.tabsList.push(new tabStatus("Loading...",webroot_url+"/interface/main/messages/messages.php?form_active=1","msg",true,false,false));
+    this.tabsList.push(new tabStatus(xl("Loading") + "<a style='font-size:80%'><i class='fa fa-spinner fa-pulse'></i></a>",webroot_url+"/interface/main/main_info.php","cal","Calender",true,true,false));
+    this.tabsList.push(new tabStatus(xl("Loading") + "<a style='font-size:80%'><i class='fa fa-spinner fa-pulse'></i></a>",webroot_url+"/interface/main/messages/messages.php?form_active=1","msg","Messages",true,false,false));
 //    this.tabsList.push(new tabStatus("Three"));
     this.text=ko.observable("Test");
     return this;
@@ -129,7 +129,7 @@ function navigateTab(url,name,afterLoadFunction)
     }
     else
     {
-        curTab=new tabStatus(xl('New'),url,name,true,false,false);
+        curTab=new tabStatus(xl("Loading") + "<a style='font-size:80%'><i class='fa fa-spinner fa-pulse'></i></a>",url,name,label,true,false,false);
         app_view_model.application_data.tabs.tabsList.push(curTab);
         if(typeof afterLoadFunction === 'function'){
             afterLoadFunction();
