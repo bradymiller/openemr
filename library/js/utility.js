@@ -15,7 +15,13 @@
 // This calls the i18next.t function that has been set up in main.php
 function xl(string) {
     if (typeof top.i18next.t == 'function') {
-        return top.i18next.t(string);
+        let translation = top.i18next.t(string);
+        if (translation === undefined) {
+            console.log("i18next.t function is returning undefined likely because translations are not yet loaded");
+            return string;
+        } else {
+            return translation;
+        }
     } else {
         // Unable to find the i18next.t function, so log error
         console.log("xl function is unable to translate since can not find the i18next.t function");
