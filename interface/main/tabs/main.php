@@ -161,6 +161,16 @@ var userDebug = <?php echo js_escape($GLOBALS['user_debug']); ?>;
 var webroot_url = <?php echo js_escape($web_root); ?>;
 var jsLanguageDirection = <?php echo js_escape($_SESSION['language_direction']); ?>;
 var jsGlobals = {};
+
+// Below is for translations that need to be preloaded. This is a short/medium term workaround
+//  until fix it so that the app does not load until i18next.t function is loaded and working.
+//  When that is fixed, can then remove this and the corresponding code in the xl() function
+//  in library/js/utility.js script.
+var jsTranslationsPreload = <?php echo json_encode([
+    'Loading' => xl('Loading'),
+    'Default First' => xl('Default First'),
+    'Default Second' => xl('Default Second')
+]); ?>;
 </script>
 
 <?php Header::setupHeader(['knockout', 'tabs-theme', 'i18next']); ?>
@@ -353,7 +363,7 @@ if (isset($_SESSION['app1'])) {
 <div id="mainBox" <?php echo $disp_mainBox ?> data-bind='attr: {id: responsiveDisplay.objWidth().mainBoxId}  '>
 
     <div id="dialogDiv"></div>
-    
+
     <div class="body_top" id="body_top_div" data-bind='css: responsiveDisplay.objWidth().bodyTopDivWidth'>
         <div id="logo_menu">
             <a href="https://www.open-emr.org" title="OpenEMR <?php echo xla("Website"); ?>" rel="noopener" target="_blank">
@@ -374,7 +384,7 @@ if (isset($_SESSION['app1'])) {
     </div>
     <div id="attendantData" class="body_title acck"  data-bind="template: {name: app_view_model.attendant_template_type, data: application_data}, css: responsiveDisplay.objWidth().attendantDataClear ">
     </div>
-    
+
     <div class="body_title" id="tabs_div" data-bind="template: {name: 'tabs-controls', data: application_data}, css: responsiveDisplay.objWidth().tabsDivWidth"> </div>
 
     <div class="mainFrames d-flex" id="mainFrames_div">

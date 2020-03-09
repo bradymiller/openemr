@@ -19,7 +19,7 @@ function tabStatus(title,url,name,label,closable,visible,locked)
     self.title=ko.observable(title);
     self.url=ko.observable(url);
     self.name=ko.observable(name);
-    self.loading_text=ko.observable((xl("Loading") + " " + xl(label) + "..."));
+    self.loading_text=ko.observable((xl("Loading") + " " + label + "..."));
     self.loader = ko.observable(true);
     self.title.subscribe(function() {
         self.loader(false);
@@ -31,8 +31,8 @@ function tabStatus(title,url,name,label,closable,visible,locked)
 function tabs_view_model()
 {
     this.tabsList=ko.observableArray();
-    this.tabsList.push(new tabStatus(xl("Loading") + "<a style='font-size:80%'><i class='fa fa-spinner fa-pulse'></i></a>",webroot_url+"/interface/main/main_info.php","cal","Calender",true,true,false));
-    this.tabsList.push(new tabStatus(xl("Loading") + "<a style='font-size:80%'><i class='fa fa-spinner fa-pulse'></i></a>",webroot_url+"/interface/main/messages/messages.php?form_active=1","msg","Messages",true,false,false));
+    this.tabsList.push(new tabStatus(xl("Loading") + "<a style='font-size:80%'><i class='fa fa-spinner fa-pulse'></i></a>",webroot_url+"/interface/main/main_info.php","cal",xl("Default First"),true,true,false));
+    this.tabsList.push(new tabStatus(xl("Loading") + "<a style='font-size:80%'><i class='fa fa-spinner fa-pulse'></i></a>",webroot_url+"/interface/main/messages/messages.php?form_active=1","msg",xl("Default Second"),true,false,false));
 //    this.tabsList.push(new tabStatus("Three"));
     this.text=ko.observable("Test");
     return this;

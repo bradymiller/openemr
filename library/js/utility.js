@@ -15,7 +15,22 @@
 // This calls the i18next.t function that has been set up in main.php
 function xl(string) {
     if (typeof top.i18next.t == 'function') {
-        return top.i18next.t(string);
+        let translation = top.i18next.t(string);
+        if (translation === undefined) {
+            // The i18next.t function is not working yet, so need to use the work around that uses the preloaded
+            //  jsTranslationsPreload variable that contains preloaded translations, which were calculated in the
+            //  interface/main/tabs/main.php script
+            if (top.jsTranslationsPreload[string]) {
+                // Return the preloaded translation
+                return top.jsTranslationsPreload[string];
+            } else {
+                console.log("xl() function is not working correctly because '" + string + "' is a special constant that needs to be preloaded");
+                return string;
+            }
+        } else {
+            // This function is working as it should, so send back the translation
+            return translation;
+        }
     } else {
         // Unable to find the i18next.t function, so log error
         console.log("xl function is unable to translate since can not find the i18next.t function");
