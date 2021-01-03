@@ -796,7 +796,13 @@ class AuthorizationController
             $authRequest->setAuthorizationApproved(true);
             $result = $server->completeAuthorizationRequest($authRequest, $response);
             $redirect = $result->getHeader('Location')[0];
+
+            error_log("redirect: " . $redirect);
+
             $authorization = parse_url($redirect, PHP_URL_QUERY);
+
+            error_log("parse-redirect: " . $authorization);
+
             // stash appropriate session for token endpoint.
             unset($_SESSION['authRequestSerial']);
             unset($_SESSION['claims']);
@@ -808,6 +814,9 @@ class AuthorizationController
             $code = [];
             // parse scope as also a query param if needed
             parse_str($authorization, $code);
+
+            error_log("code: " . $code["code"]);
+
             $code = $code["code"];
             if (isset($_POST['proceed']) && !empty($code) && !empty($session_cache)) {
                 if (!CsrfUtils::verifyCsrfToken($_POST["csrf_token_form"], 'oauth2')) {
