@@ -832,7 +832,7 @@ class AuthorizationController
             }
             // Return the HTTP redirect response. Redirect is to client callback.
             $this->logger->debug("AuthorizationController->authorizeUser() sending server response", ["response" => print_r($result, true)]);
-            SessionUtil::oauthSessionCookieDestroy();
+            //SessionUtil::oauthSessionCookieDestroy();
             $this->emitResponse($result);
             exit;
         } catch (Exception $exception) {
