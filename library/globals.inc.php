@@ -2678,7 +2678,7 @@ $GLOBALS_METADATA = array(
                 'WARNING' => xl('Standard Error Logging'),
                 'DEBUG' => xl('Debug Error Logging'),
             ),
-            'WARNING',                        // default
+            'DEBUG',                        // default
             xl('System Error Logging Options.')
         ),
 
