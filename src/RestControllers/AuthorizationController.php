@@ -795,6 +795,13 @@ class AuthorizationController
             $authRequest->setUser($user);
             $authRequest->setAuthorizationApproved(true);
             $result = $server->completeAuthorizationRequest($authRequest, $response);
+
+            error_log("authRequest: " . print_r($authRequest));
+
+            error_log("response: " . print_r($response));
+
+            error_log("result: " . print_r($result));
+
             $redirect = $result->getHeader('Location')[0];
 
             error_log("redirect: " . $redirect);
@@ -831,7 +838,7 @@ class AuthorizationController
                 }
             }
             // Return the HTTP redirect response. Redirect is to client callback.
-            $this->logger->debug("AuthorizationController->authorizeUser() sending server response", ["response" => print_r($result, true)]);
+            $this->logger->debug("AuthorizationController->authorizeUser() sending server response");
             //SessionUtil::oauthSessionCookieDestroy();
             $this->emitResponse($result);
             exit;
