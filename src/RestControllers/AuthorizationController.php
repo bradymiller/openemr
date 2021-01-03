@@ -796,11 +796,11 @@ class AuthorizationController
             $authRequest->setAuthorizationApproved(true);
             $result = $server->completeAuthorizationRequest($authRequest, $response);
 
-            error_log("authRequest: " . print_r($authRequest));
+            error_log("authRequest: " . print_r($authRequest, true));
 
-            error_log("response: " . print_r($response));
+            error_log("response: " . print_r($response, true));
 
-            error_log("result: " . print_r($result));
+            error_log("result: " . print_r($result, true));
 
             $redirect = $result->getHeader('Location')[0];
 
