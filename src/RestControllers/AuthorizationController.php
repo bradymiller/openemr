@@ -436,7 +436,11 @@ class AuthorizationController
             header($responseHeader, false);
         }
         // send it along.
+        ob_start();
         echo $response->getBody();
+        $emitOutput = ob_get_clean();
+        error_log("emit: " . $emitOutput);
+        echo $emitOutput;
     }
 
     public function clientRegisteredDetails(): void
