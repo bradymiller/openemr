@@ -430,17 +430,20 @@ class AuthorizationController
             $response->getStatusCode(),
             $response->getReasonPhrase()
         );
+
+        error_log("header status line: ". $statusLine);
+
         header($statusLine, true);
         foreach ($response->getHeaders() as $name => $values) {
             $responseHeader = sprintf('%s: %s', $name, $response->getHeaderLine($name));
+
+            error_log("header line: ". $responseHeader);
+
             header($responseHeader, false);
         }
+
         // send it along.
-        ob_start();
         echo $response->getBody();
-        $emitOutput = ob_get_clean();
-        error_log("emit: " . $emitOutput);
-        echo $emitOutput;
     }
 
     public function clientRegisteredDetails(): void
@@ -843,7 +846,7 @@ class AuthorizationController
             }
             // Return the HTTP redirect response. Redirect is to client callback.
             $this->logger->debug("AuthorizationController->authorizeUser() sending server response");
-            //SessionUtil::oauthSessionCookieDestroy();
+            SessionUtil::oauthSessionCookieDestroy();
             $this->emitResponse($result);
             exit;
         } catch (Exception $exception) {
