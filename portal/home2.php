@@ -23,6 +23,7 @@ require_once("lib/portal_mail.inc");
 require_once(__DIR__ . "/../library/appointments.inc.php");
 
 use OpenEMR\Common\Csrf\CsrfUtils;
+use OpenEMR\Common\Twig\TwigContainer;
 use OpenEMR\Core\Header;
 
 if (isset($_SESSION['register']) && $_SESSION['register'] === true) {
@@ -49,14 +50,6 @@ foreach ($msgs as $i) {
         $newcnt += 1;
     }
 }
-
-require_once __DIR__ . '/../vendor/autoload.php';
-
-use Twig\Environment;
-use Twig\Loader\FilesystemLoader;
-
-$loader = new FilesystemLoader(__DIR__ . '/../templates/portal');
-$twig = new Environment($loader);
 
 Header::setupHeader(['no_main-theme', 'datetime-picker', 'patientportal-style']);
 
@@ -258,7 +251,7 @@ function buildNav($newcnt, $pid, $result)
 
 $navMenu = buildNav($newcnt, $pid, $result);
 
-echo $twig->render('home.html.twig', [
+echo (new TwigContainer('portal'))->getTwig()->render('home.html.twig', [
     'user' => $user,
     'whereto' => $whereto,
     'result' => $result,
