@@ -24,7 +24,6 @@ require_once(__DIR__ . "/../library/appointments.inc.php");
 
 use OpenEMR\Common\Csrf\CsrfUtils;
 use OpenEMR\Common\Twig\TwigContainer;
-use OpenEMR\Core\Header;
 
 if (isset($_SESSION['register']) && $_SESSION['register'] === true) {
     require_once(__DIR__ . "/../src/Common/Session/SessionUtil.php");
@@ -50,8 +49,6 @@ foreach ($msgs as $i) {
         $newcnt += 1;
     }
 }
-
-Header::setupHeader(['no_main-theme', 'datetime-picker', 'patientportal-style']);
 
 $messagesURL = $GLOBALS['web_root'] . '' . "/portal/messaging/messages.php";
 
@@ -82,17 +79,17 @@ if ($appts) {
         }
 
         if ($row['pc_hometext'] != "") {
-            $etitle = xlt('Comments') . ": " . $row['pc_hometext'] . "\r\n";
+            $etitle = xl('Comments') . ": " . $row['pc_hometext'] . "\r\n";
         } else {
             $etitle = "";
         }
 
         array_push($appointments, [
-            'appointmentDate' => $dayname . ', ' . $row['pc_eventDate'] . ' ' . text($disphour . ":" . $dispmin . " " . $dispampm),
-            'appointmentType' => xlt("Type") . ": " . text($row['pc_catname']),
-            'provider' => xlt("Provider") . ": " . text($row['ufname'] . " " . $row['ulname']),
-            'status' => xlt("Status") . ": " . text($status_title),
-            'mode'  => (int)$row['pc_recurrtype'] > 0 ? text("recurring") : $row['pc_recurrtype'],
+            'appointmentDate' => $dayname . ', ' . $row['pc_eventDate'] . ' ' . $disphour . ":" . $dispmin . " " . $dispampm,
+            'appointmentType' => xl("Type") . ": " . $row['pc_catname'],
+            'provider' => xl("Provider") . ": " . $row['ufname'] . " " . $row['ulname'],
+            'status' => xl("Status") . ": " . $status_title,
+            'mode'  => (int)$row['pc_recurrtype'] > 0 ? "recurring" : $row['pc_recurrtype'],
             'icon_type' => (int)$row['pc_recurrtype'] > 0,
             'etitle' => $etitle,
             'pc_eid' => $row['pc_eid'],
@@ -105,38 +102,38 @@ function buildNav($newcnt, $pid, $result)
     $navItems = [
         [
             'url' => '#',
-            'label' => text($result['fname'] . " " . $result['lname']),
+            'label' => $result['fname'] . " " . $result['lname'],
             'icon' => 'fa-user',
             'dropdownID' => 'account',
             'children' => [
                 [
                     'url' => '#profilecard',
-                    'label' => xlt(' My Profile'),
+                    'label' => xl(' My Profile'),
                     'icon' => 'fa-user',
                     'dataToggle' => 'collapse',
                 ],
 
                 [
                     'url' => '#secure-msgs-card',
-                    'label' => xlt('My Messages'),
+                    'label' => xl('My Messages'),
                     'icon' => 'fa-envelope',
                     'dataToggle' => 'collapse',
                 ],
                 [
                     'url' => '#documentscard',
-                    'label' => xlt('My Documents'),
+                    'label' => xl('My Documents'),
                     'icon' => 'fa-file-medical',
                     'dataToggle' => 'collapse'
                 ],
                 [
                     'url' => '#lists',
-                    'label' => xlt('My Lists'),
+                    'label' => xl('My Lists'),
                     'icon' => 'fa-list',
                     'dataToggle' => 'collapse'
                 ],
                 [
                     'url' => '#openSignModal',
-                    'label' => xlt('My Signature'),
+                    'label' => xl('My Signature'),
                     'icon' => 'fa-file-signature',
                     'dataToggle' => 'modal',
                     'dataType' => 'patient-signature'
@@ -145,13 +142,13 @@ function buildNav($newcnt, $pid, $result)
         ],
         [
             'url' => '#',
-            'label' => xlt('Reports'),
+            'label' => xl('Reports'),
             'icon' => 'fa-book-medical',
             'dropdownID' => 'reports',
             'children' => [
                 [
                     'url' => $GLOBALS['web_root'] . '' . "/ccdaservice/ccda_gateway.php?action=startandrun",
-                    'label' => xlt('View CCD'),
+                    'label' => xl('View CCD'),
                     'icon' => 'fa-envelope',
                 ]
             ]
@@ -162,13 +159,13 @@ function buildNav($newcnt, $pid, $result)
         if ($GLOBALS['portal_two_ledger']) {
             array_push($navItems, [
                 'url' => '#',
-                'label' => xlt('Accountings'),
+                'label' => xl('Accountings'),
                 'icon' => 'fa-file-invoice-dollar',
                 'dropdownID' => 'accounting',
                 'children' => [
                     [
                         'url' => "#ledgercard",
-                        'label' => xlt('Ledger'),
+                        'label' => xl('Ledger'),
                         'icon' => 'fa-folder-open',
                         'dataToggle' => 'collapse'
                     ]
@@ -184,7 +181,7 @@ function buildNav($newcnt, $pid, $result)
             $navItems,
             [
                 'url' => '#messagescard',
-                'label' => xlt('Chat'),
+                'label' => xl('Chat'),
                 'icon' => 'fa-comment-medical',
                 'dataToggle' => 'collapse',
                 'dataType' => 'cardgroup'
@@ -193,53 +190,53 @@ function buildNav($newcnt, $pid, $result)
     }
 
     for ($i = 0; $i < count($navItems); $i++) {
-        if ($GLOBALS['allow_portal_appointments'] && $navItems[$i]['label'] === text($result['fname'] . " " . $result['lname'])) {
+        if ($GLOBALS['allow_portal_appointments'] && $navItems[$i]['label'] === ($result['fname'] . " " . $result['lname'])) {
             array_push($navItems[$i]['children'], [
                 'url' => '#appointmentcard',
-                'label' => xlt("My Appointments"),
+                'label' => xl("My Appointments"),
                 'icon' => 'fa-calendar-check',
                 'dataToggle' => 'collapse'
             ]);
         }
 
-        if ($navItems[$i]['label'] === text($result['fname'] . " " . $result['lname'])) {
+        if ($navItems[$i]['label'] === ($result['fname'] . " " . $result['lname'])) {
             array_push(
                 $navItems[$i]['children'],
                 [
                     'url' => 'javascript:changeCredentials(event)',
-                    'label' => xlt('Change Credentials'),
+                    'label' => xl('Change Credentials'),
                     'icon' => 'fa-cog fa-fw',
                 ],
                 [
                     'url' => 'logout.php',
-                    'label' => xlt('Logout'),
+                    'label' => xl('Logout'),
                     'icon' => 'fa-ban fa-fw',
                 ]
             );
         }
 
-        if (!empty($GLOBALS['portal_onsite_document_download']) && $navItems[$i]['label'] === xlt('Reports')) {
+        if (!empty($GLOBALS['portal_onsite_document_download']) && $navItems[$i]['label'] === xl('Reports')) {
             array_push(
                 $navItems[$i]['children'],
                 [
                     'url' => '#reportcard',
-                    'label' => xlt('Report Content'),
+                    'label' => xl('Report Content'),
                     'icon' => 'fa-folder-open',
                     'dataToggle' => 'collapse'
                 ],
                 [
                     'url' => '#downloadcard',
-                    'label' => xlt('Download Lab Documents'),
+                    'label' => xl('Download Lab Documents'),
                     'icon' => 'fa-download',
                     'dataToggle' => 'collapse'
                 ]
             );
         }
-        if ($GLOBALS['portal_two_payments'] && $navItems[$i]['label'] === xlt('Accountings')) {
+        if ($GLOBALS['portal_two_payments'] && $navItems[$i]['label'] === xl('Accountings')) {
 
             array_push($navItems[$i]['children'], [
                 'url' => "#paymentcard",
-                'label' => xlt('Make Payment'),
+                'label' => xl('Make Payment'),
                 'icon' => 'fa-credit-card',
                 'dataToggle' => 'collapse'
             ]);
@@ -257,7 +254,7 @@ echo (new TwigContainer('portal'))->getTwig()->render('home.html.twig', [
     'result' => $result,
     'msgs' => $msgs,
     'msgcnt' => $msgcnt,
-    'newcnt' => text($newcnt),
+    'newcnt' => $newcnt,
     'allow_portal_appointments' => $GLOBALS['allow_portal_appointments'],
     'web_root' => $GLOBALS['web_root'],
     'payment_gateway' => $GLOBALS['payment_gateway'],
@@ -267,50 +264,18 @@ echo (new TwigContainer('portal'))->getTwig()->render('home.html.twig', [
     'portal_onsite_document_download' => $GLOBALS['portal_onsite_document_download'],
     'portal_two_ledger' => $GLOBALS['portal_two_ledger'],
     'images_static_relative' => $GLOBALS['images_static_relative'],
-    'youHave' => xlt('You have'),
+    'youHave' => xl('You have'),
     'navMenu' => $navMenu,
-    'pagetitle' => xlt('Home') . ' | ' . xlt('OpenEMR Portal'),
+    'pagetitle' => xl('Home') . ' | ' . xl('OpenEMR Portal'),
     'jsVersion' => $v_js_includes,
     'messagesURL' => $messagesURL,
     'patientID' => $pid,
-    'patientName' => js_escape($_SESSION['ptName']),
-    'profileModalTitle' => xlj('Profile Edits Red = Charted Values Blue = Patient Edits'),
-    'helpButtonLabel' => xlj('Help'),
-    'cancelButtonLabel' => xlj('Cancel'),
-    'revertButtonLabel' => xlj('Revert Edits'),
-    'reviewButtonLabel' => xlj('Send for Review'),
-    'newAppointmentLabel' => xlj('Request New Appointment'),
-    'recurringAppointmentLabel' => xlj("A Recurring Appointment. Please contact your appointment desk for any changes."),
-    'editAppointmentLabel' => xlj('Edit Appointment'),
-    'newCredentialsLabel' => xlj('Please Enter New Credentials'),
-    'csrfUtils' => js_escape(CsrfUtils::collectCsrfToken()),
-    'finishedAssesmentLabel' => xlj('You have finished the assessment.'),
-    'thankYouLabel' => xlj('Thank you'),
-    'loadingTextLabel' => xlj('Loading'),
-    'startAssesmentLabel' => xlj('Start Assessment'),
-    'workingLabel' => xlt('Working!'),
-    'pleaseWaitLabel' => xlt('Please wait...'),
-    'medicationsLabel' => xlt('Medications'),
-    'medicationsAllergyLabel' => xlt('Medications Allergy List'),
-    'issuesListLabel' => xlt('Issues List'),
-    'ammendmentListLabel' => xlt('Amendment List'),
-    'labResultsLabel' => xlt('Lab Results'),
-    'appointmentsLabel' => xlt('Appointments'),
-    'noAppointmentsLabel' => xlt('No Appointments'),
-    'scheduleNewAppointmentLabel' => xlt('Schedule A New Appointment'),
-    'paymentsLabel' => xlt('Payments'),
-    'secureChatLabel' => xlt('Secure Chat'),
-    'reportsLabel' => xlt('Reports'),
-    'downloadDocumentsLabel' => xlt('Download Documents'),
-    'downloadAllPatientDocumentsLabel' => xlt('Download all patient documents'),
-    'downloadLabel' => xla('Download'),
-    'ledgerLabel' => xlt('Ledger'),
-    'patientReportedOutcomeLabel' => xlt('Patient Reported Outcomes'),
+    'patientName' => $_SESSION['ptName'],
+    'csrfUtils' => CsrfUtils::collectCsrfToken(),
     'isEasyPro' => $isEasyPro,
     'appointments' => $appointments,
     'appts' => $appts,
     'appointmentLimit' => $apptLimit,
     'appointmentCount' => $count,
-    'displayLimitLabel' => xlt("Display limit reached"),
-    'moreAppointsmentsLabel' => xlt("More appointments may exist"),
+    'displayLimitLabel' => xl("Display limit reached"),
 ]);
