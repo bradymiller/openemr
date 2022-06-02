@@ -1,20 +1,14 @@
 <?php
 
 /**
-* SDOH form (modified from Review of Systems Checks)
-*
-* @package   OpenEMR
-* @link      http://www.open-emr.org
-* @author    sunsetsystems <sunsetsystems>
-* @author    cfapress <cfapress>
-* @author    Brady Miller <brady.g.miller@gmail.com>
+ * sdoh form
+ *
+ * @package   OpenEMR
+ * @link      https://www.open-emr.org
  * @author    Char Miller <charjmiller@gmail.com>
-* @copyright Copyright (c) 2009 sunsetsystems <sunsetsystems>
-* @copyright Copyright (c) 2008 cfapress <cfapress>
-* @copyright Copyright (c) 2016-2019 Brady Miller <brady.g.miller@gmail.com>
  * @copyright Copyright (c) 2022 Char Miller <charjmiller@gmail.com>
-* @license   https://github.com/openemr/openemr/blob/master/LICENSE GNU General Public License 3
-*/
+ * @license   https://github.com/openemr/openemr/blob/master/LICENSE GNU General Public License 3
+ */
 
 require_once(__DIR__ . "/../../globals.php");
 require_once("$srcdir/api.inc");
