@@ -170,7 +170,7 @@ if (!empty($_GET['id'])) {
         <div class="row">
             <div class="col-12">
                 <h2><?php echo xlt("Social Screening Tool");?></h2>
-                <form method="post" action="<?php echo $rootdir;?>/forms/SDOH/save.php?mode=new" name="my_form" onsubmit="return top.restoreSession()">
+                <form method="post" action="<?php echo $rootdir;?>/forms/sdoh/save.php?mode=new" name="my_form" onsubmit="return top.restoreSession()">
                     <input type="hidden" name="csrf_token_form" value="<?php echo attr(CsrfUtils::collectCsrfToken()); ?>" />
                     <fieldset>
                         <legend><?php echo xlt('What is the highest level of education that you have completed?')?></legend>

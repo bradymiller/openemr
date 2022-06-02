@@ -29,7 +29,7 @@ if ($encounter == "") {
 
 if ($_GET["mode"] == "new") {
     $newid = formSubmit("form_sdoh", $_POST, ($_GET["id"] ?? ''), $userauthorized);
-    addForm($encounter, "Social Screening Tool", $newid, "SDOH", $pid, $userauthorized);
+    addForm($encounter, "Social Screening Tool", $newid, "sdoh", $pid, $userauthorized);
 } elseif ($_GET["mode"] == "update") {
     sqlStatement(
         "UPDATE form_sdoh set pid = ?,
