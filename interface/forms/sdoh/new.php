@@ -1097,8 +1097,8 @@ if (!empty($_GET['id'])) {
                         </div>
                     </fieldset>
                     <fieldset>
-                        <legend><?php echo xlt('Your total score is ')?><span id="totalscorerender"></span></legend>
-                        <input type="hidden" id="totalscore" name="totalscore" value="">
+                        <legend><?php echo xlt('Your total score is ')?><span id="totalscorerender"><?php echo text($obj["totalscore"] ?? 0); ?></span></legend>
+                        <input type="hidden" id="totalscore" name="totalscore" value="<?php echo attr($obj["totalscore"] ?? 0); ?>">
 
                     </fieldset>
                     <fieldset>
