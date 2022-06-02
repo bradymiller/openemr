@@ -20,7 +20,6 @@ function sdoh_report($pid, $encounter, $cols, $id)
     if ($data) {
         print "<table><tr>";
 
-
         $sdohData = [];
         foreach ($data as $key => $value) {
             if ($key == "id" || $key == "pid" || $key == "user" || $key == "groupname" || $key == "authorized" || $key == "activity" || $key == "date" || $value == "" || $value == "0000-00-00 00:00:00") {
@@ -28,26 +27,12 @@ function sdoh_report($pid, $encounter, $cols, $id)
             }
 
             $sdohData[$key] = $value;
-
-
-            //modified by BM 07-2009 for internationalization
-           // if ($key == "Additional Notes") {
-            //        print "<td><span class=bold>" . xlt($key) . ": </span><span class=text>" . text($value) . "</span></td>";
-           // } else {
-           //         print "<td><span class=bold>" . xlt($key) . ": </span><span class=text>" . xlt($value) . "</span></td>";
-           // }
-
-            //$count++;
-            //if ($count == $cols) {
-            //   $count = 0;
-            // print "</tr><tr>\n";
-            //}
         }
 
         if (empty($sdohData['totalscore'])) {
             echo "<tr><td><span class=bold>" . xlt("No Social Screening Risks") . "</span></td></tr>";
         } else {
-            echo "<tr><td><span class=bold>" . xlt("Social Screening Risks:") . "</span></td></tr>";
+            echo "<tr><td><span class=bold>" . xlt("Social Screening Risks") . ":" . "</span></td></tr>";
 
             if ($sdohData['education'] == 'lessthanhs') {
                 echo "<tr><td><span class=text>" . xlt("Less than High School Education") . "</span></td></tr>";
@@ -74,7 +59,7 @@ function sdoh_report($pid, $encounter, $cols, $id)
                 echo "<tr><td><span class=text>" . xlt("Housing Instability: Unsheltered") . "</span></td></tr>";
             }
             if ($sdohData['housing'] == 'houseother') {
-                echo "<tr><td><span class=text>" . xlt("Housing Instability: ") . $sdohData['housingotherinput'] . "</span></td></tr>";
+                echo "<tr><td><span class=text>" . xlt("Housing Instability") . ": " . $sdohData['housingotherinput'] . "</span></td></tr>";
             }
             if ($sdohData['worktemporary'] == 'on') {
                 echo "<tr><td><span class=text>" . xlt("Employment Insecurity: Temporary") . "</span></td></tr>";
@@ -92,12 +77,12 @@ function sdoh_report($pid, $encounter, $cols, $id)
                 echo "<tr><td><span class=text>" . xlt("Employment Insecurity: Disabled") . "</span></td></tr>";
             }
             if ($sdohData['workhours'] > 40) {
-                echo "<tr><td><span class=text>" . xlt("Over 40 Work Hours: ") .  $sdohData['workhours'] . "</span></td></tr>";
+                echo "<tr><td><span class=text>" . xlt("Over 40 Work Hours") . ": " . $sdohData['workhours'] . "</span></td></tr>";
             }
             if (!empty($sdohData['hhsize'])) {
                 // this will prevent a division by zero php error if the hhsize is set to zero
                 if ($sdohData['hhincome'] / $sdohData['hhsize'] < 25000) {
-                    echo "<tr><td><span class=text>" . xlt("Potential Low Income. Household Size: ") . $sdohData['hhsize'] . xlt("  Household Income: ") . $sdohData['hhincome'] . "</span></td></tr>";
+                    echo "<tr><td><span class=text>" . xlt("Potential Low Income. Household Size") . ": " . $sdohData['hhsize'] . "  " . xlt("Household Income") . ": " . $sdohData['hhincome'] . "</span></td></tr>";
                 }
             }
             if ($sdohData['careunder5'] == 'on') {
@@ -119,7 +104,7 @@ function sdoh_report($pid, $encounter, $cols, $id)
                 echo "<tr><td><span class=text>" . xlt("Caregiver for Elderly") . "</span></td></tr>";
             }
             if ($sdohData['careother'] == 'on') {
-                echo "<tr><td><span class=text>" . xlt("Caregiver for Other: ") . $sdohData['careotherinput'] . "</span></td></tr>";
+                echo "<tr><td><span class=text>" . xlt("Caregiver for Other") . ": " . $sdohData['careotherinput'] . "</span></td></tr>";
             }
             if ($sdohData['debtmedical'] == 'on') {
                 echo "<tr><td><span class=text>" . xlt("Debt for Medical Bills") . "</span></td></tr>";
@@ -146,7 +131,7 @@ function sdoh_report($pid, $encounter, $cols, $id)
                 echo "<tr><td><span class=text>" . xlt("Debt for Utilities or Phone") . "</span></td></tr>";
             }
             if ($sdohData['debtother'] == 'on') {
-                echo "<tr><td><span class=text>" . xlt("Debt for Other: ") . $sdohData['debtotherinput'] . "</span></td></tr>";
+                echo "<tr><td><span class=text>" . xlt("Debt for Other") . ": " . $sdohData['debtotherinput'] . "</span></td></tr>";
             }
             if ($sdohData['moneyfood'] == 'on') {
                 echo "<tr><td><span class=text>" . xlt("Struggle to pay for Healthy Food") . "</span></td></tr>";
@@ -176,7 +161,7 @@ function sdoh_report($pid, $encounter, $cols, $id)
                 echo "<tr><td><span class=text>" . xlt("Struggle to pay for Clothing") . "</span></td></tr>";
             }
             if ($sdohData['moneyother'] == 'on') {
-                echo "<tr><td><span class=text>" . xlt("Struggle to pay for Other: ") . $sdohData['moneyotherinput'] . "</span></td></tr>";
+                echo "<tr><td><span class=text>" . xlt("Struggle to pay for Other") . ": " . $sdohData['moneyotherinput'] . "</span></td></tr>";
             }
             if ($sdohData['transportmedical'] == 'on') {
                 echo "<tr><td><span class=text>" . xlt("Transportation Insecurity for Medical Care") . "</span></td></tr>";
@@ -194,7 +179,7 @@ function sdoh_report($pid, $encounter, $cols, $id)
                 echo "<tr><td><span class=text>" . xlt("Transportation Insecurity for Visiting Family or Friends") . "</span></td></tr>";
             }
             if ($sdohData['transportother'] == 'on') {
-                echo "<tr><td><span class=text>" . xlt("Transportation Insecurity for Other: ") . $sdohData['transportotherinput'] . "</span></td></tr>";
+                echo "<tr><td><span class=text>" . xlt("Transportation Insecurity for Other") . ": " . $sdohData['transportotherinput'] . "</span></td></tr>";
             }
             if ($sdohData['medicalnoinsurance'] == 'on') {
                 echo "<tr><td><span class=text>" . xlt("Delayed Medical Care due to No Insurance") . "</span></td></tr>";
@@ -221,7 +206,7 @@ function sdoh_report($pid, $encounter, $cols, $id)
                 echo "<tr><td><span class=text>" . xlt("Delayed Medical Care due to No Childcare") . "</span></td></tr>";
             }
             if ($sdohData['medicalother'] == 'on') {
-                echo "<tr><td><span class=text>" . xlt("Delayed Medical Care due to Other: ") . $sdohData['medicalotherinput'] . "</span></td></tr>";
+                echo "<tr><td><span class=text>" . xlt("Delayed Medical Care due to Other") . ": " . $sdohData['medicalotherinput'] . "</span></td></tr>";
             }
             if ($sdohData['dentist'] == 'dentistnoinsurance') {
                 echo "<tr><td><span class=text>" . xlt("No Dental Insurance") . "</span></td></tr>";
@@ -233,7 +218,7 @@ function sdoh_report($pid, $encounter, $cols, $id)
                 echo "<tr><td><span class=text>" . xlt("No Dental Care due to Work Schedule") . "</span></td></tr>";
             }
             if ($sdohData['dentist'] == 'dentistnoother') {
-                echo "<tr><td><span class=text>" . xlt("No Dental Care due to Other: ") . $sdohData['dentalotherinput'] . "</span></td></tr>";
+                echo "<tr><td><span class=text>" . xlt("No Dental Care due to Other") . ": " . $sdohData['dentalotherinput'] . "</span></td></tr>";
             }
             if ($sdohData['social'] == 'sociallessthan1') {
                 echo "<tr><td><span class=text>" . xlt("Social Connection Less than Once a Week") . "</span></td></tr>";
@@ -296,7 +281,7 @@ function sdoh_report($pid, $encounter, $cols, $id)
                 echo "<tr><td><span class=text>" . xlt("Stress Event: Child Moving Out") . "</span></td></tr>";
             }
             if ($sdohData['stressother'] == 'on') {
-                echo "<tr><td><span class=text>" . xlt("Stress Event: (Other) ") .  $sdohData['stressotherinput'] . "</span></td></tr>";
+                echo "<tr><td><span class=text>" . xlt("Stress Event: (Other)") . " " .  $sdohData['stressotherinput'] . "</span></td></tr>";
             }
             if ($sdohData['safety'] == 'safeday') {
                 echo "<tr><td><span class=text>" . xlt("Unsafe Neighborhood at Night") . "</span></td></tr>";
@@ -362,7 +347,7 @@ function sdoh_report($pid, $encounter, $cols, $id)
                 echo "<tr><td><span class=text>" . xlt("Discrimination for Criminal History") . "</span></td></tr>";
             }
             if ($sdohData['discrimother'] == 'on') {
-                echo "<tr><td><span class=text>" . xlt("Discrimination for Other: ") . $sdohData['discrimotherinput'] . "</span></td></tr>";
+                echo "<tr><td><span class=text>" . xlt("Discrimination for Other") . ": " . $sdohData['discrimotherinput'] . "</span></td></tr>";
             }
             if ($sdohData['displacework'] == 'on') {
                 echo "<tr><td><span class=text>" . xlt("Discriminated at Work") . "</span></td></tr>";
@@ -389,7 +374,7 @@ function sdoh_report($pid, $encounter, $cols, $id)
                 echo "<tr><td><span class=text>" . xlt("Discriminated in Banking or Finance Services") . "</span></td></tr>";
             }
             if ($sdohData['displaceother'] == 'on') {
-                echo "<tr><td><span class=text>" . xlt("Discriminated in Other: ") . $sdohData['discrimotherinput'] . "</span></td></tr>";
+                echo "<tr><td><span class=text>" . xlt("Discriminated in Other") . ": " . $sdohData['discrimotherinput'] . "</span></td></tr>";
             }
             if ($sdohData['contact'] == 'contactphone') {
                 echo "<tr><td><span class=bold>" . xlt("Contact by Phone with Resources") . "</span></td></tr>";
@@ -404,12 +389,12 @@ function sdoh_report($pid, $encounter, $cols, $id)
                 echo "<tr><td><span class=bold>" . xlt("Do Not Contact With Resources") . "</span></td></tr>";
             }
             if ($sdohData['contact'] == 'contactother') {
-                echo "<tr><td><span class=bold>" . xlt("Contact with Resources via Other: ") . $sdohData['discrimotherinput'] . "</span></td></tr>";
+                echo "<tr><td><span class=bold>" . xlt("Contact with Resources via Other") . ": " . $sdohData['discrimotherinput'] . "</span></td></tr>";
             }
 
-            echo "<tr><td><span class=text>" . xlt("Patient Score = ") . $sdohData['totalscore'] . "</span></td></tr>";
+            echo "<tr><td><span class=text>" . xlt("Patient Score") . " = " . $sdohData['totalscore'] . "</span></td></tr>";
 
-            echo "<tr><td><span class=bold>" . xlt("Possible Diagnoses:") . "</span></td></tr>";
+            echo "<tr><td><span class=bold>" . xlt("Possible Diagnoses") . ":" . "</span></td></tr>";
 
             if ($sdohData['debtmedical'] == 'on'
             || $sdohData['debtcreditcards'] == 'on'
@@ -596,12 +581,7 @@ function sdoh_report($pid, $encounter, $cols, $id)
             {
                 echo "<tr><td><span class=text>" . xlt("Uninsured or Underinsured") . "</span></td></tr>";
             }
-
-
         }
-
-
     }
-
     print "</tr></table>";
 }

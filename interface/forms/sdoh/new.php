@@ -32,132 +32,130 @@ if (!empty($_GET['id'])) {
 
     <?php Header::setupHeader();?>
 
-    <script type="text/javascript" language="JavaScript">
+    <script>
 
         $(function () {
             document.body.addEventListener('click', CalculateTotal, true);
         })
 
-            function CalculateTotal() {
-                let totalscore = 0;
-                if (document.getElementById('lessthanhs').checked == true) {totalscore +=5; }
-                if (document.getElementById('highschool').checked == true) {totalscore +=3; }
-                if (document.getElementById('associate').checked == true) {totalscore +=1; }
-                if (document.getElementById('disabilityyes').checked == true) {totalscore +=5; }
-                if (document.getElementById('housetemporary').checked == true) {totalscore +=2; }
-                if (document.getElementById('houseunsafe').checked == true) {totalscore +=2; }
-                if (document.getElementById('housecar').checked == true) {totalscore +=3; }
-                if (document.getElementById('houseunshelter').checked == true) {totalscore +=5; }
-                if (document.getElementById('houseother').checked == true) {totalscore +=1; }
-                if (document.getElementById('worktemporary').checked == true) {totalscore +=1; }
-                if (document.getElementById('workseasonal').checked == true) {totalscore +=1; }
-                if (document.getElementById('worklooking').checked == true) {totalscore +=3; }
-                if (document.getElementById('workretired').checked == true) {totalscore +=1; }
-                if (document.getElementById('workdisabled').checked == true) {totalscore +=3; }
-                if (document.getElementById('careunder5').checked == true) {totalscore +=5; }
-                if (document.getElementById('care5to12').checked == true) {totalscore +=3; }
-                if (document.getElementById('careover12').checked == true) {totalscore +=1; }
-                if (document.getElementById('carespecneeds').checked == true) {totalscore +=5; }
-                if (document.getElementById('caredisabled').checked == true) {totalscore +=5; }
-                if (document.getElementById('careelderly').checked == true) {totalscore +=5; }
-                if (document.getElementById('careother').checked == true) {totalscore +=1; }
-                if (document.getElementById('debtmedical').checked == true) {totalscore +=3; }
-                if (document.getElementById('debtcreditcards').checked == true) {totalscore +=1; }
-                if (document.getElementById('debtrent').checked == true) {totalscore +=1; }
-                if (document.getElementById('debtstudentloans').checked == true) {totalscore +=1; }
-                if (document.getElementById('debttaxes').checked == true) {totalscore +=1; }
-                if (document.getElementById('debtlegal').checked == true) {totalscore +=1; }
-                if (document.getElementById('debtcar').checked == true) {totalscore +=1; }
-                if (document.getElementById('debtutilities').checked == true) {totalscore +=1; }
-                if (document.getElementById('debtother').checked == true) {totalscore +=1; }
-                if (document.getElementById('moneyfood').checked == true) {totalscore +=3; }
-                if (document.getElementById('moneymedical').checked == true) {totalscore +=2; }
-                if (document.getElementById('moneychildcare').checked == true) {totalscore +=2; }
-                if (document.getElementById('moneyutilities').checked == true) {totalscore +=1; }
-                if (document.getElementById('moneyphone').checked == true) {totalscore +=1; }
-                if (document.getElementById('moneyrent').checked == true) {totalscore +=2; }
-                if (document.getElementById('moneytransportation').checked == true) {totalscore +=1; }
-                if (document.getElementById('moneyclothing').checked == true) {totalscore +=1; }
-                if (document.getElementById('moneyeducation').checked == true) {totalscore +=1; }
-                if (document.getElementById('moneyother').checked == true) {totalscore +=1; }
-                if (document.getElementById('transportmedical').checked == true) {totalscore +=1; }
-                if (document.getElementById('transportfood').checked == true) {totalscore +=2; }
-                if (document.getElementById('transportwork').checked == true) {totalscore +=2; }
-                if (document.getElementById('transportschool').checked == true) {totalscore +=1; }
-                if (document.getElementById('transportfamily').checked == true) {totalscore +=1; }
-                if (document.getElementById('transportother').checked == true) {totalscore +=1; }
-                if (document.getElementById('medicalnoinsurance').checked == true) {totalscore +=3; }
-                if (document.getElementById('medicalcopay').checked == true) {totalscore +=2; }
-                if (document.getElementById('medicalnotcovered').checked == true) {totalscore +=2; }
-                if (document.getElementById('medicalwork').checked == true) {totalscore +=1; }
-                if (document.getElementById('medicalnoprovider').checked == true) {totalscore +=1; }
-                if (document.getElementById('medicalunderstand').checked == true) {totalscore +=1; }
-                if (document.getElementById('medicaltrust').checked == true) {totalscore +=1; }
-                if (document.getElementById('medicalchildcare').checked == true) {totalscore +=1; }
-                if (document.getElementById('medicalother').checked == true) {totalscore +=1; }
-                if (document.getElementById('dentistnoinsurance').checked == true) {totalscore +=1; }
-                if (document.getElementById('dentistnoprovider').checked == true) {totalscore +=1; }
-                if (document.getElementById('dentistnowork').checked == true) {totalscore +=1; }
-                if (document.getElementById('dentistnoother').checked == true) {totalscore +=1; }
-                if (document.getElementById('sociallessthan1').checked == true) {totalscore +=3; }
-                if (document.getElementById('social1').checked == true) {totalscore +=2; }
-                if (document.getElementById('social2to3').checked == true) {totalscore +=1; }
-                if (document.getElementById('stresslevelsomewhat').checked == true) {totalscore +=1; }
-                if (document.getElementById('stresslevelalot').checked == true) {totalscore +=2; }
-                if (document.getElementById('stresslevelverymuch').checked == true) {totalscore +=3; }
-                if (document.getElementById('stressdeath').checked == true) {totalscore +=5; }
-                if (document.getElementById('stressdivorce').checked == true) {totalscore +=3; }
-                if (document.getElementById('stressjob').checked == true) {totalscore +=3; }
-                if (document.getElementById('stressmoved').checked == true) {totalscore +=2; }
-                if (document.getElementById('stressillness').checked == true) {totalscore +=3; }
-                if (document.getElementById('stressvictim').checked == true) {totalscore +=3; }
-                if (document.getElementById('stresswitness').checked == true) {totalscore +=1; }
-                if (document.getElementById('stresslegal').checked == true) {totalscore +=2; }
-                if (document.getElementById('stresshomeless').checked == true) {totalscore +=3; }
-                if (document.getElementById('stressincarcerated').checked == true) {totalscore +=3; }
-                if (document.getElementById('stressbankruptcy').checked == true) {totalscore +=3; }
-                if (document.getElementById('stressmarriage').checked == true) {totalscore +=1; }
-                if (document.getElementById('stressbirth').checked == true) {totalscore +=1; }
-                if (document.getElementById('stressadultchild').checked == true) {totalscore +=1; }
-                if (document.getElementById('stressother').checked == true) {totalscore +=1; }
-                if (document.getElementById('safeday').checked == true) {totalscore +=1; }
-                if (document.getElementById('safeno').checked == true) {totalscore +=3; }
-                if (document.getElementById('partnerunsafe').checked == true) {totalscore +=5; }
-                if (document.getElementById('femaleyes').checked == true) {totalscore +=3; }
-                if (document.getElementById('addictionyes').checked == true) {totalscore +=3; }
-                if (document.getElementById('armedservicesyes').checked == true) {totalscore +=3; }
-                if (document.getElementById('refugeeyes').checked == true) {totalscore +=5; }
-                if (document.getElementById('discrimrace').checked == true) {totalscore +=5; }
-                if (document.getElementById('discrimgender').checked == true) {totalscore +=2; }
-                if (document.getElementById('discrimsexpref').checked == true) {totalscore +=3; }
-                if (document.getElementById('discrimgenexp').checked == true) {totalscore +=3; }
-                if (document.getElementById('discrimreligion').checked == true) {totalscore +=2; }
-                if (document.getElementById('discrimdisability').checked == true) {totalscore +=3; }
-                if (document.getElementById('discrimage').checked == true) {totalscore +=1; }
-                if (document.getElementById('discrimweight').checked == true) {totalscore +=1; }
-                if (document.getElementById('discrimses').checked == true) {totalscore +=1; }
-                if (document.getElementById('discrimedu').checked == true) {totalscore +=1; }
-                if (document.getElementById('discrimmarital').checked == true) {totalscore +=1; }
-                if (document.getElementById('discrimcitizen').checked == true) {totalscore +=1; }
-                if (document.getElementById('discrimaccent').checked == true) {totalscore +=1; }
-                if (document.getElementById('discrimcriminalhist').checked == true) {totalscore +=1; }
-                if (document.getElementById('discrimother').checked == true) {totalscore +=1; }
-                if (document.getElementById('displacework').checked == true) {totalscore +=1; }
-                if (document.getElementById('displacehousing').checked == true) {totalscore +=1; }
-                if (document.getElementById('displacehealth').checked == true) {totalscore +=1; }
-                if (document.getElementById('displacelaw').checked == true) {totalscore +=1; }
-                if (document.getElementById('displaceedu').checked == true) {totalscore +=1; }
-                if (document.getElementById('displacepublic').checked == true) {totalscore +=1; }
-                if (document.getElementById('displaceclubs').checked == true) {totalscore +=1; }
-                if (document.getElementById('displacegovt').checked == true) {totalscore +=1; }
-                if (document.getElementById('displacefinance').checked == true) {totalscore +=1; }
-                if (document.getElementById('displaceother').checked == true) {totalscore +=1; }
+        function CalculateTotal() {
+            let totalscore = 0;
+            if (document.getElementById('lessthanhs').checked == true) {totalscore +=5; }
+            if (document.getElementById('highschool').checked == true) {totalscore +=3; }
+            if (document.getElementById('associate').checked == true) {totalscore +=1; }
+            if (document.getElementById('disabilityyes').checked == true) {totalscore +=5; }
+            if (document.getElementById('housetemporary').checked == true) {totalscore +=2; }
+            if (document.getElementById('houseunsafe').checked == true) {totalscore +=2; }
+            if (document.getElementById('housecar').checked == true) {totalscore +=3; }
+            if (document.getElementById('houseunshelter').checked == true) {totalscore +=5; }
+            if (document.getElementById('houseother').checked == true) {totalscore +=1; }
+            if (document.getElementById('worktemporary').checked == true) {totalscore +=1; }
+            if (document.getElementById('workseasonal').checked == true) {totalscore +=1; }
+            if (document.getElementById('worklooking').checked == true) {totalscore +=3; }
+            if (document.getElementById('workretired').checked == true) {totalscore +=1; }
+            if (document.getElementById('workdisabled').checked == true) {totalscore +=3; }
+            if (document.getElementById('careunder5').checked == true) {totalscore +=5; }
+            if (document.getElementById('care5to12').checked == true) {totalscore +=3; }
+            if (document.getElementById('careover12').checked == true) {totalscore +=1; }
+            if (document.getElementById('carespecneeds').checked == true) {totalscore +=5; }
+            if (document.getElementById('caredisabled').checked == true) {totalscore +=5; }
+            if (document.getElementById('careelderly').checked == true) {totalscore +=5; }
+            if (document.getElementById('careother').checked == true) {totalscore +=1; }
+            if (document.getElementById('debtmedical').checked == true) {totalscore +=3; }
+            if (document.getElementById('debtcreditcards').checked == true) {totalscore +=1; }
+            if (document.getElementById('debtrent').checked == true) {totalscore +=1; }
+            if (document.getElementById('debtstudentloans').checked == true) {totalscore +=1; }
+            if (document.getElementById('debttaxes').checked == true) {totalscore +=1; }
+            if (document.getElementById('debtlegal').checked == true) {totalscore +=1; }
+            if (document.getElementById('debtcar').checked == true) {totalscore +=1; }
+            if (document.getElementById('debtutilities').checked == true) {totalscore +=1; }
+            if (document.getElementById('debtother').checked == true) {totalscore +=1; }
+            if (document.getElementById('moneyfood').checked == true) {totalscore +=3; }
+            if (document.getElementById('moneymedical').checked == true) {totalscore +=2; }
+            if (document.getElementById('moneychildcare').checked == true) {totalscore +=2; }
+            if (document.getElementById('moneyutilities').checked == true) {totalscore +=1; }
+            if (document.getElementById('moneyphone').checked == true) {totalscore +=1; }
+            if (document.getElementById('moneyrent').checked == true) {totalscore +=2; }
+            if (document.getElementById('moneytransportation').checked == true) {totalscore +=1; }
+            if (document.getElementById('moneyclothing').checked == true) {totalscore +=1; }
+            if (document.getElementById('moneyeducation').checked == true) {totalscore +=1; }
+            if (document.getElementById('moneyother').checked == true) {totalscore +=1; }
+            if (document.getElementById('transportmedical').checked == true) {totalscore +=1; }
+            if (document.getElementById('transportfood').checked == true) {totalscore +=2; }
+            if (document.getElementById('transportwork').checked == true) {totalscore +=2; }
+            if (document.getElementById('transportschool').checked == true) {totalscore +=1; }
+            if (document.getElementById('transportfamily').checked == true) {totalscore +=1; }
+            if (document.getElementById('transportother').checked == true) {totalscore +=1; }
+            if (document.getElementById('medicalnoinsurance').checked == true) {totalscore +=3; }
+            if (document.getElementById('medicalcopay').checked == true) {totalscore +=2; }
+            if (document.getElementById('medicalnotcovered').checked == true) {totalscore +=2; }
+            if (document.getElementById('medicalwork').checked == true) {totalscore +=1; }
+            if (document.getElementById('medicalnoprovider').checked == true) {totalscore +=1; }
+            if (document.getElementById('medicalunderstand').checked == true) {totalscore +=1; }
+            if (document.getElementById('medicaltrust').checked == true) {totalscore +=1; }
+            if (document.getElementById('medicalchildcare').checked == true) {totalscore +=1; }
+            if (document.getElementById('medicalother').checked == true) {totalscore +=1; }
+            if (document.getElementById('dentistnoinsurance').checked == true) {totalscore +=1; }
+            if (document.getElementById('dentistnoprovider').checked == true) {totalscore +=1; }
+            if (document.getElementById('dentistnowork').checked == true) {totalscore +=1; }
+            if (document.getElementById('dentistnoother').checked == true) {totalscore +=1; }
+            if (document.getElementById('sociallessthan1').checked == true) {totalscore +=3; }
+            if (document.getElementById('social1').checked == true) {totalscore +=2; }
+            if (document.getElementById('social2to3').checked == true) {totalscore +=1; }
+            if (document.getElementById('stresslevelsomewhat').checked == true) {totalscore +=1; }
+            if (document.getElementById('stresslevelalot').checked == true) {totalscore +=2; }
+            if (document.getElementById('stresslevelverymuch').checked == true) {totalscore +=3; }
+            if (document.getElementById('stressdeath').checked == true) {totalscore +=5; }
+            if (document.getElementById('stressdivorce').checked == true) {totalscore +=3; }
+            if (document.getElementById('stressjob').checked == true) {totalscore +=3; }
+            if (document.getElementById('stressmoved').checked == true) {totalscore +=2; }
+            if (document.getElementById('stressillness').checked == true) {totalscore +=3; }
+            if (document.getElementById('stressvictim').checked == true) {totalscore +=3; }
+            if (document.getElementById('stresswitness').checked == true) {totalscore +=1; }
+            if (document.getElementById('stresslegal').checked == true) {totalscore +=2; }
+            if (document.getElementById('stresshomeless').checked == true) {totalscore +=3; }
+            if (document.getElementById('stressincarcerated').checked == true) {totalscore +=3; }
+            if (document.getElementById('stressbankruptcy').checked == true) {totalscore +=3; }
+            if (document.getElementById('stressmarriage').checked == true) {totalscore +=1; }
+            if (document.getElementById('stressbirth').checked == true) {totalscore +=1; }
+            if (document.getElementById('stressadultchild').checked == true) {totalscore +=1; }
+            if (document.getElementById('stressother').checked == true) {totalscore +=1; }
+            if (document.getElementById('safeday').checked == true) {totalscore +=1; }
+            if (document.getElementById('safeno').checked == true) {totalscore +=3; }
+            if (document.getElementById('partnerunsafe').checked == true) {totalscore +=5; }
+            if (document.getElementById('femaleyes').checked == true) {totalscore +=3; }
+            if (document.getElementById('addictionyes').checked == true) {totalscore +=3; }
+            if (document.getElementById('armedservicesyes').checked == true) {totalscore +=3; }
+            if (document.getElementById('refugeeyes').checked == true) {totalscore +=5; }
+            if (document.getElementById('discrimrace').checked == true) {totalscore +=5; }
+            if (document.getElementById('discrimgender').checked == true) {totalscore +=2; }
+            if (document.getElementById('discrimsexpref').checked == true) {totalscore +=3; }
+            if (document.getElementById('discrimgenexp').checked == true) {totalscore +=3; }
+            if (document.getElementById('discrimreligion').checked == true) {totalscore +=2; }
+            if (document.getElementById('discrimdisability').checked == true) {totalscore +=3; }
+            if (document.getElementById('discrimage').checked == true) {totalscore +=1; }
+            if (document.getElementById('discrimweight').checked == true) {totalscore +=1; }
+            if (document.getElementById('discrimses').checked == true) {totalscore +=1; }
+            if (document.getElementById('discrimedu').checked == true) {totalscore +=1; }
+            if (document.getElementById('discrimmarital').checked == true) {totalscore +=1; }
+            if (document.getElementById('discrimcitizen').checked == true) {totalscore +=1; }
+            if (document.getElementById('discrimaccent').checked == true) {totalscore +=1; }
+            if (document.getElementById('discrimcriminalhist').checked == true) {totalscore +=1; }
+            if (document.getElementById('discrimother').checked == true) {totalscore +=1; }
+            if (document.getElementById('displacework').checked == true) {totalscore +=1; }
+            if (document.getElementById('displacehousing').checked == true) {totalscore +=1; }
+            if (document.getElementById('displacehealth').checked == true) {totalscore +=1; }
+            if (document.getElementById('displacelaw').checked == true) {totalscore +=1; }
+            if (document.getElementById('displaceedu').checked == true) {totalscore +=1; }
+            if (document.getElementById('displacepublic').checked == true) {totalscore +=1; }
+            if (document.getElementById('displaceclubs').checked == true) {totalscore +=1; }
+            if (document.getElementById('displacegovt').checked == true) {totalscore +=1; }
+            if (document.getElementById('displacefinance').checked == true) {totalscore +=1; }
+            if (document.getElementById('displaceother').checked == true) {totalscore +=1; }
 
-
-                document.getElementById('totalscorerender').innerHTML = totalscore;
-                document.getElementById('totalscore').value = totalscore;
-
-            }
+            document.getElementById('totalscorerender').innerHTML = totalscore;
+            document.getElementById('totalscore').value = totalscore;
+        }
     </script>
 
 </head>
@@ -259,7 +257,7 @@ if (!empty($_GET['id'])) {
                                             </div>
                                             <div class="form-radio">
                                                 <input type="radio" name="housing" id="houseother" name='houseother' value="houseother" <?php echo ($obj["housing"] == "houseother") ? "checked" : ""; ?>/>
-                                                <label class="form-check-label" for="houseother"><?php echo xlt('Other:');?></label>
+                                                <label class="form-check-label" for="houseother"><?php echo xlt('Other') . ':';?></label>
                                                 <input type="text" id="housingotherinput" name='housingotherinput' size="30" value="<?php echo text($obj["housingotherinput"]); ?>"/>
                                             </div>
                                             <div class="form-radio">
@@ -365,7 +363,7 @@ if (!empty($_GET['id'])) {
                         </div>
                     </fieldset>
                     <fieldset>
-                        <legend><?php echo xlt('Are you a primary caregiver for any of the following? Check all that aplly.')?></legend>
+                        <legend><?php echo xlt('Are you a primary caregiver for any of the following? Check all that apply.')?></legend>
                         <div class="container">
                                 <div class="row">
                                     <div class="col-12">
