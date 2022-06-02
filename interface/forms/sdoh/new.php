@@ -20,6 +20,9 @@ $returnurl = 'encounter_top.php';
 
 if (!empty($_GET['id'])) {
     $obj = formFetch("form_sdoh", $_GET["id"]);
+    $mode = 'update';
+} else {
+    $mode = 'new';
 }
 
 ?>
@@ -164,7 +167,11 @@ if (!empty($_GET['id'])) {
         <div class="row">
             <div class="col-12">
                 <h2><?php echo xlt("Social Screening Tool");?></h2>
-                <form method="post" action="<?php echo $rootdir;?>/forms/sdoh/save.php?mode=new" name="my_form" onsubmit="return top.restoreSession()">
+                <?php if ($mode == "new") { ?>
+                    <form method="post" action="<?php echo $rootdir;?>/forms/sdoh/save.php?mode=new" name="my_form" onsubmit="return top.restoreSession()">
+                <?php } else { // $mode == "update" ?>
+                    <form method="post" action="<?php echo $rootdir;?>/forms/sdoh/save.php?mode=update&id=<?php echo attr_url($_GET["id"]); ?>" name="my_form" onsubmit="return top.restoreSession()">
+                <?php } ?>
                     <input type="hidden" name="csrf_token_form" value="<?php echo attr(CsrfUtils::collectCsrfToken()); ?>" />
                     <fieldset>
                         <legend><?php echo xlt('What is the highest level of education that you have completed?')?></legend>

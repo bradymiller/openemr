@@ -74,7 +74,7 @@ function sdoh_report($pid, $encounter, $cols, $id)
                 echo "<tr><td><span class=text>" . xlt("Housing Instability: Unsheltered") . "</span></td></tr>";
             }
             if ($sdohData['housing'] == 'houseother') {
-                echo "<tr><td><span class=text>" . xlt("Housing Instability: ") . $sdohData['houseotherinput'] . "</span></td></tr>";
+                echo "<tr><td><span class=text>" . xlt("Housing Instability: ") . $sdohData['housingotherinput'] . "</span></td></tr>";
             }
             if ($sdohData['worktemporary'] == 'on') {
                 echo "<tr><td><span class=text>" . xlt("Employment Insecurity: Temporary") . "</span></td></tr>";
