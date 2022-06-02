@@ -396,189 +396,189 @@ function sdoh_report($pid, $encounter, $cols, $id)
 
             echo "<tr><td><span class=bold>" . xlt("Possible Diagnoses") . ":" . "</span></td></tr>";
 
-            if ($sdohData['debtmedical'] == 'on'
-            || $sdohData['debtcreditcards'] == 'on'
-            || $sdohData['debtrent'] == 'on'
-            || $sdohData['debtstudentloans'] == 'on'
-            || $sdohData['debttaxes'] == 'on'
-            || $sdohData['debtlegal'] == 'on'
-            || $sdohData['debtcar'] == 'on'
-            || $sdohData['debtutilities'] == 'on'
-            || $sdohData['debtother'] == 'on'
-            || $sdohData['moneyfood'] == 'on'
-            || $sdohData['moneymedical'] == 'on'
-            || $sdohData['moneychildcare'] == 'on'
-            || $sdohData['moneyutilities'] == 'on'
-            || $sdohData['moneyphone'] == 'on'
-            || $sdohData['moneyrent'] == 'on'
-            || $sdohData['moneytransportation'] == 'on'
-            || $sdohData['moneyclothing'] == 'on'
-            || $sdohData['moneyeducation'] == 'on'
-            || $sdohData['moneyother'] == 'on'
-            || $sdohData['stressbankruptcy'] == 'on'
-            )
-            {
+            if (
+                $sdohData['debtmedical'] == 'on'
+                || $sdohData['debtcreditcards'] == 'on'
+                || $sdohData['debtrent'] == 'on'
+                || $sdohData['debtstudentloans'] == 'on'
+                || $sdohData['debttaxes'] == 'on'
+                || $sdohData['debtlegal'] == 'on'
+                || $sdohData['debtcar'] == 'on'
+                || $sdohData['debtutilities'] == 'on'
+                || $sdohData['debtother'] == 'on'
+                || $sdohData['moneyfood'] == 'on'
+                || $sdohData['moneymedical'] == 'on'
+                || $sdohData['moneychildcare'] == 'on'
+                || $sdohData['moneyutilities'] == 'on'
+                || $sdohData['moneyphone'] == 'on'
+                || $sdohData['moneyrent'] == 'on'
+                || $sdohData['moneytransportation'] == 'on'
+                || $sdohData['moneyclothing'] == 'on'
+                || $sdohData['moneyeducation'] == 'on'
+                || $sdohData['moneyother'] == 'on'
+                || $sdohData['stressbankruptcy'] == 'on'
+            ) {
                 echo "<tr><td><span class=text>" . xlt("Financial Insecurity") . "</span></td></tr>";
             }
 
-            if ($sdohData['moneyfood'] == 'on'
-            || $sdohData['moneymedical'] == 'on'
-            || $sdohData['moneychildcare'] == 'on'
-            || $sdohData['moneyutilities'] == 'on'
-            || $sdohData['moneyphone'] == 'on'
-            || $sdohData['moneyrent'] == 'on'
-            || $sdohData['moneytransportation'] == 'on'
-            || $sdohData['moneyclothing'] == 'on'
-            || $sdohData['moneyeducation'] == 'on'
-            || $sdohData['moneyother'] == 'on'
-            )
-            {
+            if (
+                $sdohData['moneyfood'] == 'on'
+                || $sdohData['moneymedical'] == 'on'
+                || $sdohData['moneychildcare'] == 'on'
+                || $sdohData['moneyutilities'] == 'on'
+                || $sdohData['moneyphone'] == 'on'
+                || $sdohData['moneyrent'] == 'on'
+                || $sdohData['moneytransportation'] == 'on'
+                || $sdohData['moneyclothing'] == 'on'
+                || $sdohData['moneyeducation'] == 'on'
+                || $sdohData['moneyother'] == 'on'
+            ) {
                 echo "<tr><td><span class=text>" . xlt("Material Hardship") . "</span></td></tr>";
             }
 
-            if ($sdohData['moneyfood'] == 'on'
-            || $sdohData['transportfood'] == 'on'
-            )
-            {
+            if (
+                $sdohData['moneyfood'] == 'on'
+                || $sdohData['transportfood'] == 'on'
+            ) {
                 echo "<tr><td><span class=text>" . xlt("Food Insecurity") . "</span></td></tr>";
             }
 
-            if ($sdohData['housing'] == 'housetemporary'
-            || $sdohData['housing'] == 'houseunsafe'
-            || $sdohData['housing'] == 'housecar'
-            || $sdohData['housing'] == 'houseunshelter'
-            || $sdohData['housing'] == 'houseother'
-            || $sdohData['debtrent'] == 'on'
-            || $sdohData['moneyrent'] == 'on'
-            )
-            {
+            if (
+                $sdohData['housing'] == 'housetemporary'
+                || $sdohData['housing'] == 'houseunsafe'
+                || $sdohData['housing'] == 'housecar'
+                || $sdohData['housing'] == 'houseunshelter'
+                || $sdohData['housing'] == 'houseother'
+                || $sdohData['debtrent'] == 'on'
+                || $sdohData['moneyrent'] == 'on'
+            ) {
                 echo "<tr><td><span class=text>" . xlt("Housing Instability") . "</span></td></tr>";
             }
 
-            if ($sdohData['transportmedical'] == 'on'
-            || $sdohData['transportfood'] == 'on'
-            || $sdohData['transportwork'] == 'on'
-            || $sdohData['transportschool'] == 'on'
-            || $sdohData['transportfamily'] == 'on'
-            || $sdohData['transportother'] == 'on'
-            )
-            {
+            if (
+                $sdohData['transportmedical'] == 'on'
+                || $sdohData['transportfood'] == 'on'
+                || $sdohData['transportwork'] == 'on'
+                || $sdohData['transportschool'] == 'on'
+                || $sdohData['transportfamily'] == 'on'
+                || $sdohData['transportother'] == 'on'
+            ) {
                 echo "<tr><td><span class=text>" . xlt("Transportation Insecurity") . "</span></td></tr>";
             }
 
-            if ($sdohData['moneymedical'] == 'on'
-            || $sdohData['medicalnoinsurance'] == 'on'
-            || $sdohData['medicalcopay'] == 'on'
-            || $sdohData['medicalnotcovered'] == 'on'
-            || $sdohData['debtmedical'] == 'on'
-            || $sdohData['dentist'] == 'dentistnoinsurance'
-            )
-            {
+            if (
+                $sdohData['moneymedical'] == 'on'
+                || $sdohData['medicalnoinsurance'] == 'on'
+                || $sdohData['medicalcopay'] == 'on'
+                || $sdohData['medicalnotcovered'] == 'on'
+                || $sdohData['debtmedical'] == 'on'
+                || $sdohData['dentist'] == 'dentistnoinsurance'
+            ) {
                 echo "<tr><td><span class=text>" . xlt("Medical Cost Burden") . "</span></td></tr>";
             }
 
-            if ($sdohData['education'] == 'lessthanhs'
-            || $sdohData['education'] == 'highschool'
-            || $sdohData['medicalunderstand'] == 'on'
-            )
-            {
+            if (
+                $sdohData['education'] == 'lessthanhs'
+                || $sdohData['education'] == 'highschool'
+                || $sdohData['medicalunderstand'] == 'on'
+            ) {
                 echo "<tr><td><span class=text>" . xlt("Low Health Literacy") . "</span></td></tr>";
             }
 
-            if ($sdohData['careunder5'] == 'on'
-            || $sdohData['care5to12'] == 'on'
-            || $sdohData['careover12'] == 'on'
-            || $sdohData['moneychildcare'] == 'on'
-            || $sdohData['transportschool'] == 'on'
-            || $sdohData['medicalchildcare'] == 'on'
-            || $sdohData['caredisabled'] == 'on'
-            || $sdohData['careelderly'] == 'on'
-            || $sdohData['careother'] == 'on'
-            )
-            {
+            if (
+                $sdohData['careunder5'] == 'on'
+                || $sdohData['care5to12'] == 'on'
+                || $sdohData['careover12'] == 'on'
+                || $sdohData['moneychildcare'] == 'on'
+                || $sdohData['transportschool'] == 'on'
+                || $sdohData['medicalchildcare'] == 'on'
+                || $sdohData['caredisabled'] == 'on'
+                || $sdohData['careelderly'] == 'on'
+                || $sdohData['careother'] == 'on'
+            ) {
                 echo "<tr><td><span class=text>" . xlt("Caregiver Burden") . "</span></td></tr>";
             }
 
-            if ($sdohData['social'] == 'sociallessthan1'
-            || $sdohData['social'] == 'social1'
-            || $sdohData['social'] == 'social2to3'
-            )
-            {
+            if (
+                $sdohData['social'] == 'sociallessthan1'
+                || $sdohData['social'] == 'social1'
+                || $sdohData['social'] == 'social2to3'
+            ) {
                 echo "<tr><td><span class=text>" . xlt("Social Isolation") . "</span></td></tr>";
             }
 
-            if ($sdohData['stress'] == 'stresslevelsomewhat'
-            || $sdohData['stress'] == 'stresslevelalot'
-            || $sdohData['stress'] == 'stresslevelverymuch'
-            || $sdohData['stressdeath'] == 'on'
-            || $sdohData['stressdivorce'] == 'on'
-            || $sdohData['stressjob'] == 'on'
-            || $sdohData['stressmoved'] == 'on'
-            || $sdohData['stressillness'] == 'on'
-            || $sdohData['stressvictim'] == 'on'
-            || $sdohData['stresswitness'] == 'on'
-            || $sdohData['stresslegal'] == 'on'
-            || $sdohData['stresshomeless'] == 'on'
-            || $sdohData['stressincarcerated'] == 'on'
-            || $sdohData['stressbankruptcy'] == 'on'
-            || $sdohData['stressmarriage'] == 'on'
-            || $sdohData['stressbirth'] == 'on'
-            || $sdohData['stressadultchild'] == 'on'
-            || $sdohData['stressother'] == 'on'
-            )
-            {
+            if (
+                $sdohData['stress'] == 'stresslevelsomewhat'
+                || $sdohData['stress'] == 'stresslevelalot'
+                || $sdohData['stress'] == 'stresslevelverymuch'
+                || $sdohData['stressdeath'] == 'on'
+                || $sdohData['stressdivorce'] == 'on'
+                || $sdohData['stressjob'] == 'on'
+                || $sdohData['stressmoved'] == 'on'
+                || $sdohData['stressillness'] == 'on'
+                || $sdohData['stressvictim'] == 'on'
+                || $sdohData['stresswitness'] == 'on'
+                || $sdohData['stresslegal'] == 'on'
+                || $sdohData['stresshomeless'] == 'on'
+                || $sdohData['stressincarcerated'] == 'on'
+                || $sdohData['stressbankruptcy'] == 'on'
+                || $sdohData['stressmarriage'] == 'on'
+                || $sdohData['stressbirth'] == 'on'
+                || $sdohData['stressadultchild'] == 'on'
+                || $sdohData['stressother'] == 'on'
+            ) {
                 echo "<tr><td><span class=text>" . xlt("Elevated or Toxic Stress") . "</span></td></tr>";
             }
 
-            if ($sdohData['partnersafety'] == 'partnerunsafe'
-            )
-            {
+            if (
+                $sdohData['partnersafety'] == 'partnerunsafe'
+            ) {
                 echo "<tr><td><span class=text>" . xlt("Intimate Partner Violence") . "</span></td></tr>";
             }
 
-            if ($sdohData['safety'] == 'safeday'
-            || $sdohData['safety'] == 'safeno'
-            )
-            {
+            if (
+                $sdohData['safety'] == 'safeday'
+                || $sdohData['safety'] == 'safeno'
+            ) {
                 echo "<tr><td><span class=text>" . xlt("Unsafe Neighborhood") . "</span></td></tr>";
             }
 
-            if ($sdohData['discrimrace'] == 'on'
-            || $sdohData['discrimgender'] == 'on'
-            || $sdohData['discrimsexpref'] == 'on'
-            || $sdohData['discrimgenexp'] == 'on'
-            || $sdohData['discrimreligion'] == 'on'
-            || $sdohData['discrimdisability'] == 'on'
-            || $sdohData['discrimage'] == 'on'
-            || $sdohData['discrimweight'] == 'on'
-            || $sdohData['discrimses'] == 'on'
-            || $sdohData['discrimedu'] == 'on'
-            || $sdohData['discrimmarital'] == 'on'
-            || $sdohData['discrimcitizen'] == 'on'
-            || $sdohData['discrimaccent'] == 'on'
-            || $sdohData['discrimcriminalhist'] == 'on'
-            || $sdohData['discrimother'] == 'on'
-            || $sdohData['displacework'] == 'on'
-            || $sdohData['displacehousing'] == 'on'
-            || $sdohData['displacehealth'] == 'on'
-            || $sdohData['displacelaw'] == 'on'
-            || $sdohData['displaceedu'] == 'on'
-            || $sdohData['displacepublic'] == 'on'
-            || $sdohData['displaceclubs'] == 'on'
-            || $sdohData['displacegovt'] == 'on'
-            || $sdohData['displacefinance'] == 'on'
-            || $sdohData['displaceother'] == 'on'
-            )
-            {
+            if (
+                $sdohData['discrimrace'] == 'on'
+                || $sdohData['discrimgender'] == 'on'
+                || $sdohData['discrimsexpref'] == 'on'
+                || $sdohData['discrimgenexp'] == 'on'
+                || $sdohData['discrimreligion'] == 'on'
+                || $sdohData['discrimdisability'] == 'on'
+                || $sdohData['discrimage'] == 'on'
+                || $sdohData['discrimweight'] == 'on'
+                || $sdohData['discrimses'] == 'on'
+                || $sdohData['discrimedu'] == 'on'
+                || $sdohData['discrimmarital'] == 'on'
+                || $sdohData['discrimcitizen'] == 'on'
+                || $sdohData['discrimaccent'] == 'on'
+                || $sdohData['discrimcriminalhist'] == 'on'
+                || $sdohData['discrimother'] == 'on'
+                || $sdohData['displacework'] == 'on'
+                || $sdohData['displacehousing'] == 'on'
+                || $sdohData['displacehealth'] == 'on'
+                || $sdohData['displacelaw'] == 'on'
+                || $sdohData['displaceedu'] == 'on'
+                || $sdohData['displacepublic'] == 'on'
+                || $sdohData['displaceclubs'] == 'on'
+                || $sdohData['displacegovt'] == 'on'
+                || $sdohData['displacefinance'] == 'on'
+                || $sdohData['displaceother'] == 'on'
+            ) {
                 echo "<tr><td><span class=text>" . xlt("Discrimination") . "</span></td></tr>";
             }
 
-            if ( $sdohData['medicalnoinsurance'] == 'on'
-            || $sdohData['dentist'] == 'dentistnoinsurance'
-            || $sdohData['medicalcopay'] == 'on'
-            || $sdohData['medicalnotcovered'] == 'on'
-            )
-            {
+            if (
+                $sdohData['medicalnoinsurance'] == 'on'
+                || $sdohData['dentist'] == 'dentistnoinsurance'
+                || $sdohData['medicalcopay'] == 'on'
+                || $sdohData['medicalnotcovered'] == 'on'
+            ) {
                 echo "<tr><td><span class=text>" . xlt("Uninsured or Underinsured") . "</span></td></tr>";
             }
         }
