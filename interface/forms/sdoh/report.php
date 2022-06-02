@@ -94,8 +94,11 @@ function sdoh_report($pid, $encounter, $cols, $id)
             if ($sdohData['workhours'] > 40) {
                 echo "<tr><td><span class=text>" . xlt("Over 40 Work Hours: ") .  $sdohData['workhours'] . "</span></td></tr>";
             }
-            if ($sdohData['hhincome']/$sdohData['hhsize'] < 25000) {
-                echo "<tr><td><span class=text>" . xlt("Potential Low Income. Household Size: ") .  $sdohData['hhsize'] . xlt("  Household Income: ") .  $sdohData['hhincome'] . "</span></td></tr>";
+            if (!empty($sdohData['hhsize'])) {
+                // this will prevent a division by zero php error if the hhsize is set to zero
+                if ($sdohData['hhincome'] / $sdohData['hhsize'] < 25000) {
+                    echo "<tr><td><span class=text>" . xlt("Potential Low Income. Household Size: ") . $sdohData['hhsize'] . xlt("  Household Income: ") . $sdohData['hhincome'] . "</span></td></tr>";
+                }
             }
             if ($sdohData['careunder5'] == 'on') {
                 echo "<tr><td><span class=text>" . xlt("Caregiver for Children Under 5") . "</span></td></tr>";
