@@ -328,7 +328,7 @@ function sdoh_report($pid, $encounter, $cols, $id)
             if ($sdohData['discrimsexpre'] == 'on') {
                 echo "<tr><td><span class=text>" . xlt("Discrimination for Sexual Preference") . "</span></td></tr>";
             }
-            if ($sdohData['discrimgenexp'] == '') {
+            if ($sdohData['discrimgenexp'] == 'on') {
                 echo "<tr><td><span class=text>" . xlt("Discrimination for Gender Expression") . "</span></td></tr>";
             }
             if ($sdohData['discrimreligion'] == 'on') {
