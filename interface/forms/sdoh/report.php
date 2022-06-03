@@ -518,7 +518,7 @@ function sdoh_report($pid, $encounter, $cols, $id)
                 || ($sdohData['stressvictim'] ?? '') == 'on'
                 || ($sdohData['stresswitness'] ?? '') == 'on'
                 || ($sdohData['stresslegal'] ?? '') == 'on'
-                || ($sdohData['stresshomeless']  ?? '')== 'on'
+                || ($sdohData['stresshomeless']  ?? '') == 'on'
                 || ($sdohData['stressincarcerated'] ?? '') == 'on'
                 || ($sdohData['stressbankruptcy'] ?? '') == 'on'
                 || ($sdohData['stressmarriage'] ?? '') == 'on'
