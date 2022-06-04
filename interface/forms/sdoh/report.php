@@ -157,7 +157,7 @@ function sdoh_report($pid, $encounter, $cols, $id)
                 echo "<tr><td><span class=text>" . xlt("Struggle to pay for Clothing") . "</span></td></tr>";
             }
             if (($sdohData['moneyeducation'] ?? '') == 'on') {
-                echo "<tr><td><span class=text>" . xlt("Struggle to pay for Clothing") . "</span></td></tr>";
+                echo "<tr><td><span class=text>" . xlt("Struggle to pay for Education") . "</span></td></tr>";
             }
             if (($sdohData['moneyother'] ?? '') == 'on') {
                 echo "<tr><td><span class=text>" . xlt("Struggle to pay for Other") . ": " . text($sdohData['moneyotherinput'] ?? '') . "</span></td></tr>";
@@ -183,7 +183,7 @@ function sdoh_report($pid, $encounter, $cols, $id)
             if (($sdohData['medicalnoinsurance'] ?? '') == 'on') {
                 echo "<tr><td><span class=text>" . xlt("Delayed Medical Care due to No Insurance") . "</span></td></tr>";
             }
-            if (($sdohData['medcialcopay'] ?? '') == 'on') {
+            if (($sdohData['medicalcopay'] ?? '') == 'on') {
                 echo "<tr><td><span class=text>" . xlt("Delayed Medical Care due to High Copay or Deductible") . "</span></td></tr>";
             }
             if (($sdohData['medicalnotcovered'] ?? '') == 'on') {
@@ -198,7 +198,7 @@ function sdoh_report($pid, $encounter, $cols, $id)
             if (($sdohData['medicalunderstand'] ?? '') == 'on') {
                 echo "<tr><td><span class=text>" . xlt("Delayed Medical Care due to Not Understanding Care Plan") . "</span></td></tr>";
             }
-            if (($sdohData['medicaltrust'] ?? '') == 'pm') {
+            if (($sdohData['medicaltrust'] ?? '') == 'on') {
                 echo "<tr><td><span class=text>" . xlt("Delayed Medical Care due to Lack of Trust in Provider") . "</span></td></tr>";
             }
             if (($sdohData['medicalchildcare'] ?? '') == 'on') {
@@ -217,7 +217,7 @@ function sdoh_report($pid, $encounter, $cols, $id)
                 echo "<tr><td><span class=text>" . xlt("No Dental Care due to Work Schedule") . "</span></td></tr>";
             }
             if (($sdohData['dentist'] ?? '') == 'dentistnoother') {
-                echo "<tr><td><span class=text>" . xlt("No Dental Care due to Other") . ": " . text($sdohData['dentalotherinput'] ?? '') . "</span></td></tr>";
+                echo "<tr><td><span class=text>" . xlt("No Dental Care due to Other") . ": " . text($sdohData['dentistotherinput'] ?? '') . "</span></td></tr>";
             }
             if (($sdohData['social'] ?? '') == 'sociallessthan1') {
                 echo "<tr><td><span class=text>" . xlt("Social Connection Less than Once a Week") . "</span></td></tr>";
@@ -297,7 +297,7 @@ function sdoh_report($pid, $encounter, $cols, $id)
             if (($sdohData['addiction'] ?? '') == 'addictionyes') {
                 echo "<tr><td><span class=text>" . xlt("Addiction with Self or Family") . "</span></td></tr>";
             }
-            if (($sdohData['armedservices'] ?? '') == 'aremedservicesyes') {
+            if (($sdohData['armedservices'] ?? '') == 'armedservicesyes') {
                 echo "<tr><td><span class=text>" . xlt("Discharged from Armed Services") . "</span></td></tr>";
             }
             if (($sdohData['refugee'] ?? '') == 'refugeeyes') {
@@ -306,10 +306,10 @@ function sdoh_report($pid, $encounter, $cols, $id)
             if (($sdohData['discrimrace'] ?? '') == 'on') {
                 echo "<tr><td><span class=text>" . xlt("Discrimination for Race and/or Ethnicity") . "</span></td></tr>";
             }
-            if (($sdohData['disrimgender'] ?? '') == 'on') {
+            if (($sdohData['discrimgender'] ?? '') == 'on') {
                 echo "<tr><td><span class=text>" . xlt("Discrimination for Gender") . "</span></td></tr>";
             }
-            if (($sdohData['discrimsexpre'] ?? '') == 'on') {
+            if (($sdohData['discrimsexpref'] ?? '') == 'on') {
                 echo "<tr><td><span class=text>" . xlt("Discrimination for Sexual Preference") . "</span></td></tr>";
             }
             if (($sdohData['discrimgenexp'] ?? '') == 'on') {
@@ -368,6 +368,9 @@ function sdoh_report($pid, $encounter, $cols, $id)
             }
             if (($sdohData['displaceclubs'] ?? '') == 'on') {
                 echo "<tr><td><span class=text>" . xlt("Discriminated in Religious or Civic Clubs or Organizations") . "</span></td></tr>";
+            }
+            if (($sdohData['displacegovt'] ?? '') == 'on') {
+                echo "<tr><td><span class=text>" . xlt("Discriminated in Government") . "</span></td></tr>";
             }
             if (($sdohData['displacefinance'] ?? '') == 'on') {
                 echo "<tr><td><span class=text>" . xlt("Discriminated in Banking or Finance Services") . "</span></td></tr>";

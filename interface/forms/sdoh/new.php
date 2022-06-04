@@ -598,7 +598,7 @@ if (!empty($_GET['id'])) {
                                             <div class="form-check">
                                                  <input type="checkbox" class="form-check-input" id="medicalother" name='medicalother' <?php echo (($obj["medicalother"] ?? '') == "on") ? "checked" : ""; ?>/>
                                                  <label class="form-check-label" for="medicalother"><?php echo xlt('Other');?></label>
-                                                <input type="text" id="medicalotherinput" name='medicalotherinput' size="30" value"<?php echo text($obj["medicalotherinput"] ?? ''); ?>"/>
+                                                <input type="text" id="medicalotherinput" name='medicalotherinput' size="30" value="<?php echo text($obj["medicalotherinput"] ?? ''); ?>"/>
                                             </div>
                                         </div>
                                     </div>
