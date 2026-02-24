@@ -1,6 +1,6 @@
 <?php declare(strict_types = 1);
 
-// total 8284 errors
+// total 8283 errors
 
 $ignoreErrors = [];
 $ignoreErrors[] = [
@@ -5260,7 +5260,7 @@ $ignoreErrors[] = [
 ];
 $ignoreErrors[] = [
     'message' => '#^Variable \\$RXTYPE might not be defined\\.$#',
-    'count' => 3,
+    'count' => 2,
     'path' => __DIR__ . '/../../interface/forms/eye_mag/SpectacleRx.php',
 ];
 $ignoreErrors[] = [

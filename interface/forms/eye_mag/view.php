@@ -4406,14 +4406,16 @@ if ($refresh and $refresh != 'fullscreen') {
             <?php endif; ?>
         }
         function doscript(type,id,encounter,rx_number) {
-             const params = new URLSearchParams({
-                 encounter: encounter,
-                 form_id: <?php echo js_escape($form_id); ?>,
-                 id: id,
-                 REFTYPE: type,
-                 rx_number: rx_number
-             });
-             dlgopen('../../forms/eye_mag/SpectacleRx.php?' + params.toString(), '_blank', 660, 700,'', <?php echo xlj('Dispense Rx'); ?>);
+            let rxType = document.querySelector('input[name="RX_TYPE_1"]:checked')?.value;
+            const params = new URLSearchParams({
+                encounter: encounter,
+                form_id: <?php echo js_escape($form_id); ?>,
+                id: id,
+                REFTYPE: type,
+                rx_number: rx_number,
+                rx_type: rxType
+            });
+            dlgopen('../../forms/eye_mag/SpectacleRx.php?' + params.toString(), '_blank', 660, 700,'', <?php echo xlj('Dispense Rx'); ?>);
         }
 
         function dispensed(pid) {
