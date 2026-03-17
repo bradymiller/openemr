@@ -54,7 +54,6 @@ function newpatient_report($pid, $encounter, $cols, $id): void
             'referringProvider' => $referringProvider,
             'posCode' => $posCode,
             'facility' => $facility_name,
-            'dispensedMedications' => []
         ];
         /**
          * @var \OpenEMR\Core\OEGlobalsBag $globalsBag
