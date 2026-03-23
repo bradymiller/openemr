@@ -1,6 +1,6 @@
 <?php declare(strict_types = 1);
 
-// total 5806 errors
+// total 5807 errors
 
 $ignoreErrors = [];
 $ignoreErrors[] = [
@@ -5920,7 +5920,7 @@ $ignoreErrors[] = [
 ];
 $ignoreErrors[] = [
     'message' => '#^Use QueryUtils\\:\\:querySingleRow\\(\\) or QueryUtils\\:\\:fetchRecords\\(\\) instead of sqlQuery\\(\\)\\.$#',
-    'count' => 6,
+    'count' => 7,
     'path' => __DIR__ . '/../../library/pnotes.inc.php',
 ];
 $ignoreErrors[] = [

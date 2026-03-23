@@ -99,42 +99,48 @@ function getPnotesByUser($activity = "1", $show_all = "no", $user = '', $count =
     } else { //$activity=='all'
         $activity_query = " ";
     }
-    $user_plug = '';
+    $sqlBindArray = [];
+    $includePortalUser = false;
   // Set whether to show chosen user or all users
     if ($show_all == 'yes') {
         $usrvar = '_%';
     } else {
         if (checkPortalAuthUser($user)) {
-            $user_plug = "|| pnotes.assigned_to = 'portal-user'";
+            $includePortalUser = true;
         }
         $usrvar = $user;
     }
 
   // run the query
   // 2013-02-08 EMR Direct: minor changes to query so notes with pid=0 don't disappear
+    $fromWhere = "FROM ((pnotes LEFT JOIN users ON pnotes.user = users.username)
+          LEFT JOIN patient_data ON pnotes.pid = patient_data.pid) WHERE $activity_query
+          pnotes.deleted != '1' AND (pnotes.assigned_to LIKE ?";
+    $sqlBindArray[] = $usrvar;
+    if ($includePortalUser) {
+        $fromWhere .= " OR pnotes.assigned_to = ?";
+        $sqlBindArray[] = 'portal-user';
+    }
+    $fromWhere .= ")";
+
+  // return the results
+    if ($count) {
+        $row = sqlQuery("SELECT COUNT(*) AS cnt $fromWhere", $sqlBindArray);
+        return $row !== false ? (int) $row['cnt'] : 0;
+    }
+
     $sql = "SELECT pnotes.id, pnotes.user, pnotes.pid, pnotes.title, pnotes.date, pnotes.message_status, pnotes.activity,
           IF(pnotes.pid = 0 OR pnotes.user != pnotes.pid,users.fname,patient_data.fname) as users_fname,
           IF(pnotes.pid = 0 OR pnotes.user != pnotes.pid,users.lname,patient_data.lname) as users_lname,
           patient_data.fname as patient_data_fname, patient_data.lname as patient_data_lname
-          FROM ((pnotes LEFT JOIN users ON pnotes.user = users.username)
-          LEFT JOIN patient_data ON pnotes.pid = patient_data.pid) WHERE $activity_query
-          pnotes.deleted != '1' AND (pnotes.assigned_to LIKE ? $user_plug)";
+          $fromWhere";
     if (!empty($sortby) || !empty($sortorder)  || !empty($begin) || !empty($listnumber)) {
         $sql .= " order by " . escape_sql_column_name($sortby, ['users','patient_data','pnotes'], true) .
             " " . escape_sort_order($sortorder) .
             " limit " . escape_limit($begin) . ", " . escape_limit($listnumber);
     }
 
-    $result = sqlStatement($sql, [$usrvar]);
-
-  // return the results
-    if ($count) {
-        $total = sqlNumRows($result) != 0 ? sqlNumRows($result) : 0;
-
-        return $total;
-    } else {
-        return $result;
-    }
+    return sqlStatement($sql, $sqlBindArray);
 }
 
 function getPnotesByDate(
@@ -184,7 +190,10 @@ function getPnotesByDate(
     }
 
     if ($status) {
-        $sql .= " AND message_status IN ('" . str_replace(",", "','", add_escape_custom($status)) . "')";
+        $statusArr = explode(",", $status);
+        $placeholders = implode(",", array_fill(0, count($statusArr), "?"));
+        $sql .= " AND message_status IN ($placeholders)";
+        array_push($sqlParameterArray, ...$statusArr);
     }
 
     $sql .= " ORDER BY date DESC";
@@ -250,7 +259,10 @@ function getSentPnotesByDate(
     }
 
     if ($status) {
-        $sql .= " AND message_status IN ('" . str_replace(",", "','", add_escape_custom($status)) . "')";
+        $statusArr = explode(",", $status);
+        $placeholders = implode(",", array_fill(0, count($statusArr), "?"));
+        $sql .= " AND message_status IN ($placeholders)";
+        array_push($sqlParameterArray, ...$statusArr);
     }
 
     $sql .= " ORDER BY date DESC";
