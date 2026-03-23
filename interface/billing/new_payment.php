@@ -25,6 +25,7 @@ require_once("$srcdir/payment.inc.php");
 
 use OpenEMR\Billing\ParseERA;
 use OpenEMR\Common\Acl\AclMain;
+use OpenEMR\Common\Csrf\CsrfUtils;
 use OpenEMR\Common\Twig\TwigContainer;
 use OpenEMR\Core\Header;
 use OpenEMR\OeUI\OemrUI;
@@ -38,49 +39,71 @@ if (!AclMain::aclCheckCore('acct', 'bill', '', 'write') && !AclMain::aclCheckCor
     $screen = 'new_payment';
 //===============================================================================
 // Initialisations
-$mode                    = $_POST['mode'] ?? '';
+$mode                    = filter_input(INPUT_POST, 'mode') ?? '';
 $payment_id              = isset($_REQUEST['payment_id'])          ? $_REQUEST['payment_id'] + 0      : 0;
 $request_payment_id      = $payment_id ;
 $hidden_patient_code     = $_REQUEST['hidden_patient_code'] ?? '';
-$default_search_patient  = $_POST['default_search_patient'] ?? '';
+$default_search_patient  = filter_input(INPUT_POST, 'default_search_patient') ?? '';
 $hidden_type_code        = $_REQUEST['hidden_type_code'] ?? '';
+//===============================================================================
+// CSRF verification for all POST actions
+//===============================================================================
+if ($mode !== '') {
+    if (!CsrfUtils::verifyCsrfToken($_POST["csrf_token_form"] ?? '')) {
+        CsrfUtils::csrfNotVerified();
+    }
+}
 //===============================================================================
 //ar_session addition code
 //===============================================================================
 
 if ($mode == "new_payment" || $mode == "distribute") {
-    if (trim((string) $_POST['type_name']) == 'insurance') {
-        $QueryPart = "payer_id = '" . add_escape_custom($hidden_type_code) . "', patient_id = '0" ;
-    } elseif (trim((string) $_POST['type_name']) == 'patient') {
-        $QueryPart = "payer_id = '0', patient_id = '" . add_escape_custom($hidden_type_code);
+    $type_name = trim(filter_input(INPUT_POST, 'type_name') ?? '');
+    if ($type_name === 'insurance') {
+        $payer_id = $hidden_type_code;
+        $patient_id = 0;
+    } elseif ($type_name === 'patient') {
+        $payer_id = 0;
+        $patient_id = $hidden_type_code;
+    } else {
+        $payer_id = 0;
+        $patient_id = 0;
     }
-      $user_id = $_SESSION['authUserID'];
-      $closed = 0;
-      $modified_time = date('Y-m-d H:i:s');
-      $check_date = DateToYYYYMMDD(formData('check_date'));
-      $deposit_date = DateToYYYYMMDD(formData('deposit_date'));
-      $post_to_date = DateToYYYYMMDD(formData('post_to_date'));
-    if ($post_to_date == '') {
+    $user_id = $_SESSION['authUserID'];
+    $closed = 0;
+    $modified_time = date('Y-m-d H:i:s');
+    $check_date = DateToYYYYMMDD(formData('check_date'));
+    $deposit_date = DateToYYYYMMDD(formData('deposit_date'));
+    $post_to_date = DateToYYYYMMDD(formData('post_to_date'));
+    if ($post_to_date === '') {
         $post_to_date = date('Y-m-d');
     }
-    if ($_POST['deposit_date'] == '') {
+    if ((filter_input(INPUT_POST, 'deposit_date') ?? '') === '') {
         $deposit_date = $post_to_date;
     }
-      $payment_id = sqlInsert("insert into ar_session set "    .
-        $QueryPart .
-        "', user_id = '"     . trim(add_escape_custom($user_id))  .
-        "', closed = '"      . trim(add_escape_custom($closed))  .
-        "', reference = '"   . trim(formData('check_number')) .
-        "', check_date = '"  . trim(add_escape_custom($check_date)) .
-        "', deposit_date = '" . trim(add_escape_custom($deposit_date))  .
-        "', pay_total = '"    . trim(formData('payment_amount')) .
-        "', modified_time = '" . trim(add_escape_custom($modified_time))  .
-        "', payment_type = '"   . trim(formData('type_name')) .
-        "', description = '"   . trim(formData('description')) .
-        "', adjustment_code = '"   . trim(formData('adjustment_code')) .
-        "', post_to_date = '" . trim(add_escape_custom($post_to_date))  .
-        "', payment_method = '"   . trim(formData('payment_method')) .
-        "'");
+    $payment_id = sqlInsert(
+        "INSERT INTO ar_session SET " .
+        "payer_id = ?, patient_id = ?, user_id = ?, closed = ?, " .
+        "reference = ?, check_date = ?, deposit_date = ?, pay_total = ?, " .
+        "modified_time = ?, payment_type = ?, description = ?, " .
+        "adjustment_code = ?, post_to_date = ?, payment_method = ?",
+        [
+            trim((string) $payer_id),
+            trim((string) $patient_id),
+            trim((string) $user_id),
+            trim((string) $closed),
+            trim(formData('check_number')),
+            trim((string) $check_date),
+            trim((string) $deposit_date),
+            trim(formData('payment_amount')),
+            trim($modified_time),
+            trim(formData('type_name')),
+            trim(formData('description')),
+            trim(formData('adjustment_code')),
+            trim((string) $post_to_date),
+            trim(formData('payment_method')),
+        ]
+    );
 }
 
 //===============================================================================
@@ -380,6 +403,7 @@ $payment_id = $payment_id * 1 > 0 ? $payment_id + 0 : $request_payment_id + 0;
                         }
                         ?>
                     </fieldset>
+                    <input type="hidden" name="csrf_token_form" value="<?php echo attr(CsrfUtils::collectCsrfToken()); ?>" />
                     <input id="hidden_patient_code" name="hidden_patient_code" type="hidden" value="<?php echo attr($hidden_patient_code);?>" />
                     <input id='mode' name='mode' type='hidden' value='' />
                     <input id='default_search_patient' name='default_search_patient' type='hidden' value='<?php echo attr($default_search_patient); ?>' />

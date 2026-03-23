@@ -1,6 +1,6 @@
 <?php declare(strict_types = 1);
 
-// total 8283 errors
+// total 8282 errors
 
 $ignoreErrors = [];
 $ignoreErrors[] = [
@@ -1065,11 +1065,6 @@ $ignoreErrors[] = [
 ];
 $ignoreErrors[] = [
     'message' => '#^Variable \\$PaymentType might not be defined\\.$#',
-    'count' => 1,
-    'path' => __DIR__ . '/../../interface/billing/new_payment.php',
-];
-$ignoreErrors[] = [
-    'message' => '#^Variable \\$QueryPart might not be defined\\.$#',
     'count' => 1,
     'path' => __DIR__ . '/../../interface/billing/new_payment.php',
 ];
