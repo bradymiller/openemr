@@ -1,6 +1,6 @@
 <?php declare(strict_types = 1);
 
-// total 5807 errors
+// total 5808 errors
 
 $ignoreErrors = [];
 $ignoreErrors[] = [
@@ -3025,7 +3025,7 @@ $ignoreErrors[] = [
 ];
 $ignoreErrors[] = [
     'message' => '#^Use QueryUtils\\:\\:sqlStatementThrowException\\(\\) or QueryUtils\\:\\:fetchRecords\\(\\) instead of sqlStatement\\(\\)\\.$#',
-    'count' => 14,
+    'count' => 15,
     'path' => __DIR__ . '/../../interface/patient_file/deleter.php',
 ];
 $ignoreErrors[] = [
