@@ -15,10 +15,10 @@
 require_once(__DIR__ . "/../../../library/api.inc.php");
 require_once(__DIR__ . "/../../forms/vitals/C_FormVitals.class.php");
 
-function addAppt($days, $time)
+function addAppt(string $days, $time)
 {
     $sql = "insert into openemr_postcalendar_events (pc_pid, pc_eventDate," .
-    "pc_comments, pc_aid,pc_startTime) values (?, date_add(current_date(), interval " . add_escape_custom($days) .
+    "pc_comments, pc_aid,pc_startTime) values (?, date_add(current_date(), interval " . (int) $days .
     " day),'from CAMOS', ?, ?)";
     return sqlInsert($sql, [$_SESSION['pid'], $_SESSION['authUserID'], $time]);
 }
@@ -123,7 +123,7 @@ function process_commands(&$string_to_process, &$camos_return_data)
     if (preg_match("/\/\*\s*date_add\s*::\s*(.*?)\s*\*\//", (string) $string_to_process, $matches)) {
         $to_replace = $matches[0];
         $days = $matches[1];
-        $query = "select date_format(date_add(date, interval " . add_escape_custom($days) . " day),'%W, %m-%d-%Y') as date from form_encounter where pid = ? and encounter = ?";
+        $query = "select date_format(date_add(date, interval " . (int) $days . " day),'%W, %m-%d-%Y') as date from form_encounter where pid = ? and encounter = ?";
         $statement = sqlStatement($query, [$_SESSION['pid'], $_SESSION['encounter']]);
         if ($result = sqlFetchArray($statement)) {
             $string_to_process = str_replace($to_replace, $result['date'], $string_to_process);
@@ -133,7 +133,7 @@ function process_commands(&$string_to_process, &$camos_return_data)
     if (preg_match("/\/\*\s*date_sub\s*::\s*(.*?)\s*\*\//", (string) $string_to_process, $matches)) {
         $to_replace = $matches[0];
         $days = $matches[1];
-        $query = "select date_format(date_sub(date, interval " . add_escape_custom($days) . " day),'%W, %m-%d-%Y') as date from form_encounter where pid = ? and encounter = ?";
+        $query = "select date_format(date_sub(date, interval " . (int) $days . " day),'%W, %m-%d-%Y') as date from form_encounter where pid = ? and encounter = ?";
         $statement = sqlStatement($query, [$_SESSION['pid'], $_SESSION['encounter']]);
         if ($result = sqlFetchArray($statement)) {
             $string_to_process = str_replace($to_replace, $result['date'], $string_to_process);
