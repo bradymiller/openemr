@@ -8,9 +8,11 @@
  * @author    Rod Roark <rod@sunsetsystems.com>
  * @author    Brady Miller <brady.g.miller@gmail.com>
  * @author    Tyler Wrenn <tyler@tylerwrenn.com>
+ * @author    Michael A. Smith <michael@opencoreemr.com>
  * @copyright Copyright (c) 2010-2017 Rod Roark <rod@sunsetsystems.com>
  * @copyright Copyright (c) 2018 Brady Miller <brady.g.miller@gmail.com>
  * @copyright Copyright (c) 2020 Tyler Wrenn <tyler@tylerwrenn.com>
+ * @copyright Copyright (c) 2026 OpenCoreEMR Inc <https://opencoreemr.com/>
  * @license   https://github.com/openemr/openemr/blob/master/LICENSE GNU General Public License 3
  */
 
@@ -18,6 +20,7 @@ require_once("../globals.php");
 require_once("$srcdir/patient.inc.php");
 
 use OpenEMR\Common\Csrf\CsrfUtils;
+use OpenEMR\Common\Database\SqlQueryException;
 use OpenEMR\Common\Utils\PaginationUtils;
 use OpenEMR\Core\Header;
 
@@ -117,15 +120,22 @@ $simpleSearch = $_GET['simple_search'] ?? null;
                 continue; // "match field"
             }
             $fldname = substr((string) $key, 3);
+            // Validate that fldname is a real patient_data column to prevent SQL injection
+            try {
+                $escapedColumn = escape_sql_column_name($fldname, ['patient_data'], false, true);
+            } catch (SqlQueryException) {
+                // Invalid column name - skip this field
+                continue;
+            }
             // pubpid requires special treatment.  Match on that is fatal.
-            if ($fldname == 'pubpid') {
-                $relevance .= " + 1000 * ( " . add_escape_custom($fldname) . " LIKE ? )";
+            if ($fldname === 'pubpid') {
+                $relevance .= " + 1000 * ( `" . $escapedColumn . "` LIKE ? )";
                 array_push($sqlBindArray, $value);
             } else {
-                $relevance .= " + ( " . add_escape_custom($fldname) . " LIKE ? )";
+                $relevance .= " + ( `" . $escapedColumn . "` LIKE ? )";
                 array_push($sqlBindArray, $value);
             }
-            $where .= " OR " . add_escape_custom($fldname) . " LIKE ?";
+            $where .= " OR `" . $escapedColumn . "` LIKE ?";
             array_push($sqlBindArraySpecial, $value);
             echo "<input type='hidden' name='" . attr($key) . "' value='" . attr($value) . "' />\n";
             ++$numfields;
