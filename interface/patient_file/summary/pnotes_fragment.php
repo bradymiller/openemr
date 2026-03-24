@@ -29,7 +29,7 @@ $docid = empty($_REQUEST['docid']) ? 0 : 0 + $_REQUEST['docid'];
 
 //ajax for type 2 notes widget
 if (isset($_GET['docUpdateId'])) {
-    return disappearPnote($_GET['docUpdateId']);
+    return disappearPnote($_GET['docUpdateId'], $pid);
 }
 
 ?>
