@@ -21,6 +21,7 @@ $isPortal = $data['is_portal'];
 $signer = '';
 $ignoreAuth = false;
 
+use OpenEMR\Common\Acl\AccessDeniedHelper;
 use OpenEMR\Common\Session\SessionUtil;
 use OpenEMR\Common\Session\SessionWrapperFactory;
 
@@ -35,6 +36,9 @@ if ($isPortal) {
         // authorized by patient portal
         $req_pid = $session->get('pid');
         $ignoreAuth_onsite_portal = true;
+
+        // Portal users can only view their own signatures
+        $user = $req_pid;
     } else {
         SessionUtil::portalSessionCookieDestroy();
         echo js_escape("error");
@@ -43,15 +47,14 @@ if ($isPortal) {
 }
 require_once("../../../interface/globals.php");
 
-if (!$isPortal) {
-    $userManipulatedFlag = false;
-    if ($user != $_SESSION['authUserID']) {
-        $userManipulatedFlag = true;
+if ($isPortal) {
+    // Portal users can only view patient signatures, not admin signatures
+    if ($type === 'admin-signature') {
+        AccessDeniedHelper::deny('Portal user attempted to view admin signature');
     }
-
-    if ($userManipulatedFlag) {
-        echo js_escape("error");
-        exit();
+} else {
+    if ($user != $_SESSION['authUserID']) {
+        AccessDeniedHelper::deny('User ID mismatch in show-signature');
     }
 }
 
