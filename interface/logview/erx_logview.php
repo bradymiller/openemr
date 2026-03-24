@@ -17,8 +17,14 @@
 
 require_once(__DIR__ . '/../globals.php');
 
+use OpenEMR\Common\Acl\AccessDeniedHelper;
+use OpenEMR\Common\Acl\AclMain;
 use OpenEMR\Common\Csrf\CsrfUtils;
 use OpenEMR\Core\Header;
+
+if (!AclMain::aclCheckCore('admin', 'users')) {
+    AccessDeniedHelper::denyWithTemplate('eRx log viewer access denied', xl("eRx Logs"));
+}
 
 $error_log_path = $GLOBALS['OE_SITE_DIR'] . '/documents/erx_error';
 
