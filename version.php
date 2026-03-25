@@ -17,12 +17,12 @@
 $v_major = '8';
 $v_minor = '0';
 $v_patch = '0';
-$v_tag   = ''; // minor revision number, should be empty for production releases
+$v_tag = ''; // minor revision number, should be empty for production releases
 
 // A real patch identifier. This is incremented when we release a patch for a
 // production release. Note the above $v_patch variable is a misnomer and actually
 // stores release version information.
-$v_realpatch = '2';
+$v_realpatch = '3';
 
 // Database version identifier, this is to be incremented whenever there
 // is a database change in the course of development.  It is used
@@ -43,7 +43,7 @@ $v_acl = 12;
 // end with "?v=$v_js_includes".  Search the code for examples of doing this.
 // All this is to keep browsers from using an older cached version.
 // Need to assign it as a global below to work in template scripts.
-if (!empty($_ENV['OPENEMR__ENVIRONMENT']) && ($_ENV['OPENEMR__ENVIRONMENT'] === 'dev')) {
+if (!empty($_ENV['OPENEMR__ENVIRONMENT']) && $_ENV['OPENEMR__ENVIRONMENT'] === 'dev') {
     $v_js_includes = md5(microtime());
 } else {
     // Change this number when bumping
