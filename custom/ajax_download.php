@@ -26,10 +26,15 @@ if (!CsrfUtils::verifyCsrfToken($_REQUEST["csrf_token_form"])) {
     CsrfUtils::csrfNotVerified();
 }
 
-$reportID = (int) $_POST['reportID'];  // sanitize to int: db column is bigint
-$ruleID = (string) $_POST['ruleID'];  // validated later by its presence in $criteriaPatients
-$fileName = $_GET['fileName'] ?? '';  // validated later by check_file_dir_name()
-$provider_id = (int) $_POST['provider_id'];  // sanitize to int: db column is bigint
+$reportID = filter_input(INPUT_POST, 'reportID', FILTER_VALIDATE_INT);
+$ruleID = filter_input(INPUT_POST, 'ruleID') ?? '';  // validated later by its presence in $criteriaPatients
+$fileName = filter_input(INPUT_GET, 'fileName') ?? '';  // validated later by check_file_dir_name()
+$provider_id = filter_input(INPUT_POST, 'provider_id', FILTER_VALIDATE_INT);
+
+if ($reportID === null || $reportID === false) {
+    echo xlt("FAILURE: Invalid report ID");
+    exit(0);
+}
 
 if ($fileName) {
     $fileList = explode(",", (string) $fileName);
