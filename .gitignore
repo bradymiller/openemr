@@ -35,3 +35,6 @@ coverage/js-unit
 
 # phpstan
 tmp-phpstan/*
+
+# easy dev worktree config file
+.worktrees.json
