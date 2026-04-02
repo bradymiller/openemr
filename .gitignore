@@ -36,5 +36,8 @@ coverage/js-unit
 # phpstan
 tmp-phpstan/*
 
-# easy dev worktree config file
+# easy dev worktree support
 .worktrees.json
+docker/development-easy/docker-compose.override.yml
+docker/development-easy-light/docker-compose.override.yml
+docker/development-easy-redis/docker-compose.override.yml
