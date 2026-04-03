@@ -273,13 +273,13 @@ The OpenEMR development docker environment has a very rich advanced feature set.
       ```
       Usage: openemr-cmd worktree <add|remove|up|down|list|regen> [options]
 
-      add <branch> [--env easy|easy-light|easy-redis] [--start]
-                            Create worktree (default env: easy)
-      remove <branch> [--purge] Remove worktree (--purge deletes DB volumes)
-      up <branch>               Start Docker stack for worktree
-      down <branch>             Stop Docker stack for worktree
-      list                      List all worktrees and status
-      regen <branch>            Regenerate override/env files
+        add <branch> [--env easy|easy-light|easy-redis] [--start]
+                                  Create worktree (default env: easy)
+        remove <branch> [--keep-volumes] Remove worktree (volumes deleted by default)
+        up <branch>               Start Docker stack for worktree
+        down <branch> [--keep-volumes]  Stop Docker stack for worktree (volumes deleted by default)
+        list                      List all worktrees and status
+        regen <branch>            Regenerate override/env files
       ```
 
     - Can create a new worktree on a new branch via:
