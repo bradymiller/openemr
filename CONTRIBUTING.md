@@ -296,7 +296,7 @@ The OpenEMR development docker environment has a very rich advanced feature set.
       ```sh
       openemr-cmd worktree up worktree-branch-label
       ```
-    
+
       - Can stop the docker testing stack on a worktree via:
       ```sh
       openemr-cmd worktree down worktree-branch-label
