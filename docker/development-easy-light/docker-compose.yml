@@ -39,6 +39,7 @@ services:
     - nodemodules:/var/www/localhost/htdocs/openemr/node_modules:rw
     - vendordir:/var/www/localhost/htdocs/openemr/vendor:rw
     - ccdanodemodules:/var/www/localhost/htdocs/openemr/ccdaservice/node_modules:rw
+    - ccdanodemodules2:/var/www/localhost/htdocs/openemr/ccdaservice/packages/oe-cqm-service/node_modules:rw
     - logvolume:/var/log
     - couchdbvolume:/couchdb/data
     environment:
@@ -106,5 +107,6 @@ volumes:
   nodemodules: {}
   vendordir: {}
   ccdanodemodules: {}
+  ccdanodemodules2: {}
   logvolume: {}
   couchdbvolume: {}
