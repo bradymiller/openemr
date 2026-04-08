@@ -12,7 +12,7 @@ readonly -A WEBSERVER_OPENEMR_DIRS=(
 # to build configurations for tests in GitHub Actions
 parse() {
   local docker_dir="${1}"
-  local node_version=22
+  local node_version=24
   local database
   local db
   local webserver
