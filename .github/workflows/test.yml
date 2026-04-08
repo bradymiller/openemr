@@ -16,7 +16,7 @@ on:
       docker_dir:
         required: true
         type: string
-        description: Docker directory name (e.g., apache_85_114)
+        description: Docker directory name (e.g., apache_85_118)
       display_name:
         required: false
         type: string
