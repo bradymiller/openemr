@@ -6,6 +6,6 @@ x-includes:
 
 services:
   mysql:
-    image: mysql:8.0
+    image: mysql:5.7
   openemr:
-    image: openemr/openemr:flex-3.22-php-8.4
+    image: openemr/openemr:flex-3.23-php-8.5
