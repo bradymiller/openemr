@@ -45,6 +45,9 @@ class SentinelUtil
     private readonly ?string $masterCertFile;
     private readonly ?string $masterKeyFile;
 
+    private readonly int $redisSessionLockTtl;
+    private readonly int $redisSessionLockMaxWait;
+
     private readonly LoggerInterface $logger;
 
     public function __construct(?LoggerInterface $logger = null)
@@ -131,6 +134,18 @@ class SentinelUtil
             throw new \Exception("Master key file does not exist or is not readable: " . $this->masterKeyFile);
         }
 
+        // optional: lock TTL in seconds (how long Redis holds the lock key before auto-expiry)
+        $redisSessionLockTtl = getenv('REDIS_SESSION_LOCK_TTL', true);
+        $this->redisSessionLockTtl = ($redisSessionLockTtl !== false && ctype_digit($redisSessionLockTtl) && (int) $redisSessionLockTtl > 0)
+            ? (int) $redisSessionLockTtl
+            : LockingRedisSessionHandler::DEFAULT_LOCK_TTL_SECONDS;
+
+        // optional: max seconds to spin-wait for the lock before throwing
+        $redisSessionLockMaxWait = getenv('REDIS_SESSION_LOCK_MAX_WAIT', true);
+        $this->redisSessionLockMaxWait = ($redisSessionLockMaxWait !== false && ctype_digit($redisSessionLockMaxWait) && (int) $redisSessionLockMaxWait > 0)
+            ? (int) $redisSessionLockMaxWait
+            : LockingRedisSessionHandler::DEFAULT_LOCK_MAX_WAIT_SECONDS;
+
         $this->logger->debug("Predis Sentinel constructor initialized successfully.", [
             'predisSentinels' => $this->predisSentinels,
             'predisMaster' => $this->predisMaster,
@@ -143,13 +158,10 @@ class SentinelUtil
             'sentinelKeyFile' => $this->sentinelKeyFile,
             'masterCaFile' => $this->masterCaFile,
             'masterCertFile' => $this->masterCertFile,
-            'masterKeyFile' => $this->masterKeyFile
+            'masterKeyFile' => $this->masterKeyFile,
+            'redisSessionLockTtl' => $this->redisSessionLockTtl,
+            'redisSessionLockMaxWait' => $this->redisSessionLockMaxWait,
         ]);
-    }
-
-    public static function getRedisSessionStorage(): RedisSessionHandler
-    {
-        return new RedisSessionHandler((new self())->configureClient());
     }
 
     public function configureClient(): Client
@@ -226,6 +238,7 @@ class SentinelUtil
 
     public function configure(int $ttl): \SessionHandlerInterface {
         $redis = self::configureClient();
-        return new RedisSessionHandler($redis, ['ttl' => $ttl]);
+        $inner = new RedisSessionHandler($redis, ['ttl' => $ttl]);
+        return new LockingRedisSessionHandler($redis, $inner, $this->redisSessionLockTtl, $this->redisSessionLockMaxWait);
     }
 }
