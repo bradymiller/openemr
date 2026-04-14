@@ -363,6 +363,91 @@ build_test_e2e() {
 }
 
 ##
+# Verify that OpenEMR is healthy after a Redis master failover.
+#
+# Steps:
+#  1. Confirm the app is healthy before touching Redis
+#  2. Stop the redis-master container to trigger sentinel election
+#  3. Poll until sentinel reports the new master as clean (flags == "master")
+#  4. Confirm the app recovers within the post-failover window
+#  5. Restart redis-master so it re-joins as a replica (leaves cluster intact)
+build_test_redis_failover() {
+    local sentinel_container="sentinel-1"
+    local sentinel_master_name="redis-master"
+    local max_failover_wait=90
+    local poll_interval=3
+
+    echo "=== Redis Sentinel Failover Test ==="
+
+    # Step 1: health check before failover
+    echo "Step 1: Verifying OpenEMR health before failover..."
+    _exec curl -fsSL --max-time 15 http://localhost/meta/health/readyz
+    echo ""
+
+    # Step 2: stop the master
+    echo "Step 2: Stopping redis-master to trigger sentinel failover..."
+    dc stop redis-master
+
+    # Step 3: poll sentinel until a clean master is elected
+    echo "Step 3: Waiting for sentinel to elect a new master (up to ${max_failover_wait}s)..."
+    local elapsed=0
+    while true; do
+        # SENTINEL master <name> returns alternating field/value pairs;
+        # extract the value on the line following "flags".
+        # Sentinels have no requirepass in this config so no -a flag.
+        local flags
+        flags=$(dc exec -T "${sentinel_container}" \
+            redis-cli -p 26379 \
+            SENTINEL master "${sentinel_master_name}" 2>/dev/null \
+            | awk '/^"flags"$/{getline; print}' | tr -d '"' || echo "unavailable")
+
+        echo "  Sentinel master flags: '${flags}' (${elapsed}s elapsed)"
+
+        if [[ "${flags}" == "master" ]]; then
+            echo "  New master elected."
+            break
+        fi
+
+        if (( elapsed >= max_failover_wait )); then
+            echo "ERROR: Sentinel failover did not complete within ${max_failover_wait}s"
+            dc exec -T "${sentinel_container}" \
+                redis-cli -p 26379 \
+                SENTINEL master "${sentinel_master_name}" || true
+            return 1
+        fi
+
+        sleep "${poll_interval}"
+        (( elapsed += poll_interval )) || true
+    done
+
+    # Step 4: verify the app recovers — retry for up to 60 s because Predis
+    # creates a fresh client per request, so the first request after failover
+    # may still hit a brief connection window before the new master is stable
+    echo "Step 4: Verifying OpenEMR health after failover (up to 60s)..."
+    local retry=0
+    while true; do
+        if _exec curl -fsSL --max-time 15 http://localhost/meta/health/readyz 2>/dev/null; then
+            echo ""
+            echo "  OpenEMR is healthy after failover."
+            break
+        fi
+        (( retry++ )) || true
+        if (( retry >= 12 )); then
+            echo "ERROR: OpenEMR did not recover within 60s after sentinel failover"
+            return 1
+        fi
+        echo "  Health check attempt ${retry}/12 failed, retrying in 5s..."
+        sleep 5
+    done
+
+    # Step 5: bring redis-master back so it rejoins as a replica
+    echo "Step 5: Restarting redis-master (will rejoin cluster as a replica)..."
+    dc start redis-master
+
+    echo "=== Redis Sentinel Failover Test PASSED ==="
+}
+
+##
 # Print the webserver error log
 dump_error_log() {
     case "$1" in
@@ -434,6 +519,9 @@ build_test() {
              return
              ;;
         e2e) build_test_e2e "$@"
+             return
+             ;;
+        redis-failover) build_test_redis_failover "$@"
              return
              ;;
         *) :;;

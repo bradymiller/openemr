@@ -45,12 +45,14 @@ on:
         type: choice
         options:
         - apache_82_118
+        - apache_82_118_redis_sentinel
         - apache_83_118
         - apache_84_118
         - apache_85_1011
         - apache_85_106
         - apache_85_114
         - apache_85_118
+        - apache_85_118_redis_sentinel
         - apache_85_122
         - apache_85_57
         - apache_85_80
@@ -83,6 +85,7 @@ jobs:
       docker_dir: ${{ steps.parse.outputs.docker_dir }}
       e2e_enabled: ${{ steps.parse.outputs.e2e_enabled }}
       openemr_dir: ${{ steps.parse.outputs.openemr_dir }}
+      redis_sentinel_enabled: ${{ steps.parse.outputs.redis_sentinel_enabled }}
       suites: ${{ steps.compute-suites.outputs.suites }}
       compose_file: ${{ steps.parse-env.outputs.compose_file }}
       # Cache keys for restore in test jobs
@@ -101,6 +104,8 @@ jobs:
 
         # Extract outputs and write to GITHUB_OUTPUT
         jq -r '.[0].output | to_entries[] | "\(.key)=\(.value)"' parsed_config.json >> "$GITHUB_OUTPUT"
+        # redis_sentinel_enabled is not in output if template is absent; default to false
+        grep -q '^redis_sentinel_enabled=' "$GITHUB_OUTPUT" || echo 'redis_sentinel_enabled=false' >> "$GITHUB_OUTPUT"
 
         # Extract env vars and write to GITHUB_ENV
         jq -r '.[0].env | to_entries[] | "\(.key)=\(.value)"' parsed_config.json >> "$GITHUB_ENV"
@@ -116,11 +121,14 @@ jobs:
     - name: Compute test suite list
       id: compute-suites
       run: |
+        base='["unit","api","fixtures","services","validators","controllers","common","email"'
         if [[ '${{ steps.parse.outputs.e2e_enabled }}' = 'true' ]]; then
-          echo 'suites=["unit","api","fixtures","services","validators","controllers","common","email","e2e"]' >> "$GITHUB_OUTPUT"
-        else
-          echo 'suites=["unit","api","fixtures","services","validators","controllers","common","email"]' >> "$GITHUB_OUTPUT"
+          base="${base},"'"e2e"'
         fi
+        if [[ '${{ steps.parse.outputs.redis_sentinel_enabled }}' = 'true' ]]; then
+          base="${base},"'"redis-failover"'
+        fi
+        echo "suites=${base}]" >> "$GITHUB_OUTPUT"
 
     - name: Setup PHP
       uses: shivammathur/setup-php@v2
