@@ -46,12 +46,17 @@ services:
 
   sentinel-1:
     image: redis:8.6@sha256:1f073813b641755b70b0200da64131bbeeb4ec5b633ca67772229b49820caafa
-    command: ["redis-sentinel", "/etc/redis/sentinel.conf"]
+    # The sentinel.conf template is mounted read-only.  On startup, the template
+    # is copied to /tmp/sentinel.conf (writable by the redis user) before running
+    # redis-sentinel.  This avoids a permission problem on Linux CI runners where
+    # the mounted file is owned by the host runner user (uid 1001) but the redis
+    # process runs as the redis user (uid 999) and cannot write to it.  Redis
+    # Sentinel must be able to write its myid and runtime state back to the config.
+    entrypoint: ["/bin/sh", "-c"]
+    command:
+      - "cp /tmp/sentinel-template.conf /tmp/sentinel.conf && redis-sentinel /tmp/sentinel.conf"
     volumes:
-    # Each sentinel gets its own config file — sentinel writes its myid and runtime
-    # state (current master IP) back to the config on startup.  Sharing one file
-    # between two containers causes a write-race that corrupts it and exits both.
-    - ./sentinel-1.conf:/etc/redis/sentinel.conf
+    - ./sentinel-1.conf:/tmp/sentinel-template.conf:ro
     depends_on:
       redis-master:
         condition: service_healthy
@@ -65,10 +70,12 @@ services:
 
   sentinel-2:
     image: redis:8.6@sha256:1f073813b641755b70b0200da64131bbeeb4ec5b633ca67772229b49820caafa
-    command: ["redis-sentinel", "/etc/redis/sentinel.conf"]
+    # See sentinel-1 comment above for why the copy-to-tmp approach is used.
+    entrypoint: ["/bin/sh", "-c"]
+    command:
+      - "cp /tmp/sentinel-template.conf /tmp/sentinel.conf && redis-sentinel /tmp/sentinel.conf"
     volumes:
-    # Each sentinel gets its own config file — see sentinel-1 comment above.
-    - ./sentinel-2.conf:/etc/redis/sentinel.conf
+    - ./sentinel-2.conf:/tmp/sentinel-template.conf:ro
     depends_on:
       redis-master:
         condition: service_healthy
