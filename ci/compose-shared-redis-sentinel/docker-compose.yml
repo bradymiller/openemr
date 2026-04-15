@@ -48,8 +48,10 @@ services:
     image: redis:8.6@sha256:1f073813b641755b70b0200da64131bbeeb4ec5b633ca67772229b49820caafa
     command: ["redis-sentinel", "/etc/redis/sentinel.conf"]
     volumes:
-    # Not :ro — sentinel writes runtime state (current master IP) back to its config file
-    - ./sentinel.conf:/etc/redis/sentinel.conf
+    # Each sentinel gets its own config file — sentinel writes its myid and runtime
+    # state (current master IP) back to the config on startup.  Sharing one file
+    # between two containers causes a write-race that corrupts it and exits both.
+    - ./sentinel-1.conf:/etc/redis/sentinel.conf
     depends_on:
       redis-master:
         condition: service_healthy
@@ -65,8 +67,8 @@ services:
     image: redis:8.6@sha256:1f073813b641755b70b0200da64131bbeeb4ec5b633ca67772229b49820caafa
     command: ["redis-sentinel", "/etc/redis/sentinel.conf"]
     volumes:
-    # Not :ro — sentinel writes runtime state (current master IP) back to its config file
-    - ./sentinel.conf:/etc/redis/sentinel.conf
+    # Each sentinel gets its own config file — see sentinel-1 comment above.
+    - ./sentinel-2.conf:/etc/redis/sentinel.conf
     depends_on:
       redis-master:
         condition: service_healthy

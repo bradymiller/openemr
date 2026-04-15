@@ -395,10 +395,10 @@ build_test_redis_failover() {
         # SENTINEL master <name> returns alternating field/value pairs;
         # extract the value on the line following "flags".
         # Sentinels have no requirepass in this config so no -a flag.
-        # The || is on the assignment (not on dc directly) so set -e is not
-        # suppressed inside the dc function body.
+        # Use docker compose directly (not the dc() wrapper) so SC2310 is not
+        # triggered by a bash function appearing in a || condition.
         local flags
-        flags=$(dc exec -T "${sentinel_container}" \
+        flags=$(docker compose exec -T "${sentinel_container}" \
             redis-cli -p 26379 \
             SENTINEL master "${sentinel_master_name}" 2>/dev/null \
             | awk '/^"flags"$/{getline; print}' | tr -d '"' 2>/dev/null) || flags="unavailable"
@@ -412,9 +412,9 @@ build_test_redis_failover() {
 
         if (( elapsed >= max_failover_wait )); then
             echo "ERROR: Sentinel failover did not complete within ${max_failover_wait}s"
-            ( dc exec -T "${sentinel_container}" \
+            docker compose exec -T "${sentinel_container}" \
                 redis-cli -p 26379 \
-                SENTINEL master "${sentinel_master_name}" ) || true
+                SENTINEL master "${sentinel_master_name}" || true
             return 1
         fi
 
@@ -428,9 +428,10 @@ build_test_redis_failover() {
     echo "Step 4: Verifying OpenEMR health after failover (up to 60s)..."
     local retry=0
     while true; do
-        # Run in a subshell so _exec is not in an if/|| condition (avoids SC2310).
+        # Use docker compose exec directly (not _exec wrapper) so SC2310 is not
+        # triggered by a bash function appearing in a || condition.
         local health_status=0
-        ( _exec curl -fsSL --max-time 15 http://localhost/meta/health/readyz 2>/dev/null ) || health_status=$?
+        docker compose exec openemr curl -fsSL --max-time 15 http://localhost/meta/health/readyz 2>/dev/null || health_status=$?
         if [[ "${health_status}" -eq 0 ]]; then
             echo ""
             echo "  OpenEMR is healthy after failover."
