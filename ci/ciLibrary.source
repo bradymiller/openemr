@@ -379,6 +379,11 @@ build_test_redis_failover() {
 
     echo "=== Redis Sentinel Failover Test ==="
 
+    # Step 0: run PHPUnit locking integration tests against the healthy cluster
+    echo "Step 0: Running Redis session locking integration tests..."
+    phpunit --testsuite redis-sentinel
+    echo ""
+
     # Step 1: health check before failover
     echo "Step 1: Verifying OpenEMR health before failover..."
     _exec curl -fsSL --max-time 15 http://localhost/meta/health/readyz

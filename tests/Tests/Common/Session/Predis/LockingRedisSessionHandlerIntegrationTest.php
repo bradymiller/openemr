@@ -11,8 +11,10 @@
  *  - The Lua release script is a no-op when the stored token has been replaced by another owner
  *    (token mismatch prevents accidental release of a lock we no longer own)
  *
- * The tests skip automatically when SESSION_STORAGE_MODE is not 'predis-sentinel', so they
- * do not run on developer machines without Redis and do not interfere with the isolated suite.
+ * These tests are registered under the 'redis-sentinel' PHPUnit testsuite and invoked by
+ * build_test_redis_failover() in ci/ciLibrary.source before the failover steps, so they only
+ * run inside the OpenEMR container when the full sentinel cluster is available.  They are
+ * excluded from the 'common' testsuite to prevent double-execution in sentinel CI configs.
  *
  * Redis client construction mirrors SentinelUtil but omits sentinel-level AUTH: the CI sentinel
  * containers have no requirepass, so only the master password is forwarded.
@@ -61,12 +63,6 @@ class LockingRedisSessionHandlerIntegrationTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-
-        if (getenv('SESSION_STORAGE_MODE') !== 'predis-sentinel') {
-            $this->markTestSkipped(
-                'SESSION_STORAGE_MODE != predis-sentinel — skipping Redis Sentinel integration tests'
-            );
-        }
 
         $this->redis = $this->buildClient();
 
