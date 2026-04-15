@@ -159,7 +159,8 @@ class LockingRedisSessionHandlerTest extends TestCase
         $setCalls = $this->callsFor($calls, 'set');
         $this->assertCount(1, $setCalls, 'SET NX should be called once for lock acquisition');
         $this->assertSame('lock_sess123', $setCalls[0]['args'][0]);
-        $this->assertMatchesRegularExpression('/^[0-9a-f]{32}$/', (string) $setCalls[0]['args'][1]);
+        $this->assertIsString($setCalls[0]['args'][1]);
+        $this->assertMatchesRegularExpression('/^[0-9a-f]{32}$/', $setCalls[0]['args'][1]);
         $this->assertSame('PX', $setCalls[0]['args'][2]);
         $this->assertSame('NX', $setCalls[0]['args'][4]);
     }
@@ -196,7 +197,8 @@ class LockingRedisSessionHandlerTest extends TestCase
 
         $evalCalls = $this->callsFor($calls, 'eval');
         $this->assertCount(1, $evalCalls, 'Lua release script should be called once after write');
-        $this->assertStringContainsString('redis.call("GET"', (string) $evalCalls[0]['args'][0]);
+        $this->assertIsString($evalCalls[0]['args'][0]);
+        $this->assertStringContainsString('redis.call("GET"', $evalCalls[0]['args'][0]);
         $this->assertSame('lock_sess123', $evalCalls[0]['args'][2]);
     }
 
@@ -370,7 +372,7 @@ class LockingRedisSessionHandlerTest extends TestCase
         $this->assertSame('lock_sess-xyz', $evalCalls[0]['args'][2]);
         // ARGV[1] should be a 32-char hex token from bin2hex(random_bytes(16))
         $this->assertIsString($evalCalls[0]['args'][3]);
-        $this->assertMatchesRegularExpression('/^[0-9a-f]{32}$/', (string) $evalCalls[0]['args'][3]);
+        $this->assertMatchesRegularExpression('/^[0-9a-f]{32}$/', $evalCalls[0]['args'][3]);
     }
 
     public function testLuaTokenMatchesTokenUsedInSetNx(): void
