@@ -406,7 +406,7 @@ build_test_redis_failover() {
         flags=$(docker compose exec -T "${sentinel_container}" \
             redis-cli -p 26379 \
             SENTINEL master "${sentinel_master_name}" 2>/dev/null \
-            | awk '/^"flags"$/{getline; print}' | tr -d '"' 2>/dev/null) || flags="unavailable"
+            | awk '/^"?flags"?$/{getline; print}' | tr -d '"' 2>/dev/null) || flags="unavailable"
 
         echo "  Sentinel master flags: '${flags}' (${elapsed}s elapsed)"
 
