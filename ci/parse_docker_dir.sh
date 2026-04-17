@@ -83,9 +83,10 @@ parse() {
 
   # Compose file path (first entry must be directly in ci/, not a subdirectory,
   # because Docker Compose resolves all relative paths from the first file's directory)
-  compose_file="ci/${database_template}:ci/${webserver_template}:ci/${selenium_template}:ci/${mailpit_template}:ci/${docker_dir}/docker-compose.yml"
   if [[ -n "${redis_sentinel_template}" ]]; then
-    compose_file="${compose_file}:ci/${redis_sentinel_template}"
+    compose_file="ci/${database_template}:ci/${webserver_template}:ci/${selenium_template}:ci/${mailpit_template}:ci/${redis_sentinel_template}:ci/${docker_dir}/docker-compose.yml"
+  else
+    compose_file="ci/${database_template}:ci/${webserver_template}:ci/${selenium_template}:ci/${mailpit_template}:ci/${docker_dir}/docker-compose.yml"
   fi
 
   jq -cn \
