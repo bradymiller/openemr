@@ -107,7 +107,7 @@ class LockingRedisSessionHandlerIntegrationTest extends TestCase
         );
 
         $options = ['replication' => 'sentinel', 'service' => $masterName];
-        if ($masterPass !== null && $masterPass !== '') {
+        if ($masterPass !== null) {
             $options['parameters'] = ['password' => $masterPass];
         }
 

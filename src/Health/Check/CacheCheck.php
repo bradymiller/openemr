@@ -127,7 +127,7 @@ class CacheCheck implements HealthCheckInterface
         $masterName = getenv('REDIS_MASTER') ?: 'mymaster';
 
         $sentinelParameters = array_map(
-            fn($sentinel): array => ['host' => $sentinel],
+            fn($sentinel): array => ['host' => $sentinel, 'port' => 26379],
             $sentinelHosts
         );
 

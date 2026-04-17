@@ -47,6 +47,17 @@ class SessionUtilReadAndCloseTest extends TestCase
             session_write_close();
         }
 
+        // Isolate from bootstrap (interface/globals.php) state.
+        // Without this, the first tests in this class inherit session_id() and
+        // $_SESSION contents from the core OpenEMR session that globals.php
+        // opens — which, under predis-sentinel session storage, points to a
+        // session that exists in Redis but not in the file-based handler the
+        // tests switch to via Symfony's setSaveHandler(null). use_strict_mode
+        // then silently regenerates the session ID, desynchronising the test
+        // helper's captured $sessionId from what PHP actually reads/writes.
+        $_SESSION = [];
+        session_id(session_create_id());
+
         // Reset session name to default
         session_name('PHPSESSID');
 
@@ -79,6 +90,12 @@ class SessionUtilReadAndCloseTest extends TestCase
      * Helper: creates a ReadAndCloseNativeSessionStorage + Session, starts it,
      * and wires it into the SessionWrapperFactory singleton.
      *
+     * Writes a sentinel value in the setup session so the saved session data is
+     * non-empty. Without this, AbstractSessionHandler::write() sees empty data
+     * and calls destroy() instead — which, combined with use_strict_mode=1 on
+     * the follow-up read_and_close open, causes PHP to silently regenerate the
+     * session ID and desync from $ctx['sessionId'] used by the verify step.
+     *
      * @return array{storage: ReadAndCloseNativeSessionStorage, session: Session, sessionId: string}
      */
     private function createReadAndCloseSession(): array
@@ -91,6 +108,8 @@ class SessionUtilReadAndCloseTest extends TestCase
         ]);
         $setupSession = new Session($setupStorage, new AttributeBag('TestSessionUtil'));
         $setupSession->start();
+        // Sentinel value prevents write() from short-circuiting to destroy()
+        $setupSession->set('__test_sentinel', 1);
         $sessionId = $setupSession->getId();
         $setupSession->save();
 

@@ -386,7 +386,7 @@ build_test_redis_failover() {
 
     # Step 1: health check before failover
     echo "Step 1: Verifying OpenEMR health before failover..."
-    _exec curl -fsSL --max-time 15 http://localhost/meta/health/readyz
+    _exec curl -fsSL --insecure --max-time 15 https://localhost/meta/health/readyz
     echo ""
 
     # Step 2: stop the master
@@ -436,7 +436,7 @@ build_test_redis_failover() {
         # Use docker compose exec directly (not _exec wrapper) so SC2310 is not
         # triggered by a bash function appearing in a || condition.
         local health_status=0
-        docker compose exec openemr curl -fsSL --max-time 15 http://localhost/meta/health/readyz 2>/dev/null || health_status=$?
+        docker compose exec openemr curl -fsSL --insecure --max-time 15 https://localhost/meta/health/readyz 2>/dev/null || health_status=$?
         if [[ "${health_status}" -eq 0 ]]; then
             echo ""
             echo "  OpenEMR is healthy after failover."
