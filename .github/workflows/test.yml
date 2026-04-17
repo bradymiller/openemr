@@ -46,6 +46,8 @@ on:
         options:
         - apache_82_118
         - apache_82_118_redis_sentinel
+        - apache_82_118_redis_sentinel_tls
+        - apache_82_118_redis_sentinel_mtls
         - apache_83_118
         - apache_84_118
         - apache_85_1011

@@ -379,6 +379,20 @@ build_test_redis_failover() {
 
     echo "=== Redis Sentinel Failover Test ==="
 
+    # Detect TLS mode so redis-cli commands use the right flags.
+    # The openemr container carries the authoritative env vars.
+    local redis_cli_tls_args=""
+    local _tls _x509
+    _tls=$(docker compose exec -T openemr printenv REDIS_TLS 2>/dev/null) || _tls=""
+    if [[ "${_tls}" == "yes" ]]; then
+        redis_cli_tls_args="--tls --cacert /certs/ca.crt"
+        _x509=$(docker compose exec -T openemr printenv REDIS_X509 2>/dev/null) || _x509=""
+        if [[ "${_x509}" == "yes" ]]; then
+            redis_cli_tls_args="${redis_cli_tls_args} --cert /certs/client.crt --key /certs/client.key"
+        fi
+        echo "TLS mode detected (redis_cli_tls_args: ${redis_cli_tls_args})"
+    fi
+
     # Step 0: run PHPUnit locking integration tests against the healthy cluster
     echo "Step 0: Running Redis session locking integration tests..."
     phpunit --testsuite redis-sentinel
@@ -402,9 +416,10 @@ build_test_redis_failover() {
         # Sentinels have no requirepass in this config so no -a flag.
         # Use docker compose directly (not the dc() wrapper) so SC2310 is not
         # triggered by a bash function appearing in a || condition.
+        # shellcheck disable=SC2086
         local flags
         flags=$(docker compose exec -T "${sentinel_container}" \
-            redis-cli -p 26379 \
+            redis-cli ${redis_cli_tls_args} -p 26379 \
             SENTINEL master "${sentinel_master_name}" 2>/dev/null \
             | awk '/^"?flags"?$/{getline; print}' | tr -d '"' 2>/dev/null) || flags="unavailable"
 
@@ -417,8 +432,9 @@ build_test_redis_failover() {
 
         if (( elapsed >= max_failover_wait )); then
             echo "ERROR: Sentinel failover did not complete within ${max_failover_wait}s"
+            # shellcheck disable=SC2086
             docker compose exec -T "${sentinel_container}" \
-                redis-cli -p 26379 \
+                redis-cli ${redis_cli_tls_args} -p 26379 \
                 SENTINEL master "${sentinel_master_name}" || true
             return 1
         fi

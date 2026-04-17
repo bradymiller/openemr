@@ -12,6 +12,7 @@
 
 namespace OpenEMR\Health\Check;
 
+use OpenEMR\Common\Session\Predis\SentinelUtil;
 use OpenEMR\Health\HealthCheckInterface;
 use OpenEMR\Health\HealthCheckResult;
 use Predis\Client;
@@ -97,7 +98,10 @@ class CacheCheck implements HealthCheckInterface
     }
 
     /**
-     * Check Redis Sentinel connection
+     * Check Redis Sentinel connection.
+     *
+     * Reuses SentinelUtil::configureClient() so TLS / mTLS settings are
+     * automatically picked up from the environment.
      */
     private function checkRedisSentinel(): ?HealthCheckResult
     {
@@ -106,42 +110,7 @@ class CacheCheck implements HealthCheckInterface
             return null;
         }
 
-        $sentinels = getenv('REDIS_SENTINELS');
-        if ($sentinels === false || $sentinels === '') {
-            return new HealthCheckResult(
-                $this->getName(),
-                false,
-                'Redis sentinels not configured'
-            );
-        }
-
-        $sentinelHosts = array_filter(explode('|||', $sentinels), fn($s): bool => $s !== '');
-        if (count($sentinelHosts) === 0) {
-            return new HealthCheckResult(
-                $this->getName(),
-                false,
-                'Invalid Redis sentinel configuration'
-            );
-        }
-
-        $masterName = getenv('REDIS_MASTER') ?: 'mymaster';
-
-        $sentinelParameters = array_map(
-            fn($sentinel): array => ['host' => $sentinel, 'port' => 26379],
-            $sentinelHosts
-        );
-
-        $options = [
-            'replication' => 'sentinel',
-            'service' => $masterName,
-        ];
-
-        $password = getenv('REDIS_MASTER_PASSWORD');
-        if ($password !== false && $password !== '') {
-            $options['parameters'] = ['password' => $password];
-        }
-
-        $redis = new Client($sentinelParameters, $options);
+        $redis = (new SentinelUtil())->configureClient();
         $response = $redis->ping();
 
         if ($response->getPayload() !== 'PONG') {

@@ -16,8 +16,8 @@
  * run inside the OpenEMR container when the full sentinel cluster is available.  They are
  * excluded from the 'common' testsuite to prevent double-execution in sentinel CI configs.
  *
- * Redis client construction mirrors SentinelUtil but omits sentinel-level AUTH: the CI sentinel
- * containers have no requirepass, so only the master password is forwarded.
+ * Redis client construction delegates to SentinelUtil::configureClient() so that TLS and mTLS
+ * modes are automatically supported based on the REDIS_TLS / REDIS_X509 environment variables.
  *
  * @package   OpenEMR
  * @link      https://www.open-emr.org
@@ -31,6 +31,7 @@ declare(strict_types=1);
 namespace OpenEMR\Tests\Common\Session\Predis;
 
 use OpenEMR\Common\Session\Predis\LockingRedisSessionHandler;
+use OpenEMR\Common\Session\Predis\SentinelUtil;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Predis\Client;
@@ -87,31 +88,12 @@ class LockingRedisSessionHandlerIntegrationTest extends TestCase
     /**
      * Build a Predis sentinel client from the env vars set by the CI compose stack.
      *
-     * Sentinel-level AUTH is intentionally omitted: the CI sentinel containers have no
-     * requirepass directive, so sending AUTH would return an error.  Only the master
-     * password (which the master does require) is forwarded.
+     * Delegates to SentinelUtil::configureClient() which handles plain TCP, TLS, and
+     * mTLS modes based on the REDIS_TLS / REDIS_X509 environment variables.
      */
     private function buildClient(): Client
     {
-        $rawSentinels = (string) getenv('REDIS_SENTINELS');
-        $masterName   = (string) (getenv('REDIS_MASTER') ?: 'mymaster');
-        $masterPass   = getenv('REDIS_MASTER_PASSWORD') ?: null;
-
-        $sentinelParameters = array_map(
-            static fn(string $host): array => [
-                'scheme' => 'tcp',
-                'host'   => trim($host),
-                'port'   => 26379,
-            ],
-            explode('|||', $rawSentinels),
-        );
-
-        $options = ['replication' => 'sentinel', 'service' => $masterName];
-        if ($masterPass !== null) {
-            $options['parameters'] = ['password' => $masterPass];
-        }
-
-        return new Client($sentinelParameters, $options);
+        return (new SentinelUtil())->configureClient();
     }
 
     /**
