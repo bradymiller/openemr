@@ -34,14 +34,11 @@ services:
           -subj "/CN=test-ca" 2>/dev/null
 
         # --- Server cert (covers every Redis/Sentinel hostname) ---
-        SAN="DNS:redis-master,DNS:redis-replica-1,DNS:redis-replica-2,DNS:sentinel-1,DNS:sentinel-2,DNS:localhost"
+        echo "subjectAltName=DNS:redis-master,DNS:redis-replica-1,DNS:redis-replica-2,DNS:sentinel-1,DNS:sentinel-2,DNS:localhost" > /tmp/san.ext
         openssl genrsa -out server.key 2048 2>/dev/null
         openssl req -new -key server.key -subj "/CN=redis" 2>/dev/null \
           | openssl x509 -req -CA ca.crt -CAkey ca.key -CAcreateserial \
-              -extfile /dev/stdin -days 1 -out server.crt 2>/dev/null \
-              <<SANEOF
-        subjectAltName=$${SAN}
-        SANEOF
+              -extfile /tmp/san.ext -days 1 -out server.crt 2>/dev/null
 
         # --- Client cert (for mTLS variant; harmless to generate always) ---
         openssl genrsa -out client.key 2048 2>/dev/null

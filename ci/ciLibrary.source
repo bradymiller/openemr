@@ -377,21 +377,23 @@ build_test_redis_failover() {
     local max_failover_wait=90
     local poll_interval=3
 
-    echo "=== Redis Sentinel Failover Test ==="
-
     # Detect TLS mode so redis-cli commands use the right flags.
     # The openemr container carries the authoritative env vars.
     local redis_cli_tls_args=""
+    local tls_label=""
     local _tls _x509
     _tls=$(docker compose exec -T openemr printenv REDIS_TLS 2>/dev/null) || _tls=""
     if [[ "${_tls}" == "yes" ]]; then
         redis_cli_tls_args="--tls --cacert /certs/ca.crt"
+        tls_label=" (TLS)"
         _x509=$(docker compose exec -T openemr printenv REDIS_X509 2>/dev/null) || _x509=""
         if [[ "${_x509}" == "yes" ]]; then
             redis_cli_tls_args="${redis_cli_tls_args} --cert /certs/client.crt --key /certs/client.key"
+            tls_label=" (mTLS)"
         fi
-        echo "TLS mode detected (redis_cli_tls_args: ${redis_cli_tls_args})"
     fi
+
+    echo "=== Redis Sentinel${tls_label} Failover Test ==="
 
     # Step 0: run PHPUnit locking integration tests against the healthy cluster
     echo "Step 0: Running Redis session locking integration tests..."
@@ -471,7 +473,7 @@ build_test_redis_failover() {
     echo "Step 5: Restarting redis-master (will rejoin cluster as a replica)..."
     dc start redis-master
 
-    echo "=== Redis Sentinel Failover Test PASSED ==="
+    echo "=== Redis Sentinel${tls_label} Failover Test PASSED ==="
 }
 
 ##
