@@ -20,11 +20,12 @@ x-includes:
 services:
   # ---------- cert generation ----------
   redis-tls-init:
-    image: redis:8.6@sha256:1f073813b641755b70b0200da64131bbeeb4ec5b633ca67772229b49820caafa
+    image: alpine:3.21
     entrypoint: ["/bin/sh", "-c"]
     command:
       - |
         set -ex
+        apk add --no-cache openssl
         cd /certs
 
         # --- CA ---
