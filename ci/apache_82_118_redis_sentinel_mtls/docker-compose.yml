@@ -17,31 +17,29 @@ x-includes:
 services:
   # ---------- cert generation (identical to TLS variant) ----------
   redis-tls-init:
-    image: alpine:3.21
+    image: redis:8.6@sha256:1f073813b641755b70b0200da64131bbeeb4ec5b633ca67772229b49820caafa
     entrypoint: ["/bin/sh", "-c"]
     command:
       - |
-        set -e
-        apk add --no-cache openssl >/dev/null 2>&1
+        set -ex
         cd /certs
 
         # --- CA ---
-        openssl genrsa -out ca.key 2048 2>/dev/null
-        openssl req -x509 -new -key ca.key -days 1 -out ca.crt \
-          -subj "/CN=test-ca" 2>/dev/null
+        openssl genrsa -out ca.key 2048
+        openssl req -x509 -new -key ca.key -days 1 -out ca.crt -subj "/CN=test-ca"
 
         # --- Server cert (covers every Redis/Sentinel hostname) ---
         echo "subjectAltName=DNS:redis-master,DNS:redis-replica-1,DNS:redis-replica-2,DNS:sentinel-1,DNS:sentinel-2,DNS:localhost" > /tmp/san.ext
-        openssl genrsa -out server.key 2048 2>/dev/null
-        openssl req -new -key server.key -subj "/CN=redis" 2>/dev/null \
+        openssl genrsa -out server.key 2048
+        openssl req -new -key server.key -subj "/CN=redis" \
           | openssl x509 -req -CA ca.crt -CAkey ca.key -CAcreateserial \
-              -extfile /tmp/san.ext -days 1 -out server.crt 2>/dev/null
+              -extfile /tmp/san.ext -days 1 -out server.crt
 
         # --- Client cert (required for mTLS) ---
-        openssl genrsa -out client.key 2048 2>/dev/null
-        openssl req -new -key client.key -subj "/CN=openemr-client" 2>/dev/null \
+        openssl genrsa -out client.key 2048
+        openssl req -new -key client.key -subj "/CN=openemr-client" \
           | openssl x509 -req -CA ca.crt -CAkey ca.key -CAcreateserial \
-              -days 1 -out client.crt 2>/dev/null
+              -days 1 -out client.crt
 
         # --- Symlinks matching SentinelUtil's expected filenames ---
         ln -sf ca.crt redis-sentinel-ca
@@ -52,6 +50,7 @@ services:
         ln -sf client.key redis-master-key
 
         chmod 644 *.crt *.key ca.key
+        ls -la /certs/
     volumes:
       - redis-certs:/certs
 
