@@ -175,11 +175,9 @@ class SentinelUtil
 
         $sentinelParameters = array_map(function ($host) use ($useTls, $useClientCert, $sentinelCaFile, $sentinelCertFile, $sentinelKeyFile, $sentinelPassword) {
             $parameters = [
-                'scheme'       => $useTls ? 'tls' : 'tcp',
-                'host'         => $host,
-                'port'         => 26379,
-                'timeout'      => 5.0,
-                'read_write_timeout' => 5.0,
+                'scheme' => $useTls ? 'tls' : 'tcp',
+                'host'   => $host,
+                'port'   => 26379,
             ];
 
             if ($useTls) {
@@ -210,10 +208,7 @@ class SentinelUtil
             'service'     => $this->predisMaster
         ];
 
-        $parameters = [
-            'timeout'      => 5.0,
-            'read_write_timeout' => 5.0,
-        ];
+        $parameters = [];
         if (!empty($this->predisMasterPassword)) {
             $parameters['password'] = $this->predisMasterPassword;
         }
@@ -233,7 +228,9 @@ class SentinelUtil
             $parameters['ssl'] = $sslOptions;
         }
 
-        $options['parameters'] = $parameters;
+        if (!empty($parameters)) {
+            $options['parameters'] = $parameters;
+        }
 
         // Create a new Predis client instance
         return new Client($sentinelParameters, $options);

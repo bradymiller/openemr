@@ -400,12 +400,9 @@ build_test_redis_failover() {
     phpunit --testsuite redis-sentinel
     echo ""
 
-    # Step 1: verify the web server is running before we start the failover.
-    # Uses /livez (not /readyz) because readyz loads the full framework including
-    # a Redis session; under TLS/mTLS the Apache worker's TLS handshake to
-    # sentinels can hang.  Redis connectivity is already proven by Step 0.
-    echo "Step 1: Verifying OpenEMR web server is alive before failover..."
-    _exec curl -fsSL --insecure --max-time 15 https://localhost/meta/health/livez
+    # Step 1: health check before failover
+    echo "Step 1: Verifying OpenEMR health before failover..."
+    _exec curl -fsSL --insecure --max-time 15 https://localhost/meta/health/readyz
     echo ""
 
     # Step 2: stop the master
@@ -446,34 +443,27 @@ build_test_redis_failover() {
         (( elapsed += poll_interval )) || true
     done
 
-    # Step 4: verify the app can reach the new Redis master after failover.
-    # Uses a CLI PHP script that creates a fresh Predis sentinel client and
-    # pings the master.  This directly tests what matters (Predis discovers the
-    # promoted replica) without going through Apache (where TLS-to-sentinel
-    # hangs in CI).  Retries for up to 60 s to allow Predis connection caches
-    # to expire and the new master to stabilise.
-    echo "Step 4: Verifying Redis connectivity after failover (up to 60s)..."
+    # Step 4: verify the app recovers — retry for up to 60 s because Predis
+    # creates a fresh client per request, so the first request after failover
+    # may still hit a brief connection window before the new master is stable
+    echo "Step 4: Verifying OpenEMR health after failover (up to 60s)..."
     local retry=0
     while true; do
-        local ping_status=0
-        docker compose exec -T openemr php -r '
-            require "/var/www/localhost/htdocs/openemr/vendor/autoload.php";
-            $redis = (new \OpenEMR\Common\Session\Predis\SentinelUtil())->configureClient();
-            $pong = $redis->ping();
-            if ($pong->getPayload() !== "PONG") { exit(1); }
-            echo "PONG\n";
-        ' 2>/dev/null || ping_status=$?
-        if [[ "${ping_status}" -eq 0 ]]; then
+        # Use docker compose exec directly (not _exec wrapper) so SC2310 is not
+        # triggered by a bash function appearing in a || condition.
+        local health_status=0
+        docker compose exec openemr curl -fsSL --insecure --max-time 15 https://localhost/meta/health/readyz 2>/dev/null || health_status=$?
+        if [[ "${health_status}" -eq 0 ]]; then
             echo ""
-            echo "  Redis is reachable via sentinel after failover."
+            echo "  OpenEMR is healthy after failover."
             break
         fi
         (( retry++ )) || true
         if (( retry >= 12 )); then
-            echo "ERROR: Redis not reachable via sentinel within 60s after failover"
+            echo "ERROR: OpenEMR did not recover within 60s after sentinel failover"
             return 1
         fi
-        echo "  Redis ping attempt ${retry}/12 failed, retrying in 5s..."
+        echo "  Health check attempt ${retry}/12 failed, retrying in 5s..."
         sleep 5
     done
 
