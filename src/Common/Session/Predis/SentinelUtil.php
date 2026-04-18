@@ -177,11 +177,12 @@ class SentinelUtil
      */
     public function configureClient(): \Redis
     {
-        $masterAddress = $this->discoverMaster();
+        [$masterHost, $masterPort] = $this->discoverMaster();
 
         $redis = new \Redis();
 
-        $host = $this->predisTls ? 'tls://' . $masterAddress[0] : $masterAddress[0];
+        $host = $this->predisTls ? 'tls://' . $masterHost : $masterHost;
+        /** @var array{stream?: array<string, bool|string|null>} $options */
         $options = [];
         if ($this->predisTls) {
             $sslOptions = [
@@ -198,7 +199,7 @@ class SentinelUtil
 
         $connected = $redis->connect(
             $host,
-            (int) $masterAddress[1],
+            $masterPort,
             3.0,   // connectTimeout
             null,  // persistentId
             0,     // retryInterval
@@ -208,9 +209,9 @@ class SentinelUtil
 
         if (!$connected) {
             throw new \RuntimeException(sprintf(
-                'Failed to connect to Redis master at %s:%s',
-                $masterAddress[0],
-                $masterAddress[1],
+                'Failed to connect to Redis master at %s:%d',
+                $masterHost,
+                $masterPort,
             ));
         }
 
@@ -239,41 +240,30 @@ class SentinelUtil
 
         foreach ($this->predisSentinels as $sentinelHost) {
             try {
-                $sentinelOptions = [
-                    'host'           => $this->predisTls ? 'tls://' . trim($sentinelHost) : trim($sentinelHost),
+                $host = $this->predisTls ? 'tls://' . trim($sentinelHost) : trim($sentinelHost);
+
+                // phpredis 6.0+ supports an array constructor for RedisSentinel with
+                // TLS options.  PHPStan stubs only know the older positional constructor.
+                // @phpstan-ignore argument.type
+                $sentinel = new \RedisSentinel([
+                    'host'           => $host,
                     'port'           => 26379,
                     'connectTimeout' => 3.0,
                     'readTimeout'    => 3.0,
-                ];
+                ] + $this->buildSentinelAuthOptions() + $this->buildSentinelSslOptions());
 
-                if (!empty($this->predisSentinelsPassword)) {
-                    $sentinelOptions['auth'] = $this->predisSentinelsPassword;
-                }
-
-                if ($this->predisTls) {
-                    $sslOptions = [
-                        'verify_peer'      => true,
-                        'verify_peer_name' => true,
-                        'cafile'           => $this->sentinelCaFile,
-                    ];
-                    if ($this->predisX509) {
-                        $sslOptions['local_cert'] = $this->sentinelCertFile;
-                        $sslOptions['local_pk']   = $this->sentinelKeyFile;
-                    }
-                    $sentinelOptions['ssl'] = $sslOptions;
-                }
-
-                $sentinel = new \RedisSentinel($sentinelOptions);
                 $masterInfo = $sentinel->getMasterAddrByName($this->predisMaster);
 
-                if (is_array($masterInfo) && count($masterInfo) >= 2) {
+                if (is_array($masterInfo) && isset($masterInfo[0], $masterInfo[1])) {
+                    $masterHost = (string) $masterInfo[0];
+                    $masterPort = (int) $masterInfo[1];
                     $this->logger->debug('Discovered Redis master via sentinel', [
                         'sentinel' => $sentinelHost,
-                        'master'   => $masterInfo[0] . ':' . $masterInfo[1],
+                        'master'   => $masterHost . ':' . $masterPort,
                     ]);
-                    return $masterInfo;
+                    return [$masterHost, $masterPort];
                 }
-            } catch (\Throwable $e) {
+            } catch (\RedisException $e) {
                 $lastException = $e;
                 $this->logger->warning('Sentinel query failed, trying next', [
                     'sentinel' => $sentinelHost,
@@ -288,5 +278,37 @@ class SentinelUtil
             0,
             $lastException,
         );
+    }
+
+    /**
+     * @return array<string, string>
+     */
+    private function buildSentinelAuthOptions(): array
+    {
+        if (!empty($this->predisSentinelsPassword)) {
+            return ['auth' => $this->predisSentinelsPassword];
+        }
+        return [];
+    }
+
+    /**
+     * @return array<string, array<string, bool|string|null>>
+     */
+    private function buildSentinelSslOptions(): array
+    {
+        if (!$this->predisTls) {
+            return [];
+        }
+
+        $sslOptions = [
+            'verify_peer'      => true,
+            'verify_peer_name' => true,
+            'cafile'           => $this->sentinelCaFile,
+        ];
+        if ($this->predisX509) {
+            $sslOptions['local_cert'] = $this->sentinelCertFile;
+            $sslOptions['local_pk']   = $this->sentinelKeyFile;
+        }
+        return ['ssl' => $sslOptions];
     }
 }
