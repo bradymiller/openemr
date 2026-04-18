@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "f985c40c2715336e4d8f07b7b9bc4f83",
+    "content-hash": "e605efd3b86c7b95188135071ed52a8d",
     "packages": [
         {
             "name": "academe/authorizenet-objects",
@@ -16431,11 +16431,11 @@
         "ext-libxml": "*",
         "ext-mbstring": "*",
         "ext-mysqli": "*",
-        "ext-redis": "*",
         "ext-openssl": "*",
         "ext-pdo": "*",
         "ext-pdo_mysql": "*",
         "ext-phar": "*",
+        "ext-redis": "*",
         "ext-session": "*",
         "ext-simplexml": "*",
         "ext-soap": "*",
