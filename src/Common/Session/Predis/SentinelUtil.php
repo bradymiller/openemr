@@ -260,7 +260,7 @@ class SentinelUtil
                         $sslOptions['local_cert'] = $this->sentinelCertFile;
                         $sslOptions['local_pk']   = $this->sentinelKeyFile;
                     }
-                    $sentinelOptions['stream'] = $sslOptions;
+                    $sentinelOptions['ssl'] = $sslOptions;
                 }
 
                 $sentinel = new \RedisSentinel($sentinelOptions);
