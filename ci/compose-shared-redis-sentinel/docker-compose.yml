@@ -110,7 +110,9 @@ services:
       SESSION_STORAGE_MODE: predis-sentinel
       REDIS_SENTINELS: sentinel-1|||sentinel-2
       REDIS_MASTER: redis-master
-      REDIS_SENTINELS_PASSWORD: strongpassword
+      # REDIS_SENTINELS_PASSWORD is intentionally omitted: the CI sentinel
+      # containers have no requirepass directive.  Only the master password
+      # (used by sentinel auth-pass and by the session handler) is needed.
       REDIS_MASTER_PASSWORD: strongpassword
     depends_on:
       sentinel-1:
