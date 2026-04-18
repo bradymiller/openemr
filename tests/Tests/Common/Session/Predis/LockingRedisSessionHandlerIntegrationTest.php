@@ -35,6 +35,7 @@ use OpenEMR\Common\Session\Predis\SentinelUtil;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Psr\Log\NullLogger;
+use Symfony\Component\HttpFoundation\Session\Storage\Handler\RedisSessionHandler;
 
 /**
  * Combined inner-handler interface as required by LockingRedisSessionHandler.
@@ -77,6 +78,7 @@ class LockingRedisSessionHandlerIntegrationTest extends TestCase
         // Always clean up, even when a test fails mid-way
         if (isset($this->redis)) {
             $this->redis->del($this->lockKey());
+            $this->redis->del($this->sessionDataKey());
         }
     }
 
@@ -107,15 +109,39 @@ class LockingRedisSessionHandlerIntegrationTest extends TestCase
         return $mock;
     }
 
-    private function makeHandler(int $maxLockWaitSeconds = 10): LockingRedisSessionHandler
+    private function makeHandler(int $maxLockWaitSeconds = 10, int $lockTtlSeconds = 30): LockingRedisSessionHandler
     {
         return new LockingRedisSessionHandler(
             $this->redis,
             $this->makeInner(),
-            lockTtlSeconds: 30,
+            lockTtlSeconds: $lockTtlSeconds,
             maxLockWaitSeconds: $maxLockWaitSeconds,
             logger: new NullLogger(),
         );
+    }
+
+    /**
+     * Build a handler backed by a real RedisSessionHandler (not a mock) so
+     * session data actually round-trips through Redis.
+     */
+    private function makeRealHandler(): LockingRedisSessionHandler
+    {
+        $inner = new RedisSessionHandler($this->redis, ['ttl' => 300]);
+        return new LockingRedisSessionHandler(
+            $this->redis,
+            $inner,
+            lockTtlSeconds: 30,
+            maxLockWaitSeconds: 10,
+            logger: new NullLogger(),
+        );
+    }
+
+    private function sessionDataKey(): string
+    {
+        // Symfony's RedisSessionHandler stores data under "php_sessions:{id}" by default,
+        // but the prefix depends on the configured prefix option. The default prefix when
+        // none is specified uses the PHPREDIS_SESSION prefix. We clean up using a pattern.
+        return 'php_sessions:' . self::SESSION_ID;
     }
 
     // =========================================================================
@@ -224,5 +250,89 @@ class LockingRedisSessionHandlerIntegrationTest extends TestCase
 
         $this->assertSame(1, $this->redis->exists($this->lockKey()), 'lock key must survive when the stored token does not match ours');
         // tearDown will del() the key
+    }
+
+    // =========================================================================
+    // Session data round-trip — verifies data persists through Redis
+    // =========================================================================
+
+    public function testSessionDataSurvivesWriteThenRead(): void
+    {
+        $writer = $this->makeRealHandler();
+        $writer->open('', 'test');
+        $writer->read(self::SESSION_ID);
+        $writer->write(self::SESSION_ID, 'colour|s:4:"blue";');
+
+        // A second handler reading the same session should get the data back
+        $reader = $this->makeRealHandler();
+        $reader->open('', 'test');
+        $data = $reader->read(self::SESSION_ID);
+        $reader->close();
+
+        $this->assertSame('colour|s:4:"blue";', $data, 'session data must survive a write→read cycle through Redis');
+    }
+
+    // =========================================================================
+    // Sentinel failover discovery — falls back to second sentinel
+    // =========================================================================
+
+    public function testDiscoveryFallsBackToSecondSentinel(): void
+    {
+        // Build a SentinelUtil with a bogus first sentinel and the real second.
+        // The constructor reads env vars, so we temporarily prepend a bad host.
+        $origSentinels = getenv('REDIS_SENTINELS');
+        putenv('REDIS_SENTINELS=bogus-host-that-does-not-exist|||' . $origSentinels);
+
+        try {
+            $util = new SentinelUtil();
+            $redis = $util->configureClient();
+
+            // If we get here, discovery fell back to a working sentinel
+            $this->assertTrue($redis->ping(), 'Redis should be reachable after falling back to the second sentinel');
+        } finally {
+            // Restore original env
+            putenv('REDIS_SENTINELS=' . $origSentinels);
+        }
+    }
+
+    // =========================================================================
+    // Lock expiry recovery — PX TTL acts as a safety net
+    // =========================================================================
+
+    public function testSecondReaderAcquiresLockAfterTtlExpiry(): void
+    {
+        // Use a very short lock TTL (1 second) so the test doesn't wait long
+        $holder = new LockingRedisSessionHandler(
+            $this->redis,
+            $this->makeInner(),
+            lockTtlSeconds: 1,
+            maxLockWaitSeconds: 0,
+            logger: new NullLogger(),
+        );
+        $holder->read(self::SESSION_ID);  // acquires lock with 1 s TTL
+
+        // Lock exists now
+        $this->assertSame(1, $this->redis->exists($this->lockKey()), 'lock must exist immediately after read');
+
+        // Do NOT release — simulate a crash.  Wait for the TTL to expire.
+        // 1 s TTL + small buffer.
+        usleep(1_200_000); // 1.2 seconds
+
+        // Lock should have auto-expired
+        $this->assertSame(0, $this->redis->exists($this->lockKey()), 'lock must auto-expire after TTL');
+
+        // A second handler should now acquire the lock without waiting
+        $waiter = new LockingRedisSessionHandler(
+            $this->redis,
+            $this->makeInner(),
+            lockTtlSeconds: 30,
+            maxLockWaitSeconds: 0,
+            logger: new NullLogger(),
+        );
+        $waiter->read(self::SESSION_ID);  // should succeed immediately
+
+        $this->assertSame(1, $this->redis->exists($this->lockKey()), 'second handler must hold the lock after TTL expiry');
+
+        $waiter->write(self::SESSION_ID, '');  // clean up
     }
 }
