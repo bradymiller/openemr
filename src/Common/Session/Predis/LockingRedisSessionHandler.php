@@ -37,7 +37,6 @@ declare(strict_types=1);
 namespace OpenEMR\Common\Session\Predis;
 
 use OpenEMR\BC\ServiceContainer;
-use Predis\ClientInterface;
 use Psr\Log\LoggerInterface;
 
 class LockingRedisSessionHandler implements \SessionHandlerInterface, \SessionUpdateTimestampHandlerInterface
@@ -77,13 +76,13 @@ class LockingRedisSessionHandler implements \SessionHandlerInterface, \SessionUp
     private readonly LoggerInterface $logger;
 
     /**
-     * @param ClientInterface                                                     $redis              Predis client (same instance used by $inner)
+     * @param \Redis                                                              $redis              phpredis client (same instance used by $inner)
      * @param \SessionHandlerInterface&\SessionUpdateTimestampHandlerInterface    $inner              Inner handler that performs the actual Redis read/write
      * @param int                                                                 $lockTtlSeconds     Redis TTL for the lock key; should exceed the longest expected request
      * @param int                                                                 $maxLockWaitSeconds How long to spin-wait for the lock before giving up
      */
     public function __construct(
-        private readonly ClientInterface $redis,
+        private readonly \Redis $redis,
         private readonly \SessionHandlerInterface&\SessionUpdateTimestampHandlerInterface $inner,
         private readonly int $lockTtlSeconds = self::DEFAULT_LOCK_TTL_SECONDS,
         private readonly int $maxLockWaitSeconds = self::DEFAULT_LOCK_MAX_WAIT_SECONDS,
@@ -185,10 +184,10 @@ class LockingRedisSessionHandler implements \SessionHandlerInterface, \SessionUp
         $deadline = microtime(true) + $this->maxLockWaitSeconds;
 
         while (true) {
-            // Redis SET key value PX ttlMs NX — returns OK on success, null when key exists
-            $result = $this->redis->set($this->currentLockKey, $token, 'PX', $ttlMs, 'NX');
+            // phpredis SET with NX + PX — returns true on success, false when key exists
+            $result = $this->redis->set($this->currentLockKey, $token, ['NX', 'PX' => $ttlMs]);
 
-            if ($result !== null) {
+            if ($result === true) {
                 $this->lockToken = $token;
                 $this->logger->debug('Redis session lock acquired', [
                     'session_id' => $sessionId,
@@ -230,7 +229,8 @@ else
     return 0
 end
 LUA;
-        $this->redis->eval($script, 1, $this->currentLockKey, $this->lockToken);
+        // phpredis eval: script, [keys + args], numKeys
+        $this->redis->eval($script, [$this->currentLockKey, $this->lockToken], 1);
 
         $this->logger->debug('Redis session lock released', [
             'lock_key' => $this->currentLockKey,

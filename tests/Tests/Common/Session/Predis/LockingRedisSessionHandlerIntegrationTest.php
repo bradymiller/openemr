@@ -34,7 +34,6 @@ use OpenEMR\Common\Session\Predis\LockingRedisSessionHandler;
 use OpenEMR\Common\Session\Predis\SentinelUtil;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
-use Predis\Client;
 use Psr\Log\NullLogger;
 
 /**
@@ -44,7 +43,7 @@ interface InnerHandlerInterface extends \SessionHandlerInterface, \SessionUpdate
 
 class LockingRedisSessionHandlerIntegrationTest extends TestCase
 {
-    private Client $redis;
+    private \Redis $redis;
 
     /**
      * Fixed session ID used across all tests.
@@ -86,12 +85,10 @@ class LockingRedisSessionHandlerIntegrationTest extends TestCase
     // =========================================================================
 
     /**
-     * Build a Predis sentinel client from the env vars set by the CI compose stack.
-     *
-     * Delegates to SentinelUtil::configureClient() which handles plain TCP, TLS, and
-     * mTLS modes based on the REDIS_TLS / REDIS_X509 environment variables.
+     * Build a phpredis client via SentinelUtil which handles plain TCP, TLS,
+     * and mTLS modes based on the REDIS_TLS / REDIS_X509 environment variables.
      */
-    private function buildClient(): Client
+    private function buildClient(): \Redis
     {
         return (new SentinelUtil())->configureClient();
     }

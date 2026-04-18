@@ -15,7 +15,6 @@ namespace OpenEMR\Health\Check;
 use OpenEMR\Common\Session\Predis\SentinelUtil;
 use OpenEMR\Health\HealthCheckInterface;
 use OpenEMR\Health\HealthCheckResult;
-use Predis\Client;
 
 class CacheCheck implements HealthCheckInterface
 {
@@ -66,27 +65,24 @@ class CacheCheck implements HealthCheckInterface
         $redisTls = getenv('REDIS_TLS') === 'yes';
         $redisPassword = getenv('REDIS_PASSWORD') ?: null;
 
-        $parameters = [
-            'scheme' => $redisTls ? 'tls' : 'tcp',
-            'host' => $redisServer,
-            'port' => (int)$redisPort,
-        ];
-
-        if ($redisPassword !== null && $redisPassword !== '') {
-            $parameters['password'] = $redisPassword;
-        }
-
+        $redis = new \Redis();
+        $host = $redisTls ? 'tls://' . $redisServer : $redisServer;
+        $options = [];
         if ($redisTls) {
-            $parameters['ssl'] = [
+            $options['stream'] = [
                 'verify_peer' => false,
                 'verify_peer_name' => false,
             ];
         }
 
-        $redis = new Client($parameters);
-        $response = $redis->ping();
+        $redis->connect($host, (int) $redisPort, 3.0, null, 0, 3.0, $options);
 
-        if ($response->getPayload() !== 'PONG') {
+        if ($redisPassword !== null && $redisPassword !== '') {
+            $redis->auth($redisPassword);
+        }
+
+        $pong = $redis->ping();
+        if ($pong !== true) {
             return new HealthCheckResult(
                 $this->getName(),
                 false,
@@ -111,9 +107,9 @@ class CacheCheck implements HealthCheckInterface
         }
 
         $redis = (new SentinelUtil())->configureClient();
-        $response = $redis->ping();
+        $pong = $redis->ping();
 
-        if ($response->getPayload() !== 'PONG') {
+        if ($pong !== true) {
             return new HealthCheckResult(
                 $this->getName(),
                 false,

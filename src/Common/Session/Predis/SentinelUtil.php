@@ -16,18 +16,17 @@
 namespace OpenEMR\Common\Session\Predis;
 
 use OpenEMR\BC\ServiceContainer;
-use Predis\Client;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\Session\Storage\Handler\RedisSessionHandler;
 
 class SentinelUtil
 {
-    private static $sentinelCa = 'redis-sentinel-ca';
-    private static $sentinelCert = 'redis-sentinel-cert';
-    private static $sentinelKey = 'redis-sentinel-key';
-    private static $masterCa = 'redis-master-ca';
-    private static $masterCert = 'redis-master-cert';
-    private static $masterKey = 'redis-master-key';
+    private static string $sentinelCa = 'redis-sentinel-ca';
+    private static string $sentinelCert = 'redis-sentinel-cert';
+    private static string $sentinelKey = 'redis-sentinel-key';
+    private static string $masterCa = 'redis-master-ca';
+    private static string $masterCert = 'redis-master-cert';
+    private static string $masterKey = 'redis-master-key';
     private readonly string $sessionStorageMode;
     private readonly array $predisSentinels;
     private readonly string $predisMaster;
@@ -53,6 +52,11 @@ class SentinelUtil
     public function __construct(?LoggerInterface $logger = null)
     {
         $this->logger = $logger ?? ServiceContainer::getLogger();
+
+        if (!extension_loaded('redis')) {
+            $this->logger->error("phpredis extension is not loaded.");
+            throw new \RuntimeException("phpredis extension (ext-redis) is required for predis-sentinel session storage.");
+        }
 
         // required to ensure running correct mode
         $this->sessionStorageMode = getenv('SESSION_STORAGE_MODE', true) ?? null;
@@ -164,81 +168,125 @@ class SentinelUtil
         ]);
     }
 
-    public function configureClient(): Client
+    /**
+     * Query sentinels to discover the current master and return a connected \Redis client.
+     *
+     * Tries each sentinel in order.  The first one that responds with a valid
+     * master address wins.  TLS / mTLS settings are applied to both the sentinel
+     * query connections and the final master connection.
+     */
+    public function configureClient(): \Redis
     {
-        $useTls = $this->predisTls;
-        $useClientCert = $this->predisX509;
-        $sentinelCaFile = $this->sentinelCaFile;
-        $sentinelCertFile = $this->sentinelCertFile;
-        $sentinelKeyFile = $this->sentinelKeyFile;
-        $sentinelPassword = $this->predisSentinelsPassword;
+        $masterAddress = $this->discoverMaster();
 
-        $sentinelParameters = array_map(function ($host) use ($useTls, $useClientCert, $sentinelCaFile, $sentinelCertFile, $sentinelKeyFile, $sentinelPassword) {
-            $parameters = [
-                'scheme' => $useTls ? 'tls' : 'tcp',
-                'host'   => $host,
-                'port'   => 26379,
-            ];
+        $redis = new \Redis();
 
-            if ($useTls) {
-                $sslOptions = [
-                    'verify_peer'       => true,
-                    'verify_peer_name'  => true,
-                    'cafile'            => $sentinelCaFile,
-                ];
-
-                if ($useClientCert) {
-                    $sslOptions['local_cert'] = $sentinelCertFile;
-                    $sslOptions['local_pk']   = $sentinelKeyFile;
-                }
-
-                $parameters['ssl'] = $sslOptions;
-            }
-
-            if (!empty($sentinelPassword)) {
-                $parameters['password'] = $sentinelPassword;
-            }
-
-            return $parameters;
-        }, $this->predisSentinels);
-
-        // Define options for Sentinel
-        $options = [
-            'replication' => 'sentinel',
-            'service'     => $this->predisMaster
-        ];
-
-        $parameters = [];
-        if (!empty($this->predisMasterPassword)) {
-            $parameters['password'] = $this->predisMasterPassword;
-        }
-        if ($useTls) {
-            $parameters['scheme'] = 'tls';
+        $host = $this->predisTls ? 'tls://' . $masterAddress[0] : $masterAddress[0];
+        $options = [];
+        if ($this->predisTls) {
             $sslOptions = [
-                'verify_peer'       => true,
-                'verify_peer_name'  => true,
-                'cafile'            => $this->masterCaFile,
+                'verify_peer'      => true,
+                'verify_peer_name' => true,
+                'cafile'           => $this->masterCaFile,
             ];
-
-            if ($useClientCert) {
+            if ($this->predisX509) {
                 $sslOptions['local_cert'] = $this->masterCertFile;
                 $sslOptions['local_pk']   = $this->masterKeyFile;
             }
-
-            $parameters['ssl'] = $sslOptions;
+            $options['stream'] = $sslOptions;
         }
 
-        if (!empty($parameters)) {
-            $options['parameters'] = $parameters;
+        $connected = $redis->connect(
+            $host,
+            (int) $masterAddress[1],
+            3.0,   // connectTimeout
+            null,  // persistentId
+            0,     // retryInterval
+            3.0,   // readTimeout
+            $options,
+        );
+
+        if (!$connected) {
+            throw new \RuntimeException(sprintf(
+                'Failed to connect to Redis master at %s:%s',
+                $masterAddress[0],
+                $masterAddress[1],
+            ));
         }
 
-        // Create a new Predis client instance
-        return new Client($sentinelParameters, $options);
+        if (!empty($this->predisMasterPassword)) {
+            $redis->auth($this->predisMasterPassword);
+        }
+
+        return $redis;
     }
 
-    public function configure(int $ttl): \SessionHandlerInterface {
-        $redis = self::configureClient();
+    public function configure(int $ttl): \SessionHandlerInterface
+    {
+        $redis = $this->configureClient();
         $inner = new RedisSessionHandler($redis, ['ttl' => $ttl]);
         return new LockingRedisSessionHandler($redis, $inner, $this->redisSessionLockTtl, $this->redisSessionLockMaxWait);
+    }
+
+    /**
+     * Query each sentinel until one returns the master address.
+     *
+     * @return array{0: string, 1: int} [host, port]
+     */
+    private function discoverMaster(): array
+    {
+        $lastException = null;
+
+        foreach ($this->predisSentinels as $sentinelHost) {
+            try {
+                $sentinelOptions = [
+                    'host'           => $this->predisTls ? 'tls://' . trim($sentinelHost) : trim($sentinelHost),
+                    'port'           => 26379,
+                    'connectTimeout' => 3.0,
+                    'readTimeout'    => 3.0,
+                ];
+
+                if (!empty($this->predisSentinelsPassword)) {
+                    $sentinelOptions['auth'] = $this->predisSentinelsPassword;
+                }
+
+                if ($this->predisTls) {
+                    $sslOptions = [
+                        'verify_peer'      => true,
+                        'verify_peer_name' => true,
+                        'cafile'           => $this->sentinelCaFile,
+                    ];
+                    if ($this->predisX509) {
+                        $sslOptions['local_cert'] = $this->sentinelCertFile;
+                        $sslOptions['local_pk']   = $this->sentinelKeyFile;
+                    }
+                    $sentinelOptions['stream'] = $sslOptions;
+                }
+
+                $sentinel = new \RedisSentinel($sentinelOptions);
+                $masterInfo = $sentinel->getMasterAddrByName($this->predisMaster);
+
+                if (is_array($masterInfo) && count($masterInfo) >= 2) {
+                    $this->logger->debug('Discovered Redis master via sentinel', [
+                        'sentinel' => $sentinelHost,
+                        'master'   => $masterInfo[0] . ':' . $masterInfo[1],
+                    ]);
+                    return $masterInfo;
+                }
+            } catch (\Throwable $e) {
+                $lastException = $e;
+                $this->logger->warning('Sentinel query failed, trying next', [
+                    'sentinel' => $sentinelHost,
+                    'error'    => $e->getMessage(),
+                ]);
+            }
+        }
+
+        throw new \RuntimeException(
+            'Could not discover Redis master from any sentinel: '
+            . ($lastException !== null ? $lastException->getMessage() : 'all sentinels returned empty'),
+            0,
+            $lastException,
+        );
     }
 }

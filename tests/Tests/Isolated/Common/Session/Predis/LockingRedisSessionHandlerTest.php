@@ -16,10 +16,6 @@
  * All Redis and inner-handler interactions are verified with mocks — no
  * real Redis connection or Docker environment is required.
  *
- * Note: Predis\ClientInterface dispatches all commands (set, eval, …) through
- * __call(), so tests mock __call() and inspect recorded calls rather than
- * mocking individual command methods that don't exist on the interface.
- *
  * @package   OpenEMR
  * @link      https://www.open-emr.org
  * @author    Brady Miller <brady.g.miller@gmail.com>
@@ -34,7 +30,6 @@ namespace OpenEMR\Tests\Isolated\Common\Session\Predis;
 use OpenEMR\Common\Session\Predis\LockingRedisSessionHandler;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
-use Predis\ClientInterface;
 use Psr\Log\NullLogger;
 
 /**
@@ -44,15 +39,19 @@ interface InnerHandlerInterface extends \SessionHandlerInterface, \SessionUpdate
 
 class LockingRedisSessionHandlerTest extends TestCase
 {
-    private ClientInterface&MockObject $redis;
+    private \Redis&MockObject $redis;
     private InnerHandlerInterface&MockObject $inner;
     private LockingRedisSessionHandler $handler;
 
     protected function setUp(): void
     {
+        if (!extension_loaded('redis')) {
+            $this->markTestSkipped('phpredis extension not available');
+        }
+
         parent::setUp();
 
-        $this->redis = $this->createMock(ClientInterface::class);
+        $this->redis = $this->createMock(\Redis::class);
         $this->inner = $this->createMock(InnerHandlerInterface::class);
 
         $this->handler = new LockingRedisSessionHandler(
@@ -65,24 +64,32 @@ class LockingRedisSessionHandlerTest extends TestCase
     }
 
     /**
-     * Configure the Redis mock to record every __call() invocation and return
-     * sensible defaults: 'OK' for SET NX (lock acquired), 1 for EVAL (lock released).
+     * Configure the Redis mock to record every set() and eval() invocation and
+     * return sensible defaults: true for SET NX (lock acquired), 1 for EVAL (lock released).
      *
-     * @param list<array{cmd: string, args: list<mixed>}> $calls Passed by reference; populated on each __call invocation
+     * @param list<array{cmd: string, args: list<mixed>}> $calls Passed by reference; populated on each invocation
      */
     private function configureRedisTracking(array &$calls): void
     {
-        $this->redis->method('__call')
+        $this->redis->method('set')
             ->willReturnCallback(
-                static function (string $cmd, array $args) use (&$calls): mixed {
-                    $calls[] = ['cmd' => $cmd, 'args' => $args];
-                    return $cmd === 'set' ? 'OK' : 1;
+                static function (string $key, mixed $value, mixed $options = null) use (&$calls): bool {
+                    $calls[] = ['cmd' => 'set', 'args' => [$key, $value, $options]];
+                    return true;
+                }
+            );
+
+        $this->redis->method('eval')
+            ->willReturnCallback(
+                static function (string $script, array $args = [], int $numKeys = 0) use (&$calls): mixed {
+                    $calls[] = ['cmd' => 'eval', 'args' => [$script, $args, $numKeys]];
+                    return 1;
                 }
             );
     }
 
     /**
-     * Filter recorded __call invocations by command name and re-index.
+     * Filter recorded invocations by command name and re-index.
      *
      * @param list<array{cmd: string, args: list<mixed>}> $calls
      * @return list<array{cmd: string, args: list<mixed>}>
@@ -98,47 +105,29 @@ class LockingRedisSessionHandlerTest extends TestCase
 
     public function testOpenDelegatesToInner(): void
     {
-        $redisCalled = false;
-        $this->redis->method('__call')->willReturnCallback(
-            static function () use (&$redisCalled): mixed {
-                $redisCalled = true;
-                return null;
-            }
-        );
+        $this->redis->expects($this->never())->method('set');
+        $this->redis->expects($this->never())->method('eval');
         $this->inner->expects($this->once())->method('open')->with('/path', 'sess')->willReturn(true);
 
         $this->assertTrue($this->handler->open('/path', 'sess'));
-        $this->assertFalse($redisCalled, 'Redis should not be called for open()');
     }
 
     public function testGcDelegatesToInner(): void
     {
-        $redisCalled = false;
-        $this->redis->method('__call')->willReturnCallback(
-            static function () use (&$redisCalled): mixed {
-                $redisCalled = true;
-                return null;
-            }
-        );
+        $this->redis->expects($this->never())->method('set');
+        $this->redis->expects($this->never())->method('eval');
         $this->inner->expects($this->once())->method('gc')->with(3600)->willReturn(5);
 
         $this->assertSame(5, $this->handler->gc(3600));
-        $this->assertFalse($redisCalled, 'Redis should not be called for gc()');
     }
 
     public function testValidateIdDelegatesToInner(): void
     {
-        $redisCalled = false;
-        $this->redis->method('__call')->willReturnCallback(
-            static function () use (&$redisCalled): mixed {
-                $redisCalled = true;
-                return null;
-            }
-        );
+        $this->redis->expects($this->never())->method('set');
+        $this->redis->expects($this->never())->method('eval');
         $this->inner->expects($this->once())->method('validateId')->with('abc123')->willReturn(true);
 
         $this->assertTrue($this->handler->validateId('abc123'));
-        $this->assertFalse($redisCalled, 'Redis should not be called for validateId()');
     }
 
     // =========================================================================
@@ -158,11 +147,14 @@ class LockingRedisSessionHandlerTest extends TestCase
 
         $setCalls = $this->callsFor($calls, 'set');
         $this->assertCount(1, $setCalls, 'SET NX should be called once for lock acquisition');
+        // args: [key, token, options]
         $this->assertSame('lock_sess123', $setCalls[0]['args'][0]);
         $this->assertIsString($setCalls[0]['args'][1]);
         $this->assertMatchesRegularExpression('/^[0-9a-f]{32}$/', $setCalls[0]['args'][1]);
-        $this->assertSame('PX', $setCalls[0]['args'][2]);
-        $this->assertSame('NX', $setCalls[0]['args'][4]);
+        // Options array with NX and PX
+        $this->assertIsArray($setCalls[0]['args'][2]);
+        $this->assertContains('NX', $setCalls[0]['args'][2]);
+        $this->assertArrayHasKey('PX', $setCalls[0]['args'][2]);
     }
 
     public function testReadUsesCorrectLockKey(): void
@@ -197,9 +189,10 @@ class LockingRedisSessionHandlerTest extends TestCase
 
         $evalCalls = $this->callsFor($calls, 'eval');
         $this->assertCount(1, $evalCalls, 'Lua release script should be called once after write');
+        // args: [script, [lockKey, token], numKeys]
         $this->assertIsString($evalCalls[0]['args'][0]);
         $this->assertStringContainsString('redis.call("GET"', $evalCalls[0]['args'][0]);
-        $this->assertSame('lock_sess123', $evalCalls[0]['args'][2]);
+        $this->assertSame('lock_sess123', $evalCalls[0]['args'][1][0]);
     }
 
     public function testWriteReleasesLockEvenWhenInnerThrows(): void
@@ -294,18 +287,11 @@ class LockingRedisSessionHandlerTest extends TestCase
 
     public function testCloseWithoutPriorReadDoesNotCallRedis(): void
     {
-        $redisCalled = false;
-        $this->redis->method('__call')->willReturnCallback(
-            static function () use (&$redisCalled): mixed {
-                $redisCalled = true;
-                return null;
-            }
-        );
+        $this->redis->expects($this->never())->method('set');
+        $this->redis->expects($this->never())->method('eval');
         $this->inner->method('close')->willReturn(true);
 
         $this->handler->close();
-
-        $this->assertFalse($redisCalled, 'Redis should not be called by close() when no lock was acquired');
     }
 
     // =========================================================================
@@ -314,8 +300,8 @@ class LockingRedisSessionHandlerTest extends TestCase
 
     public function testThrowsWhenLockCannotBeAcquiredWithinTimeout(): void
     {
-        // __call returns null for every command — SET NX never succeeds
-        $this->redis->method('__call')->willReturn(null);
+        // set() returns false — SET NX never succeeds (key already exists)
+        $this->redis->method('set')->willReturn(false);
 
         $fastHandler = new LockingRedisSessionHandler(
             $this->redis,
@@ -333,7 +319,7 @@ class LockingRedisSessionHandlerTest extends TestCase
 
     public function testInnerReadIsNotCalledWhenLockTimesOut(): void
     {
-        $this->redis->method('__call')->willReturn(null);
+        $this->redis->method('set')->willReturn(false);
         $this->inner->expects($this->never())->method('read');
 
         $fastHandler = new LockingRedisSessionHandler(
@@ -368,11 +354,14 @@ class LockingRedisSessionHandlerTest extends TestCase
         $evalCalls = $this->callsFor($calls, 'eval');
         $this->assertCount(1, $evalCalls);
 
-        // KEYS[1] should be the lock key
-        $this->assertSame('lock_sess-xyz', $evalCalls[0]['args'][2]);
-        // ARGV[1] should be a 32-char hex token from bin2hex(random_bytes(16))
-        $this->assertIsString($evalCalls[0]['args'][3]);
-        $this->assertMatchesRegularExpression('/^[0-9a-f]{32}$/', $evalCalls[0]['args'][3]);
+        // phpredis eval args: [script, [keys + args], numKeys]
+        // args[1][0] = KEYS[1] = lock key
+        $this->assertSame('lock_sess-xyz', $evalCalls[0]['args'][1][0]);
+        // args[1][1] = ARGV[1] = token (32-char hex)
+        $this->assertIsString($evalCalls[0]['args'][1][1]);
+        $this->assertMatchesRegularExpression('/^[0-9a-f]{32}$/', $evalCalls[0]['args'][1][1]);
+        // numKeys = 1
+        $this->assertSame(1, $evalCalls[0]['args'][2]);
     }
 
     public function testLuaTokenMatchesTokenUsedInSetNx(): void
@@ -390,6 +379,7 @@ class LockingRedisSessionHandlerTest extends TestCase
         $evalCalls = $this->callsFor($calls, 'eval');
 
         // The token written to the lock key must be the same token checked in the Lua release
-        $this->assertSame($setCalls[0]['args'][1], $evalCalls[0]['args'][3]);
+        // SET args[1] = token, EVAL args[1][1] = token
+        $this->assertSame($setCalls[0]['args'][1], $evalCalls[0]['args'][1][1]);
     }
 }
