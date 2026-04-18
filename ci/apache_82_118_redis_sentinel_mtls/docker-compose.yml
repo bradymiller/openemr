@@ -92,6 +92,8 @@ services:
       - "yes"
       - --tls-replication
       - "yes"
+      - --replica-announce-ip
+      - redis-master
     volumes:
       - redis-certs:/certs:ro
     depends_on:
@@ -132,6 +134,8 @@ services:
       - "yes"
       - --tls-replication
       - "yes"
+      - --replica-announce-ip
+      - redis-replica-1
     volumes:
       - redis-certs:/certs:ro
     depends_on:
@@ -168,6 +172,8 @@ services:
       - "yes"
       - --tls-replication
       - "yes"
+      - --replica-announce-ip
+      - redis-replica-2
     volumes:
       - redis-certs:/certs:ro
     depends_on:
