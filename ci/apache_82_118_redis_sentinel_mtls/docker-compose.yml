@@ -22,6 +22,15 @@ services:
     command:
       - |
         set -ex
+
+        # Idempotent: skip if certs already exist.  docker compose up may
+        # restart this container on subsequent calls; regenerating would
+        # invalidate certs the running Redis/Sentinel containers already loaded.
+        if [ -f /certs/ca.crt ]; then
+            echo "Certs already present — skipping generation."
+            exit 0
+        fi
+
         apk add --no-cache openssl
         cd /certs
 
