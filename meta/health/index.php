@@ -63,7 +63,18 @@ try {
             // so globals.php always writes site_id, triggering a read_and_close
             // reopen. Marking writable avoids that reopen and its log warning.
             $sessionAllowWrite = true;
+
+            // Tighten socket timeout for health probes.  Predis's own `timeout`
+            // parameter covers the TCP connect, but stream_socket_enable_crypto()
+            // (TLS handshake) falls back to PHP's default_socket_timeout (60 s).
+            // A 3-second ceiling keeps the probe responsive: if Redis/sentinels
+            // are unreachable, readyz fails fast instead of hanging.
+            $origSocketTimeout = ini_get('default_socket_timeout');
+            ini_set('default_socket_timeout', '3');
+
             require_once __DIR__ . "/../../interface/globals.php";
+
+            ini_set('default_socket_timeout', $origSocketTimeout !== false ? $origSocketTimeout : '60');
 
             // Run full health checks
             $checker = new HealthChecker();

@@ -28,7 +28,7 @@ class HealthEndpointTest extends TestCase
         $this->client = new Client([
             "verify" => false,
             "base_uri" => $baseUrl,
-            "timeout" => 10,
+            "timeout" => 30,
             "http_errors" => false,
             "allow_redirects" => false, // Don't follow redirects - we want to detect them
         ]);

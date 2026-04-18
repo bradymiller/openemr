@@ -178,8 +178,8 @@ class SentinelUtil
                 'scheme'       => $useTls ? 'tls' : 'tcp',
                 'host'         => $host,
                 'port'         => 26379,
-                'timeout'      => 5.0,
-                'read_write_timeout' => 5.0,
+                'timeout'      => 3.0,
+                'read_write_timeout' => 3.0,
             ];
 
             if ($useTls) {
@@ -211,8 +211,8 @@ class SentinelUtil
         ];
 
         $parameters = [
-            'timeout'      => 5.0,
-            'read_write_timeout' => 5.0,
+            'timeout'      => 3.0,
+            'read_write_timeout' => 3.0,
         ];
         if (!empty($this->predisMasterPassword)) {
             $parameters['password'] = $this->predisMasterPassword;
