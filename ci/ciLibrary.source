@@ -421,9 +421,12 @@ build_test_redis_failover() {
     echo "Step 2: Stopping redis-master to trigger sentinel failover..."
     dc stop redis-master
 
-    # Step 3: poll sentinel until a clean master is elected
-    echo "Step 3: Waiting for sentinel to elect a new master (up to ${max_failover_wait}s)..."
-    local elapsed=0
+    # Step 3: poll sentinel until a clean master is elected.
+    # Wait for sentinel to detect the failure first — down-after-milliseconds
+    # is 5000 ms, so at 0 s the old master still appears healthy.
+    echo "Step 3: Waiting for sentinel to detect failure and elect a new master (up to ${max_failover_wait}s)..."
+    sleep 7
+    local elapsed=7
     while true; do
         # SENTINEL master <name> returns alternating field/value pairs;
         # extract the value on the line following "flags".
@@ -464,9 +467,11 @@ build_test_redis_failover() {
         # Use docker compose exec directly (not _exec wrapper) so SC2310 is not
         # triggered by a bash function appearing in a || condition.
         local health_status=0
-        docker compose exec openemr curl -fsSL --insecure --max-time 15 https://localhost/meta/health/readyz 2>/dev/null || health_status=$?
-        if [[ "${health_status}" -eq 0 ]]; then
-            echo ""
+        local health_body
+        health_body=$(docker compose exec -T openemr curl -fsSL --insecure --max-time 15 https://localhost/meta/health/readyz 2>/dev/null) || health_status=$?
+        # readyz returns HTTP 200 even for errors; check the body for "error" status
+        if [[ "${health_status}" -eq 0 ]] && ! echo "${health_body}" | grep -q '"status":"error"'; then
+            echo "  ${health_body}"
             echo "  OpenEMR is healthy after failover."
             break
         fi
