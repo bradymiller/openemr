@@ -409,6 +409,7 @@ build_test_redis_failover() {
     # After failover we verify this value survived on the promoted replica,
     # proving replication preserved session data.
     echo "Step 1.5: Writing pre-failover test value to Redis..."
+    # shellcheck disable=SC2016
     _exec php -r '
         require "/var/www/localhost/htdocs/openemr/vendor/autoload.php";
         $r = (new \OpenEMR\Common\Session\Predis\SentinelUtil())->configureClient();
@@ -467,10 +468,10 @@ build_test_redis_failover() {
         # Use docker compose exec directly (not _exec wrapper) so SC2310 is not
         # triggered by a bash function appearing in a || condition.
         local health_status=0
-        local health_body
+        local health_body=""
         health_body=$(docker compose exec -T openemr curl -fsSL --insecure --max-time 15 https://localhost/meta/health/readyz 2>/dev/null) || health_status=$?
         # readyz returns HTTP 200 even for errors; check the body for "error" status
-        if [[ "${health_status}" -eq 0 ]] && ! echo "${health_body}" | grep -q '"status":"error"'; then
+        if [[ "${health_status}" -eq 0 && "${health_body}" != *'"status":"error"'* ]]; then
             echo "  ${health_body}"
             echo "  OpenEMR is healthy after failover."
             break
@@ -486,6 +487,7 @@ build_test_redis_failover() {
 
     # Step 4.5: verify the pre-failover test value survived on the promoted replica.
     echo "Step 4.5: Verifying pre-failover data survived on new master..."
+    # shellcheck disable=SC2016
     _exec php -r '
         require "/var/www/localhost/htdocs/openemr/vendor/autoload.php";
         $r = (new \OpenEMR\Common\Session\Predis\SentinelUtil())->configureClient();
