@@ -243,8 +243,9 @@ class SentinelUtil
                 $host = $this->predisTls ? 'tls://' . trim($sentinelHost) : trim($sentinelHost);
 
                 // phpredis 6.0+ supports an array constructor for RedisSentinel with
-                // TLS options.  PHPStan stubs only know the older positional constructor.
-                // @phpstan-ignore argument.type
+                // TLS options.  PHPStan stubs only know the older positional constructor,
+                // so both the argument count and type errors must be suppressed.
+                /** @phpstan-ignore new.argumentCount, argument.type */
                 $sentinel = new \RedisSentinel([
                     'host'           => $host,
                     'port'           => 26379,
@@ -254,8 +255,13 @@ class SentinelUtil
 
                 $masterInfo = $sentinel->getMasterAddrByName($this->predisMaster);
 
-                if (is_array($masterInfo) && isset($masterInfo[0], $masterInfo[1])) {
-                    $masterHost = (string) $masterInfo[0];
+                if (
+                    is_array($masterInfo)
+                    && isset($masterInfo[0], $masterInfo[1])
+                    && is_string($masterInfo[0])
+                    && (is_string($masterInfo[1]) || is_int($masterInfo[1]))
+                ) {
+                    $masterHost = $masterInfo[0];
                     $masterPort = (int) $masterInfo[1];
                     $this->logger->debug('Discovered Redis master via sentinel', [
                         'sentinel' => $sentinelHost,
