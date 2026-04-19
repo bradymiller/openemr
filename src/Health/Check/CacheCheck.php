@@ -69,10 +69,19 @@ class CacheCheck implements HealthCheckInterface
         $host = $redisTls ? 'tls://' . $redisServer : $redisServer;
         $options = [];
         if ($redisTls) {
-            $options['stream'] = [
-                'verify_peer' => false,
-                'verify_peer_name' => false,
+            $certKeyPath = getenv('REDIS_TLS_CERT_KEY_PATH') ?: '';
+            $sslOptions = [
+                'verify_peer'      => true,
+                'verify_peer_name' => true,
             ];
+            if ($certKeyPath !== '') {
+                $sslOptions['cafile'] = $certKeyPath . '/redis-master-ca';
+            }
+            if (getenv('REDIS_X509') === 'yes' && $certKeyPath !== '') {
+                $sslOptions['local_cert'] = $certKeyPath . '/redis-master-cert';
+                $sslOptions['local_pk']   = $certKeyPath . '/redis-master-key';
+            }
+            $options['stream'] = $sslOptions;
         }
 
         $redis->connect($host, (int) $redisPort, 3.0, null, 0, 3.0, $options);

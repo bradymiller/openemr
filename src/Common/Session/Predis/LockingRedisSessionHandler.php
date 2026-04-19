@@ -99,11 +99,18 @@ class LockingRedisSessionHandler implements \SessionHandlerInterface, \SessionUp
     /**
      * Acquires the Redis lock for this session, then reads and returns the data.
      * The lock is held until write(), updateTimestamp(), destroy(), or close().
+     * If the inner read throws, the lock is released to avoid a leaked lock that
+     * would block the session until TTL expiry.
      */
     public function read(string $id): string|false
     {
         $this->acquireLock($id);
-        return $this->inner->read($id);
+        try {
+            return $this->inner->read($id);
+        } catch (\Throwable $e) {
+            $this->releaseLock();
+            throw $e;
+        }
     }
 
     /**
@@ -190,7 +197,7 @@ class LockingRedisSessionHandler implements \SessionHandlerInterface, \SessionUp
             if ($result === true) {
                 $this->lockToken = $token;
                 $this->logger->debug('Redis session lock acquired', [
-                    'session_id' => $sessionId,
+                    'session_id_prefix' => substr($sessionId, 0, 8) . '…',
                     'lock_ttl_seconds' => $this->lockTtlSeconds,
                 ]);
                 return;
@@ -199,8 +206,7 @@ class LockingRedisSessionHandler implements \SessionHandlerInterface, \SessionUp
             if (microtime(true) >= $deadline) {
                 $this->currentLockKey = null;
                 throw new \RuntimeException(sprintf(
-                    'Failed to acquire Redis session lock for session "%s" within %d second(s).',
-                    $sessionId,
+                    'Failed to acquire Redis session lock within %d second(s).',
                     $this->maxLockWaitSeconds,
                 ));
             }
@@ -232,9 +238,7 @@ LUA;
         // phpredis eval: script, [keys + args], numKeys
         $this->redis->eval($script, [$this->currentLockKey, $this->lockToken], 1);
 
-        $this->logger->debug('Redis session lock released', [
-            'lock_key' => $this->currentLockKey,
-        ]);
+        $this->logger->debug('Redis session lock released');
 
         $this->lockToken = null;
         $this->currentLockKey = null;
