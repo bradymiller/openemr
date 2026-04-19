@@ -99,6 +99,29 @@ class LockingRedisSessionHandlerTest extends TestCase
         return array_values(array_filter($calls, static fn(array $c): bool => $c['cmd'] === $cmd));
     }
 
+    /**
+     * Extract a single arg from a recorded call, narrowed from mixed.
+     *
+     * @param array{cmd: string, args: list<mixed>} $call
+     */
+    private static function arg(array $call, int $index): mixed
+    {
+        return $call['args'][$index];
+    }
+
+    /**
+     * Extract a sub-array arg (e.g. the [keys+args] array passed to eval()).
+     *
+     * @param array{cmd: string, args: list<mixed>} $call
+     * @return array<int, mixed>
+     */
+    private static function argArray(array $call, int $index): array
+    {
+        $val = $call['args'][$index];
+        assert(is_array($val));
+        return $val;
+    }
+
     // =========================================================================
     // open() / gc() / validateId() — no lock interaction
     // =========================================================================
@@ -148,13 +171,13 @@ class LockingRedisSessionHandlerTest extends TestCase
         $setCalls = $this->callsFor($calls, 'set');
         $this->assertCount(1, $setCalls, 'SET NX should be called once for lock acquisition');
         // args: [key, token, options]
-        $this->assertSame('lock_sess123', $setCalls[0]['args'][0]);
-        $this->assertIsString($setCalls[0]['args'][1]);
-        $this->assertMatchesRegularExpression('/^[0-9a-f]{32}$/', $setCalls[0]['args'][1]);
+        $this->assertSame('lock_sess123', self::arg($setCalls[0], 0));
+        $this->assertIsString(self::arg($setCalls[0], 1));
+        $this->assertMatchesRegularExpression('/^[0-9a-f]{32}$/', (string) self::arg($setCalls[0], 1));
         // Options array with NX and PX
-        $this->assertIsArray($setCalls[0]['args'][2]);
-        $this->assertContains('NX', $setCalls[0]['args'][2]);
-        $this->assertArrayHasKey('PX', $setCalls[0]['args'][2]);
+        $setOptions = self::argArray($setCalls[0], 2);
+        $this->assertContains('NX', $setOptions);
+        $this->assertArrayHasKey('PX', $setOptions);
     }
 
     public function testReadUsesCorrectLockKey(): void
@@ -168,7 +191,7 @@ class LockingRedisSessionHandlerTest extends TestCase
 
         $setCalls = $this->callsFor($calls, 'set');
         $this->assertCount(1, $setCalls);
-        $this->assertSame('lock_my-session-id', $setCalls[0]['args'][0]);
+        $this->assertSame('lock_my-session-id', self::arg($setCalls[0], 0));
     }
 
     // =========================================================================
@@ -190,9 +213,10 @@ class LockingRedisSessionHandlerTest extends TestCase
         $evalCalls = $this->callsFor($calls, 'eval');
         $this->assertCount(1, $evalCalls, 'Lua release script should be called once after write');
         // args: [script, [lockKey, token], numKeys]
-        $this->assertIsString($evalCalls[0]['args'][0]);
-        $this->assertStringContainsString('redis.call("GET"', $evalCalls[0]['args'][0]);
-        $this->assertSame('lock_sess123', $evalCalls[0]['args'][1][0]);
+        $this->assertIsString(self::arg($evalCalls[0], 0));
+        $this->assertStringContainsString('redis.call("GET"', (string) self::arg($evalCalls[0], 0));
+        $evalArgs = self::argArray($evalCalls[0], 1);
+        $this->assertSame('lock_sess123', $evalArgs[0]);
     }
 
     public function testWriteReleasesLockEvenWhenInnerThrows(): void
@@ -355,13 +379,14 @@ class LockingRedisSessionHandlerTest extends TestCase
         $this->assertCount(1, $evalCalls);
 
         // phpredis eval args: [script, [keys + args], numKeys]
-        // args[1][0] = KEYS[1] = lock key
-        $this->assertSame('lock_sess-xyz', $evalCalls[0]['args'][1][0]);
-        // args[1][1] = ARGV[1] = token (32-char hex)
-        $this->assertIsString($evalCalls[0]['args'][1][1]);
-        $this->assertMatchesRegularExpression('/^[0-9a-f]{32}$/', $evalCalls[0]['args'][1][1]);
+        $evalArgs = self::argArray($evalCalls[0], 1);
+        // evalArgs[0] = KEYS[1] = lock key
+        $this->assertSame('lock_sess-xyz', $evalArgs[0]);
+        // evalArgs[1] = ARGV[1] = token (32-char hex)
+        $this->assertIsString($evalArgs[1]);
+        $this->assertMatchesRegularExpression('/^[0-9a-f]{32}$/', (string) $evalArgs[1]);
         // numKeys = 1
-        $this->assertSame(1, $evalCalls[0]['args'][2]);
+        $this->assertSame(1, self::arg($evalCalls[0], 2));
     }
 
     public function testLuaTokenMatchesTokenUsedInSetNx(): void
@@ -379,7 +404,7 @@ class LockingRedisSessionHandlerTest extends TestCase
         $evalCalls = $this->callsFor($calls, 'eval');
 
         // The token written to the lock key must be the same token checked in the Lua release
-        // SET args[1] = token, EVAL args[1][1] = token
-        $this->assertSame($setCalls[0]['args'][1], $evalCalls[0]['args'][1][1]);
+        $evalArgs = self::argArray($evalCalls[0], 1);
+        $this->assertSame(self::arg($setCalls[0], 1), $evalArgs[1]);
     }
 }
