@@ -110,15 +110,17 @@ class LockingRedisSessionHandlerTest extends TestCase
     }
 
     /**
-     * Extract a sub-array arg (e.g. the [keys+args] array passed to eval()).
+     * Extract a sub-array arg (e.g. the [keys+args] array passed to eval(),
+     * or the options array passed to set()).
      *
      * @param array{cmd: string, args: list<mixed>} $call
-     * @return array<int, mixed>
+     * @return array<array-key, mixed>
      */
     private static function argArray(array $call, int $index): array
     {
         $val = $call['args'][$index];
         assert(is_array($val));
+        /** @var array<array-key, mixed> $val */
         return $val;
     }
 
@@ -173,7 +175,7 @@ class LockingRedisSessionHandlerTest extends TestCase
         // args: [key, token, options]
         $this->assertSame('lock_sess123', self::arg($setCalls[0], 0));
         $this->assertIsString(self::arg($setCalls[0], 1));
-        $this->assertMatchesRegularExpression('/^[0-9a-f]{32}$/', (string) self::arg($setCalls[0], 1));
+        $this->assertMatchesRegularExpression('/^[0-9a-f]{32}$/', self::arg($setCalls[0], 1));
         // Options array with NX and PX
         $setOptions = self::argArray($setCalls[0], 2);
         $this->assertContains('NX', $setOptions);
@@ -214,7 +216,7 @@ class LockingRedisSessionHandlerTest extends TestCase
         $this->assertCount(1, $evalCalls, 'Lua release script should be called once after write');
         // args: [script, [lockKey, token], numKeys]
         $this->assertIsString(self::arg($evalCalls[0], 0));
-        $this->assertStringContainsString('redis.call("GET"', (string) self::arg($evalCalls[0], 0));
+        $this->assertStringContainsString('redis.call("GET"', self::arg($evalCalls[0], 0));
         $evalArgs = self::argArray($evalCalls[0], 1);
         $this->assertSame('lock_sess123', $evalArgs[0]);
     }
@@ -384,7 +386,7 @@ class LockingRedisSessionHandlerTest extends TestCase
         $this->assertSame('lock_sess-xyz', $evalArgs[0]);
         // evalArgs[1] = ARGV[1] = token (32-char hex)
         $this->assertIsString($evalArgs[1]);
-        $this->assertMatchesRegularExpression('/^[0-9a-f]{32}$/', (string) $evalArgs[1]);
+        $this->assertMatchesRegularExpression('/^[0-9a-f]{32}$/', $evalArgs[1]);
         // numKeys = 1
         $this->assertSame(1, self::arg($evalCalls[0], 2));
     }
