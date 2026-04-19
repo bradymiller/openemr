@@ -1242,6 +1242,56 @@ $ignoreErrors[] = [
     'path' => __DIR__ . '/../../tests/Tests/Fixtures/PractitionerFixtureManager.php',
 ];
 $ignoreErrors[] = [
+    'message' => '#^Call to method execute\\(\\) on an unknown class Symfony\\\\Component\\\\Console\\\\Tester\\\\CommandTester\\.$#',
+    'count' => 27,
+    'path' => __DIR__ . '/../../tests/Tests/Isolated/Common/Command/BackgroundServicesCommandTest.php',
+];
+$ignoreErrors[] = [
+    'message' => '#^Call to method getDisplay\\(\\) on an unknown class Symfony\\\\Component\\\\Console\\\\Tester\\\\CommandTester\\.$#',
+    'count' => 19,
+    'path' => __DIR__ . '/../../tests/Tests/Isolated/Common/Command/BackgroundServicesCommandTest.php',
+];
+$ignoreErrors[] = [
+    'message' => '#^Call to method getStatusCode\\(\\) on an unknown class Symfony\\\\Component\\\\Console\\\\Tester\\\\CommandTester\\.$#',
+    'count' => 18,
+    'path' => __DIR__ . '/../../tests/Tests/Isolated/Common/Command/BackgroundServicesCommandTest.php',
+];
+$ignoreErrors[] = [
+    'message' => '#^Instantiated class Symfony\\\\Component\\\\Console\\\\Tester\\\\CommandTester not found\\.$#',
+    'count' => 1,
+    'path' => __DIR__ . '/../../tests/Tests/Isolated/Common/Command/BackgroundServicesCommandTest.php',
+];
+$ignoreErrors[] = [
+    'message' => '#^Method OpenEMR\\\\Tests\\\\Isolated\\\\Common\\\\Command\\\\BackgroundServicesCommandTest\\:\\:createTester\\(\\) has invalid return type Symfony\\\\Component\\\\Console\\\\Tester\\\\CommandTester\\.$#',
+    'count' => 1,
+    'path' => __DIR__ . '/../../tests/Tests/Isolated/Common/Command/BackgroundServicesCommandTest.php',
+];
+$ignoreErrors[] = [
+    'message' => '#^Call to method execute\\(\\) on an unknown class Symfony\\\\Component\\\\Console\\\\Tester\\\\CommandTester\\.$#',
+    'count' => 2,
+    'path' => __DIR__ . '/../../tests/Tests/Isolated/Console/Command/InstallCommandTest.php',
+];
+$ignoreErrors[] = [
+    'message' => '#^Call to method getDisplay\\(\\) on an unknown class Symfony\\\\Component\\\\Console\\\\Tester\\\\CommandTester\\.$#',
+    'count' => 1,
+    'path' => __DIR__ . '/../../tests/Tests/Isolated/Console/Command/InstallCommandTest.php',
+];
+$ignoreErrors[] = [
+    'message' => '#^Call to method getStatusCode\\(\\) on an unknown class Symfony\\\\Component\\\\Console\\\\Tester\\\\CommandTester\\.$#',
+    'count' => 2,
+    'path' => __DIR__ . '/../../tests/Tests/Isolated/Console/Command/InstallCommandTest.php',
+];
+$ignoreErrors[] = [
+    'message' => '#^Instantiated class Symfony\\\\Component\\\\Console\\\\Tester\\\\CommandTester not found\\.$#',
+    'count' => 1,
+    'path' => __DIR__ . '/../../tests/Tests/Isolated/Console/Command/InstallCommandTest.php',
+];
+$ignoreErrors[] = [
+    'message' => '#^Method OpenEMR\\\\Tests\\\\Isolated\\\\Console\\\\Command\\\\InstallCommandTest\\:\\:createTester\\(\\) has invalid return type Symfony\\\\Component\\\\Console\\\\Tester\\\\CommandTester\\.$#',
+    'count' => 1,
+    'path' => __DIR__ . '/../../tests/Tests/Isolated/Console/Command/InstallCommandTest.php',
+];
+$ignoreErrors[] = [
     'message' => '#^Call to method clearTelemetryData\\(\\) on an unknown class OpenEMR\\\\Tests\\\\Isolated\\\\Telemetry\\\\MockObject\\.$#',
     'count' => 1,
     'path' => __DIR__ . '/../../tests/Tests/Isolated/Telemetry/TelemetryRepositoryTest.php',
