@@ -405,18 +405,6 @@ jobs:
         . ci/ciLibrary.source
         dockers_env_start
 
-    - name: Dump container logs on startup failure
-      if: ${{ failure() }}
-      run: |
-        echo "=== docker compose ps ==="
-        docker compose ps -a
-        echo "=== sentinel-1 logs ==="
-        docker compose logs sentinel-1 2>/dev/null || true
-        echo "=== sentinel-2 logs ==="
-        docker compose logs sentinel-2 2>/dev/null || true
-        echo "=== redis-master logs ==="
-        docker compose logs redis-master 2>/dev/null || true
-
     - name: Install and configure
       run: |
         . ci/ciLibrary.source
