@@ -42,6 +42,8 @@ class DisabledClientRejectionTest extends TestCase
     private bool $originalPasswordGrantSettingWasSet = false;
     private ?string $originalSiteAddrOath = null;
     private bool $siteAddrOathWasInserted = false;
+    private ?string $originalPasswordGrantGlobalRow = null;
+    private bool $passwordGrantGlobalRowWasInserted = false;
 
     protected function setUp(): void
     {
@@ -109,6 +111,7 @@ class DisabledClientRejectionTest extends TestCase
                     [$this->originalSiteAddrOath, 'site_addr_oath']
                 );
             }
+            $this->restorePasswordGrantGlobal();
         } finally {
             $globals = OEGlobalsBag::getInstance();
             if ($this->originalPasswordGrantSettingWasSet) {
@@ -117,6 +120,47 @@ class DisabledClientRejectionTest extends TestCase
                 $globals->remove('oauth_password_grant');
                 unset($GLOBALS['oauth_password_grant']);
             }
+        }
+    }
+
+    private function persistPasswordGrantEnabled(): void
+    {
+        // OEGlobalsBag only mutates the current PHPUnit process; the HTTP
+        // server reads oauth_password_grant from the globals table on
+        // each request. Snapshot + set the DB row so CustomPasswordGrant
+        // is actually enabled server-side for the /token calls below.
+        $current = QueryUtils::querySingleRow(
+            'SELECT gl_value FROM `globals` WHERE gl_name = ?',
+            ['oauth_password_grant']
+        );
+        if (is_array($current)) {
+            $glValue = $current['gl_value'] ?? null;
+            $this->originalPasswordGrantGlobalRow = is_string($glValue) ? $glValue : null;
+            QueryUtils::sqlStatementThrowException(
+                'UPDATE `globals` SET gl_value = ? WHERE gl_name = ?',
+                ['3', 'oauth_password_grant']
+            );
+        } else {
+            QueryUtils::sqlStatementThrowException(
+                'INSERT INTO `globals` (`gl_name`, `gl_index`, `gl_value`) VALUES (?, 0, ?)',
+                ['oauth_password_grant', '3']
+            );
+            $this->passwordGrantGlobalRowWasInserted = true;
+        }
+    }
+
+    private function restorePasswordGrantGlobal(): void
+    {
+        if ($this->passwordGrantGlobalRowWasInserted) {
+            QueryUtils::sqlStatementThrowException(
+                'DELETE FROM `globals` WHERE gl_name = ?',
+                ['oauth_password_grant']
+            );
+        } elseif ($this->originalPasswordGrantGlobalRow !== null) {
+            QueryUtils::sqlStatementThrowException(
+                'UPDATE `globals` SET gl_value = ? WHERE gl_name = ?',
+                [$this->originalPasswordGrantGlobalRow, 'oauth_password_grant']
+            );
         }
     }
 
@@ -165,6 +209,7 @@ class DisabledClientRejectionTest extends TestCase
         $this->originalPasswordGrantSettingWasSet = $globals->has('oauth_password_grant');
         $this->originalPasswordGrantSetting = $globals->get('oauth_password_grant');
         $globals->set('oauth_password_grant', 3);
+        $this->persistPasswordGrantEnabled();
 
         $http = $this->buildClient();
         [$clientId, $clientSecret] = $this->registerConfidentialClient(
@@ -203,6 +248,7 @@ class DisabledClientRejectionTest extends TestCase
         $this->originalPasswordGrantSettingWasSet = $globals->has('oauth_password_grant');
         $this->originalPasswordGrantSetting = $globals->get('oauth_password_grant');
         $globals->set('oauth_password_grant', 3);
+        $this->persistPasswordGrantEnabled();
 
         $http = $this->buildClient();
         [$clientId, $clientSecret] = $this->registerConfidentialClient(

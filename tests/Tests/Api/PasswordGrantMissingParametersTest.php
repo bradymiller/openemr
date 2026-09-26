@@ -41,6 +41,8 @@ class PasswordGrantMissingParametersTest extends TestCase
     private ?string $clientId = null;
     private mixed $originalPasswordGrantSetting = null;
     private bool $originalPasswordGrantSettingWasSet = false;
+    private ?string $originalPasswordGrantGlobalRow = null;
+    private bool $passwordGrantGlobalRowWasInserted = false;
 
     protected function setUp(): void
     {
@@ -62,6 +64,13 @@ class PasswordGrantMissingParametersTest extends TestCase
         $this->originalPasswordGrantSettingWasSet = $globals->has('oauth_password_grant');
         $this->originalPasswordGrantSetting = $globals->get('oauth_password_grant');
         $globals->set('oauth_password_grant', 3);
+
+        // OEGlobalsBag only mutates the current PHPUnit process; the HTTP
+        // server loads oauth_password_grant from the globals table on each
+        // request. Snapshot + set the DB row so CustomPasswordGrant is
+        // actually enabled server-side for the /token calls below, then
+        // restore in tearDown.
+        $this->persistPasswordGrantEnabled();
     }
 
     protected function tearDown(): void
@@ -73,6 +82,7 @@ class PasswordGrantMissingParametersTest extends TestCase
                     [$this->clientId]
                 );
             }
+            $this->restorePasswordGrantGlobal();
         } finally {
             $globals = OEGlobalsBag::getInstance();
             if ($this->originalPasswordGrantSettingWasSet) {
@@ -81,6 +91,43 @@ class PasswordGrantMissingParametersTest extends TestCase
                 $globals->remove('oauth_password_grant');
                 unset($GLOBALS['oauth_password_grant']);
             }
+        }
+    }
+
+    private function persistPasswordGrantEnabled(): void
+    {
+        $current = QueryUtils::querySingleRow(
+            'SELECT gl_value FROM `globals` WHERE gl_name = ?',
+            ['oauth_password_grant']
+        );
+        if (is_array($current)) {
+            $glValue = $current['gl_value'] ?? null;
+            $this->originalPasswordGrantGlobalRow = is_string($glValue) ? $glValue : null;
+            QueryUtils::sqlStatementThrowException(
+                'UPDATE `globals` SET gl_value = ? WHERE gl_name = ?',
+                ['3', 'oauth_password_grant']
+            );
+        } else {
+            QueryUtils::sqlStatementThrowException(
+                'INSERT INTO `globals` (`gl_name`, `gl_index`, `gl_value`) VALUES (?, 0, ?)',
+                ['oauth_password_grant', '3']
+            );
+            $this->passwordGrantGlobalRowWasInserted = true;
+        }
+    }
+
+    private function restorePasswordGrantGlobal(): void
+    {
+        if ($this->passwordGrantGlobalRowWasInserted) {
+            QueryUtils::sqlStatementThrowException(
+                'DELETE FROM `globals` WHERE gl_name = ?',
+                ['oauth_password_grant']
+            );
+        } elseif ($this->originalPasswordGrantGlobalRow !== null) {
+            QueryUtils::sqlStatementThrowException(
+                'UPDATE `globals` SET gl_value = ? WHERE gl_name = ?',
+                [$this->originalPasswordGrantGlobalRow, 'oauth_password_grant']
+            );
         }
     }
 

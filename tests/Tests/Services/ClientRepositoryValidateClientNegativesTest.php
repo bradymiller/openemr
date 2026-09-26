@@ -71,9 +71,9 @@ class ClientRepositoryValidateClientNegativesTest extends TestCase
         $garbageBytes = '007' . bin2hex(random_bytes(64));
         $clientId = 'test-decrypt-error-' . Uuid::uuid4()->toString();
         QueryUtils::sqlStatementThrowException(
-            "INSERT INTO oauth_clients (client_id, client_secret, is_confidential, is_enabled, client_role) "
-                . "VALUES (?, ?, 1, 1, 'users')",
-            [$clientId, $garbageBytes]
+            "INSERT INTO oauth_clients (client_id, client_name, client_secret, is_confidential, is_enabled, client_role) "
+                . "VALUES (?, ?, ?, 1, 1, 'users')",
+            [$clientId, 'ClientRepository decrypt-error test', $garbageBytes]
         );
         $this->trackedClientIds[] = $clientId;
 
@@ -95,9 +95,9 @@ class ClientRepositoryValidateClientNegativesTest extends TestCase
 
         $clientId = 'test-empty-secret-' . Uuid::uuid4()->toString();
         QueryUtils::sqlStatementThrowException(
-            "INSERT INTO oauth_clients (client_id, client_secret, is_confidential, is_enabled, client_role) "
-                . "VALUES (?, ?, 1, 1, 'users')",
-            [$clientId, $encryptedEmpty]
+            "INSERT INTO oauth_clients (client_id, client_name, client_secret, is_confidential, is_enabled, client_role) "
+                . "VALUES (?, ?, ?, 1, 1, 'users')",
+            [$clientId, 'ClientRepository empty-post-decrypt test', $encryptedEmpty]
         );
         $this->trackedClientIds[] = $clientId;
 
