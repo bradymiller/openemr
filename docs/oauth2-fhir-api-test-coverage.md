@@ -461,16 +461,18 @@ Each entry notes **(category, impact, where to add, rough effort)**. Ordering fo
 
 ### 8.1a Priority 1 — Security gaps: implementation holes (fix the code)
 
-These are suspected or confirmed exploitable paths in the production code. Verify-and-fix before anything else lands.
+**Phase A audit result: empty.** Three candidates were audited 2026-10-13; all three resolved to either "architecturally safe, add regression gate" or "best addressed upstream." Details:
 
-- **Bulk FHIR `system/*` scope downgrade.** `GroupExportFhirApiTest` has one non-existent-group deny; the actual "token holds `system/Patient.read` but invokes `system/Group.$export`" scope-downgrade attack is unverified in code. The enforcement surface is `BulkFhirRestController` → `ScopeConstraintFilterer` → `ResourceConstraintFilterer`. **(Status: UNVERIFIED — needs code audit first. If exploitable: fix privately via GHSA workflow, then land regression gates. If already denied: downgrade to §8.1b for test-only coverage. Effort: medium if fix needed, small if already denied.)**
-- **Cross-scope lateral escalation on bearer presentation.** `BearerTokenRejectionPropertiesTest::testTokenWithReadOnlyScopeCannotWriteViaFhirEndpoint` is one case. The full patient→user→system lateral matrix is unverified. **(Status: UNVERIFIED — audit first. Same handling as above. Effort: medium if fix needed, small if already denied.)**
-- **Auth-code validation-order DoS** (deferred by Brady 2026-10-13 during #14531 review under a cost-benefit framing; **flagged for re-review** under the new security-first framework). `AuthCodeRepository::isAuthCodeRevoked` does the atomic claim BEFORE league validates redirect_uri/PKCE. A wrong-redirect-uri exchange burns the code pre-validation. Attacker who holds the code can DoS a legitimate exchange, cannot mint tokens themselves (still needs PKCE/secret). Proper fix: ~100 LoC league vendor-copy in `CustomAuthCodeGrant::respondToAccessTokenRequest`. **(Status: known trade-off, re-review needed. Effort: medium.)**
+- **Bulk FHIR `system/*` scope downgrade — AUDITED, SAFE.** Verified empirically (user-scope path: `user/Patient.read` token on `GET /fhir/Patient/$export` returns 401) and traced in code: `HttpRestParsedRoute` extracts `operation='$export'`; `AuthorizationListener::onRestApiSecurityCheck` builds scope `<context>/<resource>.$export`; `HttpRestRequest::requestHasScopeEntity` looks up by scope lookup key (context+resource); `ScopeEntity::containsScope` (lines 313-351) rejects on operation mismatch (line 324-325 — `read` ≠ `$export`). The system-scope path is architecturally identical. **Resolution: moved to §8.1b as regression-gate.**
+- **Cross-scope lateral escalation (patient→user→system) — AUDITED, SAFE.** `AuthorizationListener::onRestApiSecurityCheck` derives `scopeType` from `$restRequest->getRequestUserRole()`, not from the token's scope prefix. A patient-role token always builds `patient/*` lookups, a users-role token always builds `user/*`, a system token always builds `system/*`. `ScopeEntity::containsScope` line 318-320 requires exact-context match (`if (getContext() !== otherScope->getContext()) return false`). Lateral escalation is architecturally prevented. **Resolution: moved to §8.1b as regression-gate.**
+- **Auth-code validation-order DoS — moved to §9 for upstream coordination.** Phase A re-review under the security-first framework: impact is low-to-trivial (attacker who holds the code gains nothing by burning it; victim cost is one re-authorize click). Local vendor-copy fix (~100 LoC in `CustomAuthCodeGrant::respondToAccessTokenRequest`) carries ongoing maintenance tax against upstream league. The underlying issue is league's `AuthCodeRepositoryInterface` — `isAuthCodeRevoked` is a read-named method; `revokeAuthCode` is void and fires post-issuance. Right home is an upstream interface addition. **Resolution: tracked in §9 — file upstream issue first, PR second.**
 
 ### 8.1b Priority 1 — Security gaps: deny-path regression gates (lock current behavior)
 
 Implementation is believed correct; adding tests prevents a silent future regression. Any of these that find a real exploit should be peeled off and handled privately under 8.1a.
 
+- **Bulk FHIR `system/*` scope downgrade regression gates** (moved from §8.1a after Phase A audit confirmed enforcement works). Lock the three export routes: `GET /fhir/Patient/$export`, `GET /fhir/Group/{id}/$export`, `GET /fhir/$export`. Each test: mint a confidential client-credentials token with narrow `system/<resource>.read` scope only, call the broader-scope export route, assert 401. **(Where: new api test file or extend `GroupExportFhirApiTest`. Effort: small-medium — needs JWT assertion scaffolding.)**
+- **Cross-scope lateral escalation regression gates** (moved from §8.1a after Phase A audit confirmed enforcement works). Lock: patient-role token with `patient/Patient.read` cannot reach a `user/*`-scoped FHIR route; user-role token with `user/Patient.read` cannot reach a `system/*`-scoped FHIR route. **(Where: `OAuth2AttackScenarioTest` or `BearerTokenRejectionPropertiesTest`. Effort: small-medium.)**
 - **Token-endpoint race on authorization code across worker processes.** `testSecondExchangeOfSameCodeIsRejected` proves single-process serialization via DB unique constraint; `ClientRegistrationReadTest::testTwoConcurrentReadsWithSameTokenCannotBothSucceed` uses `curl_multi` for DCR read. **No matching curl_multi test for the token endpoint.** **(Where: new api test using curl_multi. Effort: small.)**
 - **ID token (OIDC) tampering through the auth-code flow.** SMART launch token tampering + logout `id_token_hint` tampering are covered. ID-token-at-authentication tampering through the auth-code → id_token issuance → client-side verify path is not. **(Where: new api test or extend `AuthorizationGrantFlowTest`. Effort: small-medium.)**
 - **`state` CSRF deny-paths beyond the one existing test.** `OAuthLoginCsrfRejectionTest` is 1 method. Missing/replayed/tampered-after-step-1 variants not tested. **(Where: `OAuthLoginCsrfRejectionTest`. Effort: small.)**
@@ -515,12 +517,131 @@ None of the §8 items are purely new-feature gaps independent of spec compliance
 
 Carried forward in case a future PR wants to revisit:
 
+- **Auth-code validation-order DoS** — awaiting upstream `league/oauth2-server` interface addition. Local workaround (atomic-claim in `AuthCodeRepository::isAuthCodeRevoked`) correctly enforces single-use but creates a pre-validation code-burn window. Impact is low (attacker gains nothing by burning a code they already hold; victim cost is one re-authorize click). Tracked in §9 for upstream coordination.
+- **`invalid_request` vs. `invalid_grant` error label on auth-code reuse** — same root cause as above. League 8.5.5 maps `isAuthCodeRevoked=true` to `invalid_request`; RFC 6749 §5.2 specifies `invalid_grant`. Fix lives in the same upstream interface change tracked in §9.
 - **No SHA pin on external-client smokes.** Rolling master pulls. Transient breakage expected; triage first checks whether the regression is in OpenEMR or the external repo. Documented in `smart-launch-test.yml` header comment.
 - **Inferno signal-swallow bug** — tracked above under §8.2 as the small-but-high-signal fix.
 
 ---
 
-## 9. Appendix — file paths worth bookmarking
+## 9. Upstream `league/oauth2-server` coordination plan
+
+Two items from §8 are architecturally better addressed in `thephpleague/oauth2-server` rather than in OpenEMR's local fork of behavior:
+
+1. **Race-safe single-use enforcement on authorization codes** (§8.1a resolution).
+2. **Correct `invalid_grant` label on code reuse** (§8.5).
+
+Both resolve to the same root cause: league's `AuthCodeRepositoryInterface` design has a race window between its two methods, and `revokeAuthCode(): void` cannot signal duplicate claims. Any implementer wanting proper single-use enforcement under concurrency faces a trade-off between (a) putting the claim in `isAuthCodeRevoked` (what OpenEMR currently does — correct under concurrency but burns codes pre-validation, see §8.5), (b) overriding `AuthCodeGrant::respondToAccessTokenRequest` wholesale (~100 LoC vendor-copy with ongoing maintenance tax), or (c) accepting the race.
+
+### Phase 1 — File upstream issue (short-term, lightweight)
+
+**Status:** draft ready (below). File against `thephpleague/oauth2-server` at the issue tracker as a standalone concern, not a security advisory. The underlying issue is a public interface limitation discussed openly; no attack content, no OpenEMR-specific disclosure.
+
+**Draft issue:**
+
+> ---
+>
+> **Title:** `AuthCodeRepositoryInterface` cannot signal duplicate-claim without vendor-copying `AuthCodeGrant::respondToAccessTokenRequest`
+>
+> **Body:**
+>
+> RFC 6749 §4.1.2 and OIDC Core 1.0 §3.1.3.5 both require authorization codes to be single-use. Implementers using `league/oauth2-server`'s `AuthCodeRepositoryInterface` face a race window and an interface limitation when enforcing this under concurrent exchanges.
+>
+> ### The race
+>
+> `AuthCodeGrant::respondToAccessTokenRequest` (`src/Grant/AuthCodeGrant.php`) calls:
+>
+> 1. `AuthCodeRepositoryInterface::isAuthCodeRevoked($codeId)` → read-only check inside `validateAuthorizationCode`.
+> 2. (validate redirect_uri / PKCE / scopes.)
+> 3. `issueAccessToken(...)` + `issueRefreshToken(...)`.
+> 4. `AuthCodeRepositoryInterface::revokeAuthCode($codeId)` → `void`, called last.
+>
+> Two concurrent exchanges of the same code can both pass step 1 before either reaches step 4. Both receive tokens. In 8.5.5 the `revokeAuthCode` call at the end is void, so there's no way for the second exchange to detect that it lost the race.
+>
+> ### The interface limitation
+>
+> Making `isAuthCodeRevoked` do an atomic claim (SELECT-with-write-side-effect) closes the race by using a DB primary-key constraint as the serializer. But it has to fire BEFORE league validates redirect_uri / PKCE / scopes (which happen later in `respondToAccessTokenRequest`), so a client with a wrong redirect_uri or wrong `code_verifier` burns the code pre-validation. For benign clients this means one re-authorize cycle after a config typo. For adversarial callers who already hold a leaked code, it's a no-gain DoS vector but it's a vector nonetheless.
+>
+> The alternative — override `respondToAccessTokenRequest` wholesale and insert the atomic claim between validation and token issuance — requires copying ~100 lines of the parent method (which uses the `private validateAuthorizationCode` method, so a clean inheritance split isn't possible). This locks implementers into a vendor-copy that has to be rebased against every upstream release.
+>
+> ### Proposed interface additions
+>
+> Two options:
+>
+> **A. Return a boolean from `revokeAuthCode` and call it earlier.**
+>
+> ```php
+> interface AuthCodeRepositoryInterface
+> {
+>     // Change return type void → bool. True = claim succeeded; false = duplicate.
+>     public function revokeAuthCode($codeId): bool;
+> }
+> ```
+>
+> Then in `AuthCodeGrant::respondToAccessTokenRequest`, call `revokeAuthCode` after validation but before token issuance:
+>
+> ```php
+> // ... existing validation (validateAuthorizationCode, validateCodeChallenge, etc.) ...
+>
+> if ($this->authCodeRepository->revokeAuthCode($authCodePayload->auth_code_id) === false) {
+>     throw OAuthServerException::invalidGrant('Authorization code has already been used');
+> }
+>
+> // Issue tokens
+> $accessToken = $this->issueAccessToken(...);
+> ```
+>
+> This also lets the grant throw the RFC-correct `invalid_grant` on reuse rather than the current `invalid_request` emitted by `validateAuthorizationCode` when `isAuthCodeRevoked` returns true.
+>
+> **B. Add a sibling method with explicit atomic-claim semantics.**
+>
+> ```php
+> interface AuthCodeRepositoryInterface
+> {
+>     // Returns true if the claim succeeded (code is now consumed);
+>     // false if the code was already claimed by a prior exchange.
+>     public function claimAuthCode($codeId): bool;
+> }
+> ```
+>
+> `AuthCodeGrant::respondToAccessTokenRequest` would call `claimAuthCode` instead of the current `isAuthCodeRevoked` + `revokeAuthCode` pair. The existing two methods could be kept as deprecated aliases for backwards compatibility.
+>
+> ### Backwards compatibility
+>
+> Option A is a breaking change to the interface signature (void → bool). Option B is additive if the existing methods are retained as deprecated.
+>
+> Happy to prototype a PR for whichever option the maintainers prefer.
+>
+> ---
+
+### Phase 2 — Draft PR (future, when there is time)
+
+Prerequisites to scoping a PR:
+
+1. **Decide between option A (breaking) or option B (additive).** Option B is safer for an established library; option A is cleaner API-wise. Likely the maintainers' call.
+2. **Reference implementation**: write a stub `AuthCodeRepositoryInterface::claimAuthCode` (or modified `revokeAuthCode`) + update `AuthCodeGrant::respondToAccessTokenRequest` + add deprecation shim for the old pair.
+3. **Test coverage upstream**: league/oauth2-server has its own test suite under `tests/`. The PR would need:
+   - Unit test on the new interface method
+   - Integration test showing single-use enforcement under simulated concurrency (two sequential exchanges of same code, second fails with `invalid_grant`)
+   - Deprecation-shim test if going option B
+4. **Migration note for implementers**: README / UPGRADE docs for the new method.
+
+Estimated PR size: ~150-250 LoC including tests + docs. Not large by upstream standards but needs careful discussion of the backwards-compat shape before submission.
+
+### Phase 3 — OpenEMR adopts upstream
+
+Once upstream ships the new interface:
+
+1. Update `src/Common/Auth/OpenIDConnect/Repositories/AuthCodeRepository.php` to use the new method. Remove the atomic-claim-via-`isAuthCodeRevoked` workaround (`isAuthCodeRevoked` goes back to pure read).
+2. The code-burn window at §8.5 closes naturally — the claim now fires post-validation.
+3. The `invalid_request` → `invalid_grant` label gap at §8.5 also closes.
+4. Remove both entries from §8.5. Add a note to `AuthCodeRepository` referencing the upstream migration.
+
+Both OpenEMR §8.5 trade-offs resolve in one upstream release.
+
+---
+
+## 10. Appendix — file paths worth bookmarking
 
 - `tests/README.md`, `tests/Tests/README.md`, `tests/Tests/WebUi/README.md` — existing test-suite docs.
 - Config: `phpunit.xml`, `phpunit-isolated.xml`, `phpstan.neon.dist`, `.phpstan/extension.neon`, `semgrep.yaml`.
