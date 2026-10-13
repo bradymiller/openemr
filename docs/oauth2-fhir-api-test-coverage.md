@@ -1,8 +1,17 @@
 # OpenEMR Test Coverage — OAuth2, SMART-on-FHIR, FHIR, and REST API
 
+> **Status: private working document.** §8 catalogs gaps including security-category items that could inform an attacker before the fixes land. Keep internal until the Priority 1a implementation items (§8.1a) are resolved; the rest can become public when the maintainer signs off.
+
 **Audience:** maintainers (human and AI). **Purpose:** reference landscape of what is tested, where, how it runs, and where the gaps are, so future contributors can target gaps without re-researching the whole surface each time.
 
 **Base state:** post-PR #14531 (merge SHA `ff1a129a86`, 2026-10-13). All file paths are relative to the repo root. Test counts reflect the state at that merge; later landings add to the picture but shouldn't invalidate the structure of this document.
+
+**Prioritization framework** (applied in §8):
+
+1. **Security gaps** (highest) — implementation holes that could be exploited today, and test-coverage holes where a regression could silently flip a deny-path.
+2. **Testing** — coverage expansion + layer-symmetry adds that strengthen the regression signal without changing production behavior.
+3. **Spec compliance gaps** — endpoints or shapes the spec requires but OpenEMR has not implemented.
+4. **Feature gaps** — new functionality beyond what the spec requires.
 
 ---
 
@@ -448,51 +457,66 @@ Not pinned to a SHA.
 
 ## 8. Gap register
 
-Ordered loosely by priority (biggest-structural gaps first; nits last). Each entry notes **(impact, where to add, rough effort)**.
+Each entry notes **(category, impact, where to add, rough effort)**. Ordering follows the §Prioritization framework at the top of this document — security first, then testing, then spec compliance, then feature. Within each priority, items are listed with effort size.
 
-### 8.1 Positive-testing gaps (happy paths not exercised end-to-end)
+### 8.1a Priority 1 — Security gaps: implementation holes (fix the code)
 
-- **`/userinfo` endpoint — unimplemented but advertised.** `src/RestControllers/Authorization/OAuth2DiscoveryController.php:71` emits `"userinfo_endpoint"` in discovery; `grep -rln 'userinfo' src/` finds only that one emit site + an unrelated SSRF validator. Any OIDC client that follows discovery and calls `/userinfo` gets a 404. **(Impact: OIDC conformance gap. Where: implement handler + add to router + api test. Effort: medium — new controller + repository method + tests.)**
-- **`/revoke` endpoint (RFC 7009) — unimplemented, not advertised.** SMART configuration has a commented-out `revocation_endpoint`. **(Impact: SMART App Launch 2.0 recommends; some clients expect it. Where: implement + tests + advertise. Effort: medium.)**
-- **DCR PUT (update) + DELETE (deregister) — RFC 7592.** Only GET is implemented. PUT/DELETE return 200 as silent no-ops (no persist, no delete). Not a leak but a spec gap. **(Impact: RFC 7592 conformance. Where: `AuthorizationController::oauthClientRegistrationRead` sibling methods + tests. Effort: medium.)**
-- **EHR launch end-to-end via a real client.** Standalone launch is covered by `oe-smart-questionnaire` smoke; EHR launch (user clicks SMART app from inside OpenEMR → `launch=<launch_param>` → authorize) is only covered at the isolated layer (`EhrLaunchPatientContextTest`). **(Impact: EHR launch is the primary SMART use case for an EHR vendor. Where: add EHR-launch mode to smart-launch smoke, or new smoke with an EHR-launch-capable test app. Effort: medium-large.)**
-- **Public client (no secret) auth-code via PKCE from an external client.** `AuthorizationGrantPublicClientPkceTest` has 3 api tests, but no external-client smoke drives it. **(Impact: real-world SMART mobile apps are public clients. Where: add a public-client lane to `oe-module-api-explorer` driver. Effort: small-medium.)**
-- **Backend-services (`system/*`) SMART launch from an external client.** Scope-set exercised by cert tests only. **(Impact: SMART Backend Services is the ONC-mandated bulk-export flow. Where: add to one of the smokes. Effort: medium.)**
-- **Portal API surface** — 5 routes, zero api tests. **(Impact: patient-portal clients hit these. Where: `tests/Tests/Api/*PortalApiTest.php`. Effort: medium — needs portal patient fixture, already provided by `PortalPatientFixtureManager`.)**
-- **Password + auth-code + refresh grants via a real third-party client.** `api-explorer` DCRs them but doesn't drive them. **(Impact: catches real-client API-shape drift. Where: extend `ci/api-explorer/driver.php`. Effort: small.)**
-- **Scope-narrowing on consent.** User flips a consent checkbox off, token's scope should be narrower. No test covers this. **(Impact: SMART consent UX. Where: api test driving `/scope-authorize-confirm` with partial scope list. Effort: medium.)**
-- **Error-path browser flows in SMART launch.** Denied-consent, expired launch token, missing patient context — no end-to-end coverage. **(Impact: SMART UX robustness. Where: extend `SmartLaunchQuestionnaireTest`. Effort: medium.)**
-- **FHIR writes from a real third-party client.** The only external-client smoke that touches FHIR is `api-explorer` → `GET fhir/Patient`. No POST/PUT/DELETE smoke. **(Impact: write-path contract drift. Where: extend driver.php. Effort: small-medium.)**
-- **Pagination / `_sort` / `_include` / `_revinclude` smoke.** Not exercised by external-client smokes. **(Impact: FHIR search profile conformance. Where: extend driver.php or add dedicated api tests. Effort: medium.)**
+These are suspected or confirmed exploitable paths in the production code. Verify-and-fix before anything else lands.
 
-### 8.2 Negative / deny-path gaps
+- **Bulk FHIR `system/*` scope downgrade.** `GroupExportFhirApiTest` has one non-existent-group deny; the actual "token holds `system/Patient.read` but invokes `system/Group.$export`" scope-downgrade attack is unverified in code. The enforcement surface is `BulkFhirRestController` → `ScopeConstraintFilterer` → `ResourceConstraintFilterer`. **(Status: UNVERIFIED — needs code audit first. If exploitable: fix privately via GHSA workflow, then land regression gates. If already denied: downgrade to §8.1b for test-only coverage. Effort: medium if fix needed, small if already denied.)**
+- **Cross-scope lateral escalation on bearer presentation.** `BearerTokenRejectionPropertiesTest::testTokenWithReadOnlyScopeCannotWriteViaFhirEndpoint` is one case. The full patient→user→system lateral matrix is unverified. **(Status: UNVERIFIED — audit first. Same handling as above. Effort: medium if fix needed, small if already denied.)**
+- **Auth-code validation-order DoS** (deferred by Brady 2026-10-13 during #14531 review under a cost-benefit framing; **flagged for re-review** under the new security-first framework). `AuthCodeRepository::isAuthCodeRevoked` does the atomic claim BEFORE league validates redirect_uri/PKCE. A wrong-redirect-uri exchange burns the code pre-validation. Attacker who holds the code can DoS a legitimate exchange, cannot mint tokens themselves (still needs PKCE/secret). Proper fix: ~100 LoC league vendor-copy in `CustomAuthCodeGrant::respondToAccessTokenRequest`. **(Status: known trade-off, re-review needed. Effort: medium.)**
 
-- **Bulk FHIR `system/*` scope downgrade.** `GroupExportFhirApiTest` has one non-existent-group deny; the actual "token has `system/Patient.read` but attempts `system/Group.$export`" scope-downgrade attack is uncovered. Explicitly deferred to "post-PR landing" per Brady 2026-10-13. **(Impact: bulk-export authorization. Where: `OAuth2AttackScenarioTest` or new file + Group/Patient `$export` deny-paths. Effort: medium.)**
-- **Cross-scope lateral escalation on bearer presentation.** `BearerTokenRejectionPropertiesTest::testTokenWithReadOnlyScopeCannotWriteViaFhirEndpoint` is one case. Patient→user→system lateral attempts not surfaced as a full matrix. **(Impact: scope-boundary enforcement. Where: `OAuth2AttackScenarioTest` + `BearerTokenRejectionPropertiesTest`. Effort: medium.)**
-- **Token-endpoint race on authorization code across worker processes.** `testSecondExchangeOfSameCodeIsRejected` proves single-process serialization via DB unique constraint; `ClientRegistrationReadTest::testTwoConcurrentReadsWithSameTokenCannotBothSucceed` already uses `curl_multi` for DCR read. **No matching curl_multi test for the token endpoint.** **(Impact: validates the atomic-claim fix under real concurrency. Where: new api test using curl_multi. Effort: small.)**
-- **ID token (OIDC) tampering through the auth-code flow.** SMART launch token tampering + logout `id_token_hint` tampering are covered. ID-token-at-authentication tampering through the auth-code → id_token issuance → client-side verify path is not. **(Impact: id_token integrity. Where: new api test or extend `AuthorizationGrantFlowTest`. Effort: small-medium.)**
-- **`state` CSRF deny-paths beyond the one existing test.** `OAuthLoginCsrfRejectionTest` is 1 method. Missing/replayed/tampered-after-step-1 variants not tested. **(Impact: CSRF robustness. Where: `OAuthLoginCsrfRejectionTest`. Effort: small.)**
-- **PKCE deny-paths beyond happy.** `AuthorizationGrantPublicClientPkceTest` is 3 methods. Full matrix (verifier mismatch × missing × wrong-method × S256-vs-plain downgrade) not exhausted. **(Impact: PKCE conformance. Where: `AuthorizationGrantPublicClientPkceTest` + attack suite. Effort: small-medium.)**
-- **JWKS SSRF / unreachable / malformed at JWT-assertion time (api layer).** `AuthorizationControllerJwksUriValidationIsolatedTest` has 17 isolated tests at DCR registration time. `JwksBoundaryNegativesTest` has 3 at api layer. The "DCR with SSRF-bait `jwks_uri`, prove token endpoint refuses to resolve it" api-layer path is thin. **(Impact: SSRF protection on token exchange. Where: extend `JwksBoundaryNegativesTest`. Effort: small.)**
-- **CORS `Access-Control-Allow-Origin: *` + credentials bad pairing** — the attack-scenario suite doesn't explicitly assert this invariant; the semgrep rule guards source-side introduction. **(Impact: belt-and-suspenders. Where: `OAuth2AttackScenarioTest` CORS section. Effort: small.)**
-- **Rate-limit / brute-force at HTTP layer.** `PasswordGrantHardeningTest` has 38 service-layer tests on `AuthUtils` counters; no api-layer test asserts the HTTP response shape when a client hits the rate limit via `/token`. **(Impact: documents the brute-force deny-path contract. Where: new api test. Effort: small.)**
+### 8.1b Priority 1 — Security gaps: deny-path regression gates (lock current behavior)
 
-### 8.3 Coverage asymmetries between layers
+Implementation is believed correct; adding tests prevents a silent future regression. Any of these that find a real exploit should be peeled off and handled privately under 8.1a.
 
-- **`ScopeConstraintFilterer`** — no direct isolated test (only wiring test); twin `ResourceConstraintFilterer` has 10 direct isolated tests. **(Impact: untested branch logic. Where: new isolated test. Effort: small.)**
-- **`IntrospectionTest`** — 32 api tests, no isolated test on the controller internals. **(Impact: slower feedback loop. Where: isolated-tier split. Effort: medium.)**
-- **SMART authorization controller** — 14 isolated tests, no api-layer coverage of consent-screen HTML output beyond `AuthorizationGrantFlowTest`'s implicit coverage. **(Impact: consent UI drift. Where: api test rendering `/scope-authorize-confirm` + asserting known markers. Effort: medium.)**
-- **SMART launch e2e** — 1 Panther test vs. 8 isolated SMARTLaunchToken + 3 EhrLaunchPatientContext + 2 SMARTSessionTokenContext. **(Impact: e2e is thinnest. Where: extend `SmartLaunchQuestionnaireTest` with error paths + EHR launch mode. Effort: medium-large.)**
-- **FHIR Bulk** — 1 api test (negative), 1 cert test (positive), rich service-layer. Spec surface is wider. **(Impact: Bulk Data IG conformance. Where: `GroupExportFhirApiTest` + new api tests. Effort: medium.)**
+- **Token-endpoint race on authorization code across worker processes.** `testSecondExchangeOfSameCodeIsRejected` proves single-process serialization via DB unique constraint; `ClientRegistrationReadTest::testTwoConcurrentReadsWithSameTokenCannotBothSucceed` uses `curl_multi` for DCR read. **No matching curl_multi test for the token endpoint.** **(Where: new api test using curl_multi. Effort: small.)**
+- **ID token (OIDC) tampering through the auth-code flow.** SMART launch token tampering + logout `id_token_hint` tampering are covered. ID-token-at-authentication tampering through the auth-code → id_token issuance → client-side verify path is not. **(Where: new api test or extend `AuthorizationGrantFlowTest`. Effort: small-medium.)**
+- **`state` CSRF deny-paths beyond the one existing test.** `OAuthLoginCsrfRejectionTest` is 1 method. Missing/replayed/tampered-after-step-1 variants not tested. **(Where: `OAuthLoginCsrfRejectionTest`. Effort: small.)**
+- **PKCE deny-paths beyond happy.** `AuthorizationGrantPublicClientPkceTest` is 3 methods. Full matrix (verifier mismatch × missing × wrong-method × S256-vs-plain downgrade) not exhausted. **(Where: `AuthorizationGrantPublicClientPkceTest` + attack suite. Effort: small-medium.)**
+- **JWKS SSRF / unreachable / malformed at JWT-assertion time (api layer).** `AuthorizationControllerJwksUriValidationIsolatedTest` has 17 isolated tests at DCR registration time. `JwksBoundaryNegativesTest` has 3 at api layer. The "DCR with SSRF-bait `jwks_uri`, prove token endpoint refuses to resolve it" api-layer path is thin. **(Where: extend `JwksBoundaryNegativesTest`. Effort: small.)**
+- **CORS `Access-Control-Allow-Origin: *` + `Access-Control-Allow-Credentials: true` invariant assertion.** The attack-scenario suite doesn't explicitly assert this invariant; the semgrep rule guards source-side introduction only. **(Where: `OAuth2AttackScenarioTest` CORS section. Effort: small.)**
+- **Rate-limit / brute-force at HTTP layer.** `PasswordGrantHardeningTest` has 38 service-layer tests on `AuthUtils` counters; no api-layer test asserts the HTTP response shape when a client hits the rate limit via `/token`. **(Where: new api test. Effort: small.)**
 
-### 8.4 Known limitations / documented trade-offs
+### 8.2 Priority 2 — Testing (coverage expansion + layer symmetry)
+
+Tests that improve regression signal without changing production behavior.
+
+- **Inferno signal-swallow bug** (`project_inferno_ci_signal_swallow`). `ci/inferno/run.sh` wraps phpunit in an if-conditional that disables `set -e`, so cert-side failures have historically shown green. Residuals: Bulk Group Compartment Export + Smoking Status Observations. **(Where: `ci/inferno/run.sh`. Effort: small — 5-line bash fix. Highest signal-per-effort of any item in this register because it unblocks the 31 existing cert tests.)**
+- **Portal API surface** — 5 routes, zero api tests. `PortalPatientFixtureManager` is already available. **(Where: `tests/Tests/Api/*PortalApiTest.php`. Effort: medium.)**
+- **EHR launch end-to-end via a real client.** Standalone launch is covered by `oe-smart-questionnaire` smoke; EHR launch (user clicks SMART app from inside OpenEMR → `launch=<launch_param>` → authorize) is only covered at the isolated layer (`EhrLaunchPatientContextTest`). **(Where: add EHR-launch mode to smart-launch smoke, or new smoke with an EHR-launch-capable test app. Effort: medium-large. External dependency: needs an EHR-launch-capable test app — either extend `oe-smart-questionnaire` or find an alternate.)**
+- **Public client (no secret) PKCE from an external client.** `AuthorizationGrantPublicClientPkceTest` has 3 api tests, but no external-client smoke drives it. **(Where: add a public-client lane to `oe-module-api-explorer` driver. Effort: small-medium.)**
+- **Backend-services (`system/*`) SMART launch from an external client.** Scope-set exercised by cert tests only. **(Where: extend `api-explorer` driver with full `$export` round-trip including status polling + NDJSON retrieval. Effort: medium.)**
+- **Password + auth-code + refresh grants via a real third-party client.** `api-explorer` DCRs them but doesn't drive them. **(Where: extend `ci/api-explorer/driver.php`. Effort: small each path.)**
+- **FHIR writes from a real third-party client.** The only external-client smoke that touches FHIR is `api-explorer` → `GET fhir/Patient`. No POST/PUT/DELETE smoke. **(Where: extend driver.php. Effort: small-medium.)**
+- **Pagination / `_sort` / `_include` / `_revinclude` smoke.** Not exercised by external-client smokes. **(Where: extend driver.php or add dedicated api tests. Effort: medium.)**
+- **Scope-narrowing on consent.** User flips a consent checkbox off, token's scope should be narrower. No test covers this. **(Where: api test driving `/scope-authorize-confirm` with partial scope list. Effort: medium.)**
+- **Error-path browser flows in SMART launch.** Denied-consent, expired launch token, missing patient context — no end-to-end coverage. **(Where: extend `SmartLaunchQuestionnaireTest`. Effort: medium.)**
+- **`ScopeConstraintFilterer` direct isolated test** — no direct isolated test (only wiring test); twin `ResourceConstraintFilterer` has 10 direct isolated tests. **(Where: new isolated test. Effort: small.)**
+- **`IntrospectionTest` isolated split** — 32 api tests, no isolated test on the controller internals. **(Where: isolated-tier split. Effort: medium.)**
+- **SMART authorization controller api coverage** — 14 isolated tests, no api-layer coverage of consent-screen HTML output beyond `AuthorizationGrantFlowTest`'s implicit coverage. **(Where: api test rendering `/scope-authorize-confirm` + asserting known markers. Effort: medium.)**
+- **FHIR Bulk broader positive coverage** — 1 api test (negative), 1 cert test (positive), rich service-layer. Spec surface is wider. **(Where: `GroupExportFhirApiTest` + new api tests. Effort: medium. Note: the `system/*` scope-downgrade deny side is Priority 1a above.)**
+
+### 8.3 Priority 3 — Spec compliance gaps
+
+Endpoints/shapes the spec requires but OpenEMR has not implemented. No current security exposure, but ONC/OIDC auditors may flag.
+
+- **`/userinfo` endpoint — unimplemented but advertised.** `src/RestControllers/Authorization/OAuth2DiscoveryController.php:71` emits `"userinfo_endpoint"` in discovery; `grep -rln 'userinfo' src/` finds only that one emit site + an unrelated SSRF validator. Any OIDC client that follows discovery and calls `/userinfo` gets a 404. **(Where: implement handler + add to router + api test. Effort: medium — new controller + repository method + tests. Risk: may surface OIDC claims-mapping bugs that cascade into more PRs.)**
+- **`/revoke` endpoint (RFC 7009) — unimplemented, not advertised.** SMART configuration has a commented-out `revocation_endpoint`. **(Where: implement + tests + advertise. Effort: medium.)**
+- **DCR PUT (update) + DELETE (deregister) — RFC 7592.** Only GET is implemented. PUT/DELETE return 200 as silent no-ops (no persist, no delete). Not a leak but a spec gap and a subtle integrity surprise for clients expecting these methods to be either functional or rejected. **(Where: `AuthorizationController::oauthClientRegistrationRead` sibling methods + tests. Effort: medium.)**
+- **`invalid_request` vs. `invalid_grant` error label on auth-code reuse** — League 8.5.5 maps `isAuthCodeRevoked=true` to `invalid_request` in `validateAuthorizationCode`. RFC 6749 §5.2 specifies `invalid_grant` for a reused code. Fix bundled with the §8.1a auth-code validation-order DoS vendor-copy (same ~100 LoC fix in `CustomAuthCodeGrant::respondToAccessTokenRequest`). **(Effort: trivial increment on top of 8.1a fix.)**
+
+### 8.4 Priority 4 — Feature gaps
+
+None of the §8 items are purely new-feature gaps independent of spec compliance. The §8.3 spec items double as feature additions but are classified by their spec-mandate posture, not feature-wishlist posture.
+
+### 8.5 Known limitations / documented trade-offs (not gaps per se)
 
 Carried forward in case a future PR wants to revisit:
 
-- **Auth-code validation-order DoS trade-off** (deferred by Brady 2026-10-13 during #14531 review). `AuthCodeRepository::isAuthCodeRevoked` does the atomic claim BEFORE league validates redirect_uri/PKCE. A wrong-redirect-uri exchange burns the code pre-validation (DoS: attacker who holds the code prevents legitimate exchange, but can't mint tokens). Proper fix requires ~100 LoC league vendor-copy in `CustomAuthCodeGrant::respondToAccessTokenRequest`.
-- **`invalid_request` vs. `invalid_grant` error label on auth-code reuse.** League 8.5.5 maps `isAuthCodeRevoked=true` to `invalid_request` in `validateAuthorizationCode`. RFC 6749 §5.2 specifies `invalid_grant` for a reused code. Fix lives in the same vendor-copy as the DoS trade-off above.
-- **Inferno signal-swallow bug** (`project_inferno_ci_signal_swallow`). `ci/inferno/run.sh` wraps phpunit in an if-conditional that disables `set -e`, so cert-side failures have historically shown green. Residuals: Bulk Group Compartment Export + Smoking Status Observations.
-- **No SHA pin on external-client smokes.** Rolling master pulls. Transient breakage expected; triage first checks whether the regression is in OpenEMR or the external repo.
+- **No SHA pin on external-client smokes.** Rolling master pulls. Transient breakage expected; triage first checks whether the regression is in OpenEMR or the external repo. Documented in `smart-launch-test.yml` header comment.
+- **Inferno signal-swallow bug** — tracked above under §8.2 as the small-but-high-signal fix.
 
 ---
 
