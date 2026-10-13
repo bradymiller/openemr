@@ -487,6 +487,22 @@ Implementation is believed correct; adding tests prevents a silent future regres
 
 Tests that improve regression signal without changing production behavior.
 
+**In-flight external contributor PRs** chip at this register — status collected 2026-10-13. These are open on `openemr/openemr`; coordination hint on each. Column key: ✅ CI green • ⚠️ transient / infra failure not caused by diff • 🚫 CI gated (contributor's workflow runs not yet triggered — usually first-time-contributor approval or codecov) • 👁️ reviewers.
+
+| PR | Author | Shape | CI | Reviewers | Lane in this register |
+|----|--------|-------|----|-----------|-----------------------|
+| [#14194](https://github.com/openemr/openemr/pull/14194) FHIR OperationDefinition api tests | namespaceMarcello | test-only (196/0, 2 files) | ✅ 75 green, 1 pending | — | Resource-level FHIR api coverage; also exercises **authorization skip list** (adjacent to our §8.1b dispatcher work) |
+| [#14195](https://github.com/openemr/openemr/pull/14195) FHIR Procedure api tests | namespaceMarcello | test-only (561/0, 1 file) | ✅ 71 green, 1 pending | 👁️ coderabbit | Resource-level FHIR api coverage |
+| [#14219](https://github.com/openemr/openemr/pull/14219) FHIR Group api tests | namespaceMarcello | test-only (418/0, 2 files) | ⚠️ Upgrade-from-5.0.0/setup failed (infra, not diff) | 👁️ coderabbit | Resource-level FHIR api coverage |
+| [#14190](https://github.com/openemr/openemr/pull/14190) ValueSet `_id` → `list_options.option_id` | namespaceMarcello | prod fix + api tests (406/4, 3 files) | ✅ 75 green, 1 pending | 👁️ coderabbit | FHIR resource prod fix + api coverage |
+| [#14218](https://github.com/openemr/openemr/pull/14218) Specimen honors `status` search param | namespaceMarcello | prod fix + api tests (562/5, 3 files) | ✅ 75 green, 1 pending | 👁️ coderabbit | FHIR resource prod fix + api coverage |
+| [#14220](https://github.com/openemr/openemr/pull/14220) Media reports deleted docs as entered-in-error | namespaceMarcello | prod fix + api tests (422/1, 3 files) | ✅ 73 green, 1 pending | — | FHIR resource prod fix + api coverage |
+| [#14292](https://github.com/openemr/openemr/pull/14292) Dead refresh token → 400 invalid_grant | namespaceMarcello | prod fix + isolated test (197/1, 3 files) | ✅ 73 green, codecov patch/project failing (test-code excluded, not blocking) | — | Grant-handler lane; semantically adjacent to our OAuth2AttackScenarioTest |
+| [#14511](https://github.com/openemr/openemr/pull/14511) Ignore duplicate consent submissions | shwetanktomar | prod fix + isolated test (56/0, 2 files) | 🚫 full matrix not yet triggered (2/2 checks only) | — | AuthorizationController; same file our PKCE/CSRF tests exercise from outside |
+| [#14516](https://github.com/openemr/openemr/pull/14516) Complete server scope catalog types | sn1thy | prod + isolated test (142/149, 9 files) | 🚫 full matrix not yet triggered (2/2 checks only) | — | ScopeRepository + AuthorizationController; low direct overlap |
+
+**Coordination hints:** Several of these PRs modify `tests/Tests/Api/ApiTestClient.php` — merge-order favors our PR #14574 (does not touch it). Consistent helper naming (`assertOAuthUnauthorizedResponse`) is worth preserving across the series.
+
 - **Inferno signal-swallow bug** (`project_inferno_ci_signal_swallow`). `ci/inferno/run.sh` wraps phpunit in an if-conditional that disables `set -e`, so cert-side failures have historically shown green. Residuals: Bulk Group Compartment Export + Smoking Status Observations. **(Where: `ci/inferno/run.sh`. Effort: small — 5-line bash fix. Highest signal-per-effort of any item in this register because it unblocks the 31 existing cert tests.)**
 - **Portal API surface** — 5 routes, zero api tests. `PortalPatientFixtureManager` is already available. **(Where: `tests/Tests/Api/*PortalApiTest.php`. Effort: medium.)**
 - **EHR launch end-to-end via a real client.** Standalone launch is covered by `oe-smart-questionnaire` smoke; EHR launch (user clicks SMART app from inside OpenEMR → `launch=<launch_param>` → authorize) is only covered at the isolated layer (`EhrLaunchPatientContextTest`). **(Where: add EHR-launch mode to smart-launch smoke, or new smoke with an EHR-launch-capable test app. Effort: medium-large. External dependency: needs an EHR-launch-capable test app — either extend `oe-smart-questionnaire` or find an alternate.)**
