@@ -504,24 +504,29 @@ Tests that improve regression signal without changing production behavior.
 **Coordination hints:** Several of these PRs modify `tests/Tests/Api/ApiTestClient.php` — merge-order favors our PR #14574 (does not touch it). Consistent helper naming (`assertOAuthUnauthorizedResponse`) is worth preserving across the series.
 
 - **Inferno signal-swallow bug** (`project_inferno_ci_signal_swallow`). `ci/inferno/run.sh` wraps phpunit in an if-conditional that disables `set -e`, so cert-side failures have historically shown green. Residuals: Bulk Group Compartment Export + Smoking Status Observations. **(Where: `ci/inferno/run.sh`. Effort: small — 5-line bash fix. Highest signal-per-effort of any item in this register because it unblocks the 31 existing cert tests.)**
-- **Portal API surface** — 5 routes. PR #14591 adds **positive-shape smoke coverage** for 3 of the 5 (patient, encounter list, encounter single) via password-grant minted patient-role tokens. Expanding PR #14591 (per the layered plan below) adds auth-code-mint variant, scope-set equivalence, and cross-patient isolation — bringing full api-tier coverage. Appointment routes deferred: `ServerScopeListEntity::apiScopes` lists `patient/appointment.read` but the password-grant issuance pipeline drops it; the scope-equivalence test (D1 below) is expected to expose whether this is a mint-path quirk or a real issuance filter difference, and will inform whether appointment-coverage can be added without a separate fix.
+- **Portal API surface** — 5 routes. Progress 2026-10-15 → 2026-10-16:
+  - **PR #14591** (merge `8b94569831`) shipped positive-shape smoke coverage for patient + encounter list (via password-grant), plus the full layered plan below (A/B1/B2/C/D1/D2) and the new `tests/Tests/Support/OAuth2/` helper library.
+  - **PR #14603** (merge `6f2c5ff422`) added positive-shape coverage for `GET /portal/patient/encounter/{known-uuid}` — first external consumer of the helper library.
+  - **PR #14605** (merge `5b5b8b3acb`) fixed `AppointmentRestController` — the three list methods were returning 404 for empty results because `RestControllerHelper::responseHandler` treats falsy as 404 and `[]` is falsy. Added `listResponse()` helper; `GET /portal/patient/appointment` now returns 200 + `"[]"` for empty. Also surfaced that my PR #14591 inline comment attributing the appointment-route 404 to a "scope-filter mystery" was WRONG — `patient/appointment.read` survives DCR → ScopeRepository → finalizeScopes → JWT fine; the real cause was this empty-array-as-404 bug all along. Sibling to issue #14581 (same family, different method).
+  - **Remaining open follow-up:** `GET /portal/patient/appointment/{known-uuid}` positive-shape test — needs `FhirSearchWhereClauseBuilder` plumbing investigation (service search path requires fixture state beyond the raw INSERT the list test uses; see inline note in `PortalApiAppointmentPositiveTest`).
   - **Layered coverage plan** (for Portal API, generalizable to future endpoint families):
     - **A) Scope-match semantics** (isolated) — ✅ covered by `ScopeConstraintEnforcementWiringIsolatedTest` + ScopeEntity tests.
     - **B1) Mint path — password grant / patient** — ✅ `PasswordGrantPatientRoleFlowTest`.
-    - **B2) Mint path — auth-code / patient (via PKCE)** — ❌ gap. `AuthorizationGrantFlowTest` only exercises `user_role=api`. Fill via api-tier test using the new `tests/Tests/Support/OAuth2/AuthCodeFlow::mintPatientRoleToken()` helper (see helper-library plan below).
-    - **C) Endpoint reach + response shape** — ✅ PR #14591 for 3/5 routes.
-    - **D1) Scope-set equivalence across mint paths** — ❌ gap. For the same client+scope-request, password-grant and auth-code should mint tokens with identical scope sets. The appointment-filter mystery is the likely tenant of this test.
-    - **D2) Cross-patient data isolation** — ❌ gap. Patient A's bearer must not reach patient B's data. Needs two portal fixtures.
+    - **B2) Mint path — auth-code / patient (via PKCE)** — ✅ PR #14591 via `AuthCodeFlow::mintPatientRoleToken()`.
+    - **C) Endpoint reach + response shape** — ✅ patient + encounter list via PR #14591; encounter single-UUID via PR #14603; appointment list via PR #14605. Appointment single-UUID known-positive is the one remaining gap.
+    - **D1) Scope-set equivalence across mint paths** — ✅ PR #14591. Confirmed password-grant and auth-code produce equivalent resource-scope sets (nonce excluded as known-benign auth-code OIDC artifact).
+    - **D2) Cross-patient data isolation** — ✅ PR #14591 (`testGetPortalPatientIsolatesAcrossDifferentPatientBearers`).
     - **E) Full-stack realistic (external client)** — 🟡 `oe-smart-questionnaire` covers SMART launch to an external questionnaire app, not our portal routes. Extending `oe-module-api-explorer` with a `--lane=portal` option is the right scaffold (realism axis), separate from the api-tier library.
-  - **Scaffolding plan — `tests/Tests/Support/OAuth2/` reusable mint-helper library** (new in-tree library, scoped to this PR):
-    - `AuthCodeFlow::mintUserRoleToken`, `mintPatientRoleToken`, `mintPublicPkce` — composable, scope-parameterized, pure HTTP (BrowserKit or Guzzle).
-    - `PasswordGrant::mintUserRoleToken`, `mintPatientRoleToken`.
-    - `JwtAssertion::mintSystemToken`.
-    - `DcrClient::registerConfidential`, `registerPublic`, `enableViaDb`.
-    - Shape: static methods returning `['access_token' => $t, 'scopes_granted' => [...], 'client_id' => ..., ...]`.
-    - Separate from `tests/Acceptance/Support/OAuth2/AuthCodeFlow.php` which stays artifact-targeted (admin-panel enable). The api-tier library enables via direct DB.
-    - Every subsequent api-tier test exercising a new scope / grant / endpoint becomes ~20 lines after this library lands.
-    - **Does NOT obsolete `api-explorer`** — the helper library is the fast-breadth internal matrix; `api-explorer` continues to own the "real external client" realism axis (CORS from an external origin, discovery consumption, timing/network quirks, docs-vs-actual-behavior drift). They grow together.
+  - **Scaffolding — `tests/Tests/Support/OAuth2/` reusable mint-helper library** (landed via PR #14591):
+    - `DcrClient::registerConfidential / registerPublic / enableViaDb / remove`
+    - `PasswordGrant::mintUserRoleToken / mintPatientRoleToken`
+    - `AuthCodeFlow::mintUserRoleToken / mintPatientRoleToken` (full /authorize → login → consent → /token via Guzzle + DomCrawler)
+    - All three use orphan-row try/catch guards. Future api-tier tests: ~20 lines each after this library.
+    - Current consumers: PR #14591 (`PortalApiSmokeTest`), PR #14603 (`PortalApiEncounterPositiveTest`), PR #14605 (`PortalApiAppointmentPositiveTest`). Validates the "future tests become ~20 lines" scaffold goal.
+    - Not yet landed: `JwtAssertion::mintSystemToken` + public-client PKCE variant on `AuthCodeFlow`. Add when first consumer needs them.
+    - Separate from `tests/Acceptance/Support/OAuth2/AuthCodeFlow.php` (artifact-targeted; admin-panel enable).
+    - **Does NOT obsolete `api-explorer`** — complementary coverage axes. Helper library owns fast-breadth internal matrix; api-explorer owns real-external-client realism axis.
+  - **Lesson for scope-filter mysteries:** when a route returns 404 and the obvious hypothesis is "scope dropped by issuance," hands-on probes of the issuance pipeline (DCR → ScopeRepository → finalizeScopes → JWT payload) are the right first step BEFORE blaming the scope path. The appointment "mystery" was really an empty-array-as-404 controller bug all along, caught by a dedicated investigation agent in minutes.
 - **EHR launch end-to-end via a real client.** Standalone launch is covered by `oe-smart-questionnaire` smoke; EHR launch (user clicks SMART app from inside OpenEMR → `launch=<launch_param>` → authorize) is only covered at the isolated layer (`EhrLaunchPatientContextTest`). **(Where: add EHR-launch mode to smart-launch smoke, or new smoke with an EHR-launch-capable test app. Effort: medium-large. External dependency: needs an EHR-launch-capable test app — either extend `oe-smart-questionnaire` or find an alternate.)**
 - **Public client (no secret) PKCE from an external client.** `AuthorizationGrantPublicClientPkceTest` has 3 api tests, but no external-client smoke drives it. **(Where: add a public-client lane to `oe-module-api-explorer` driver. Effort: small-medium.)**
 - **Backend-services (`system/*`) SMART launch from an external client.** Scope-set exercised by cert tests only. **(Where: extend `api-explorer` driver with full `$export` round-trip including status polling + NDJSON retrieval. Effort: medium.)**
