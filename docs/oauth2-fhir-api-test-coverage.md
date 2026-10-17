@@ -585,6 +585,60 @@ Tests that improve regression signal without changing production behavior.
 - **SMART authorization controller api coverage** — ✅ **CLOSED via PR #14633** (merge `deaac61cce`). `ConsentPageRenderTest` adds 5 shape assertions on the rendered consent-page HTML: csrf input, proceed button, cancel control, registered-client-name display, action under `/oauth2/` namespace, plus staff/patient parity. `AuthCodeFlow` gained reusable `renderConsentPageForUserRole` + `renderConsentPageForPatientRole` helpers — future consent-screen regression tests are ~10 lines each. Finding: consent form POSTs to `/oauth2/default/device/code` (league OAuth2 library's shared confirm handler used by both auth-code and device-code), NOT `/scope-authorize-confirm` as I'd originally assumed; the template's `redirect` variable is populated server-side with whatever league routes through.
 - **FHIR Bulk broader positive coverage** — ✅ **substantially covered by Inferno** (post-signal-swallow-fix). Inferno §7 drives the full Bulk Data flow end-to-end: §7.1 Bulk Data Authorization (6 sub-tests: invalid grant_type / invalid client_assertion_type / invalid JWT / correct info / response-body JSON shape), §7.2 Group Compartment Export (CapabilityStatement support, auth required, 202 + Content-location, status check, output type/url), §7.3 Group Compartment Export Validation (NDJSON access token required, per-resource US Core profile conformance for Patient/AllergyIntolerance/CarePlan/CareTeam/Condition/Device/DiagnosticReport/DocumentReference/Goal/Immunization/MedicationRequest/Observation/Procedure/Encounter/Organization/Practitioner/Provenance/Location, Group patient-ID matching), §7.4 Group Compartment Export Cancel (DELETE 202). Internal api-tier addition would be marginal signal — the cert surface is already fully exercised. Any specific regression surface not reachable through §7 would still be worth an api-tier test, but there's no identified gap.
 
+#### Scope-system coverage audit (2026-10-17)
+
+Scope-related code is one of the most security-sensitive surfaces in the OAuth2 stack. A regression in scope parsing, consent intersection, registration filtering, or context matching could silently widen access, bypass user intent, or confuse role boundaries. Audit of today's test coverage:
+
+**Covered — ~130-150 assertions across the stack:**
+
+| Component | Test file | Count | Covers |
+|---|---|---|---|
+| `ScopeEntity` parse + `containsScope` | `Isolated/.../ScopeEntityTest.php` + `Unit/.../ScopeEntityTest.php` | 17 + 9 | Scope-string parsing, operation/resource extraction, context, containsScope (incl. v1→v2 permission expansion) |
+| `ScopePermissionObject` CRUDS | `Isolated/.../ScopePermissionObjectTest.php` | 25 | `read`→`rs` expansion, `write`→`cud`, constraint query parsing, CRUDS ordering, v1 shortcut handling |
+| `ScopeConsentResolver` intersection | `Isolated/RestControllers/SMART/ScopeConsentResolverIsolatedTest.php` | 16 | Posted checkbox state → granted scopes, uncheck narrows, unregistered scope filtering, fail-closed without registration, posted-values-outside-request ignored |
+| `ScopeRepository` finalization | `Unit/.../Repositories/ScopeRepositoryTest.php` | 13 | Discovery of registered scopes, finalization behavior |
+| `ScopeEntityContext` | `Unit/.../Entities/ScopeEntityContextTest.php` | 8 | Context resolution semantics (patient/user/system) |
+| `ScopeDelimiterRejection` | `Isolated/.../ScopeDelimiterRejectionIsolatedTest.php` | 7 | Colon-form rejection for non-legacy contexts (prevents `system:Patient.read` sneaking past slash-based matching) |
+| `ScopePermissionParser` SMART v2 | `Isolated/RestControllers/SMART/ScopePermissionParserIsolatedTest.php` | 5 | SMART v2 scope parsing |
+| `ResourceConstraintFilterer` | `Isolated/FHIR/SMART/ResourceConstraintFiltererTest.php` | 10 | Per-resource field constraint (e.g. category filter for DocumentReference) |
+| `ScopeConstraintEnforcementWiring` | `Isolated/FHIR/SMART/ScopeConstraintEnforcementWiringIsolatedTest.php` | 2 | `FhirDocumentReferenceRestController` applies constraint filterer; bulk uses unconstrained check |
+| `ResourceScopeEntityListGrantsScope` | `Isolated/.../ResourceScopeEntityListGrantsScopeIsolatedTest.php` | 3 | List-of-scopes grants a specific scope |
+| `ConsentScopeNarrowing` (api-tier) | `tests/Tests/Api/ConsentScopeNarrowingTest.php` (PR #14628) | 3 | End-to-end confirmation that consent-page unchecking narrows the issued token |
+| `OAuth2AttackScenarioTest` scope-adjacent | `tests/Tests/Api/OAuth2AttackScenarioTest.php` | ~5 of ~30 | Password grant wrong-role rejection; refresh with made-up token; FHIR rejects wrong-signed/empty bearer |
+| **Scope-set equivalence** (D1 from PR #14591) | `PortalApiSmokeTest::testPasswordGrantAndAuthCodeMintEquivalentScopeSets` | 1 | Password-grant and auth-code mint produce identical scope sets for the same request |
+| Inferno US Core 3.1.1 scope conformance | §4 cert groups | 30+ sub-tests × 3 patients | Resource-level scopes grant correctly for every US Core profile |
+| Inferno Backend Services JWT→scope | §7.1 Bulk Data Auth | 6 sub-tests | client_credentials + JWT assertion maps to correct `system/*` scopes |
+
+**Security-regression classes and their current gates:**
+
+| Bug class | Risk shape | Current gate |
+|---|---|---|
+| Scope up-grading (request `patient/Patient.read`, server grants `patient/*.*`) | ✅ ScopeEntityTest + ScopeConsentResolver + ConsentScopeNarrowingTest |
+| Scope-category confusion (patient/* matches user/* via context parse bug) | ✅ ScopeEntityContextTest + PR #14574 role-mismatch deny gates |
+| Colon-form bypass (`system:Patient.read` treated like `system/Patient.read`) | ✅ ScopeDelimiterRejectionIsolatedTest |
+| Permission upgrade (`read` accepted as `write`) | ✅ ScopePermissionObjectTest |
+| CRUDS ordering (`csu` sneaks past because regex is wrong) | ✅ ScopePermissionObjectTest::isOrderedCrudString |
+| Consent intersection bypass (user unchecks scope, token keeps it) | ✅ 16 isolated + 3 api-tier |
+| Registration-filter bypass (unregistered scope gets through DCR) | ✅ ScopeConsentResolver `testRegistrationFilter*` (5 of the 16) |
+| Fail-open on empty registration | ✅ `testRegistrationFilterFailsClosedWithoutRegisteredScopes` |
+| ONC-cert US Core 3.1.1 scope conformance | ✅ Inferno §4 (3-patient × 30+ cert groups per run) |
+| Backend-services JWT→scope flow | ✅ Inferno §7.1 + attack-scenario alg-none + foreign-key tests |
+| Scope-set equivalence between grants | ✅ PR #14591 D1 |
+| **Narrow-then-refresh scope persistence** — if user grants only `patient/Patient.read` but requested both, the refresh must NOT re-widen to the original request | ❌ **GAP.** Isolated `ScopeConsentResolverIsolatedTest::testPartialV1ApprovalDegradesToV2Subset` covers the first mint; the refresh invariant is NOT explicitly tested |
+| **Scope downgrade on refresh** — RFC 6749 §6 allows the client to narrow scope on refresh via a `scope=` parameter. Does OpenEMR accept it and narrow correctly? | ❌ **GAP.** Not explicitly tested |
+| **Deny-consent error shape** — user clicks Cancel/does not submit `proceed=1`. Must return no code and redirect with `error=access_denied` per RFC 6749 §4.1.2.1 | ❌ **GAP.** Only happy-path consent tested |
+| Public-client (no secret) PKCE at mint-level | 🟡 `AuthorizationGrantPublicClientPkceTest` has 3 api tests at `/authorize` layer, no full-flow mint-level test |
+
+**Addressing plan (2026-10-17):**
+
+- **Short-term (next 1-2 PRs):** Close the 4 identified gaps via api-tier tests using the already-landed `AuthCodeFlow` helper library. Specifically:
+  1. Deny-consent error-path tests (part of pursuit item #1).
+  2. Narrow-then-refresh scope persistence (part of pursuit item #1).
+  3. Public-client PKCE full-flow mint helper + tests (pursuit item #2 — extends `AuthCodeFlow` with `mintUserRolePublicClient` variant).
+  4. Scope-downgrade-on-refresh via `scope=` parameter (natural companion to #2 above).
+- **No new production code expected.** All four gaps are regression-gate additions over currently-correct behavior.
+- **If any of the 4 tests surface a real bug** (particularly the refresh-widening case which has been seen in other OAuth2 implementations), peel off and handle under §8.1a before continuing.
+
 ### 8.3 Priority 3 — Spec compliance gaps
 
 Endpoints/shapes the spec requires but OpenEMR has not implemented. No current security exposure, but ONC/OIDC auditors may flag.
