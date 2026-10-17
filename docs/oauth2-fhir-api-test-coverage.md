@@ -624,20 +624,18 @@ Scope-related code is one of the most security-sensitive surfaces in the OAuth2 
 | ONC-cert US Core 3.1.1 scope conformance | ✅ Inferno §4 (3-patient × 30+ cert groups per run) |
 | Backend-services JWT→scope flow | ✅ Inferno §7.1 + attack-scenario alg-none + foreign-key tests |
 | Scope-set equivalence between grants | ✅ PR #14591 D1 |
-| **Narrow-then-refresh scope persistence** — if user grants only `patient/Patient.read` but requested both, the refresh must NOT re-widen to the original request | ❌ **GAP.** Isolated `ScopeConsentResolverIsolatedTest::testPartialV1ApprovalDegradesToV2Subset` covers the first mint; the refresh invariant is NOT explicitly tested |
-| **Scope downgrade on refresh** — RFC 6749 §6 allows the client to narrow scope on refresh via a `scope=` parameter. Does OpenEMR accept it and narrow correctly? | ❌ **GAP.** Not explicitly tested |
-| **Deny-consent error shape** — user clicks Cancel/does not submit `proceed=1`. Must return no code and redirect with `error=access_denied` per RFC 6749 §4.1.2.1 | ❌ **GAP.** Only happy-path consent tested |
-| Public-client (no secret) PKCE at mint-level | 🟡 `AuthorizationGrantPublicClientPkceTest` has 3 api tests at `/authorize` layer, no full-flow mint-level test |
+| **Narrow-then-refresh scope persistence** — if user grants only `patient/Patient.read` but requested both, the refresh must NOT re-widen to the original request | ✅ `RefreshTokenScopePersistenceTest::testRefreshWithExplicitScopePreservesNarrowedSet` + `testRefreshWithUpgradedScopeIsRejectedOrNarrowed` (api-tier) |
+| **Scope downgrade on refresh** — RFC 6749 §6 allows the client to narrow scope on refresh via a `scope=` parameter. Does OpenEMR accept it and narrow correctly? | ✅ `PublicClientPkceMintTest::testPublicClientScopeDowngradeOnRefreshIsHonored` + `RefreshTokenScopePersistenceTest` narrowing cases |
+| **Deny-consent error shape** — user clicks Cancel/does not submit `proceed=1`. Must return no code and redirect with `error=access_denied` per RFC 6749 §4.1.2.1 | ❌ **Spec-compliance gap, not security — see §8.3 user-denial entry.** Fixing requires a code change (short-circuit `authorizeUser` when `proceed` absent + wire the Cancel button to POST `deny=1`); will become testable once that lands. |
+| Public-client (no secret) PKCE at mint-level | ✅ `PublicClientPkceMintTest` — 3 api tests covering mint, consent-narrowing, and scope-downgrade-on-refresh |
 
 **Addressing plan (2026-10-17):**
 
-- **Short-term (next 1-2 PRs):** Close the 4 identified gaps via api-tier tests using the already-landed `AuthCodeFlow` helper library. Specifically:
-  1. Deny-consent error-path tests (part of pursuit item #1).
-  2. Narrow-then-refresh scope persistence (part of pursuit item #1).
-  3. Public-client PKCE full-flow mint helper + tests (pursuit item #2 — extends `AuthCodeFlow` with `mintUserRolePublicClient` variant).
-  4. Scope-downgrade-on-refresh via `scope=` parameter (natural companion to #2 above).
-- **No new production code expected.** All four gaps are regression-gate additions over currently-correct behavior.
-- **If any of the 4 tests surface a real bug** (particularly the refresh-widening case which has been seen in other OAuth2 implementations), peel off and handle under §8.1a before continuing.
+- ✅ **Narrow-then-refresh scope persistence** — Covered by `RefreshTokenScopePersistenceTest` (new api-tier file; 2 tests, 51 assertions). Confirms (a) narrowed scope set carries through refresh when the client passes `scope=` naming only the granted subset, and (b) a widening attempt is either rejected or quietly narrowed back to the bound set.
+- ✅ **Public-client PKCE full-flow mint helper + scope-downgrade-on-refresh** — Covered by `PublicClientPkceMintTest` (new api-tier file; 3 tests, 71 assertions). The `AuthCodeFlow` helper gained `mintUserRolePublicClient` + `exchangeRefreshToken` + `generatePkceVerifier` / `deriveS256Challenge` to support it.
+- ❌ **Deny-consent (RFC 6749 §4.1.2.1)** — Reclassified from §8.2 to §8.3 after flow analysis: the Cancel button in `scope-authorize.html.twig` is `window.history.back()` only and `AuthorizationController::authorizeUser` always approves — so there is no path for a user to formally refuse consent today. This is a spec-compliance gap (not a regression-gate gap) and needs a code change before a test can be added. Tracked in §8.3.
+- **No new production code was added** — all three completed items are regression-gate additions over currently-correct behavior.
+- **New known limitations surfaced during implementation:** two edge cases (OIDC + `offline_access` refresh requiring explicit `scope=`, and OpenEMR DCR rejecting `token_endpoint_auth_method=none`) — recorded in §8.5.
 
 ### 8.3 Priority 3 — Spec compliance gaps
 
@@ -661,6 +659,8 @@ Carried forward in case a future PR wants to revisit:
 - **`invalid_request` vs. `invalid_grant` error label on auth-code reuse** — same root cause as above. League 8.5.5 maps `isAuthCodeRevoked=true` to `invalid_request`; RFC 6749 §5.2 specifies `invalid_grant`. Fix lives in the same upstream interface change tracked in §9.
 - **No SHA pin on external-client smokes.** Rolling master pulls. Transient breakage expected; triage first checks whether the regression is in OpenEMR or the external repo. Documented in `smart-launch-test.yml` header comment.
 - **Inferno signal-swallow bug** — ✅ CLOSED (see §8.2 entry; `ci/inferno/run.sh` fix landed and both residuals pass cert as of 2026-10-17 status audit).
+- **OIDC + `offline_access` refresh requires explicit `scope=` on the refresh exchange.** When a flow requests `openid` + `offline_access` + resource scopes and the OIDC `nonce` claim is in session, `ScopeRepository::finalizeScopes()` appends a synthetic `nonce` scope to the issued-and-bound set (OIDC id_token nonce handling, src/Common/Auth/OpenIDConnect/Repositories/ScopeRepository.php:175-181). The `nonce` artifact is bound to the refresh token, and the refresh exchange's "every bound scope must be a known scope" check then fails with `invalid_scope` / "Check the nonce scope" because `nonce` is not a registered scope. Workaround (also what Inferno does): always pass an explicit `scope=` on the refresh exchange naming only real scopes — RFC 6749 §6-compliant and avoids the artifact. Not a bug per se (the artifact drives id_token nonce echoing on access-token issuance) but worth documenting so a caller doesn't assume the "omit scope to reuse bound set" branch works for every grant shape. Covered by `tests/Tests/Api/RefreshTokenScopePersistenceTest.php` (test includes an inline note tying the explicit-scope requirement back to this limitation).
+- **OpenEMR DCR rejects `token_endpoint_auth_method=none`.** Per RFC 7591 the `none` value signals a public client. OpenEMR's `AuthorizationController::registerClient` allowed-list restricts the field to `client_secret_basic | client_secret_post | private_key_jwt` (src/RestControllers/AuthorizationController.php:294). The flip to a public client in OpenEMR is driven by `application_type != 'private'` instead — with `application_type=web` the server skips `client_secret` generation, so the registered client is effectively public even though `token_endpoint_auth_method` is declared as `client_secret_post`. New public-client DCR callers should follow the `AuthorizationGrantPublicClientPkceTest` registration pattern (and the `DcrClient::registerPublic` helper). Public clients may also only request `patient/*` scopes — `user/*` / `system/*` are rejected at DCR time with `invalid_client_metadata` (AuthorizationController.php:348-353). Covered end-to-end by `tests/Tests/Api/PublicClientPkceMintTest.php`.
 
 ---
 
