@@ -419,11 +419,19 @@ Covered in §5.3 — per-resource `Fhir*ApiTest.php` files. Routes without dedic
 
 ### 6.4 /apis/default/portal/* coverage
 
-**No `tests/Tests/Api/*Portal*ApiTest.php` files.** Portal-adjacent tests exist at service layer only:
+**Full api-tier + external-client coverage as of 2026-10-18.** Shipped sequence:
+
+- `tests/Tests/Api/PortalApiSmokeTest.php` — list + unknown-UUID 404 shapes, scope-set equivalence, cross-patient data isolation (PR #14591, merge `8b94569831`).
+- `tests/Tests/Api/PortalApiEncounterPositiveTest.php` — known-UUID encounter positive (PR #14603, merge `6f2c5ff422`).
+- `tests/Tests/Api/PortalApiAppointmentPositiveTest.php` — appointment list + 404 shapes; fixed empty-array-as-404 regression in `AppointmentRestController` (PR #14605, merge `5b5b8b3acb`).
+- `tests/Tests/Api/PortalApiAppointmentSinglePositiveTest.php` — known-UUID + malformed-UUID 404; fixed uuid-to-binary conversion in `AppointmentRestController::getOneForPatient` (PR #14625, merge `f3fdb45328`).
+- `ci/api-explorer/driver-portal.php` — external-client-realism smoke (PR #14673, merge `00b201bee7`): portal patient fixture install → DCR → DB-flip → `user_role=patient` token → `GET /portal/patient` + body-identity check.
+
+Portal-adjacent service-layer tests continue to exist independently:
 
 - `tests/Tests/Services/AdminUnblockCounterResetTest.php` (14)
 - `tests/Tests/Services/Portal/*` — various.
-- Portal auth path reached indirectly via `PasswordGrantPatientRoleFlowTest.php` (3, #14531).
+- Portal auth path reached directly via `PasswordGrantPatientRoleFlowTest.php` (3, #14531) and the mint-helper library's `AuthCodeFlow::mintPatientRoleToken()` (PR #14591).
 
 ### 6.5 Acceptance (release-artifact smoke)
 
@@ -431,12 +439,16 @@ Covered in §3.2 under Acceptance.
 
 ### 6.6 External-client api smoke
 
-`sjpadgett/oe-module-api-explorer` via `.github/workflows/api-explorer-test.yml`:
+`sjpadgett/oe-module-api-explorer` via `.github/workflows/api-explorer-test.yml`. Current scope (post-2026-10-18 batch):
 
-- **DCRs four grant configurations** (confidential auth-code, public PKCE, JWT client-credentials, SMART EHR launch).
-- **Driver** (`ci/api-explorer/driver.php`) exercises **one** path end-to-end: JWT `client_credentials` → `fhir/Patient` → assert `Bundle` with `total >= 1`.
-- Other three grants are registered but not driven.
-- No write-path smoke, no pagination, no `_include`/`_revinclude`, no portal routes.
+- **DCRs four grant configurations** on explorer-side (confidential auth-code, public PKCE, JWT client-credentials, SMART EHR launch).
+- **Five driver scripts** exercise distinct OAuth2 round-trips end-to-end:
+  - `ci/api-explorer/driver.php` (PR #14533): JWT `client_credentials` → `fhir/Patient` → `Bundle total >= 1`.
+  - `ci/api-explorer/driver-browser.php` (PR #14538): confidential auth-code + public PKCE auth-code via Panther/Selenium.
+  - `ci/api-explorer/driver-password.php` (PR #14663): DCR + DB-flip + `password` grant (user_role=users) → `fhir/Patient`.
+  - `ci/api-explorer/driver-fhir-writes.php` (PR #14665): DCR + DB-flip + `password` grant → FHIR `CareTeam` POST + PUT + GET persistence read-back.
+  - `ci/api-explorer/driver-portal.php` (PR #14673): portal patient fixture install + DCR + DB-flip + `password` grant (user_role=patient) → `/apis/default/portal/patient` + body-identity check.
+- **Still not covered:** write-path beyond CareTeam, pagination (`next` link not emitted — see §8.3), `_include` (404s — see §8.3), SMART launch (covered by sibling `oe-smart-questionnaire` smoke instead).
 
 Not pinned to a SHA.
 
@@ -487,7 +499,7 @@ Implementation is believed correct; adding tests prevents a silent future regres
 
 Tests that improve regression signal without changing production behavior.
 
-**In-flight external contributor PRs** chip at this register — status collected 2026-10-13. These are open on `openemr/openemr`; coordination hint on each. Column key: ✅ CI green • ⚠️ transient / infra failure not caused by diff • 🚫 CI gated (contributor's workflow runs not yet triggered — usually first-time-contributor approval or codecov) • 👁️ reviewers.
+**In-flight external contributor PRs** chip at this register — status collected 2026-10-13, re-confirmed 2026-10-18 (all nine still OPEN; one add — #14653). These are open on `openemr/openemr`; coordination hint on each. Column key: ✅ CI green • ⚠️ transient / infra failure not caused by diff • 🚫 CI gated (contributor's workflow runs not yet triggered — usually first-time-contributor approval or codecov) • 👁️ reviewers.
 
 | PR | Author | Shape | CI | Reviewers | Lane in this register |
 |----|--------|-------|----|-----------|-----------------------|
@@ -497,11 +509,22 @@ Tests that improve regression signal without changing production behavior.
 | [#14190](https://github.com/openemr/openemr/pull/14190) ValueSet `_id` → `list_options.option_id` | namespaceMarcello | prod fix + api tests (406/4, 3 files) | ✅ 75 green, 1 pending | 👁️ coderabbit | FHIR resource prod fix + api coverage |
 | [#14218](https://github.com/openemr/openemr/pull/14218) Specimen honors `status` search param | namespaceMarcello | prod fix + api tests (562/5, 3 files) | ✅ 75 green, 1 pending | 👁️ coderabbit | FHIR resource prod fix + api coverage |
 | [#14220](https://github.com/openemr/openemr/pull/14220) Media reports deleted docs as entered-in-error | namespaceMarcello | prod fix + api tests (422/1, 3 files) | ✅ 73 green, 1 pending | — | FHIR resource prod fix + api coverage |
-| [#14292](https://github.com/openemr/openemr/pull/14292) Dead refresh token → 400 invalid_grant | namespaceMarcello | prod fix + isolated test (197/1, 3 files) | ✅ 73 green, codecov patch/project failing (test-code excluded, not blocking) | — | Grant-handler lane; semantically adjacent to our OAuth2AttackScenarioTest |
-| [#14511](https://github.com/openemr/openemr/pull/14511) Ignore duplicate consent submissions | shwetanktomar | prod fix + isolated test (56/0, 2 files) | 🚫 full matrix not yet triggered (2/2 checks only) | — | AuthorizationController; same file our PKCE/CSRF tests exercise from outside |
-| [#14516](https://github.com/openemr/openemr/pull/14516) Complete server scope catalog types | sn1thy | prod + isolated test (142/149, 9 files) | 🚫 full matrix not yet triggered (2/2 checks only) | — | ScopeRepository + AuthorizationController; low direct overlap |
+| [#14292](https://github.com/openemr/openemr/pull/14292) Dead refresh token → 400 invalid_grant | namespaceMarcello | prod fix + isolated test (197/1, 3 files) | ✅ 73 green, codecov patch/project failing (test-code excluded, not blocking) | — | Grant-handler lane; **check overlap** with our #14658 (refresh scope persistence) before merging |
+| [#14511](https://github.com/openemr/openemr/pull/14511) Ignore duplicate consent submissions | shwetanktomar | prod fix + isolated test (56/0, 2 files) | 🚫 full matrix not yet triggered (2/2 checks only) | — | AuthorizationController; **check overlap** with our #14628 (consent-scope narrowing) + #14633 (consent-page render) before merging |
+| [#14516](https://github.com/openemr/openemr/pull/14516) Complete server scope catalog types | sn1thy | prod + isolated test (142/149, 9 files) | 🚫 full matrix not yet triggered (2/2 checks only) | — | ScopeRepository + AuthorizationController; **check overlap** with our #14662 (unconstrained-scope depth) before merging |
+| [#14653](https://github.com/openemr/openemr/pull/14653) REST + FHIR endpoint bugs from 8.4 client-side testing | juggernautsei | prod fix + tests (25 files across services + api + service-layer tests) | — | — | Multi-service bugfix sweep; touches Document / Encounter / Goal / Practitioner / Organization / InsuranceCompany / List / PatientTransaction / Vitals / ValueSet. Needs standalone review; most comprehensive standard-api touching PR in flight. |
 
-**Coordination hints:** Several of these PRs modify `tests/Tests/Api/ApiTestClient.php` — merge-order favors our PR #14574 (does not touch it). Consistent helper naming (`assertOAuthUnauthorizedResponse`) is worth preserving across the series.
+**Coordination hints:**
+- Several PRs modify `tests/Tests/Api/ApiTestClient.php` — merge-order favors our PR #14574 (does not touch it). Consistent helper naming (`assertOAuthUnauthorizedResponse`) is worth preserving across the series.
+- Three OAuth-adjacent PRs (#14292, #14511, #14516) overlap in scope with shipped work from the scope-system / consent / refresh-token audit batches — review each for duplication or regression against our tests before merging.
+- #14653's prod-fix scope is wider than the audit docs track — see §6 Route-catalog, not §5/§8.
+- Three pure-test FHIR coverage adds (#14194, #14195, #14219) are lowest-friction to triage; the three FHIR resource bugfixes (#14190, #14218, #14220) need code review but are self-contained.
+
+**Suggested landing order (lowest-friction first):**
+1. #14194 / #14195 / #14219 — pure FHIR test adds, no prod change.
+2. #14190 / #14218 / #14220 — FHIR resource bugfixes with tests; standalone.
+3. #14292 / #14511 / #14516 — OAuth-adjacent; overlap-audit against our shipped work first.
+4. #14653 — multi-service bugfix sweep; biggest surface, needs its own review pass.
 
 - **Inferno signal-swallow bug + residual cert items** — ✅ **CLOSED (status audit 2026-10-17).** Historical context: `ci/inferno/run.sh` previously wrapped phpunit in an if-conditional that disabled `set -e`, so cert-side failures showed green. Known residuals that had been silently failing: Bulk Group Compartment Export + Smoking Status Observations. **Current state:**
   - **The signal-swallow bug is fixed** (`ci/inferno/run.sh` lines 222-232 now use `if ! run_testsuite; then local exit_code=$?; echo "FAILURE: ..."; exit "${exit_code}"; fi` — exit code propagates correctly through the `if !` wrapper).
