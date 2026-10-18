@@ -401,8 +401,10 @@ Non-FHIR api tests in `tests/Tests/Api/`:
 |---|---|
 | `AppointmentApiTest.php` | 4 |
 | `DocumentApiTest.php` | 15 |
+| `DrugApiTest.php` | 2 (post-batch-1) |
 | `FacilityApiTest.php` | 7 |
 | `HealthEndpointTest.php` | 3 |
+| `ImmunizationApiTest.php` | 2 (post-batch-1) |
 | `InsuranceCompanyApiTest.php` | 5 |
 | `InsuranceEmployerSearchApiTest.php` | 9 |
 | `ListApiTest.php` | 2 |
@@ -410,8 +412,17 @@ Non-FHIR api tests in `tests/Tests/Api/`:
 | `PatientApiTest.php` | 7 |
 | `PractitionerApiTest.php` | 7 |
 | `PrescriptionApiTest.php` | 9 |
+| `ProcedureApiTest.php` | 2 (post-batch-1) |
 | `ProductApiTest.php` | 1 |
+| `UserApiTest.php` | 3 (post-batch-1) |
 | `VersionApiTest.php` | 1 |
+
+**Expansion roadmap (as of 2026-10-18).** The 96 standard routes vs. the file count above still leaves many route patterns without a dedicated api-tier test file. Rough plan:
+
+- **Batch 1 (in flight, PR TBD):** `/api/drug` + `/api/user` + `/api/procedure` + `/api/immunization` — 4 new resource files, list GET + unknown-UUID 404 shape per resource. Avoids overlap with contributor PR #14653 (which touches `/api/patient/:pid/document/:did` at api tier + 8 standard-api endpoints at service tier). Zero risk of conflict + validates the pattern.
+- **Batch 2 (future):** Backfill single-GET + PUT on existing-covered resources (`/api/facility/:fuuid`, `/api/practitioner/:pruuid`, `/api/patient/:puuid`, `/api/prescription/:uuid` + DELETE). Needs real UUIDs from create-then-fetch or demo data probes.
+- **Batch 3 (future, after #14653 lands):** Backfill api-tier regression gates for the endpoints #14653 fixes at service tier — medication / surgery / dental_issue list + single GET + CRUD, insurance_company single GET + PUT, vital PUT, patient transaction POST + PUT. These routes 500 on master pre-#14653 so the tests have to wait.
+- **Batch 4 (future):** Encounter + SOAP + insurance compartment sub-routes. More fixture scaffolding needed (encounters, soap notes); worth factoring a `tests/Tests/Fixtures/*ApiFixtureManager.php` pattern similar to `PortalPatientFixtureManager` first.
 
 ### 6.3 /apis/default/fhir/* coverage
 
