@@ -401,10 +401,10 @@ Non-FHIR api tests in `tests/Tests/Api/`:
 |---|---|
 | `AppointmentApiTest.php` | 4 |
 | `DocumentApiTest.php` | 15 |
-| `DrugApiTest.php` | 2 (post-batch-1) |
+| `DrugApiTest.php` | 2 (added by PR #14675) |
 | `FacilityApiTest.php` | 7 |
 | `HealthEndpointTest.php` | 3 |
-| `ImmunizationApiTest.php` | 2 (post-batch-1) |
+| `ImmunizationApiTest.php` | 2 (added by PR #14675) |
 | `InsuranceCompanyApiTest.php` | 5 |
 | `InsuranceEmployerSearchApiTest.php` | 9 |
 | `ListApiTest.php` | 2 |
@@ -412,12 +412,12 @@ Non-FHIR api tests in `tests/Tests/Api/`:
 | `PatientApiTest.php` | 7 |
 | `PractitionerApiTest.php` | 7 |
 | `PrescriptionApiTest.php` | 9 |
-| `ProcedureApiTest.php` | 2 (post-batch-1) |
 | `ProductApiTest.php` | 1 |
-| `UserApiTest.php` | 3 (post-batch-1) |
 | `VersionApiTest.php` | 1 |
 
-**Expansion roadmap (as of 2026-10-18).** The 96 standard routes vs. the file count above still leaves many route patterns without a dedicated api-tier test file. Rough plan:
+**Deferred from batch 1** (not yet shipped — see batch descriptions below): `ProcedureApiTest.php` (`/api/procedure` has a prod SQL bug on master, worth a separate issue), `UserApiTest.php` (`/api/user` needs the OAuth helper-library pattern for the `user/user.rs` scope).
+
+**Expansion roadmap (as of 2026-10-19).** The 96 standard routes vs. the file count above still leaves many route patterns without a dedicated api-tier test file. Rough plan:
 
 - **Batch 1 (PR #14675, MERGED 2026-10-19 at `6c352d57c6`):** `/api/drug` + `/api/immunization` — 2 new resource files, 4 tests, 24 assertions. Also carries a prod fix in `ViewRendererListener` (rabbit-caught): `http_response_code()` was being dropped when wrapping controller returns into `JsonResponse` / `Response`, so every `handleProcessingResult(…, 4xx)` call site silently returned 200. Fix: capture + thread the status through with an `is_int` narrow for the CLI-default `false`. 12+ call sites across controllers were affected (now correctly 4xx). Shipped alongside: `#[OA\Response]` 404 declarations on Drug + Immunization + regenerated `swagger/openemr-api.yaml`; new isolated `ViewRendererListenerTest` (3 tests, 10 assertions) covering JSON + text branches with `#[RunInSeparateProcess]` on the fallback-200 test to actually exercise the `is_int` guard; data-provider `@codeCoverageIgnore` ride-along nitpick from the just-landed #14653. **Scope narrowed from the original 4 resources:** `/api/procedure` returns an SQL error page on master (unrelated production bug, worth a separate issue); `/api/user` requires the `user/user.rs` scope which `ApiTestClient::ALL_SCOPES` doesn't carry — deferred to a follow-up PR that switches to the OAuth helper-library pattern (`DcrClient` + `PasswordGrant`) to pass a custom scope. Zero conflict with #14653.
 - **Batch 2 (future):** Backfill single-GET + PUT on existing-covered resources (`/api/facility/:fuuid`, `/api/practitioner/:pruuid`, `/api/patient/:puuid`, `/api/prescription/:uuid` + DELETE). Needs real UUIDs from create-then-fetch or demo data probes.
