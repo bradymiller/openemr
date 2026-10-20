@@ -395,33 +395,39 @@ Routes aggregated in `_rest_routes.inc.php` from three sources:
 
 ### 6.2 /apis/default/api/* coverage
 
-Non-FHIR api tests in `tests/Tests/Api/`:
+Non-FHIR api tests in `tests/Tests/Api/` (as of master `70639e44c9`, 2026-10-20):
 
-| File | Count |
-|---|---|
-| `AppointmentApiTest.php` | 4 |
-| `DocumentApiTest.php` | 15 |
-| `DrugApiTest.php` | 2 (added by PR #14675) |
-| `FacilityApiTest.php` | 7 |
-| `HealthEndpointTest.php` | 3 |
-| `ImmunizationApiTest.php` | 2 (added by PR #14675) |
-| `InsuranceCompanyApiTest.php` | 5 |
-| `InsuranceEmployerSearchApiTest.php` | 9 |
-| `ListApiTest.php` | 2 |
-| `PatientAllergyConditionApiTest.php` | 5 |
-| `PatientApiTest.php` | 7 |
-| `PractitionerApiTest.php` | 7 |
-| `PrescriptionApiTest.php` | 9 |
-| `ProductApiTest.php` | 1 |
-| `VersionApiTest.php` | 1 |
+| File | Count | Notes |
+|---|---|---|
+| `AppointmentApiTest.php` | 5 | DELETE added by PR #14680 |
+| `DentalIssueApiTest.php` | 4 | NEW via PR #14681 |
+| `DocumentApiTest.php` | 15 | |
+| `DrugApiTest.php` | 2 | NEW via PR #14675 |
+| `EncounterApiTest.php` | 4 | NEW via PR #14722 |
+| `FacilityApiTest.php` | 7 | |
+| `HealthEndpointTest.php` | 3 | |
+| `ImmunizationApiTest.php` | 2 | NEW via PR #14675 |
+| `InsuranceCompanyApiTest.php` | 10 | GET list + single-success + 3 PATCH gates (PR #14680 + PR #14688) |
+| `InsuranceEmployerSearchApiTest.php` | 9 | |
+| `ListApiTest.php` | 2 | |
+| `ListRestControllerEmptyListTest.php` | 1 (× 3 data-provider rows) | NEW via PR #14681 |
+| `MedicationApiTest.php` | 4 | NEW via PR #14680 |
+| `PatientAllergyConditionApiTest.php` | 5 | |
+| `PatientApiTest.php` | 7 | |
+| `PatientTransactionApiTest.php` | 3 | NEW via PR #14689 |
+| `PractitionerApiTest.php` | 7 | |
+| `PrescriptionApiTest.php` | 9 | |
+| `ProcedureApiTest.php` | 2 | NEW via PR #14720 (also shipped the ProcedureService SQL fix) |
+| `ProductApiTest.php` | 1 | |
+| `SoapNoteApiTest.php` | 4 | NEW via PR #14722 |
+| `SurgeryApiTest.php` | 4 | NEW via PR #14681 |
+| `UserApiTest.php` | 3 | NEW via PR #14721 |
+| `VersionApiTest.php` | 1 | |
+| `VitalApiTest.php` | 5 | NEW via PR #14689 |
 
-**Deferred from batch 1 — both now shipping:**
-- `ProcedureApiTest.php` + the ProcedureService SQL fix — **MERGED 2026-10-20 as PR #14720** at `96a9a185cf`. The latent bug turned out to be a dangling `LEFT JOIN` keyword pair accidentally left by PR #9357 (`7212a370981`, "Search handling for FHIR ServiceRequest"); the pre-fix response was an HTML "Query Error" page with HTTP 200 (error emitted after headers). Fix was a one-line removal; 2 api-tier regression gates added.
-- `UserApiTest.php` — **MERGED 2026-10-20 as PR #14721** at `70639e44c9`. Did not need the OAuth helper-library pattern after all — the server's `ScopePermissionObject` expands `.read` → `.rs` at parse time, so adding `user/user.read` to `ApiTestClient::ALL_SCOPES` grants effectively the same permission set the route authorizes on (the earlier framing was based on a misread of the required scope string). 3 tests + 3 rabbit followup rounds (tearDown + cleanupClient, exception-safe try/finally, assertArrayNotHasKey username).
+**Expansion roadmap (as of 2026-10-20).** The 96 standard routes vs. the file count above still leaves some route patterns without a dedicated api-tier test file. Rough plan:
 
-**Expansion roadmap (as of 2026-10-19).** The 96 standard routes vs. the file count above still leaves many route patterns without a dedicated api-tier test file. Rough plan:
-
-- **Batch 1 (PR #14675, MERGED 2026-10-19 at `6c352d57c6`):** `/api/drug` + `/api/immunization` — 2 new resource files, 4 tests, 24 assertions. Also carries a prod fix in `ViewRendererListener` (rabbit-caught): `http_response_code()` was being dropped when wrapping controller returns into `JsonResponse` / `Response`, so every `handleProcessingResult(…, 4xx)` call site silently returned 200. Fix: capture + thread the status through with an `is_int` narrow for the CLI-default `false`. 12+ call sites across controllers were affected (now correctly 4xx). Shipped alongside: `#[OA\Response]` 404 declarations on Drug + Immunization + regenerated `swagger/openemr-api.yaml`; new isolated `ViewRendererListenerTest` (3 tests, 10 assertions) covering JSON + text branches with `#[RunInSeparateProcess]` on the fallback-200 test to actually exercise the `is_int` guard; data-provider `@codeCoverageIgnore` ride-along nitpick from the just-landed #14653. **Scope narrowed from the original 4 resources:** `/api/procedure` returns an SQL error page on master (unrelated production bug, worth a separate issue); `/api/user` requires the `user/user.rs` scope which `ApiTestClient::ALL_SCOPES` doesn't carry — deferred to a follow-up PR that switches to the OAuth helper-library pattern (`DcrClient` + `PasswordGrant`) to pass a custom scope. Zero conflict with #14653.
+- **Batch 1 (PR #14675, MERGED 2026-10-19 at `6c352d57c6`):** `/api/drug` + `/api/immunization` — 2 new resource files, 4 tests, 24 assertions. Also carries a prod fix in `ViewRendererListener` (rabbit-caught): `http_response_code()` was being dropped when wrapping controller returns into `JsonResponse` / `Response`, so every `handleProcessingResult(…, 4xx)` call site silently returned 200. Fix: capture + thread the status through with an `is_int` narrow for the CLI-default `false`. 12+ call sites across controllers were affected (now correctly 4xx). Shipped alongside: `#[OA\Response]` 404 declarations on Drug + Immunization + regenerated `swagger/openemr-api.yaml`; new isolated `ViewRendererListenerTest` (3 tests, 10 assertions) covering JSON + text branches with `#[RunInSeparateProcess]` on the fallback-200 test to actually exercise the `is_int` guard; data-provider `@codeCoverageIgnore` ride-along nitpick from the just-landed #14653. **Scope narrowed from the original 4 resources** — the two deferrals (`/api/procedure` SQL fix, `/api/user` coverage) both shipped later as PR #14720 and PR #14721; see the "Deferred from batch 1" entries above the roadmap for details. Zero conflict with #14653.
 - **Batch 2 (scope collapsed 2026-10-19 after re-audit):** The original batch 2 target — "backfill single-GET + PUT on existing-covered resources (facility, practitioner, patient, prescription + DELETE)" — turned out to be **already covered** when the existing test files were re-inspected. FacilityApiTest, PractitionerApiTest, PatientApiTest, PrescriptionApiTest each already have a full CRUD + 400-shape matrix. The §6.2 roadmap bullet was written against a stale snapshot. **The residual batch 2 gap collapsed to:** Appointment POST + DELETE (`/api/patient/:pid/appointment` POST + `/api/patient/:pid/appointment/:eid` DELETE) + InsuranceCompany GET list + GET single-success + PUT. The InsuranceCompany single-GET + PUT routes overlap with batch 3 (they're exactly the ones #14653 fixed), so the honest consolidated move is batch 2+3 as one PR.
 - **Batch 2+3 slice (PR #14680, MERGED 2026-10-19 at `9983b59310`):** Appointment DELETE + InsuranceCompany GET list + GET single-success + Medication CRUD (full `/api/patient/:pid/medication/*` surface). 16 tests, 96 assertions, 3 files (2 extended + 1 new). Locks PR #14653's ListService fixes (insert/getOne/getAll uuid handling) and InsuranceCompanyService::getOneById stringify fix at the api tier. **Mid-PR CI fix:** `testDeleteRemovesMedication` was failing on every lane because `ListRestController::getAll` returns 404 for an empty list (same empty-array-as-404 bug `AppointmentRestController` had pre-#14605). drid in CI doesn't seed any other medications for pid=1, so after DELETE the list is empty → 404. Switched the gone-check from list-GET to single-GET-returning-404; works regardless of other medications on the patient. **InsuranceCompany PUT dropped from scope** — service-tier test from #14653 covers that path and api-tier would need a full-field payload the service doesn't support cleanly. Four rabbit nits applied (fixture-row uuid assertion, tightened UUID regex, match-by-id-not-title). **Latent bug surfaced:** `ListRestController::getAll`'s empty-array-as-404 is the same shape #14605 fixed for appointments — worth a follow-up PR to apply the same pattern to ListRestController.
 - **Batch 2+3 remainder + ListRestController fix (PR #14681, MERGED 2026-10-19 at `7dc1525903`):** Surgery CRUD + Dental_issue CRUD (identical ListService shape as medication) + `ListRestController::getAll` empty-array-as-404 fix mirroring PR #14605's `AppointmentRestController::listResponse()` pattern + dedicated empty-list regression gate (`ListRestControllerEmptyListTest`) parameterised across the three resource types. 11 tests, 89 assertions, 4 files (3 new + 1 modified). CoderabbitAI: "No actionable comments" (clean review).
