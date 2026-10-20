@@ -453,7 +453,7 @@ Static route-vs-file audit against `apis/routes/_rest_routes_standard.inc.php` o
 Shipped this round:
 - **#14727** (`fix(api): TransactionRestController GetPatientTransactions returns 200 for empty list`, merge `03ba739d7a`) — closes the empty-list-as-404 bug family's remaining list route + locks the shape at the api tier.
 - **#14728** (`test(api): add patient-compartment insurance CRUD coverage`, merge `4430b57659`) — adds `PatientInsuranceApiTest.php` covering CRUD on `/api/patient/{puuid}/insurance/*`.
-- **#14729** (`test(api): audit-PR a+b+c`, merge `69eb1e5ff5`) — covers `insurance_type` + patient-employer + patient-compartment Appointment (GET list + GET single + POST) + Message CRUD. The `$swap-insurance` route stayed deferred (its route handler needs behavioral exploration before locking a shape).
+- **#14729** (`test(api): audit-PR a+b+c`, merge `69eb1e5ff5`) — covers `insurance_type` + patient-employer + patient-compartment Appointment (GET list + GET single; POST already exercised in `AppointmentApiTest::setUp`) + Message CRUD. The `$swap-insurance` route stayed deferred (its route handler needs behavioral exploration before locking a shape).
 
 **Zero-coverage resources remaining (1 resource, 3 routes — new test file needed):**
 
