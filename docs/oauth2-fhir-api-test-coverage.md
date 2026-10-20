@@ -417,7 +417,7 @@ Non-FHIR api tests in `tests/Tests/Api/`:
 
 **Deferred from batch 1 — both now shipping:**
 - `ProcedureApiTest.php` + the ProcedureService SQL fix — **MERGED 2026-10-20 as PR #14720** at `96a9a185cf`. The latent bug turned out to be a dangling `LEFT JOIN` keyword pair accidentally left by PR #9357 (`7212a370981`, "Search handling for FHIR ServiceRequest"); the pre-fix response was an HTML "Query Error" page with HTTP 200 (error emitted after headers). Fix was a one-line removal; 2 api-tier regression gates added.
-- `UserApiTest.php` — **in-flight as PR #14721**. Did not need the OAuth helper-library pattern after all — the server's `ScopePermissionObject` expands `.read` → `.rs` at parse time, so adding `user/user.read` to `ApiTestClient::ALL_SCOPES` grants effectively the same permission set the route authorizes on (the earlier framing was based on a misread of the required scope string).
+- `UserApiTest.php` — **MERGED 2026-10-20 as PR #14721** at `70639e44c9`. Did not need the OAuth helper-library pattern after all — the server's `ScopePermissionObject` expands `.read` → `.rs` at parse time, so adding `user/user.read` to `ApiTestClient::ALL_SCOPES` grants effectively the same permission set the route authorizes on (the earlier framing was based on a misread of the required scope string). 3 tests + 3 rabbit followup rounds (tearDown + cleanupClient, exception-safe try/finally, assertArrayNotHasKey username).
 
 **Expansion roadmap (as of 2026-10-19).** The 96 standard routes vs. the file count above still leaves many route patterns without a dedicated api-tier test file. Rough plan:
 
