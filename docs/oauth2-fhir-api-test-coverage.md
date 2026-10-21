@@ -399,7 +399,7 @@ Non-FHIR api tests in `tests/Tests/Api/` (as of master `70639e44c9`, 2026-10-20)
 
 | File | Count | Notes |
 |---|---|---|
-| `AppointmentApiTest.php` | 7 | DELETE added by PR #14680; patient-compartment GET list + GET single added by PR #14729 |
+| `AppointmentApiTest.php` | 8 | DELETE added by PR #14680; patient-compartment GET list + GET single added by PR #14729; wrong-patient regression gate added by PR #14734 |
 | `DentalIssueApiTest.php` | 4 | NEW via PR #14681 |
 | `DocumentApiTest.php` | 15 | |
 | `DrugApiTest.php` | 2 | NEW via PR #14675 |
@@ -414,9 +414,9 @@ Non-FHIR api tests in `tests/Tests/Api/` (as of master `70639e44c9`, 2026-10-20)
 | `ListRestControllerEmptyListTest.php` | 1 (× 3 data-provider rows) | NEW via PR #14681 |
 | `MedicationApiTest.php` | 4 | NEW via PR #14680 |
 | `MessageApiTest.php` | 3 | NEW via PR #14729 |
-| `PatientAllergyConditionApiTest.php` | 5 | |
+| `PatientAllergyConditionApiTest.php` | 17 | d+e+f coverage expansion (allergy + medical_problem CRUD + top-level reads) added by PR #14733 |
 | `PatientApiTest.php` | 9 | employer GET + 400-shape added by PR #14729 |
-| `PatientInsuranceApiTest.php` | 4 | NEW via PR #14728 |
+| `PatientInsuranceApiTest.php` | 8 | NEW via PR #14728; swap-insurance operation coverage (4 tests) added by PR #14732 |
 | `PatientTransactionApiTest.php` | 4 | NEW via PR #14689; empty-list regression gate added by PR #14727 |
 | `PractitionerApiTest.php` | 7 | |
 | `PrescriptionApiTest.php` | 9 | |
@@ -440,20 +440,23 @@ Non-FHIR api tests in `tests/Tests/Api/` (as of master `70639e44c9`, 2026-10-20)
 - **Batch 4 slice 2 (PR #14728, MERGED 2026-10-20 at `4430b57659`):** patient-compartment insurance CRUD (`/api/patient/:puuid/insurance/*` — 4 routes). Uses existing `FixtureManager::installPatientFixtures()` + `installInsuranceCompanyFixture()` (did not need a new fixture manager after all — the existing helpers chain cleanly). 4 tests, 48 assertions. tearDown removes coverage rows first, then insurance_companies, then patient_data in dependency order, wrapped in try/finally so OAuth client cleanup runs on failure. Non-obvious shape: the POST returns 200 (not 201) with a single-row data shape; `CoverageValidator` requires both `date` (effective-start) AND `date_end` (nullable).
 - **TransactionRestController empty-array-as-404 fix (PR #14727, MERGED 2026-10-20 at `03ba739d7a`):** Prod fix shipped alongside slice 2. Same bug family as PR #14605 (AppointmentRestController) and PR #14681 (ListRestController) — `GetPatientTransactions` was returning 404 for a transaction-less patient instead of 200 + `data: []`. Removed the empty-array 404 branch; added `testGetAllForPatientWithNoTransactionsReturnsEmptyList` in `PatientTransactionApiTest` as the regression gate using a test-unique pubpid (`test-txn-empty-{uniqid}`) direct SQL insert + DELETE, not `FixtureManager::installPatientFixtures()` — the shared `test-fixture-%` prefix sweep would touch concurrent tests' patients. Baseline updates: dropped 1 `count(mixed)` entry + reduced `handleProcessingResult-deprecated` count 4 → 3.
 - **Audit-PR a+b+c combined (PR #14729, MERGED 2026-10-20 at `69eb1e5ff5`):** Post-batch route audit closed its three smallest-slice items in one PR — `insurance_type` (1 route, new `InsuranceTypeApiTest.php`) + patient-employer (1 route, extends `PatientApiTest` with `testGetEmployer` + `testGetEmployerWithInvalidUuidReturns400`) + patient-compartment Appointment GET list + GET single (2 routes, extends `AppointmentApiTest`) + Message CRUD (3 routes, new `MessageApiTest.php`). 7 routes, 8 tests across 4 files. Non-obvious shape: `AppointmentRestController` returns `pc_eid` as **int** in the patient-compartment list route but as **string** in the top-level `/api/appointment` list — numeric narrowing before `assertContains`. `MessageService::delete` flips `pnotes.deleted = 1` (soft delete), not `activity = 0`. Rabbit nit followup (merge `f04d0fa077`): `testGetAppointmentListForPatient` now POSTs a second appointment for another fixture patient and asserts its eid is NOT in the pid-scoped response, so a regression that drops the WHERE pid filter actually trips. **Deferred within audit-PR a:** `GET /api/patient/:puuid/insurance/$swap-insurance` — the handler behavior needs behavioral exploration before locking a shape; moved to audit-PR h in the gap register.
+- **Audit-PR h — swap-insurance operation coverage (PR #14732, MERGED 2026-10-21 at `6e75f51c7091`):** 4 new api tests extending `PatientInsuranceApiTest` for `GET /api/patient/{puuid}/insurance/$swap-insurance` — two-policy positive swap, single-policy positive swap, unknown insurance uuid (400), invalid patient uuid (400). Also added `user/insurance.$swap-insurance` to `ApiTestClient::ALL_SCOPES` — surfaced that the swap operation uses its own ONC-shaped operation-scope (via `ServerScopeListEntity::createUsersScopes`), separate from `user/insurance.write`, which is why the op was unreachable from the api-tier before. Rabbit nit followup (merge `5b31e238f0`): `assertArrayHasKey('puuid::INVALID_PUUID', ...)` on the invalid-puuid negative so a response that only fails on the unknown-insurance side cannot silently pass.
+- **Audit-PR d+e+f — allergy + medical_problem CRUD + top-level reads (PR #14733, MERGED 2026-10-21 at `7c2b21fe7de4`):** 12 new tests across the three slices, all added to the existing `PatientAllergyConditionApiTest.php` (brings file to 17 methods / 206 assertions). d: `testPostAllergyCreatesRecord` + `testPutAllergyUpdatesRecord` + `testDeleteAllergyRemovesRecord`. e: same shape for `medical_problem`. f: `testGet{Allergy,MedicalProblem}TopLevel{List,Single,SingleNotFound}` — six tests covering the top-level `/api/allergy` + `/api/medical_problem` list + single routes. Rabbit nit followup (merge `a9325c7ce5`): `assertArrayHasKey("id", $body["data"])` on both allergy + medical_problem POST responses — the create payload includes both `id` and `uuid` and the original test asserted only `uuid`. **Rabbit's 2nd-round nit declined:** attempted to tighten the post-delete follow-up GET with `assertEquals(200, ...)` + `assertArrayNotHasKey("internalErrors")` but the actual behavior is 400 — `AllergyIntoleranceService::delete` hard-removes the uuid from `uuid_registry`, so the subsequent `TokenSearchField(..., isUuid=true)` lookup fails as a validation error. The original `assertSame([], data)` is weak against error-vs-empty masquerading but there's no clean tightening to 200 or 404 that reflects actual behavior; worth a service-layer refactor as a separate concern. **Audit-PR g (background_service) split off** — needs OAuth2 scope-registry work (`user/background_service.s/.r/.c` not in `ServerScopeListEntity::apiScopes()`); non-trivial prod change rather than just test wiring.
+- **Appointment pid-scoping fix (PR #14734, MERGED 2026-10-21 at `fc1e82bb190e`):** Closes the §8.3 latent-bug entry — route handler for `GET /api/patient/:pid/appointment/:eid` was passing only `$eid` to `AppointmentRestController::getOne`, discarding the `$pid` path segment. New controller method `getOneScopedByPatient(string $pid, string $eid): Response` mirrors `delete()`'s pattern: fetches via `AppointmentService::getAppointment($eid)` and validates against the raw array before the response is built (not by parsing a serialized `Response` body — rabbit's observation that the first-cut JSON-body-parse approach would silently 404 every valid request if the payload wrapper ever changed). Route closure now typed `string $pid, string $eid` and calls the new method directly. OpenAPI attribute moved off a stale location on `getOneForPatient()` (which only serves the portal UUID route) onto the new method; swagger regenerated. Regression gate `testGetAppointmentByIdForPatientRejectsWrongPatient` added to `AppointmentApiTest`. 4 commits total (initial fix + refactor + swagger regen).
 
-**§6.2 batch roadmap complete.** All four batches shipped. Further coverage work is route-vs-file audit-driven (see **Post-batch gap register** below).
+**§6.2 batch roadmap complete.** All four batches shipped and the post-batch audit has drained to a single zero-coverage resource. Further coverage work is route-vs-file audit-driven (see **Post-batch gap register** below).
 
-#### Post-batch gap register (as of 2026-10-20)
+#### Post-batch gap register (as of 2026-10-21)
 
 Static route-vs-file audit against `apis/routes/_rest_routes_standard.inc.php` on `upstream/master @ 70639e44c9`:
 
 - **98 standard routes total** (96 double-quoted + 2 single-quoted: `GET /api/patient/:puuid/insurance/$swap-insurance` + `POST /api/background_service/$run`).
-- **~84 covered / ~14 uncovered** (≈86% route coverage) after shipping #14727 / #14728 / #14729.
+- **~95 covered / ~3 uncovered** (≈97% route coverage) after shipping #14727 / #14728 / #14729 / #14732 / #14733 / #14734.
 
-Shipped this round:
-- **#14727** (`fix(api): TransactionRestController GetPatientTransactions returns 200 for empty list`, merge `03ba739d7a`) — closes the empty-list-as-404 bug family's remaining list route + locks the shape at the api tier.
-- **#14728** (`test(api): add patient-compartment insurance CRUD coverage`, merge `4430b57659`) — adds `PatientInsuranceApiTest.php` covering CRUD on `/api/patient/{puuid}/insurance/*`.
-- **#14729** (`test(api): audit-PR a+b+c`, merge `69eb1e5ff5`) — covers `insurance_type` + patient-employer + patient-compartment Appointment (GET list + GET single; POST already exercised in `AppointmentApiTest::setUp`) + Message CRUD. The `$swap-insurance` route stayed deferred (its route handler needs behavioral exploration before locking a shape).
+Shipped since last snapshot:
+- **#14732** (`test(api): add swap-insurance operation coverage`, merge `6e75f51c7091`) — covers `GET /api/patient/{puuid}/insurance/$swap-insurance`. Also added the operation's custom scope `user/insurance.$swap-insurance` to `ApiTestClient::ALL_SCOPES`.
+- **#14733** (`test(api): audit-PR d+e+f — allergy / medical_problem CRUD + top-level reads`, merge `7c2b21fe7de4`) — covers allergy POST/PUT/DELETE + medical_problem POST/PUT/DELETE + top-level `/api/allergy` and `/api/medical_problem` list/single routes.
+- **#14734** (`fix(api): patient-compartment appointment GET must scope by pid`, merge `fc1e82bb190e`) — closes the Appointment pid-scoping gap surfaced during #14729 rabbit review; new controller helper + regression gate.
 
 **Zero-coverage resources remaining (1 resource, 3 routes — new test file needed):**
 
@@ -462,38 +465,15 @@ Shipped this round:
    - `GET /api/background_service/:name`
    - `POST /api/background_service/:name/run` (and `POST /api/background_service/$run`)
 
-**Partially-covered resources remaining (3 resources, 11 routes — extend existing files):**
+**Suggested shipping shape:**
 
-2. **Allergy write paths** — `PatientAllergyConditionApiTest` covers GET list + single in patient compartment only (read-only). Uncovered:
-   - `GET /api/allergy` (top-level)
-   - `GET /api/allergy/:auuid` (top-level)
-   - `POST /api/patient/:puuid/allergy`
-   - `PUT /api/patient/:puuid/allergy/:auuid`
-   - `DELETE /api/patient/:puuid/allergy/:auuid`
-3. **Medical_problem write paths** — same shape as allergy, same test file (read-only). Uncovered:
-   - `GET /api/medical_problem` (top-level)
-   - `GET /api/medical_problem/:muuid` (top-level)
-   - `POST /api/patient/:puuid/medical_problem`
-   - `PUT /api/patient/:puuid/medical_problem/:muuid`
-   - `DELETE /api/patient/:puuid/medical_problem/:muuid`
-4. **Patient-insurance swap operation** — `PatientInsuranceApiTest` (#14728) covers CRUD but not the swap:
-   - `GET /api/patient/:puuid/insurance/$swap-insurance`
-
-**Suggested shipping shape (smallest → largest):**
-
-- **Audit-PR d:** Allergy POST + PUT + DELETE (3 routes, extends `PatientAllergyConditionApiTest`).
-- **Audit-PR e:** Medical_problem POST + PUT + DELETE (3 routes, same shape as d).
-- **Audit-PR f:** Allergy + Medical_problem top-level GET (4 routes).
-- **Audit-PR g:** `background_service` (3 routes, new file; may need admin ACL probe first — list may 404 on stock installs with no registered services).
-- **Audit-PR h:** Patient-insurance `$swap-insurance` op (1 route, extends `PatientInsuranceApiTest`).
-
-Or group as "write paths PR" (d + e) and "top-level reads + background_service + swap PR" (f + g + h).
+- **Audit-PR g:** `background_service` (3 routes, new file). Needs OAuth2 scope-registry work first — `user/background_service.s/.r/.c` is not registered in `ServerScopeListEntity::apiScopes()` / `getV2ApiScopes()`, so the routes are currently unreachable from an api-tier test client regardless of ACL. Adding the scope registration + OpenAPI documentation is a non-trivial prod change rather than just test wiring. Also probe stock drid install: `background_services` table may be empty, so list may 404-shape or `data: []` — write the test around whatever the correct contract is for the empty-state case (likely mirrors the empty-list-as-404 bug family that #14605 / #14681 / #14727 closed).
 
 **Caveats:**
 - "Covered" is a static route-pattern count; it doesn't guarantee behavioral depth. E.g. `AppointmentApiTest`'s top-level `/api/appointment` coverage is read-only.
 - Some uncovered list routes may still carry the empty-array-as-404 bug family (same shape fixed by #14605 / #14681 / #14727). Writing the tests may surface more prod fixes.
 - `background_service` routes may be effectively dead on stock installs with no registered services — probe before writing.
-- **Appointment pid-scoping tightening** — surfaced during #14729 rabbit review. `AppointmentRestController::getOne` is invoked from both `GET /api/appointment/:eid` and `GET /api/patient/:pid/appointment/:eid` using only `$eid`; the `$pid` path segment is ignored. A wrong-pid request with a known `$eid` currently returns the appointment. Tracked for a separate tightening PR; coverage test documents the gap in-line without creating a failing assertion.
+- **Pre-existing api-suite flakiness** — surfaced during PR #14733 development. The full `at` suite can hit intermittent 401s under accumulated `oauth_clients` / `api_token` state (reproducible on master). Not caused by any specific PR; fresh DB state (e.g. post-drid) always passes.
 
 ### 6.3 /apis/default/fhir/* coverage
 
@@ -781,7 +761,7 @@ Non-test production bugs the testing-coverage sweeps uncovered that are **not ye
 - ~~**`/api/procedure` returns an SQL error page (HTML, not JSON) on master**~~ (surfaced 2026-10-18 during PR #14675 batch 1 scoping; FIXED 2026-10-20 by PR #14720 at `96a9a185cf`). Root cause was a dangling `LEFT JOIN` keyword pair in `ProcedureService::getAll()` SQL, accidentally left behind by PR #9357 ("Search handling for FHIR ServiceRequest", `7212a370981`) when a planned join was dropped. One-line removal + 2 api-tier regression gates in `ProcedureApiTest`.
 - ~~**`InsuranceCompanyService::update()` references unset array keys without defaults**~~ (surfaced 2026-10-19 during PR #14680 PUT test attempt; FIXED 2026-10-20 by PR #14688 at `dc083555e6`). The service now fetches the existing row via `getOneById()` and overlays the submitted payload (true semantic PATCH); rabbit review surfaced two additional issues (address merge was still wiping unmentioned address fields, and `addressService->update()` returning null for a missing addresses row caused the whole update to fail silently) — both addressed by merging submitted address keys over `addressService->getOneByForeignId()` and falling through to `addressService->insert()` when the update finds nothing. Three api-tier regression gates added: partial-payload PATCH, address-merge PATCH, insert-when-missing. Also tightened `InsuranceCompanyService::$addressService` to `private readonly AddressService` (dropped two "method on mixed" baseline entries).
 - ~~**`TransactionRestController::GetPatientTransactions` returns 404 for empty results**~~ (surfaced 2026-10-20 during PR #14689 scoping; FIXED 2026-10-20 by PR #14727 at `03ba739d7a`). Same empty-array-as-404 bug family as the already-fixed `AppointmentRestController` (PR #14605) and `ListRestController::getAll` (PR #14681). Dedicated empty-list regression gate added to `PatientTransactionApiTest`.
-- **`AppointmentRestController::getOne` ignores `$pid` on patient-compartment single-GET** (surfaced 2026-10-20 during PR #14729 rabbit review; **unfixed**). The route handler for `GET /api/patient/:pid/appointment/:eid` passes only `$eid` to the controller; the `$pid` path segment is accepted and discarded. A wrong-pid request with a known `$eid` returns the appointment. The in-tree test (`AppointmentApiTest::testGetAppointmentByIdForPatient`) carries an inline note describing this gap; adding an assertion against the current shape would create a failing test, so the gap is captured in prose instead of in a regression gate. **(Where: route-handler closure in `apis/routes/_rest_routes_standard.inc.php` for `GET /api/patient/:pid/appointment/:eid`, delegating to `AppointmentRestController::getOne`. Fix: validate `pc_pid === pid` after fetch, or filter on `pc_pid` in the service query. Effort: small; carry an api-tier regression gate asserting 404 for the wrong-pid shape.)**
+- ~~**`AppointmentRestController::getOne` ignores `$pid` on patient-compartment single-GET**~~ (surfaced 2026-10-20 during PR #14729 rabbit review; FIXED 2026-10-21 by PR #14734 at `fc1e82bb190e`). New controller helper `getOneScopedByPatient($pid, $eid)` mirrors `delete()`'s pattern — validates pid against the raw `AppointmentService::getAppointment($eid)` result before building the Response. Route closure now typed `string $pid, string $eid`. Regression gate `testGetAppointmentByIdForPatientRejectsWrongPatient` added to `AppointmentApiTest`. OpenAPI attribute moved off its stale location on `getOneForPatient()` onto the new method; swagger regenerated.
 
 Items in this register should either (a) get fixed with their own PR, (b) have api-tier regression gates added as part of the fix PR, or (c) be promoted to §8.1a / §8.3 if they rise to a security or spec-compliance concern.
 
