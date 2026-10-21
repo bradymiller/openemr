@@ -765,6 +765,75 @@ Scope-related code is one of the most security-sensitive surfaces in the OAuth2 
 
 **Precedent for insufficient-scope deny coverage:** the `OAuth2AttackScenarioTest` covers role-mismatch denies (user token → portal route, patient token → standard-api route) and scope-downgrade on refresh. Resource-permission axis is a direct extension of the same pattern.
 
+#### Further black-spots audit (surfaced 2026-10-21 during V2a/V2b planning)
+
+Classes of regression that the current test suite would miss, ordered by signal strength. Items 1 and 2 are flagged as the next audit targets after V2a/V2b (#14759 + #14760) land; items 3-8 are parked here for later. Each entry: shape of the gap, blast radius, suggested test shape.
+
+**1. 🔥 Session-auth vs OAuth2 pathway parity (lesson from PR #14749).**
+
+PR #14749 revealed that `/api/background_service/*` worked under session auth but 401'd every OAuth2 bearer-token caller for 7 months (March → October 2026). Root cause: `isLocalApi()` / `skipAuthorization` bypass `AuthorizationListener::onRestApiSecurityCheck` entirely, so the ACL gate works but the OAuth2 scope-registry gate never fires. This is almost certainly not isolated — any route added without walking an OAuth2 token through it would have the same shape.
+
+Shape of audit: enumerate every entry in `apis/routes/_rest_routes_standard.inc.php` + `_rest_routes_fhir.inc.php` + `_rest_routes_portal.inc.php`. For each, (a) hit via `ApiTestClient` with an admin OAuth2 bearer token carrying `ALL_SCOPES`, (b) hit via session-authenticated internal path, (c) diff the status codes. Any route where (a) returns 401/403 but (b) returns 200 is a dormant OAuth2-unreachability bug. Expected hits: unknown, but PR #14749's precedent + the "no one noticed for 7 months" characteristic suggests more than zero.
+
+**2. 🔥 SMART v2 constraint-scope end-to-end wiring.**
+
+`ServerScopeListEntity::fhirResourceScopesV2()` advertises constrained scopes:
+- `patient/Condition.rs?category=http://hl7.org/fhir/us/core/CodeSystem/condition-category|health-concern`
+- `patient/Observation.rs?category=http://terminology.hl7.org/CodeSystem/observation-category|laboratory`
+- `patient/DocumentReference.rs?category=http://hl7.org/fhir/us/core/CodeSystem/us-core-documentreference-category|clinical-note`
+
+`ResourceConstraintFilterer` is isolated-tested (10 assertions covering the filter logic). `ScopeConstraintEnforcementWiringIsolatedTest` has 2 isolated tests confirming the Fhir DocumentReference controller invokes the filterer. But no api-tier test proves the full chain: client registers for the constrained scope → consent accepts it → access_token carries the constraint → FHIR endpoint applies the filter and returns the restricted subset (not 403'd, not full set).
+
+Shape of audit: new api test file. For each constrained scope family (Condition / Observation / DocumentReference), (a) seed resources matching the constraint + resources NOT matching, (b) mint a token carrying only the constrained scope, (c) hit `GET /fhir/Condition?patient=...` with the token, (d) assert the response bundle contains only matching entries. Also exercise the inverse: mint with full `patient/Condition.rs` (unconstrained) and assert the response includes resources outside the constraint categories. Mirrors the shape of V2a/V2b but on the constraint axis.
+
+**3. DCR edge cases.**
+
+- **Max redirect_uri count** — is there a documented limit? If not, a 10MB DCR payload with 1000 redirect_uris is a DoS surface at registration time.
+- **Max scope count on registration** — DoS surface via massive scope requests
+- **Unicode / punycode redirect_uri handling** — RFC 7591 implications; could an IDN-homograph attack register a redirect_uri that looks legitimate?
+- **Duplicate client_name** — allowed? Deliberate? Does the response leak existence of other clients?
+- **DCR response field completeness** — RFC 7591 lists required fields (`client_id_issued_at`, `grant_types`, `response_types`, `redirect_uris`, `token_endpoint_auth_method`, etc). An api test asserting all required fields are present would catch a silent drop.
+
+Shape of audit: single file `tests/Tests/Api/DcrEdgeCaseApiTest.php`, ~8-10 tests, one per edge case.
+
+**4. FHIR capability drift (follow-up on PR #14667).**
+
+PR #14667 (`FhirSearchModifiersApiTest`) found 3 drifts between what `/fhir/metadata` CapabilityStatement advertises vs what the server actually serves (`_count` next-link not emitted, `_include` 404s, `_sort` silent no-op on non-Patient/Task). Precedent suggests more:
+- Advertised `searchParam` entries that aren't actually implemented
+- Advertised interactions (`conditional-create` via `If-None-Exist`, `conditional-update` via `If-Match`) that are advertised but 400'd or silently ignored
+- Advertised search modifiers (`:not`, `:above`, `:below`, `:missing`) that are advertised but silently no-op'd
+
+Shape of audit: generate the full CapabilityStatement at test time, iterate over each advertised feature, assert the server actually honors it. ~30-50 tests, likely data-provider-driven.
+
+**5. OIDC claims structure in id_token.**
+
+PR #14658 surfaced that `IdTokenSMARTResponse::getExtraParams` (OpenEMR's override) adds the `scope` field — this was non-obvious enough that rabbit asked about it incorrectly. No end-to-end test mints a token with `openid` + profile scopes, decodes the id_token, and asserts the claims match OIDC spec + discovery advertisement.
+
+Shape of audit: new api test `OidcIdTokenClaimsApiTest.php`. Mint with various scope combinations, decode id_token, assert required claims per scope grant.
+
+**6. Token revocation during active request.**
+
+If an admin disables a client or revokes a token WHILE a long-running request is in flight (e.g. Bulk FHIR export status poll), does the server terminate the request, return a specific error, or complete as-if the token were still valid? Race condition; low-urgency but could matter for billing/audit integrity.
+
+Shape of audit: time-coordinated test using async requests. Likely 1-2 tests.
+
+**7. Response-type validation.**
+
+`response_type=code` is standard and tested. What about:
+- `response_type=token` (deprecated implicit flow — SHOULD be rejected per modern OAuth2)
+- `response_type=id_token` (OIDC — may or may not be supported)
+- Unknown response_type — RFC 6749 §4.1.2.1 requires `unsupported_response_type` error
+
+Shape of audit: 3-5 tests in `OAuth2AttackScenarioTest`.
+
+**8. Audit log integrity.**
+
+Every OAuth2 token mint should produce an audit log entry (`log.event = 'oauth2-token-issued'` or similar). Every FHIR / standard-api call under an OAuth2 token should log client_id + scope + user. Are these actually written? Are they tested? Easy to silently drop during a refactor.
+
+Shape of audit: 1-2 tests that mint a token, make a request, grep the log table for the expected entry.
+
+**Suggested next-up:** 1 and 2 after V2a/V2b land. 3-8 remain parked.
+
 ### 8.3 Priority 3 — Spec compliance gaps
 
 Endpoints/shapes the spec requires but OpenEMR has not implemented. No current security exposure, but ONC/OIDC auditors may flag.
