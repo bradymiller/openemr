@@ -395,11 +395,12 @@ Routes aggregated in `_rest_routes.inc.php` from three sources:
 
 ### 6.2 /apis/default/api/* coverage
 
-Non-FHIR api tests in `tests/Tests/Api/` (as of master `fc1e82bb19`, 2026-10-21):
+Non-FHIR api tests in `tests/Tests/Api/` (as of master `c5d09ed9eb`, 2026-10-21):
 
 | File | Count | Notes |
 |---|---|---|
 | `AppointmentApiTest.php` | 8 | DELETE added by PR #14680; patient-compartment GET list + GET single added by PR #14729; wrong-patient regression gate added by PR #14734 |
+| `BackgroundServiceApiTest.php` | 6 | NEW via PR #14749 (also shipped scope registry + `/run` → `/$run` route rename; see §8.3 latent-bug register for the 7-month-dormant OAuth2 reachability bug it closed) |
 | `DentalIssueApiTest.php` | 4 | NEW via PR #14681 |
 | `DocumentApiTest.php` | 15 | |
 | `DrugApiTest.php` | 2 | NEW via PR #14675 |
@@ -414,9 +415,9 @@ Non-FHIR api tests in `tests/Tests/Api/` (as of master `fc1e82bb19`, 2026-10-21)
 | `ListRestControllerEmptyListTest.php` | 1 (× 3 data-provider rows) | NEW via PR #14681 |
 | `MedicationApiTest.php` | 4 | NEW via PR #14680 |
 | `MessageApiTest.php` | 3 | NEW via PR #14729 |
-| `PatientAllergyConditionApiTest.php` | 17 | d+e+f coverage expansion (allergy + medical_problem CRUD + top-level reads) added by PR #14733 |
+| `PatientAllergyConditionApiTest.php` | 21 | d+e+f coverage expansion (allergy + medical_problem CRUD + top-level reads) added by PR #14733; wrong-patient + unknown-puuid PUT regression gates added by PR #14747 |
 | `PatientApiTest.php` | 9 | employer GET + 400-shape added by PR #14729 |
-| `PatientInsuranceApiTest.php` | 8 | NEW via PR #14728; swap-insurance operation coverage (4 tests) added by PR #14732 |
+| `PatientInsuranceApiTest.php` | 9 | NEW via PR #14728; swap-insurance operation coverage (4 tests) added by PR #14732; wrong-patient PUT regression gate added by PR #14747 |
 | `PatientTransactionApiTest.php` | 4 | NEW via PR #14689; empty-list regression gate added by PR #14727 |
 | `PractitionerApiTest.php` | 7 | |
 | `PrescriptionApiTest.php` | 9 | |
@@ -444,36 +445,35 @@ Non-FHIR api tests in `tests/Tests/Api/` (as of master `fc1e82bb19`, 2026-10-21)
 - **Audit-PR d+e+f — allergy + medical_problem CRUD + top-level reads (PR #14733, MERGED 2026-10-21 at `7c2b21fe7de4`):** 12 new tests across the three slices, all added to the existing `PatientAllergyConditionApiTest.php` (brings file to 17 methods / 206 assertions). d: `testPostAllergyCreatesRecord` + `testPutAllergyUpdatesRecord` + `testDeleteAllergyRemovesRecord`. e: same shape for `medical_problem`. f: `testGet{Allergy,MedicalProblem}TopLevel{List,Single,SingleNotFound}` — six tests covering the top-level `/api/allergy` + `/api/medical_problem` list + single routes. Rabbit nit followup (merge `a9325c7ce5`): `assertArrayHasKey("id", $body["data"])` on both allergy + medical_problem POST responses — the create payload includes both `id` and `uuid` and the original test asserted only `uuid`. **Rabbit's 2nd-round nit declined:** attempted to tighten the post-delete follow-up GET with `assertEquals(200, ...)` + `assertArrayNotHasKey("internalErrors")` but the actual behavior is 400 — `AllergyIntoleranceService::delete` hard-removes the uuid from `uuid_registry`, so the subsequent `TokenSearchField(..., isUuid=true)` lookup fails as a validation error. The original `assertSame([], data)` is weak against error-vs-empty masquerading but there's no clean tightening to 200 or 404 that reflects actual behavior; worth a service-layer refactor as a separate concern. **Audit-PR g (background_service) split off** — needs OAuth2 scope-registry work (`user/background_service.s/.r/.c` not in `ServerScopeListEntity::apiScopes()`); non-trivial prod change rather than just test wiring.
 - **Appointment pid-scoping fix (PR #14734, MERGED 2026-10-21 at `fc1e82bb190e`):** Closes the §8.3 latent-bug entry — route handler for `GET /api/patient/:pid/appointment/:eid` was passing only `$eid` to `AppointmentRestController::getOne`, discarding the `$pid` path segment. New controller method `getOneScopedByPatient(string $pid, string $eid): Response` mirrors `delete()`'s pattern: fetches via `AppointmentService::getAppointment($eid)` and validates against the raw array before the response is built (not by parsing a serialized `Response` body — rabbit's observation that the first-cut JSON-body-parse approach would silently 404 every valid request if the payload wrapper ever changed). Route closure now typed `string $pid, string $eid` and calls the new method directly. OpenAPI attribute moved off a stale location on `getOneForPatient()` (which only serves the portal UUID route) onto the new method; swagger regenerated. Regression gate `testGetAppointmentByIdForPatientRejectsWrongPatient` added to `AppointmentApiTest`. 4 commits total (initial fix + refactor + swagger regen).
 
-**§6.2 batch roadmap complete.** All four batches shipped and the post-batch audit has drained to a single zero-coverage resource. Further coverage work is route-vs-file audit-driven (see **Post-batch gap register** below).
+- **Patient-compartment PUT pid-scoping sweep (PR #14747, OPEN 2026-10-21):** Systematic audit after #14734 covering every `/patient/:pid/*` and `/patient/:puuid/*` route in both standard + portal route files. Three PUT routes had a different flavor of the pid-discard pattern — the controller accepted the path puuid but either (a) didn't resolve + pass it to the service, or (b) resolved it conditionally and let the service's compartment check silently skip when the resolution failed. Fixed: `PUT /patient/:puuid/allergy/:auuid` + `PUT /patient/:puuid/medical_problem/:muuid` + `PUT /patient/:puuid/insurance/:insuranceUuid`. 3 wrong-pid regression gates + 2 unknown-puuid regression gates (rabbit flagged the first-cut fix let `$expectedPatientId = null` fall through — `AllergyIntoleranceService::update` + `ConditionService::update` only run the compartment check when non-null, so a crafted `/api/patient/<unknown-valid-uuid>/.../<leaked-uuid>` would still mutate the leaked row because the UPDATE bound pid from the row's own owning pid). All other patient-compartment routes verified safe — services carry WHERE on pid+id. Portal routes out of scope (no `:pid` in path; all session-scoped).
+- **background_service OAuth2 coverage (PR #14749, MERGED 2026-10-21 at `c5d09ed9eb`):** Last zero-coverage resource in the §6.2 gap register. Three layers of work:
+  - **Scope registry (prod):** Added `background_service` to V2 `$userResources` with `['r','s']` → `user/background_service.rs` + `user/background_service.$run` operation scope + resource description. Added `$run` operation description to `ScopeRepository`.
+  - **Route rename (prod):** `POST /api/background_service/:name/run` → `.../$run`. Latent bug — `HttpRestParsedRoute::parseRouteParams` grabs `end($parts)` as the resource, so the required scope was resolving to `user/run.c` which doesn't exist, 401ing every OAuth2 caller since PR #11337 (March 2026). Verified empirically against master code via direct ApiTestClient probe: both pre-fix routes 401'd with the error log showing `user/run.c not in access token` and `user/background_service.$run not in access token`. The strong-dev author (Michael A. Smith) likely tested via session auth (bypasses the OAuth2 scope-check path via `isLocalApi()` / `skipAuthorization`), never minting an OAuth2 token against the surface. Stephen Waite's follow-up #11687 established the `$run` naming convention with an inline comment explaining the parse quirk, but didn't retroactively fix the original `/run` route or register the scopes needed to reach any of the three routes from OAuth2. The whole `/api/background_service/*` surface was effectively dead for OAuth2 clients from March 2026 to this PR.
+  - **Test coverage:** New `BackgroundServiceApiTest.php` + `BackgroundServiceApiProbe.php` fixture — 6 tests, 63 assertions. `background_services` table on stock drid carries 5 seeded rows (phimail, MedEx, X12_SFTP, UUID_Service, Email_Service); list returns bare JSON array (no `data:` wrapper) so no empty-list-as-404 bug family. The named `$run` operation runs inline (not via subprocess spawner); probe fixture writes to `/tmp/_api_background_service_probe_sentinel` and the test asserts sentinel line count. Admin ACL (`admin/super`) is satisfied by demo admin user.
 
-#### Post-batch gap register (as of 2026-10-21)
+**§6.2 batch roadmap complete.** All four batches shipped. **Standard-api route-pattern coverage is effectively 100%** (98/98 after #14749). Further coverage work is behavior-depth-driven (see §8.2 **Scope-system coverage audit** for the V1/V2 scope-testing gap and the deny-path audit) rather than route-count-driven.
 
-Static route-vs-file audit against `apis/routes/_rest_routes_standard.inc.php` on `upstream/master @ fc1e82bb19` (unchanged route catalog since the 2026-10-20 snapshot — no route additions landed between):
+#### Post-batch gap register (as of 2026-10-21, post-#14749)
+
+Static route-vs-file audit against `apis/routes/_rest_routes_standard.inc.php` on `upstream/master @ c5d09ed9eb`:
 
 - **98 standard routes total** (96 double-quoted + 2 single-quoted: `GET /api/patient/:puuid/insurance/$swap-insurance` + `POST /api/background_service/$run`).
-- **~95 covered / ~3 uncovered** (≈97% route coverage) after shipping #14727 / #14728 / #14729 / #14732 / #14733 / #14734.
+- **98 covered / 0 uncovered** (100% route-pattern coverage) after shipping #14727 / #14728 / #14729 / #14732 / #14733 / #14734 / #14747 / #14749.
 
-Shipped since last snapshot:
-- **#14732** (`test(api): add swap-insurance operation coverage`, merge `6e75f51c7091`) — covers `GET /api/patient/{puuid}/insurance/$swap-insurance`. Also added the operation's custom scope `user/insurance.$swap-insurance` to `ApiTestClient::ALL_SCOPES`.
-- **#14733** (`test(api): audit-PR d+e+f — allergy / medical_problem CRUD + top-level reads`, merge `7c2b21fe7de4`) — covers allergy POST/PUT/DELETE + medical_problem POST/PUT/DELETE + top-level `/api/allergy` and `/api/medical_problem` list/single routes.
-- **#14734** (`fix(api): patient-compartment appointment GET must scope by pid`, merge `fc1e82bb190e`) — closes the Appointment pid-scoping gap surfaced during #14729 rabbit review; new controller helper + regression gate.
+Shipped since the pre-batch snapshot:
+- **#14732** (merge `6e75f51c7091`) — `GET /api/patient/{puuid}/insurance/$swap-insurance`
+- **#14733** (merge `7c2b21fe7de4`) — allergy POST/PUT/DELETE + medical_problem POST/PUT/DELETE + top-level `/api/allergy` and `/api/medical_problem`
+- **#14734** (merge `fc1e82bb190e`) — Appointment pid-scoping fix (patient-compartment single-GET)
+- **#14747** (OPEN) — Patient-compartment PUT pid-scoping sweep for allergy + medical_problem + insurance
+- **#14749** (merge `c5d09ed9eb`) — `background_service` scope registry + route rename (`/run` → `/$run`) + api coverage
 
-**Zero-coverage resources remaining (1 resource, 3 routes — new test file needed):**
+**Zero remaining uncovered standard-api routes.** The route-pattern pass is complete.
 
-1. **`background_service`** (3 routes):
-   - `GET /api/background_service`
-   - `GET /api/background_service/:name`
-   - `POST /api/background_service/:name/run` (and `POST /api/background_service/$run`)
-
-**Suggested shipping shape:**
-
-- **Audit-PR g:** `background_service` (3 routes, new file). Needs OAuth2 scope-registry work first — `user/background_service.s/.r/.c` is not registered in `ServerScopeListEntity::apiScopes()` / `getV2ApiScopes()`, so the routes are currently unreachable from an api-tier test client regardless of ACL. Adding the scope registration + OpenAPI documentation is a non-trivial prod change rather than just test wiring. Also probe stock drid install: `background_services` table may be empty, so list may 404-shape or `data: []` — write the test around whatever the correct contract is for the empty-state case (likely mirrors the empty-list-as-404 bug family that #14605 / #14681 / #14727 closed).
-
-**Caveats:**
-- "Covered" is a static route-pattern count; it doesn't guarantee behavioral depth. E.g. `AppointmentApiTest`'s top-level `/api/appointment` coverage is read-only.
-- Some uncovered list routes may still carry the empty-array-as-404 bug family (same shape fixed by #14605 / #14681 / #14727). Writing the tests may surface more prod fixes.
-- `background_service` routes may be effectively dead on stock installs with no registered services — probe before writing.
-- **Pre-existing api-suite flakiness** — surfaced during PR #14733 development. The full `at` suite can hit intermittent 401s under accumulated `oauth_clients` / `api_token` state (reproducible on master). Not caused by any specific PR; fresh DB state (e.g. post-drid) always passes.
+**What's left — behavior-depth and deny-path coverage** (tracked in §8.2 and §8.3 going forward):
+- V1/V2 scope-resolution end-to-end testing (see §8.2 **V1/V2 scope-set api-tier gap**)
+- Insufficient-scope deny paths (positive is comprehensive via `ALL_SCOPES`-grant tokens; negative — tokens with the wrong scope-permission — is thin)
+- Behavioral-depth audit of "covered" routes (e.g. `AppointmentApiTest`'s top-level `/api/appointment` coverage is read-only, no POST assertions)
+- Pre-existing api-suite flakiness under accumulated `oauth_clients` / `api_token` state (reproducible on master; fresh DB always passes)
 
 ### 6.3 /apis/default/fhir/* coverage
 
@@ -737,6 +737,34 @@ Scope-related code is one of the most security-sensitive surfaces in the OAuth2 
 - **No new production code was added in either PR** — both completed items are regression-gate additions over currently-correct behavior.
 - **New known limitations surfaced during implementation:** two edge cases (OIDC + `offline_access` refresh requiring explicit `scope=`, and OpenEMR DCR rejecting `token_endpoint_auth_method=none`) — recorded in §8.5.
 
+#### V1/V2 scope-set api-tier gap (surfaced 2026-10-21 during PR #14749 review)
+
+**What the server advertises:** `ServerScopeListEntity::getAllSupportedScopesList()` merges `apiScopes()` (V1 — `.read`/`.write`) + `getV2ApiScopes()` (V2 — compact CRUDS actionString like `user/allergy.crud` + `.rs`) + both FHIR v1/v2 forms. Both schemes are discoverable at DCR; the request-time check in `ScopeEntity::containsScope` + `createFromString()` resolves either shape against the endpoint's derived requirement (comment in `getV2ApiScopes` notes: *"createFromString() maps 'write' to create+update+delete and requires a v2 permission to be an ordered CRUDS substring, so 'cud' is what the endpoint's derived 'c'/'u'/'d' requirement resolves against"*).
+
+**What the api test client mints:** `ApiTestClient::ALL_SCOPES` is **V1-flavored** — every standard-api scope is `.read`/`.write`. The only V2 forms in the list are two scopes added recently as exceptions: `user/insurance.$swap-insurance` (operation scope, V2-only by design) and `user/background_service.rs` + `user/background_service.$run` (also V2-only, added by #14749).
+
+**Coverage reality:**
+
+| Scheme × Direction | Isolated/unit | Api-tier end-to-end |
+|---|---|---|
+| V1 positive | ✅ `ScopePermissionObjectTest` v1-shortcut cases | ✅ Every passing api test confirms V1 scopes resolve correctly (whole suite runs under V1) |
+| V1 negative — insufficient scope | ✅ `ScopePermissionObjectTest` ordering + permission-upgrade cases | ❌ **GAP** — no api test like "mint only `user/appointment.read`, call POST, assert 403" |
+| V2 positive | ✅ `ScopePermissionObjectTest` CRUDS mapping, `ScopeEntityTest` v1→v2 expansion | ❌ **GAP** — no api test mints a V2-only token (e.g. `user/allergy.rs`) and hits a route. Exceptions: `BulkAPITestClient::SYSTEM_SCOPES_V2` for Bulk FHIR + `DisabledClientRejectionTest` passes `user/Patient.rs` through DCR + `G10_Certification/SinglePatient311APITest::testSingleApiRunWithV2Scopes` (Inferno-driven) |
+| V2 negative — insufficient scope | ✅ CRUDS ordering tests | ❌ **GAP** |
+
+**Risk:** The isolated-tier primitives (parse + containsScope + CRUDS) are solid. But a regression in the end-to-end wiring — anywhere between DCR-granted V2 scope → ScopeEntity on request → endpoint's required-scope resolution — would not be caught by the current api-tier suite. Example classes of silent regression:
+- V2 token advertised and granted at DCR but silently dropped from access_token issuance
+- Endpoint derivation picks `.c` from a POST route; `containsScope` fails to recognize `.cud` as satisfying it
+- Context-match on `user/` vs `patient/` prefix for V2 forms
+
+**Suggested shape:**
+
+- **Audit-PR V2a — positive-match api gates:** mint a token with ONLY V2 scopes (`user/allergy.rs`, `user/allergy.cud`, `user/appointment.cruds`) and hit each read/write route. Assert equivalent access to the V1-scoped token. Can live in a new `ApiScopeSchemeV2EquivalenceTest` or extend existing per-resource test files via a data provider.
+- **Audit-PR V2b — insufficient-scope deny gates:** mint tokens with specifically-narrow scopes (`user/appointment.r` only, no `.c`) and assert POST/PUT/DELETE return 403 (not 200, not 401). Mirrors the shape of the already-landed `OAuth2AttackScenarioTest` deny-path gates but at the resource-permission axis rather than the context-role axis. One test per permission axis is probably enough; this is bound-the-matrix work, not test-every-resource work.
+- **Effort:** medium. The ApiTestClient's current credential-mint flow (`$credentials['scopes']`) already supports arbitrary scope lists, so no infrastructure work needed. ~20-30 tests across the two slices.
+
+**Precedent for insufficient-scope deny coverage:** the `OAuth2AttackScenarioTest` covers role-mismatch denies (user token → portal route, patient token → standard-api route) and scope-downgrade on refresh. Resource-permission axis is a direct extension of the same pattern.
+
 ### 8.3 Priority 3 — Spec compliance gaps
 
 Endpoints/shapes the spec requires but OpenEMR has not implemented. No current security exposure, but ONC/OIDC auditors may flag.
@@ -762,6 +790,8 @@ Non-test production bugs the testing-coverage sweeps uncovered that are **not ye
 - ~~**`InsuranceCompanyService::update()` references unset array keys without defaults**~~ (surfaced 2026-10-19 during PR #14680 PUT test attempt; FIXED 2026-10-20 by PR #14688 at `dc083555e6`). The service now fetches the existing row via `getOneById()` and overlays the submitted payload (true semantic PATCH); rabbit review surfaced two additional issues (address merge was still wiping unmentioned address fields, and `addressService->update()` returning null for a missing addresses row caused the whole update to fail silently) — both addressed by merging submitted address keys over `addressService->getOneByForeignId()` and falling through to `addressService->insert()` when the update finds nothing. Three api-tier regression gates added: partial-payload PATCH, address-merge PATCH, insert-when-missing. Also tightened `InsuranceCompanyService::$addressService` to `private readonly AddressService` (dropped two "method on mixed" baseline entries).
 - ~~**`TransactionRestController::GetPatientTransactions` returns 404 for empty results**~~ (surfaced 2026-10-20 during PR #14689 scoping; FIXED 2026-10-20 by PR #14727 at `03ba739d7a`). Same empty-array-as-404 bug family as the already-fixed `AppointmentRestController` (PR #14605) and `ListRestController::getAll` (PR #14681). Dedicated empty-list regression gate added to `PatientTransactionApiTest`.
 - ~~**`AppointmentRestController::getOne` ignores `$pid` on patient-compartment single-GET**~~ (surfaced 2026-10-20 during PR #14729 rabbit review; FIXED 2026-10-21 by PR #14734 at `fc1e82bb190e`). New controller helper `getOneScopedByPatient($pid, $eid)` mirrors `delete()`'s pattern — validates pid against the raw `AppointmentService::getAppointment($eid)` result before building the Response. Route closure now typed `string $pid, string $eid`. Regression gate `testGetAppointmentByIdForPatientRejectsWrongPatient` added to `AppointmentApiTest`. OpenAPI attribute moved off its stale location on `getOneForPatient()` onto the new method; swagger regenerated.
+- ~~**`/api/background_service/*` routes 401 every OAuth2 caller (7-month OAuth2 dormancy)**~~ (surfaced 2026-10-21 during PR #14749 scoping; FIXED 2026-10-21 by PR #14749 at `c5d09ed9eb`). PR #11337 (Mar 2026, Michael A. Smith) shipped three routes with full OpenAPI docs and ACL gates but no OAuth2 scope registry — so `AuthorizationListener::onRestApiSecurityCheck` built required scopes `user/background_service.r/.s/.c` which did not exist in `ServerScopeListEntity`, and every OAuth2 call 401'd with "scope X not in access token". The `/:name/run` route additionally hit a parsing quirk: `HttpRestParsedRoute::parseRouteParams` takes `end($parts)` as the resource, so the required scope resolved to `user/run.c` (also nonexistent). Stephen Waite's PR #11687 established the `$run` naming convention with an inline comment flagging the parse quirk but did not retroactively fix the original `/run` route or register the scopes. Verified empirically against master — `ApiTestClient` probe produced `scope user/run.c not in access token` and `scope user/background_service.$run not in access token`. Likely testing path for the original author: session-authenticated UI calls (bypass `AuthorizationListener` via `isLocalApi()` / `skipAuthorization`). Fix: V2 scope registry (`user/background_service.rs` + `.$run`) + route rename `/:name/run` → `/:name/$run` + 6 api tests + sentinel-file probe fixture.
+- ~~**Allergy, Condition, Insurance PUT routes ignore path puuid on compartment check**~~ (surfaced 2026-10-21 during PR #14734 systematic sweep + PR #14747 rabbit review; FIXED 2026-10-21 by PR #14747). Companion to the Appointment pid-scoping fix. Three different flavors in three services: (a) `AllergyIntoleranceService::update` + `ConditionService::update` had an `$expectedPatientId` hook but the controller let it stay `null` when the path puuid was malformed or named no patient — the service's compartment check only ran on non-null, so the UPDATE bound pid from the row's own owning pid and the mutation succeeded through any crafted path (rabbit catch). (b) `InsuranceService::update` had no compartment hook at all — WHERE was keyed on uuid alone. Fix: controller-level reject-when-null for allergy + condition; service-level pid-match pre-check for insurance. 5 api-tier regression gates (3 wrong-pid + 2 unknown-puuid).
 
 Items in this register should either (a) get fixed with their own PR, (b) have api-tier regression gates added as part of the fix PR, or (c) be promoted to §8.1a / §8.3 if they rise to a security or spec-compliance concern.
 
