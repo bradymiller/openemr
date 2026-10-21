@@ -765,6 +765,11 @@ Scope-related code is one of the most security-sensitive surfaces in the OAuth2 
 
 **Precedent for insufficient-scope deny coverage:** the `OAuth2AttackScenarioTest` covers role-mismatch denies (user token → portal route, patient token → standard-api route) and scope-downgrade on refresh. Resource-permission axis is a direct extension of the same pattern.
 
+**Shipped 2026-10-21 (CI backlog pending, both rabbit-reviewed clean):**
+- ✅ **V2a — PR #14760 (OPEN, CI backlog):** `ApiScopeSchemeV2EquivalenceTest` — 7 tests, 108 assertions. Mints V2-only tokens across `.rs`, `.cud`, `.cruds`, `.crus`, `.r` permission axes on allergy / appointment / patient / insurance. Rabbit followup commit `668df7e05c` nested the tearDown so DB-persisted `site_addr_oath` + `oauth_password_grant` row restores run even if fixture/client cleanup throws.
+- ✅ **V2b — PR #14759 (OPEN, CI backlog):** `InsufficientScopeDenyApiTest` — 8 tests, 105 assertions. V1 and V2 permission-axis denies: `.read` can't POST, `.write` can't GET list (CUD lacks `.s`), `.rs` can't POST/PUT/DELETE, `.r` can't list, `.c` can't single-GET. Rabbit followup commit `594e0e4f40` catches `GuzzleHttp\Exception\ConnectException` in setUp and registers client ID before asserting token-response status (so a failed mint still gets cleaned up).
+- **No real security findings** — every insufficient-scope mismatch was correctly rejected (401 via `AccessDeniedException` → `HTTP_UNAUTHORIZED`). Both PRs are regression-gate additions over correctly-behaving code.
+
 #### Further black-spots audit (surfaced 2026-10-21 during V2a/V2b planning)
 
 Classes of regression that the current test suite would miss, ordered by signal strength. Items 1 and 2 are flagged as the next audit targets after V2a/V2b (#14759 + #14760) land; items 3-8 are parked here for later. Each entry: shape of the gap, blast radius, suggested test shape.
