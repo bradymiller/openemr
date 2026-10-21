@@ -395,7 +395,7 @@ Routes aggregated in `_rest_routes.inc.php` from three sources:
 
 ### 6.2 /apis/default/api/* coverage
 
-Non-FHIR api tests in `tests/Tests/Api/` (as of master `70639e44c9`, 2026-10-20):
+Non-FHIR api tests in `tests/Tests/Api/` (as of master `fc1e82bb19`, 2026-10-21):
 
 | File | Count | Notes |
 |---|---|---|
@@ -448,7 +448,7 @@ Non-FHIR api tests in `tests/Tests/Api/` (as of master `70639e44c9`, 2026-10-20)
 
 #### Post-batch gap register (as of 2026-10-21)
 
-Static route-vs-file audit against `apis/routes/_rest_routes_standard.inc.php` on `upstream/master @ 70639e44c9`:
+Static route-vs-file audit against `apis/routes/_rest_routes_standard.inc.php` on `upstream/master @ fc1e82bb19` (unchanged route catalog since the 2026-10-20 snapshot — no route additions landed between):
 
 - **98 standard routes total** (96 double-quoted + 2 single-quoted: `GET /api/patient/:puuid/insurance/$swap-insurance` + `POST /api/background_service/$run`).
 - **~95 covered / ~3 uncovered** (≈97% route coverage) after shipping #14727 / #14728 / #14729 / #14732 / #14733 / #14734.
