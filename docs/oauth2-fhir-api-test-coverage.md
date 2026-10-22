@@ -765,31 +765,44 @@ Scope-related code is one of the most security-sensitive surfaces in the OAuth2 
 
 **Precedent for insufficient-scope deny coverage:** the `OAuth2AttackScenarioTest` covers role-mismatch denies (user token → portal route, patient token → standard-api route) and scope-downgrade on refresh. Resource-permission axis is a direct extension of the same pattern.
 
-**Shipped 2026-10-21 (CI backlog pending, both rabbit-reviewed clean):**
-- ✅ **V2a — PR #14760 (OPEN, CI backlog):** `ApiScopeSchemeV2EquivalenceTest` — 7 tests, 108 assertions. Mints V2-only tokens across `.rs`, `.cud`, `.cruds`, `.crus`, `.r` permission axes on allergy / appointment / patient / insurance. Rabbit followup commit `668df7e05c` nested the tearDown so DB-persisted `site_addr_oath` + `oauth_password_grant` row restores run even if fixture/client cleanup throws.
-- ✅ **V2b — PR #14759 (OPEN, CI backlog):** `InsufficientScopeDenyApiTest` — 8 tests, 105 assertions. V1 and V2 permission-axis denies: `.read` can't POST, `.write` can't GET list (CUD lacks `.s`), `.rs` can't POST/PUT/DELETE, `.r` can't list, `.c` can't single-GET. Rabbit followup commit `594e0e4f40` catches `GuzzleHttp\Exception\ConnectException` in setUp and registers client ID before asserting token-response status (so a failed mint still gets cleaned up).
-- **No real security findings** — every insufficient-scope mismatch was correctly rejected (401 via `AccessDeniedException` → `HTTP_UNAUTHORIZED`). Both PRs are regression-gate additions over correctly-behaving code.
+**Shipped 2026-10-21/22 (all merged, all rabbit-reviewed clean):**
+- ✅ **V2a — PR #14760 MERGED 2026-10-22 at `222808f80044`:** `ApiScopeSchemeV2EquivalenceTest` — 7 tests, 108 assertions. Mints V2-only tokens across `.rs`, `.cud`, `.cruds`, `.crus`, `.r` permission axes on allergy / appointment / patient / insurance. Rabbit followup `668df7e05c` nested the tearDown so DB-persisted `site_addr_oath` + `oauth_password_grant` row restores run even if fixture/client cleanup throws.
+- ✅ **V2b — PR #14759 MERGED 2026-10-22 at `da5f36ffeac3`:** `InsufficientScopeDenyApiTest` — 8 tests, 105 assertions. V1 and V2 permission-axis denies: `.read` can't POST, `.write` can't GET list (CUD lacks `.s`), `.rs` can't POST/PUT/DELETE, `.r` can't list, `.c` can't single-GET. Rabbit followup `594e0e4f40` catches `GuzzleHttp\Exception\ConnectException` in setUp and registers client ID before asserting token-response status (so a failed mint still gets cleaned up).
+- **No real security findings in V2a/V2b** — every insufficient-scope mismatch was correctly rejected (401 via `AccessDeniedException` → `HTTP_UNAUTHORIZED`). Both PRs are regression-gate additions over correctly-behaving code.
 
 #### Further black-spots audit (surfaced 2026-10-21 during V2a/V2b planning)
 
 Classes of regression that the current test suite would miss, ordered by signal strength. Items 1 and 2 are flagged as the next audit targets after V2a/V2b (#14759 + #14760) land; items 3-8 are parked here for later. Each entry: shape of the gap, blast radius, suggested test shape.
 
-**1. 🔥 Session-auth vs OAuth2 pathway parity (lesson from PR #14749).**
+**1. 🔥 ✅ CLOSED — Session-auth vs OAuth2 pathway parity (lesson from PR #14749).** Addressed via **PR #14762 MERGED 2026-10-22 at `b83914134d8c`**.
 
-PR #14749 revealed that `/api/background_service/*` worked under session auth but 401'd every OAuth2 bearer-token caller for 7 months (March → October 2026). Root cause: `isLocalApi()` / `skipAuthorization` bypass `AuthorizationListener::onRestApiSecurityCheck` entirely, so the ACL gate works but the OAuth2 scope-registry gate never fires. This is almost certainly not isolated — any route added without walking an OAuth2 token through it would have the same shape.
+PR #14749 revealed that `/api/background_service/*` worked under session auth but 401'd every OAuth2 bearer-token caller for 7 months (March → October 2026). Root cause: `isLocalApi()` / `skipAuthorization` bypass `AuthorizationListener::onRestApiSecurityCheck` entirely, so the ACL gate works but the OAuth2 scope-registry gate never fires.
 
-Shape of audit: enumerate every entry in `apis/routes/_rest_routes_standard.inc.php` + `_rest_routes_fhir.inc.php` + `_rest_routes_portal.inc.php`. For each, (a) hit via `ApiTestClient` with an admin OAuth2 bearer token carrying `ALL_SCOPES`, (b) hit via session-authenticated internal path, (c) diff the status codes. Any route where (a) returns 401/403 but (b) returns 200 is a dormant OAuth2-unreachability bug. Expected hits: unknown, but PR #14749's precedent + the "no one noticed for 7 months" characteristic suggests more than zero.
+**Audit outcome:** systematic sweep of all 239 routes (96 standard-api + 136 FHIR + 5 portal + operations) via BOTH static-registry analysis AND live sweep against a running stack. **Zero dormant-OAuth2 reachability bugs on current master.** The #14749 incident was isolated. PR #14762 shipped a 6-line fix adding 12 missing FHIR `.read` scopes to `ApiTestClient::ALL_SCOPES` (test-client scope omission, not a prod bug — those scopes already existed in the registry).
 
-**2. 🔥 SMART v2 constraint-scope end-to-end wiring.**
+**Architectural clarification the audit surfaced** (worth preserving): OpenEMR's REST API only accepts three auth paths:
+1. **Bearer tokens** (OAuth2) — runs through `AuthorizationListener::onRestApiSecurityCheck`
+2. **LocalApi** (`APICSRFTOKEN` header + session cookie, admin UI JS) — bypasses OAuth2 scope-check via `isLocalApi()` attribute
+3. **SkipAuthorization** (metadata, well-known, OperationDefinition) — explicit opt-out
+
+A plain `PHPSESSID` cookie never reaches a REST route — always 401s. The #14749 dormant class exists specifically where a route is reachable via LocalApi/skipAuthorization AND OAuth2's resource-scope check fails because the scope isn't registered. Full audit report at `/home/brady2/git/session-oauth2-parity-report.md` (129 lines, kept for future reference).
+
+**2. 🔥 SMART v2 constraint-scope end-to-end wiring.** Addressed via **PR #14763 OPEN 2026-10-22** (6 tests, 134 assertions, 3 rabbit review rounds applied).
 
 `ServerScopeListEntity::fhirResourceScopesV2()` advertises constrained scopes:
 - `patient/Condition.rs?category=http://hl7.org/fhir/us/core/CodeSystem/condition-category|health-concern`
 - `patient/Observation.rs?category=http://terminology.hl7.org/CodeSystem/observation-category|laboratory`
 - `patient/DocumentReference.rs?category=http://hl7.org/fhir/us/core/CodeSystem/us-core-documentreference-category|clinical-note`
 
-`ResourceConstraintFilterer` is isolated-tested (10 assertions covering the filter logic). `ScopeConstraintEnforcementWiringIsolatedTest` has 2 isolated tests confirming the Fhir DocumentReference controller invokes the filterer. But no api-tier test proves the full chain: client registers for the constrained scope → consent accepts it → access_token carries the constraint → FHIR endpoint applies the filter and returns the restricted subset (not 403'd, not full set).
+**Audit outcome:** full chain works as advertised. DCR cleanly accepts the constrained-scope strings. `finalizeScopes()` echoes the constraint verbatim in both the `scope` response field AND inside the JWT `scopes` claim (regression gate added for that). `ResourceConstraintFilterer` correctly admits matching-category resources and prunes non-matching ones at the FHIR endpoint. No wiring bugs. Covers 3 Condition tests (full admission+exclusion matrix across health-concern + problem-list-item + unconstrained-baseline), 2 Observation tests (vital-signs positive-admission + laboratory sibling-exclusion), 1 DocumentReference test (chain-integrity + per-entry category check).
 
-Shape of audit: new api test file. For each constrained scope family (Condition / Observation / DocumentReference), (a) seed resources matching the constraint + resources NOT matching, (b) mint a token carrying only the constrained scope, (c) hit `GET /fhir/Condition?patient=...` with the token, (d) assert the response bundle contains only matching entries. Also exercise the inverse: mint with full `patient/Condition.rs` (unconstrained) and assert the response includes resources outside the constraint categories. Mirrors the shape of V2a/V2b but on the constraint axis.
+**Deferred positive-admission for lab Observation + clinical-note DocumentReference** (surfaced via rabbit review on #14763, documented inline in the test file): the laboratory + clinical-note tests cover sibling-exclusion and chain-integrity but not positive-admission (empty bundle passes trivially). Both fixtures are heavy-lift: lab Observations are ingested through HL7 feeds not FHIR POST (would need direct DB inserts into `procedure_result` + `procedure_order` + encounter wiring), and `POST /fhir/DocumentReference` is explicitly `fhirWriteNotImplemented()` on master (would need direct DB inserts into `form_clinical_notes` + `documents` + encounter wiring). **Risk assessment: LOW** — services that return data typically regress to "wrong data" (caught by sibling-exclusion + Condition admission tests), not "always empty." Isolated-tier `ResourceConstraintFiltererTest` + `ScopeConstraintEnforcementWiringIsolatedTest` cover filterer logic directly. Chain-integrity gates in #14763 catch OAuth2/token-wiring regressions. Will close naturally when lab or clinical-note fixtures land for another purpose (bulk export, document template, etc). Non-blocking.
+
+**Non-obvious finding worth preserving:** The three advertised Condition constraints use TWO different code systems:
+- `health-concern` → `hl7.org/fhir/us/core/CodeSystem/condition-category` (us-core)
+- `encounter-diagnosis` + `problem-list-item` → `terminology.hl7.org/CodeSystem/condition-category` (hl7 terminology)
+
+SMART v2 constraints are system-sensitive `|` tokens — both halves must match. The agent initially coded `health-concern` with the hl7 terminology system and the filter correctly rejected it.
 
 **3. DCR edge cases.**
 
