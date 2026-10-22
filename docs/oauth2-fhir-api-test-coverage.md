@@ -787,7 +787,7 @@ PR #14749 revealed that `/api/background_service/*` worked under session auth bu
 
 A plain `PHPSESSID` cookie never reaches a REST route — always 401s. The #14749 dormant class exists specifically where a route is reachable via LocalApi/skipAuthorization AND OAuth2's resource-scope check fails because the scope isn't registered. Full audit report at `/home/brady2/git/session-oauth2-parity-report.md` (129 lines, kept for future reference).
 
-**2. 🔥 SMART v2 constraint-scope end-to-end wiring.** Addressed via **PR #14763 OPEN 2026-10-22** (6 tests, 134 assertions, 3 rabbit review rounds applied).
+**2. 🔥 ✅ CLOSED — SMART v2 constraint-scope end-to-end wiring.** Addressed via **PR #14763 MERGED 2026-10-22 at `f82cadded3d5`** (6 tests, 134 assertions, 3 rabbit review rounds applied).
 
 `ServerScopeListEntity::fhirResourceScopesV2()` advertises constrained scopes:
 - `patient/Condition.rs?category=http://hl7.org/fhir/us/core/CodeSystem/condition-category|health-concern`
@@ -850,7 +850,9 @@ Every OAuth2 token mint should produce an audit log entry (`log.event = 'oauth2-
 
 Shape of audit: 1-2 tests that mint a token, make a request, grep the log table for the expected entry.
 
-**Suggested next-up:** 1 and 2 after V2a/V2b land. 3-8 remain parked.
+**Status (2026-10-22):** Items 1 and 2 both ✅ CLOSED (0 real wiring bugs across either audit — the pipeline is in better shape than the #14749 incident might have suggested). Items 3-8 remain parked. The deferred positive-admission gap for lab Observation + clinical-note DocumentReference is tracked under item 2.
+
+**Suggested next-up:** no urgent items. Pick from 3-8 based on signal preference — item 4 (FHIR capability drift) has the highest demonstrated hit rate (PR #14667 found 3 drifts).
 
 ### 8.3 Priority 3 — Spec compliance gaps
 
