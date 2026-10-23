@@ -864,6 +864,52 @@ Endpoints/shapes the spec requires but OpenEMR has not implemented. No current s
 - **`invalid_request` vs. `invalid_grant` error label on auth-code reuse** — League 8.5.5 maps `isAuthCodeRevoked=true` to `invalid_request` in `validateAuthorizationCode`. RFC 6749 §5.2 specifies `invalid_grant` for a reused code. Fix bundled with the §8.1a auth-code validation-order DoS vendor-copy (same ~100 LoC fix in `CustomAuthCodeGrant::respondToAccessTokenRequest`). **(Effort: trivial increment on top of 8.1a fix.)**
 - **User-denial of consent (RFC 6749 §4.1.2.1) — not implemented.** When a user denies consent at the authorization step, the server MUST redirect to the client's `redirect_uri` with `error=access_denied` (plus the state). OpenEMR's `AuthorizationController::authorizeUser` (lines ~1395-1439) always calls `$authRequest->setAuthorizationApproved(true)` before completing the authorization request, so a code is always issued. The `if ($request->request->has('proceed') ...)` branch only decides whether to call `saveTrustedUser` for future auto-approval; it does NOT short-circuit the code issuance. The Cancel button in `scope-authorize.html.twig` is a `window.history.back()` navigation only, never POSTs. In practice, no path currently exists for a user to formally refuse consent. **(Where: short-circuit `authorizeUser` when `proceed` is absent — build a 302 to the registered `redirect_uri` with `error=access_denied` + `state` instead of calling `completeAuthorizationRequest`. The TODO comment at line 1413 flags this. Add the UI cancel button to POST with a `deny=1` field or similar so users can trigger it. Effort: small — ~20 LoC + 2 api-tier tests.)**
 
+#### FHIR CapabilityStatement advertise-vs-serve drift inventory (2026-10-23 audit)
+
+A systematic sweep audited every resource in `/fhir/metadata` against observed server behavior. 35 of 35 resources covered. 14 distinct drift classes found (several apply across most resources). The three search-modifier contract gaps already documented below are a strict subset of this inventory. Full tables with per-resource verdicts: `/home/brady2/git/fhir-capability-drift-report.md` (14.8KB). Technical detail on the two upstream-error-text leak endpoints: `/home/brady2/git/fhir-capability-drift-security-finding.md` (4.3KB).
+
+**Bundle / search mechanics drifts (universal — apply to every resource):**
+
+- **D1: `Bundle.total` reports paginated subset, not total matches.** Clients cannot know whether a result set is complete from the bundle metadata.
+- **D2: No `next` / `previous` / `first` / `last` link emitted on any bundle.** `QueryPagination::getFhirLinks()` exists and knows how to emit the links, but no bundle-builder calls it. Clients cannot walk result sets via the FHIR-standard link-following mechanism. (Subset of this is the `_count` next-link gap from #14667.)
+- **D3: `_include` advertised on 29+ resources, silently returns 200 with no included resources on every one tested.** Agent confirmed on multiple resources — generalizes the #14667 Encounter finding to the whole surface.
+- **D4: `_revinclude` same shape as D3.** Advertised, returns 200 with no included resources.
+- **D5: `_sort` on non-Patient/Task is a silent no-op.** `FhirServiceBase::searchForOpenEMRRecordsWithConfig()` discards the config. (Already in #14667 register below.)
+- **D6: `_summary=count` / `_summary=true` not honored.** Returns the full bundle regardless.
+- **D7: Unknown search params return `200 OK` with empty bundle on 12/13 probed resources.** Should return 400 BadRequest per FHIR R4 §3.1.1. Clients driving behavior from capability discovery get a wrong-but-plausible-looking empty result.
+- **D8: Organization uniquely returns the FULL list on unknown search params instead of an empty bundle.** Filter-ignore pattern different from the other 12 resources — client that sends `?unknownParam=foo` on Organization gets ALL organizations unfiltered.
+- **D9: `_elements` + `search.mode` not honored.** Various resources.
+
+**OperationDefinition / routing drifts:**
+
+- **D10: CapabilityStatement contains a duplicate `search-type` interaction entry** on some resources (observable in the metadata JSON).
+- **D11: `delete` interaction advertised on some resources but no route handler** matches — hitting DELETE returns 405 or 404 depending on resource.
+- **D12: `export` OperationDefinition is advertised but the `definition` reference does not resolve.** The CapabilityStatement points at an OperationDefinition URL that returns 404.
+- **D13: Task `update` interaction advertised but not actually routed.** PUT on Task returns 405.
+
+**Advertised search params that 5xx on non-matching values (7 endpoints):**
+
+- `_id` with non-UUID value on CarePlan / Goal / Observation → 500 "UUID columns must be a valid UUID string" (exception message bleed into response body)
+- `MedicationDispense?type=foo` → 500 "Call to undefined method FhirMedicationDispenseLocalDispensaryService::supportsCategory()" (class/method name leak)
+- `Person?_revinclude=Provenance:target` → 500 "provenance record is not supported in this resource"
+- `ValueSet?_count=1` → 500 "Expected string, number, or SearchField object for parameter '_config'"
+- `Coverage?status=zzz` and `MedicationDispense?status=zzz` — response body includes the full raw SQL query the server attempted to execute, including table names, column names, and the full JOIN structure. Root cause: `vendor/adodb/adodb-php/drivers/adodb-mysqli.inc.php:1357` calls `outp_throw(..."SQL Statement failed on preparation: " . htmlspecialchars($sql) . "'", 'Execute')`; `ADOConnection::outp` echoes directly to stdout regardless of PHP's `display_errors` setting, so the text reaches the response buffer before Symfony's error handler can intercept. Additional observation: in the `status=zzz` case, the user-supplied FHIR search param is appended into the WHERE clause as a column reference (not as a value), producing the "Unknown column" error — a separate search-param parse layer issue worth fixing on its own merits.
+
+**Suggested fix strategy (deferred):**
+
+Two-PR shape when the team picks this up:
+
+- **PR A — HTTP boundary error-shape hardening.** Wrap `FhirServiceBase::getAll` + sibling entry points in `try { ... } catch (\Throwable $e) { log + return OperationOutcome }`. Intercept BEFORE the ADODB echo path can reach the response buffer (via `ob_start` + Throwable catch + buffer discard on error path). Returns a generic `OperationOutcome` with no upstream message text, matches CLAUDE.md's standing rule: *"Never expose `$e->getMessage()` in user-facing output."* Includes regression gates asserting the 7 known-5xx endpoints now return generic OperationOutcome shape. ~30-50 LOC.
+- **PR B — FHIR search-param value validation.** At `FhirServiceBase` or the search-param parse layer, validate values match their advertised FHIR type (`token` / `date` / `string`) before building the WHERE clause. Short-circuit to 400 BadRequest before reaching ADODB prepare. Specifically fixes the `?status=zzz` → column-reference drift noted above. Likely surfaces other search-layer bugs during implementation. Medium-large effort — one FhirServiceBase method change + per-service search-param registrations may need param-type metadata.
+
+The bundle-mechanics drifts (D1-D9) are a separate workstream — each is a focused fix in `FhirResourcesService::createBundle()` or the resource-specific service, independent of the error-handling PRs. D7+D8 (unknown search-param behavior) and D11+D13 (advertised-but-not-routed interactions) are the highest-signal shippable fixes within that family.
+
+**ADODB vendor patch NOT recommended:** OpenEMR has historically avoided vendor-code patches (maintenance tax, upstream drift). PR A + PR B together close the leak-to-client path without touching vendor code. ADODB echoing to stdout internally is still non-ideal but no longer reaches the response buffer once the HTTP boundary catch-all intercepts.
+
+**Why deferred for now (2026-10-23):** Current focus is OAuth2/API pipeline audit expansion (items 3-8 of the §8.2 further-black-spots list). FHIR work will pick up after that register drains.
+
+---
+
 **FHIR search-modifier contract gaps (surfaced 2026-10-18 during PR #14667 audit).** The CapabilityStatement promises three modifiers that the implementation does not actually deliver. Documented inline in `tests/Tests/Api/FhirSearchModifiersApiTest.php` and listed here for tracking:
 
 - **`_count` + Bundle `next` link — not implemented.** `_count=1` correctly returns `total=1` + a single entry, but `FhirResourcesService::createBundle()` only emits a `self` link. `QueryPagination::getFhirLinks()` exists and knows how to emit `first`/`previous`/`next`, but no bundle-builder calls it. Forward pagination via `link[rel="next"]` is effectively unsupported — a client cannot iterate past the first page via the FHIR-standard link-following mechanism. **(Where: wire `QueryPagination::getFhirLinks()` into the bundle-builder path; add an api test asserting `link[rel="next"]` presence + follow-and-recover-full-set invariant. Effort: small-medium.)**
