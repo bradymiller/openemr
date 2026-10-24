@@ -896,6 +896,12 @@ Items 1-8 fully drained. The following audits are the next-tier candidates, rank
 
 **Current workstream (2026-10-24):** starting with 2 (weak-assertion meta-audit) as a warm-up, then 1 (role-context symmetry) as the full-matrix audit. 3-9 remain parked.
 
+**Shipped 2026-10-24:**
+- ✅ **Option 2 — Weak-assertion meta-audit, PR #14809 MERGED at `85f94425610b`:** Scanned 100 files under `tests/Tests/Api/`, found 3 real tightenings + ~130 legitimate-loose cases. Shipped as a single PR tightening the 3 cases. Report at `/home/brady2/git/weak-assertion-audit-report.md`. Hit rate low because rabbit already tightened the obvious OIDC/audit-log/nonce patterns during #14795-14799 — most remaining loose checks on server-generated values are the right check.
+- ✅ **Option 1 — Role-context symmetry audit, PR #14810 MERGED at `37cde9145481`:** 15 tests, 122 assertions in new `RoleContextSymmetryApiTest.php` covering the full user-role × patient-role × system-role matrix across standard-api / portal / FHIR / bulk-export families. **Zero unexpected cross-role successes.** Role-matrix enforcement is consistent across all probed cells. Report at `/home/brady2/git/role-context-symmetry-report.md`. Non-obvious finding worth preserving: patient-role write-denial is a TWO-layer defense — Layer 1 (`ServerScopeListEntity::getV2ApiScopes()` has an explicit "No patient/ variant" comment + does not register any `patient/*.cud` entries) + Layer 2 (`AuthorizationListener::isPatientWriteRequest()` backstop at the dispatcher). In production Layer 1 always fires first because DCR refuses to grant the scope; Layer 2 is defense-in-depth. Both layers now locked with regression gates.
+
+**Status (2026-10-24, items 1-9 progress):** Items 1 ✅, 2 ✅ closed. Items 3-9 remain parked. The 2026-10-24 pair (options 1 + 2) extends the "zero security findings" pattern — role-context enforcement is clean on master, and the weak-assertion meta-audit confirmed rabbit's catches in #14795-14799 were isolated incidents that caught the obvious cases.
+
 ### 8.3 Priority 3 — Spec compliance gaps
 
 Endpoints/shapes the spec requires but OpenEMR has not implemented. No current security exposure, but ONC/OIDC auditors may flag.
