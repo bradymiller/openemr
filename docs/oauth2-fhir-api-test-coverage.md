@@ -872,6 +872,30 @@ Shape of audit: 1-2 tests that mint a token, make a request, grep the log table 
 
 No critical gaps remain. The OAuth2/API pipeline is in strong shape — 0 real security findings across the 7 completed audits (items 1-8 minus item 4 deferred).
 
+#### Next audit directions (surfaced 2026-10-24 after further-black-spots audit drained)
+
+Items 1-8 fully drained. The following audits are the next-tier candidates, ranked by expected signal + lift. Pick based on current focus.
+
+**🎯 Highest signal:**
+
+1. **OAuth2 role-context symmetry audit** — natural follow-up to item 1 (session-vs-OAuth2 parity). Enumerate the 239 routes, probe each under user-role, patient-role, and system-role tokens (where applicable), diff reachability vs the context the route is designed for. `OAuth2AttackScenarioTest::testUserRoleTokenCannotReachPortalRoute` + `testPatientRoleTokenCannotReachStandardApiRoute` cover ONE axis each; the full matrix may have non-obvious gaps. Role-matrix enforcement in `AuthorizationListener::onRestApiSecurityCheck` lines 199-204 (the `isStandardApiRequest() && getRequestUserRole() !== 'users'` check) + `patient/*` vs `user/*` vs `system/*` scope prefix. Expected hits: not zero — role-matrix is complex enough that silent gaps are plausible. **Shape of audit:** report file + api test(s) covering the matrix. **If 0 bugs:** clean negative result like item 1. **If bugs:** likely genuine reachability issues worth fixing.
+2. **Weak-assertion meta-audit** — rabbit has caught 3 "loose check doesn't match stated contract" patterns in the last 5 PRs (`user_id`, `sub`, `nonce`). Grep `tests/Tests/Api/` for `assertGreaterThan(0, ...)`, `assertNotSame('', ...)`, `assertMatchesRegularExpression('format', ...)`, `assertNotEmpty($array)` where the assertion message implies a specific identity/value. One pass likely yields 5-15 cleanups across the suite. Low cost per find, high regression-gate value.
+3. **FHIR R4 search modifier regression gates** — lock current behavior per modifier before any §8.3 fix work. 9 modifiers to probe (`:not`, `:above`, `:below`, `:missing`, `:in`, `:not-in`, `:text`, `:contains`, `:exact`). 3 drifts already catalogued from PR #14667 + the §8.2 item 4 FHIR CapabilityStatement audit. NOT fixing the drifts — writing a dedicated regression-gate file that locks CURRENT behavior per modifier with explicit `markTestSkipped()` for the known drifts. Future prod fixes would then flip the skips to assertions.
+
+**🔬 Medium signal:**
+
+4. **PKCE deep coverage audit** — PR #14659 covered mint-level. Not yet covered: wrong-method PKCE (plain accepted on S256-marked clients?), tampered challenge at authorize, missing challenge at refresh, verifier-reuse across clients. PKCE is a common OAuth2 attack axis.
+5. **Token endpoint rate-limit coverage symmetry** — PR #14577 covered password-grant. Not yet: client_credentials, refresh_token, auth_code mint. Does rate-limiting leak between clients?
+6. **Scope-consent UX edge cases** — form double-submit, partial scope grants + downgrades combined, consent-form CSRF beyond what #14589 covers.
+7. **OAuth2 token lifetime boundary coverage** — behavior at the moment of `exp` (clock-skew tolerance, `nbf` claim handling if present, 1-second-before vs 1-second-after `exp` symmetry).
+
+**🌊 Larger / less focused:**
+
+8. **Portal-API behavioral depth parity** — standard-api got deep coverage; portal has 5 routes with less depth-of-test. Edge cases, cross-patient isolation beyond #14734's precedent.
+9. **CSRF coverage sweep on session-authenticated POST paths** — vast landscape; probably multi-session work.
+
+**Current workstream (2026-10-24):** starting with 2 (weak-assertion meta-audit) as a warm-up, then 1 (role-context symmetry) as the full-matrix audit. 3-9 remain parked.
+
 ### 8.3 Priority 3 — Spec compliance gaps
 
 Endpoints/shapes the spec requires but OpenEMR has not implemented. No current security exposure, but ONC/OIDC auditors may flag.
