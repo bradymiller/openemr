@@ -1009,7 +1009,7 @@ Items in this register should either (a) get fixed with their own PR, (b) have a
 
 Current OAuth2/API/portal/standard-api audit menu (§8.2) is drained. Rather than pick up more §8.3 FHIR register items solo, this session shifts to shepherding the existing FHIR PR queue — review, ensure test coverage, land, then revisit the register.
 
-**Shipped since 2026-10-30 (15 FHIR / FHIR-adjacent PRs merged — 11 of them on 2026-11-04 after the shepherd pass opened):**
+**Shipped since 2026-10-30 (16 FHIR / FHIR-adjacent PRs merged — 12 of them on 2026-11-04 after the shepherd pass opened):**
 - #14669 — feat(fhir): FHIR Task Pt 3 (inputs/outputs/code system/owners) — anun333 Task trilogy complete (Pts 1+2 shipped as #14614 + #14660 earlier in this cycle)
 - #14708 — feat(fhir): referral ServiceRequests from Transactions — anun333
 - #14715 — feat(referrals): track each referral as a FHIR Task — anun333
@@ -1025,11 +1025,9 @@ Current OAuth2/API/portal/standard-api audit menu (§8.2) is drained. Rather tha
 - #14965 — fix(referrals): close a referral when its Task is rejected or failed — anun333 (2026-11-04 at `1301306d57`). Morning e2e-CI-fail hold went stale by afternoon — fix landed in the same referrals sprint as #14971.
 - #14968 — fix(cqm): treat a UCUM exponent past the integer range as invalid — anun333 (2026-11-04 at `fee4415f61`). Deep-reviewed privately; closes the UCUM-overflow TypeError register item and auto-unblocks #14933's remaining rabbit concern via exception propagation (parser throws → `Ucum::specifiedUnit()` catches → `isValid()` returns false → `ucumCodeFor()` null-safe).
 - #14933 — fix(fhir): claim UCUM only for units UCUM accepts — anun333 (2026-11-04 at `5f28c55be1`). Deep-reviewed privately; part of umbrella #14702 (HL7v2 slice #14934 + C-CDA slice #14936 already shipped). "One rule, three sinks" architecture (FHIR createQuantity + DoseUnit + HL7v2 RXA-7). Non-UCUM fallback shape FHIR R4 valid. Post-unpause rabbit UCUM-overflow concern closed by #14968 landing first.
+- #14584 — fix(ccda): import the smoking status again — anun333 (2026-11-04 at `324861c38c`). Deep-reviewed privately; regression traced to PR #7348 (silence-missing-key guard that was always-false on first entry + XmlExtended list on R2.1/Synthea documents). 4-seam refactor (parse/write-direct/write-review/write-location). All 6 initial rabbit concerns addressed; post-unpause tobacco-only-pad Minor nit addressed by commit `1c07dee953` + new `RevAndApproveSocialHistoryTest` DB test.
 
-**Open as of end-of-day 2026-11-04 (6 FHIR-touching PRs):**
-
-✅ Shepherd-reviewed, merge-ready:
-- #14584 — fix(ccda): import the smoking status again — anun333. Post-unpause rabbit nit addressed by commit `1c07dee953` (`fix(ccda): render a history row without alcohol on the review screen`) + new `RevAndApproveSocialHistoryTest`. Brief: `/home/brady2/git/pr-14584-review-brief.md`.
+**Open as of end-of-day 2026-11-04 (5 FHIR-touching PRs):**
 
 🔶 Shepherd-reviewed, merge-ready with known residual:
 - #14730 — fix(fhir): `:missing=true/false` on token + string search parameters — oldrobotdev. Gender-ucfirst latent-400 residual; your A/B/C call. Brief: `/home/brady2/git/pr-14730-review-brief.md`.
