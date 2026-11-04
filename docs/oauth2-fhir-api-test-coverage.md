@@ -1057,6 +1057,9 @@ Legend: 🪲 test-infrastructure bug · 🧹 cleanup / pattern alignment · 📏
 - 📏 **Isolated sweep for `!empty()` on signed ints** (surfaced via #14617 review 2026-11-04). `!empty(-1)` returning true made `elseif ($pid == -1)` dead code. Other `equal.alwaysFalse` baseline entries could indicate similar patterns.
 - 📏 **Twin-typo check in `FhirOperationExportRestController` siblings** (surfaced via #14617 review 2026-11-04). The `$ouputResult` typo was caught by phpstan; mirror-check siblings in `src/RestControllers/FHIR/Operations/` for other variable-name typos.
 - 📏 **Integration test for `processResourceExportForJob` zero-success path** (surfaced via #14617 review 2026-11-04). Author couldn't add Docker-backed test for Fix 2; an integration test asserting the export emits `"[]"` not `"null"` when no resource produced output would lock the fixed behavior.
+- 🧹 **Typed split of `InsuranceService::doesInsuranceTypeHaveEntry`** (surfaced via #14961 review 2026-11-04). Current signature `($pid)` never had a type; fixed to a direct row-existence check. Candidate for a typed param (`string $type` or `InsuranceType $type`) + splitting into clear per-type booleans if the row-existence invariant stabilizes.
+- 🧹 **Add `declare(strict_types=1)` header to `InsuranceService.php`** (surfaced via #14961 review 2026-11-04). File lacks the declaration; PR #14961 adds return types but doesn't add strict_types. Low-risk follow-up in a cleanup pass.
+- 🧹 **Return types for `InsuranceService::validate()` + `getOneByPid()`** (surfaced via #14961 review 2026-11-04). #14961 declares `getOne` / `update` / `swapInsurance`. Sibling methods on the same class deserve the same treatment for consistency.
 
 **§8.3 register items NOT currently in flight (parked):**
 - D1–D13 CapabilityStatement drift (Bundle `next`/`_include`/`_sort` on non-Patient/Task/`_summary`/unknown-param behavior)
