@@ -1040,6 +1040,16 @@ Current OAuth2/API/portal/standard-api audit menu (§8.2) is drained. Rather tha
 
 **Shepherding approach:** review each PR for correctness + test coverage + alignment with register entries. For test-only PRs (#15022, #15000) prioritize merge. For correctness fixes, verify locally + check rabbit history + raise concerns via private brief (not public PR comment per standing rule). For features, defer to maintainer judgment on scope/timing.
 
+**Follow-up issues surfaced during the shepherding pass (running tally, started 2026-11-04):**
+
+Latent bugs / cleanup / coverage gaps surfaced BY reviewing someone else's PR — things we'd file as issues or small follow-up PRs ourselves rather than block the current PR on. Keep entries short; promote to §8.1a / §8.3 main register if they rise to a security or spec-compliance concern.
+
+Legend: 🪲 test-infrastructure bug · 🧹 cleanup / pattern alignment · 📏 coverage gap
+
+- 🪲 **`FixtureManager::installInsuranceCompanyFixture()` leaves `insurance_companies.id = 0`** (surfaced via #15022 review 2026-11-04). The column is `NOT NULL default '0'` (not AUTO_INCREMENT) per `sql/database.sql:3284`, and the fixture's INSERT omits `id`. `FhirCoverageService::searchForOpenEMRRecords` at line 891 then filters any Coverage row where `provider` (joined via `insurance_companies.id`) is empty, so `!empty(0)` drops the fixture-Coverage from search results. #15022 works around it inline with `UPDATE insurance_companies SET id = COALESCE(MAX(id), 0) + 1`. **Fix:** make the fixture self-assign `COALESCE(MAX(id), 0) + 1` at install time so future Coverage-read tests don't need the workaround.
+- 🧹 **`CoverageFhirWriteApiTest` tearDown uses a flat chain of cleanup calls** (surfaced via #15022 review 2026-11-04). The sibling #15022 added the same cleanup block with nested try/finally so a mid-removal throw doesn't leak OAuth clients. Backport the robust pattern to the write-side test.
+- 📏 **Deferred Coverage-read coverage** (surfaced via #15022 review 2026-11-04). The shipped #15022 covers happy-path + unauth. Deferred: cross-patient scope isolation (patient B token reading patient A's coverage uuid), `payor` search parameter, multi-coverage-per-patient, `status=cancelled` filtering. Natural follow-up PR shape — not blocking current coverage.
+
 **§8.3 register items NOT currently in flight (parked):**
 - D1–D13 CapabilityStatement drift (Bundle `next`/`_include`/`_sort` on non-Patient/Task/`_summary`/unknown-param behavior)
 - 7 search-param 5xx endpoints (upstream-error-text leak via ADODB echo-to-stdout)
