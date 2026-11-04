@@ -1009,7 +1009,7 @@ Items in this register should either (a) get fixed with their own PR, (b) have a
 
 Current OAuth2/API/portal/standard-api audit menu (§8.2) is drained. Rather than pick up more §8.3 FHIR register items solo, this session shifts to shepherding the existing FHIR PR queue — review, ensure test coverage, land, then revisit the register.
 
-**Shipped since 2026-10-30 (13 FHIR / FHIR-adjacent PRs merged — 9 of them on 2026-11-04 after the shepherd pass opened):**
+**Shipped since 2026-10-30 (14 FHIR / FHIR-adjacent PRs merged — 10 of them on 2026-11-04 after the shepherd pass opened):**
 - #14669 — feat(fhir): FHIR Task Pt 3 (inputs/outputs/code system/owners) — anun333 Task trilogy complete (Pts 1+2 shipped as #14614 + #14660 earlier in this cycle)
 - #14708 — feat(fhir): referral ServiceRequests from Transactions — anun333
 - #14715 — feat(referrals): track each referral as a FHIR Task — anun333
@@ -1023,16 +1023,16 @@ Current OAuth2/API/portal/standard-api audit menu (§8.2) is drained. Rather tha
 - #15012 — fix(fhir): create insurer Organization on POST instead of 500 — anun333 (2026-11-04 at `0dfffa4678`). Deep-reviewed privately (fresh review after the morning hold went stale — anun333 pushed 11 proactive edge-case fixes + regression tests over 2026-11-04 afternoon resolving the 2 Minor rabbit concerns + closing extra latent bugs). Standout fix: `b9ac16d842` period-precision-on-clock closing a `strtotime('2020')` latent flap-by-hour bug via `DateTimeImmutable::createFromFormat` + `warning_count > 0` filter + PSR-20 `ClockInterface` injection. Transaction rollback test is unusually thorough (asserts company + uuid_registry + phone_numbers + orphaned addresses all rollback together). 5 follow-up candidates in register — the biggest is the FHIR narrative-escape sweep across 7 services (pre-existing cross-cutting XSS-adjacent vector).
 - #14971 — feat(referrals): undo a cleared Reply Date, notify on a cancellation — anun333 (2026-11-04 at `608dec2f49`). Deep-reviewed privately earlier; shepherd verdict held for sjpadgett (referrals-project owner); he approved + merged late 2026-11-04. 19 api tests + 3 isolated service tests + 12 isolated notice tests. FHIR Task `cancelled`/`entered-in-error` transitions legal per R4. codecov/patch artifact was measurement noise (298 of 371 "missing" lines are the test file itself).
 - #14965 — fix(referrals): close a referral when its Task is rejected or failed — anun333 (2026-11-04 at `1301306d57`). Morning e2e-CI-fail hold went stale by afternoon — fix landed in the same referrals sprint as #14971.
+- #14968 — fix(cqm): treat a UCUM exponent past the integer range as invalid — anun333 (2026-11-04 at `fee4415f61`). Deep-reviewed privately; closes the UCUM-overflow TypeError register item and auto-unblocks #14933's remaining rabbit concern via exception propagation (parser throws → `Ucum::specifiedUnit()` catches → `isValid()` returns false → `ucumCodeFor()` null-safe).
 
-**Open as of end-of-day 2026-11-04 (8 FHIR-touching PRs):**
+**Open as of end-of-day 2026-11-04 (7 FHIR-touching PRs):**
 
 ✅ Shepherd-reviewed, merge-ready:
-- #14968 — fix(cqm): treat a UCUM exponent past the integer range as invalid — anun333. Draft flag cleared. **Merge unblocks #14933 automatically** via exception-propagation (parser throws → `Ucum::specifiedUnit()` already catches → `isValid()` returns false → `ucumCodeFor()` null-safe).
+- #14933 — fix(fhir): claim UCUM only for units UCUM accepts — anun333. UCUM-overflow concern is now auto-resolved (via exception propagation) since #14968 landed. Brief: `/home/brady2/git/pr-14933-review-brief.md`.
+- #14584 — fix(ccda): import the smoking status again — anun333. Post-unpause rabbit nit addressed by commit `1c07dee953` (`fix(ccda): render a history row without alcohol on the review screen`) + new `RevAndApproveSocialHistoryTest`. Brief: `/home/brady2/git/pr-14584-review-brief.md`.
 
 🔶 Shepherd-reviewed, merge-ready with known residual:
 - #14730 — fix(fhir): `:missing=true/false` on token + string search parameters — oldrobotdev. Gender-ucfirst latent-400 residual; your A/B/C call. Brief: `/home/brady2/git/pr-14730-review-brief.md`.
-- #14933 — fix(fhir): claim UCUM only for units UCUM accepts — anun333. UCUM-overflow concern auto-resolves when #14968 lands; merge order: #14968 → #14933.
-- #14584 — fix(ccda): import the smoking status again — anun333. Post-unpause rabbit nit (Minor): pad existing social-history values. Wait for anun333 OR merge-as-is + follow-up. Brief: `/home/brady2/git/pr-14584-review-brief.md`.
 
 🔴 Held (author/CI blockers unaddressed as of end-of-day 2026-11-04):
 - #14615 — fix(fhir): save Patient.generalPractitioner as the patient's provider — marekl11. 2 rabbit Majors unaddressed since 2026-10-28 (clear-on-update semantics + eligibility-consistency). Author dormant.
