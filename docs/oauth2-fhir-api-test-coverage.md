@@ -1016,6 +1016,7 @@ Current OAuth2/API/portal/standard-api audit menu (§8.2) is drained. Rather tha
 - #14938 — perf(sql): let searches, appointments and reports use their indexes — anun333 (touches FHIR search paths incidentally)
 - #15022 — test(api): add FHIR Coverage read endpoint tests — MalikSCole (first-time contributor, 2026-11-04 at `fe62a8c450`). Deep-reviewed privately; surfaced a latent `FixtureManager::installInsuranceCompanyFixture` bug (`insurance_companies.id` left at 0 → `FhirCoverageService`'s `!empty(0)` filter drops the fixture). Workaround scope-contained to the test; 3 follow-up issues worth filing.
 - #15000 — test(api): add FHIR AllergyIntolerance GET-by-uuid tests — snagaraj07 (first-time contributor, 2026-11-04 at `47acb35c41`). Partial on umbrella issue #12343 ("do not close"). Deep-reviewed privately; all 4 phpstan baseline removals are legit source-level fixes, not just pruning.
+- #14961 — refactor(insurance): declare ProcessingResult return types — anun333 (2026-11-04 at `b201057de7`). Deep-reviewed privately; 3 incidental bug fixes uncovered by typing (dead `!== false` check, missing null-safe on error logger, dead `instanceof` guard) + 11 baseline removals.
 
 **Open as of 2026-11-04 (11 FHIR-touching PRs after #15022 + #15000 merged):**
 
