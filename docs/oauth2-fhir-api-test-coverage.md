@@ -1009,7 +1009,7 @@ Items in this register should either (a) get fixed with their own PR, (b) have a
 
 Current OAuth2/API/portal/standard-api audit menu (§8.2) is drained. Rather than pick up more §8.3 FHIR register items solo, this session shifts to shepherding the existing FHIR PR queue — review, ensure test coverage, land, then revisit the register.
 
-**Shipped since 2026-10-30 (6 FHIR / FHIR-adjacent PRs merged):**
+**Shipped since 2026-10-30 (13 FHIR / FHIR-adjacent PRs merged — 9 of them on 2026-11-04 after the shepherd pass opened):**
 - #14669 — feat(fhir): FHIR Task Pt 3 (inputs/outputs/code system/owners) — anun333 Task trilogy complete (Pts 1+2 shipped as #14614 + #14660 earlier in this cycle)
 - #14708 — feat(fhir): referral ServiceRequests from Transactions — anun333
 - #14715 — feat(referrals): track each referral as a FHIR Task — anun333
@@ -1021,29 +1021,31 @@ Current OAuth2/API/portal/standard-api audit menu (§8.2) is drained. Rather tha
 - #14953 — fix(cda): meet three C-CDA R2.1 conformance rules in the CCD export — doctorman (2026-11-04 at `1d33469e15`). Deep-reviewed privately; 3 HL7 C-CDA R2.1 SHALL-level rules closed (Allergy Concern Act code LOINC→ActClass `CONC`; Policy Activity translation `nullFlavor="UNK"`; blanket `II/@extension` minLength=1 schema rule via DOMXPath sweep). Rabbit's "Minor" nit was a pre-existing adjacent bug flagged as out-of-scope, filed in follow-up register.
 - #14613 — fix(care-coordination): HL7 export from Immunization + Syndromic tabs — anun333 (2026-11-04 at `977158cb70`). Deep-reviewed privately; 3 unrelated faults fixed (SendToHieHelper hard-coded layout override regression since 2019 PR #2397; PHP 8 `count($imm_obs_res > 0)` precedence TypeError in ImmunizationController; jQuery UI datepicker format defaulting to mm/dd/yy). New isolated test file + 4 follow-up candidates in register.
 - #15012 — fix(fhir): create insurer Organization on POST instead of 500 — anun333 (2026-11-04 at `0dfffa4678`). Deep-reviewed privately (fresh review after the morning hold went stale — anun333 pushed 11 proactive edge-case fixes + regression tests over 2026-11-04 afternoon resolving the 2 Minor rabbit concerns + closing extra latent bugs). Standout fix: `b9ac16d842` period-precision-on-clock closing a `strtotime('2020')` latent flap-by-hour bug via `DateTimeImmutable::createFromFormat` + `warning_count > 0` filter + PSR-20 `ClockInterface` injection. Transaction rollback test is unusually thorough (asserts company + uuid_registry + phone_numbers + orphaned addresses all rollback together). 5 follow-up candidates in register — the biggest is the FHIR narrative-escape sweep across 7 services (pre-existing cross-cutting XSS-adjacent vector).
+- #14971 — feat(referrals): undo a cleared Reply Date, notify on a cancellation — anun333 (2026-11-04 at `608dec2f49`). Deep-reviewed privately earlier; shepherd verdict held for sjpadgett (referrals-project owner); he approved + merged late 2026-11-04. 19 api tests + 3 isolated service tests + 12 isolated notice tests. FHIR Task `cancelled`/`entered-in-error` transitions legal per R4. codecov/patch artifact was measurement noise (298 of 371 "missing" lines are the test file itself).
+- #14965 — fix(referrals): close a referral when its Task is rejected or failed — anun333 (2026-11-04 at `1301306d57`). Morning e2e-CI-fail hold went stale by afternoon — fix landed in the same referrals sprint as #14971.
 
-**Open as of 2026-11-04 (11 FHIR-touching PRs after #15022 + #15000 merged):**
+**Open as of end-of-day 2026-11-04 (8 FHIR-touching PRs):**
 
-🔧 Narrow FHIR correctness fixes:
-- #14730 — fix(fhir): `:missing=true/false` on token + string search parameters — oldrobotdev. **Closes §8.3 FHIR search-modifier contract gap** (string + token slices only; `:not`/`:above`/`:below`/`:in` drifts remain). Private review brief exists at `/home/brady2/git/pr-14730-review-brief.md` — one requested change (gender ucfirst guard).
-- #14933 — fix(fhir): claim UCUM only for units UCUM accepts — anun333. Data-correctness; not in register.
-- #14615 — fix(fhir): save Patient.generalPractitioner as the patient's provider — marekl11. Fills a FHIR write-path hole; not in register.
-- #15012 — fix(fhir): create an insurer Organization on POST instead of a 500 — anun333. Request-induced 500 adjacent to the §8.3 "7 search-param 5xx endpoints" family but in the write path.
-- #14617 — fix: three small logic bugs in search, FHIR export, templates — marekl11. Multi-area tiny cluster.
+✅ Shepherd-reviewed, merge-ready:
+- #14968 — fix(cqm): treat a UCUM exponent past the integer range as invalid — anun333. Draft flag cleared. **Merge unblocks #14933 automatically** via exception-propagation (parser throws → `Ucum::specifiedUnit()` already catches → `isValid()` returns false → `ucumCodeFor()` null-safe).
 
-🌱 Feature extensions (anun333 referrals workstream):
-- #14971 — feat(referrals): undo a cleared Reply Date, notify on a cancellation
-- #14965 — fix(referrals): close a referral when its Task is rejected or failed
-- #14961 — refactor(insurance): declare ProcessingResult return types (supports feature work)
+🔶 Shepherd-reviewed, merge-ready with known residual:
+- #14730 — fix(fhir): `:missing=true/false` on token + string search parameters — oldrobotdev. Gender-ucfirst latent-400 residual; your A/B/C call. Brief: `/home/brady2/git/pr-14730-review-brief.md`.
+- #14933 — fix(fhir): claim UCUM only for units UCUM accepts — anun333. UCUM-overflow concern auto-resolves when #14968 lands; merge order: #14968 → #14933.
+- #14584 — fix(ccda): import the smoking status again — anun333. Post-unpause rabbit nit (Minor): pad existing social-history values. Wait for anun333 OR merge-as-is + follow-up. Brief: `/home/brady2/git/pr-14584-review-brief.md`.
 
-🔐 Audit-ledger adjacent:
-- #14629 — feat(api): record OAuth FHIR writes in audit ledger — shwetanktomar. **Overlaps §8.3 Item L (token-mint audit entry) in spirit** — #14629 covers the FHIR-write side (post-mint), L covers the mint moment itself. Review before opening L to pick a consistent audit-entry style.
+🔴 Held (author/CI blockers unaddressed as of end-of-day 2026-11-04):
+- #14615 — fix(fhir): save Patient.generalPractitioner as the patient's provider — marekl11. 2 rabbit Majors unaddressed since 2026-10-28 (clear-on-update semantics + eligibility-consistency). Author dormant.
+- #14629 — feat(api): record OAuth FHIR writes in audit ledger — shwetanktomar. CI failing (v_database gap + api lane) + 5 rabbit rounds unresolved. **Overlaps §8.3 Item L** (token-mint audit entry) — review before opening L.
+- #14924 — fix(ccda): import vital signs per date and in the Vitals form's units — anun333. Unresolved rabbit Major (round-trip weight code `29463-7` vs `3141-9` organizer mapping).
+- #14585 — fix(ccda): import weight and head circumference by their FHIR codes — anun333. 2 Majors unaddressed (organizer-component index limit + kg→lb conversion).
 
-🚚 CCDA-side (FHIR-adjacent, not FHIR-serving):
-- #14924 — fix(ccda): import vital signs per date and in the Vitals form's units — anun333
-- #14585 — fix(ccda): import weight and head circumference by their FHIR codes — anun333
+⏸️ Author-declared draft (scoping-question, not shippable yet):
+- #15030 — fix(ccda): save the payer a QRDA Category I import brings in — anun333. "Draft, with a question before the fix." PR body starts with the author staging it as a discussion mechanism.
 
-**Shepherding approach:** review each PR for correctness + test coverage + alignment with register entries. For test-only PRs (#15022, #15000) prioritize merge. For correctness fixes, verify locally + check rabbit history + raise concerns via private brief (not public PR comment per standing rule). For features, defer to maintainer judgment on scope/timing.
+**Shepherding approach:** review each PR for correctness + test coverage + alignment with register entries. For test-only PRs prioritize merge. For correctness fixes, verify locally + check rabbit history + raise concerns via private brief (not public PR comment per standing rule). For features, defer to project-owner judgment (sjpadgett for referrals, etc.). **Lessons from the 2026-11-04 pass:**
+1. Hold triage captured at morning snapshot can become stale by afternoon — re-check 24 hours later for responsive contributors (precedent: #15012 moved 🔴 → ✅ after 11 proactive afternoon commits).
+2. Post-unpause rabbit reviews reliably find edge cases the initial review missed (precedents: #14933 UCUM overflow, #14584 tobacco-only pad). Factor into the verdict.
 
 **Follow-up issues surfaced during the shepherding pass (running tally, started 2026-11-04):**
 
