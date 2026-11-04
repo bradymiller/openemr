@@ -1009,17 +1009,15 @@ Items in this register should either (a) get fixed with their own PR, (b) have a
 
 Current OAuth2/API/portal/standard-api audit menu (§8.2) is drained. Rather than pick up more §8.3 FHIR register items solo, this session shifts to shepherding the existing FHIR PR queue — review, ensure test coverage, land, then revisit the register.
 
-**Shipped since 2026-10-30 (4 FHIR / FHIR-adjacent PRs merged):**
+**Shipped since 2026-10-30 (6 FHIR / FHIR-adjacent PRs merged):**
 - #14669 — feat(fhir): FHIR Task Pt 3 (inputs/outputs/code system/owners) — anun333 Task trilogy complete (Pts 1+2 shipped as #14614 + #14660 earlier in this cycle)
 - #14708 — feat(fhir): referral ServiceRequests from Transactions — anun333
 - #14715 — feat(referrals): track each referral as a FHIR Task — anun333
 - #14938 — perf(sql): let searches, appointments and reports use their indexes — anun333 (touches FHIR search paths incidentally)
+- #15022 — test(api): add FHIR Coverage read endpoint tests — MalikSCole (first-time contributor, 2026-11-04 at `fe62a8c450`). Deep-reviewed privately; surfaced a latent `FixtureManager::installInsuranceCompanyFixture` bug (`insurance_companies.id` left at 0 → `FhirCoverageService`'s `!empty(0)` filter drops the fixture). Workaround scope-contained to the test; 3 follow-up issues worth filing.
+- #15000 — test(api): add FHIR AllergyIntolerance GET-by-uuid tests — snagaraj07 (first-time contributor, 2026-11-04 at `47acb35c41`). Partial on umbrella issue #12343 ("do not close"). Deep-reviewed privately; all 4 phpstan baseline removals are legit source-level fixes, not just pruning.
 
-**Open as of 2026-11-04 (13 FHIR-touching PRs):**
-
-🧪 Test-only, close coverage gaps (easiest to shepherd):
-- #15022 — test(api): FHIR Coverage read endpoint tests — MalikSCole (new contributor)
-- #15000 — test(api): FHIR AllergyIntolerance GET-by-uuid tests — snagaraj07 (closes issue #12343)
+**Open as of 2026-11-04 (11 FHIR-touching PRs after #15022 + #15000 merged):**
 
 🔧 Narrow FHIR correctness fixes:
 - #14730 — fix(fhir): `:missing=true/false` on token + string search parameters — oldrobotdev. **Closes §8.3 FHIR search-modifier contract gap** (string + token slices only; `:not`/`:above`/`:below`/`:in` drifts remain). Private review brief exists at `/home/brady2/git/pr-14730-review-brief.md` — one requested change (gender ucfirst guard).
