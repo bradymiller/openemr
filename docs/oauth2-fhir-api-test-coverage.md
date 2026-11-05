@@ -1005,9 +1005,11 @@ Non-test production bugs the testing-coverage sweeps uncovered that are **not ye
 
 Items in this register should either (a) get fixed with their own PR, (b) have api-tier regression gates added as part of the fix PR, or (c) be promoted to §8.1a / §8.3 if they rise to a security or spec-compliance concern.
 
-#### FHIR workstream status (2026-11-04) — shepherding mode
+#### FHIR workstream status (2026-11-05) — shepherding mode (day 2)
 
-Current OAuth2/API/portal/standard-api audit menu (§8.2) is drained. Rather than pick up more §8.3 FHIR register items solo, this session shifts to shepherding the existing FHIR PR queue — review, ensure test coverage, land, then revisit the register.
+Current OAuth2/API/portal/standard-api audit menu (§8.2) is drained. Rather than pick up more §8.3 FHIR register items solo, this session continues shepherding the existing FHIR PR queue — review, ensure test coverage, land, then revisit the register.
+
+**Infrastructure note (2026-11-05):** Inferno CI red since 2026-11-04 17:02 UTC. Root cause: PR #14953's C-CDA R2.1 fix (Allergy Concern Act LOINC→HL7ActClass `CONC`) changed CCDA output but the expected fixture `CCDA_Newman_Alice_expected.xml` lives in the private `openemr/inferno-files` submodule and was not updated. Tracked as [issue #15083](https://github.com/openemr/openemr/issues/15083) — admin update of the private submodule unblocks it. All other certification lanes still exercise the real paths; the master-red state is fixture-stale, not a functional regression.
 
 **Shipped since 2026-10-30 (16 FHIR / FHIR-adjacent PRs merged — 12 of them on 2026-11-04 after the shepherd pass opened):**
 - #14669 — feat(fhir): FHIR Task Pt 3 (inputs/outputs/code system/owners) — anun333 Task trilogy complete (Pts 1+2 shipped as #14614 + #14660 earlier in this cycle)
@@ -1027,7 +1029,12 @@ Current OAuth2/API/portal/standard-api audit menu (§8.2) is drained. Rather tha
 - #14933 — fix(fhir): claim UCUM only for units UCUM accepts — anun333 (2026-11-04 at `5f28c55be1`). Deep-reviewed privately; part of umbrella #14702 (HL7v2 slice #14934 + C-CDA slice #14936 already shipped). "One rule, three sinks" architecture (FHIR createQuantity + DoseUnit + HL7v2 RXA-7). Non-UCUM fallback shape FHIR R4 valid. Post-unpause rabbit UCUM-overflow concern closed by #14968 landing first.
 - #14584 — fix(ccda): import the smoking status again — anun333 (2026-11-04 at `324861c38c`). Deep-reviewed privately; regression traced to PR #7348 (silence-missing-key guard that was always-false on first entry + XmlExtended list on R2.1/Synthea documents). 4-seam refactor (parse/write-direct/write-review/write-location). All 6 initial rabbit concerns addressed; post-unpause tobacco-only-pad Minor nit addressed by commit `1c07dee953` + new `RevAndApproveSocialHistoryTest` DB test.
 
-**Open as of end-of-day 2026-11-04 (5 FHIR-touching PRs):**
+**Open as of start-of-day 2026-11-05 (10 FHIR-touching PRs; one closed since yesterday):**
+
+Since end-of-day 2026-11-04: #14585 closed (superseded by #14924 which absorbs the two FHIR codes); #15030 promoted from draft to ready; four new PRs arrived (#15041, #15034, #13598-refreshed, #15042/#15059/#15035-drafts); #14924 CI is now green.
+
+✅ Shepherd-reviewed, merge-ready (2026-11-05 pass):
+- #15041 — fix(fhir): stop reporting first-occurrence problems as resolved — anun333. 1 commit, +103/-8. Fixes `occurrence == 1 → resolved` bug since 2020 (`occurrence=1` is "First", not a status). New isolated test covers 7 cases × 2 services. Both rabbit findings withdrawn. Brief: `/home/brady2/git/pr-15041-review-brief.md`. Con-4 abatement follow-up tracked in register.
 
 🔶 Shepherd-reviewed, merge-ready with known residual:
 - #14730 — fix(fhir): `:missing=true/false` on token + string search parameters — oldrobotdev. Gender-ucfirst latent-400 residual; your A/B/C call. Brief: `/home/brady2/git/pr-14730-review-brief.md`.
@@ -1035,11 +1042,17 @@ Current OAuth2/API/portal/standard-api audit menu (§8.2) is drained. Rather tha
 🔴 Held (author/CI blockers unaddressed as of end-of-day 2026-11-04):
 - #14615 — fix(fhir): save Patient.generalPractitioner as the patient's provider — marekl11. 2 rabbit Majors unaddressed since 2026-10-28 (clear-on-update semantics + eligibility-consistency). Author dormant.
 - #14629 — feat(api): record OAuth FHIR writes in audit ledger — shwetanktomar. CI failing (v_database gap + api lane) + 5 rabbit rounds unresolved. **Overlaps §8.3 Item L** (token-mint audit entry) — review before opening L.
-- #14924 — fix(ccda): import vital signs per date and in the Vitals form's units — anun333. Unresolved rabbit Major (round-trip weight code `29463-7` vs `3141-9` organizer mapping).
-- #14585 — fix(ccda): import weight and head circumference by their FHIR codes — anun333. 2 Majors unaddressed (organizer-component index limit + kg→lb conversion).
 
-⏸️ Author-declared draft (scoping-question, not shippable yet):
-- #15030 — fix(ccda): save the payer a QRDA Category I import brings in — anun333. "Draft, with a question before the fix." PR body starts with the author staging it as a discussion mechanism.
+⏳ Awaiting 2026-11-05 shepherd review:
+- #15034 — test(api): add FHIR Device GET coverage — snagaraj07. Part of #12343 umbrella (same contributor-pattern as #15000 shipped yesterday). Green CI.
+- #13598 — test(api): add FHIR Encounter API tests — snagaraj07. Refreshed 2026-11-04 after long dormancy. Green CI.
+- #15030 — fix(ccda): save the payer a QRDA Category I import brings in — anun333. Promoted from draft; green CI.
+- #14924 — fix(ccda): import vital signs per date and in the Vitals form's units — anun333. Previously held on round-trip weight-code Major (Nov 4); CI now green, superseded #14585, needs re-review.
+
+⏸️ Author-declared draft (not shippable yet):
+- #15042 — fix(fhir): Coverage type and end dates, and save date_end on create — anun333.
+- #15059 — fix(ccda): QRDA payer placeholder gets no invented address or type — anun333.
+- #15035 — feat(fhir): write laboratory results as Observations — anun333.
 
 **Shepherding approach:** review each PR for correctness + test coverage + alignment with register entries. For test-only PRs prioritize merge. For correctness fixes, verify locally + check rabbit history + raise concerns via private brief (not public PR comment per standing rule). For features, defer to project-owner judgment (sjpadgett for referrals, etc.). **Lessons from the 2026-11-04 pass:**
 1. Hold triage captured at morning snapshot can become stale by afternoon — re-check 24 hours later for responsive contributors (precedent: #15012 moved 🔴 → ✅ after 11 proactive afternoon commits).
@@ -1081,6 +1094,7 @@ Legend: 🪲 test-infrastructure bug · 🧹 cleanup / pattern alignment · 📏
 - 🧹 **Typed split of `InsuranceService::doesInsuranceTypeHaveEntry`** (surfaced via #14961 review 2026-11-04). Current signature `($pid)` never had a type; fixed to a direct row-existence check. Candidate for a typed param (`string $type` or `InsuranceType $type`) + splitting into clear per-type booleans if the row-existence invariant stabilizes.
 - 🧹 **Add `declare(strict_types=1)` header to `InsuranceService.php`** (surfaced via #14961 review 2026-11-04). File lacks the declaration; PR #14961 adds return types but doesn't add strict_types. Low-risk follow-up in a cleanup pass.
 - 🧹 **Return types for `InsuranceService::validate()` + `getOneByPid()`** (surfaced via #14961 review 2026-11-04). #14961 declares `getOne` / `update` / `swapInsurance`. Sibling methods on the same class deserve the same treatment for consistency.
+- 📏 **FHIR Condition con-4 abatementDateTime-while-active constraint violation** (surfaced via #15041 review 2026-11-05). `FhirConditionTrait::populateAbatementDateTime()` sets `abatementDateTime` whenever `enddate` is set, regardless of clinical status. FHIR R4 con-4 requires `clinicalStatus ∈ {inactive, resolved, remission}` before `abatementDateTime` may appear. Pre-existing (not introduced by #15041), applies to every occurrence not just "First". Rabbit raised + withdrew after seeing it's not #15041's doing. Fix is to gate the enddate→abatement emission on the computed clinical status. Low severity (US Core consumers tolerate the drift) but a spec-compliance gap.
 
 **§8.3 register items NOT currently in flight (parked):**
 - D1–D13 CapabilityStatement drift (Bundle `next`/`_include`/`_sort` on non-Patient/Task/`_summary`/unknown-param behavior)
