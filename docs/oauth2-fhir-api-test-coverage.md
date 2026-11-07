@@ -1046,6 +1046,7 @@ Changes since the 2026-11-05 start-of-day snapshot:
 - Resurfaced from dormancy: #10926 (jbaiad FHIR ServiceRequest writes, 2026-11-06), #10919 (craigrallen CareTeamService tests, 2026-11-04), #14220 (namespaceMarcello FHIR Media deleted-as-entered-in-error, 2026-10-26)
 - New immunizations + encounter refactor PRs on radar: #14457 (anun333), #14027 (namespaceMarcello)
 - #14615 (marekl11) **CI regressed** to FAIL on new "License Headers" workflow (was green before)
+- #14730 (oldrobotdev) gender-ucfirst residual **resolved** by oldrobotdev `a37198b0ed` + `1c4f02bc4e` on 2026-11-06 after kojiromike's formal `CHANGES_REQUESTED` on 2026-11-05; anun333 confirmed closure; PR state still `CHANGES_REQUESTED` pending kojiromike re-review
 
 ✅ Shepherd-reviewed, merge-ready (2026-11-05 pass):
 - #15041 — fix(fhir): stop reporting first-occurrence problems as resolved — anun333 (2026-11-07 at `a1e83e791c`). 1 commit, +103/-8. Fixes `occurrence == 1 → resolved` bug since 2020 (`occurrence=1` is "First", not a status). New isolated test covers 7 cases × 2 services. Both rabbit findings withdrawn. Brief: `/home/brady2/git/pr-15041-review-brief.md`. Con-4 abatement follow-up tracked in register. **🚢 SHIPPED.**
@@ -1072,11 +1073,11 @@ Changes since the 2026-11-05 start-of-day snapshot:
 - #10926 — feat(fhir): add FHIR ServiceRequest write operations (POST/PUT) — jbaiad. **DEPENDS on #10925** (ancient, same author). +2227/-203, 34 files. Refs #10910.
 - #10925 — feat(lab): add ProcedureOrderValidator and ProcedureService write operations — jbaiad. Ancient but still open; the dep for #10926.
 
-🔶 Shepherd-reviewed, merge-ready with known residual:
-- #14730 — fix(fhir): `:missing=true/false` on token + string search parameters — oldrobotdev. State `CHANGES_REQUESTED`. Gender-ucfirst latent-400 residual; your A/B/C call. Brief: `/home/brady2/git/pr-14730-review-brief.md`.
+✅ Shepherd-reviewed, merge-ready (pending maintainer re-approval):
+- #14730 — fix(fhir): `:missing=true/false` on token + string search parameters — oldrobotdev. CI green. Gender-ucfirst issue I flagged in brief was **resolved** 2026-11-06 — kojiromike filed a formal `CHANGES_REQUESTED` on 2026-11-05 citing the same concern; oldrobotdev shipped `a37198b0ed` (skip ucfirst + LOINC rewrites for `:missing`) and `1c4f02bc4e` (new api tests for `gender:missing=true/false`). anun333 confirmed his hold is closed. New rabbit Major (search-on-`sex` vs serialized-`gender` disagreement) legitimately scoped out by author as pre-existing (US Core-required `Patient.gender` requires serializer to emit `other` for empty sex; matching serializer would make `gender:missing=true` never match). PR state still `CHANGES_REQUESTED` because kojiromike hasn't re-reviewed yet. Brief: `/home/brady2/git/pr-14730-review-brief.md` (needs refresh). **Blocker: kojiromike re-review to clear state.**
 
 🔴 Held (author/CI blockers unaddressed):
-- #14615 — fix(fhir): save Patient.generalPractitioner as the patient's provider — marekl11. 2 rabbit Majors unaddressed since 2026-10-28. **CI regressed to FAIL** on new "License Headers" + "All Checks Passed" workflows 2026-11-06.
+- #14615 — fix(fhir): save Patient.generalPractitioner as the patient's provider — marekl11. 2 rabbit Majors unaddressed since 2026-10-28. **CI regressed to FAIL** on new "License Headers" + "All Checks Passed" workflows 2026-11-06. Author dormant.
 - #10919 — test(care-team): add CareTeamService unit tests — craigrallen. State `CHANGES_REQUESTED`. +1093/-0. Author dormant since last push 2026-11-04; maintainer requested changes. Not blocking.
 
 ⏸️ Author-declared draft (not shippable yet):
@@ -1135,6 +1136,7 @@ Legend: 🪲 test-infrastructure bug · 🧹 cleanup / pattern alignment · 📏
 - 📏 **Cross-patient exclusion test for FHIR GET-by-patient (sweep: Device + AllergyIntolerance + Condition + Encounter + any future #12343 siblings)** (surfaced via #15034 + #13598 review 2026-11-05). `testSearchByPatientReturnsSeededXxx` passes even if the server ignores the `?patient=` filter, since only one patient is installed. Add a second installed patient + resource; assert first patient's search doesn't return the second's resource. Applies to all four shipped and in-flight test files identically — one-sweep follow-up PR.
 - 🧹 **GET-test tearDown nested try/finally backport (#12343 family)** (surfaced via #15034 + #13598 review 2026-11-05). `DeviceFhirApiTest`, `AllergyIntoleranceFhirApiTest`, `ConditionFhirApiTest`, `EncounterFhirApiTest` all use a flat cleanup chain — if `removeXxxFixtures()` throws, the OAuth client is leaked. Backport the robust try/finally pattern from `CoverageFhirApiTest` (shipped via #15022) across all four.
 - 🧹 **`FhirCoverageService` `HIP` type-coding `.display` drift** (surfaced via #15030 review 2026-11-05 — author noted pre-existing). Every Coverage read emits `type.coding.display = "health insurance plan number"`; v3-ActCode specifies "health insurance plan policy". Every Coverage FHIR read flags this in the HL7 FHIR validator. One-line fix.
+- 📏 **Patient.gender search-vs-serializer mismatch** (surfaced via #14730 review 2026-11-06 — rabbit raised, scoped out by oldrobotdev). `gender:missing=true` search filter uses `sex IS NULL OR sex = ''`, but the Patient serializer always emits a gender (empty `sex` → `other`) because US Core's `Patient.gender` is required. So the search matches rows no US Core consumer would see as missing. Potential fixes: (a) serializer emits DataAbsentReason extension for empty `sex` instead of `other`; (b) `gender:missing=true` ANDs on the `other`-mapping-input condition. Needs product call on which semantic to align to.
 
 **§8.3 register items NOT currently in flight (parked):**
 - D1–D13 CapabilityStatement drift (Bundle `next`/`_include`/`_sort` on non-Patient/Task/`_summary`/unknown-param behavior)
