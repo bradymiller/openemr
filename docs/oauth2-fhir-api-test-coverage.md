@@ -1034,7 +1034,7 @@ Current OAuth2/API/portal/standard-api audit menu (§8.2) is drained. Rather tha
 Since end-of-day 2026-11-04: #14585 closed (superseded by #14924 which absorbs the two FHIR codes); #15030 promoted from draft to ready; four new PRs arrived (#15041, #15034, #13598-refreshed, #15042/#15059/#15035-drafts); #14924 CI is now green.
 
 ✅ Shepherd-reviewed, merge-ready (2026-11-05 pass):
-- #15041 — fix(fhir): stop reporting first-occurrence problems as resolved — anun333. 1 commit, +103/-8. Fixes `occurrence == 1 → resolved` bug since 2020 (`occurrence=1` is "First", not a status). New isolated test covers 7 cases × 2 services. Both rabbit findings withdrawn. Brief: `/home/brady2/git/pr-15041-review-brief.md`. Con-4 abatement follow-up tracked in register.
+- #15041 — fix(fhir): stop reporting first-occurrence problems as resolved — anun333 (2026-11-07 at `a1e83e791c`). 1 commit, +103/-8. Fixes `occurrence == 1 → resolved` bug since 2020 (`occurrence=1` is "First", not a status). New isolated test covers 7 cases × 2 services. Both rabbit findings withdrawn. Brief: `/home/brady2/git/pr-15041-review-brief.md`. Con-4 abatement follow-up tracked in register. **🚢 SHIPPED.**
 
 🔶 Shepherd-reviewed, merge-ready with known residual:
 - #14730 — fix(fhir): `:missing=true/false` on token + string search parameters — oldrobotdev. Gender-ucfirst latent-400 residual; your A/B/C call. Brief: `/home/brady2/git/pr-14730-review-brief.md`.
