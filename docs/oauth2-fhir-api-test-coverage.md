@@ -1011,7 +1011,13 @@ Current OAuth2/API/portal/standard-api audit menu (§8.2) is drained. Rather tha
 
 **Infrastructure note (2026-11-05):** Inferno CI red since 2026-11-04 17:02 UTC. Root cause: PR #14953's C-CDA R2.1 fix (Allergy Concern Act LOINC→HL7ActClass `CONC`) changed CCDA output but the expected fixture `CCDA_Newman_Alice_expected.xml` lives in the private `openemr/inferno-files` submodule and was not updated. Tracked as [issue #15083](https://github.com/openemr/openemr/issues/15083) — admin update of the private submodule unblocks it. All other certification lanes still exercise the real paths; the master-red state is fixture-stale, not a functional regression.
 
-**Shipped since 2026-10-30 (16 FHIR / FHIR-adjacent PRs merged — 12 of them on 2026-11-04 after the shepherd pass opened):**
+**Shipped since 2026-10-30 (21 FHIR / FHIR-adjacent PRs merged — 12 on 2026-11-04, 4 on 2026-11-06, 1 on 2026-11-07):**
+
+Additions since 2026-11-05 batch 2 (five briefs from the 2026-11-05 shepherd pass all landed over 2026-11-06/07; details in the "shipped batch 2" subsection below):
+- #15034, #13598, #15030, #14924 all merged 2026-11-06
+- #15041 merged 2026-11-07
+
+Historical list through 2026-11-04:
 - #14669 — feat(fhir): FHIR Task Pt 3 (inputs/outputs/code system/owners) — anun333 Task trilogy complete (Pts 1+2 shipped as #14614 + #14660 earlier in this cycle)
 - #14708 — feat(fhir): referral ServiceRequests from Transactions — anun333
 - #14715 — feat(referrals): track each referral as a FHIR Task — anun333
@@ -1029,9 +1035,17 @@ Current OAuth2/API/portal/standard-api audit menu (§8.2) is drained. Rather tha
 - #14933 — fix(fhir): claim UCUM only for units UCUM accepts — anun333 (2026-11-04 at `5f28c55be1`). Deep-reviewed privately; part of umbrella #14702 (HL7v2 slice #14934 + C-CDA slice #14936 already shipped). "One rule, three sinks" architecture (FHIR createQuantity + DoseUnit + HL7v2 RXA-7). Non-UCUM fallback shape FHIR R4 valid. Post-unpause rabbit UCUM-overflow concern closed by #14968 landing first.
 - #14584 — fix(ccda): import the smoking status again — anun333 (2026-11-04 at `324861c38c`). Deep-reviewed privately; regression traced to PR #7348 (silence-missing-key guard that was always-false on first entry + XmlExtended list on R2.1/Synthea documents). 4-seam refactor (parse/write-direct/write-review/write-location). All 6 initial rabbit concerns addressed; post-unpause tobacco-only-pad Minor nit addressed by commit `1c07dee953` + new `RevAndApproveSocialHistoryTest` DB test.
 
-**Open as of start-of-day 2026-11-05 (10 FHIR-touching PRs; one closed since yesterday):**
+**Open as of 2026-11-07 (13 FHIR-touching PRs):**
 
-Since end-of-day 2026-11-04: #14585 closed (superseded by #14924 which absorbs the two FHIR codes); #15030 promoted from draft to ready; four new PRs arrived (#15041, #15034, #13598-refreshed, #15042/#15059/#15035-drafts); #14924 CI is now green.
+Changes since the 2026-11-05 start-of-day snapshot:
+- 5 batch-2 PRs landed (#15041, #15034, #13598, #15030, #14924)
+- #15042 promoted from draft → ready
+- #15059 promoted from draft → ready
+- #14629 (shwetanktomar OAuth FHIR writes audit) **unblocked** — author pushed 6 CI-fixing commits 2026-11-07 05:50-06:56 UTC; CI is now fully green; still needs rabbit incremental review on the new commits
+- NEW: #15038 (anun333 insurance in-force rule service — big refactor, +1573/-60)
+- Resurfaced from dormancy: #10926 (jbaiad FHIR ServiceRequest writes, 2026-11-06), #10919 (craigrallen CareTeamService tests, 2026-11-04), #14220 (namespaceMarcello FHIR Media deleted-as-entered-in-error, 2026-10-26)
+- New immunizations + encounter refactor PRs on radar: #14457 (anun333), #14027 (namespaceMarcello)
+- #14615 (marekl11) **CI regressed** to FAIL on new "License Headers" workflow (was green before)
 
 ✅ Shepherd-reviewed, merge-ready (2026-11-05 pass):
 - #15041 — fix(fhir): stop reporting first-occurrence problems as resolved — anun333 (2026-11-07 at `a1e83e791c`). 1 commit, +103/-8. Fixes `occurrence == 1 → resolved` bug since 2020 (`occurrence=1` is "First", not a status). New isolated test covers 7 cases × 2 services. Both rabbit findings withdrawn. Brief: `/home/brady2/git/pr-15041-review-brief.md`. Con-4 abatement follow-up tracked in register. **🚢 SHIPPED.**
@@ -1049,10 +1063,33 @@ Since end-of-day 2026-11-04: #14585 closed (superseded by #14924 which absorbs t
 - #15030 — fix(ccda): save the payer a QRDA Category I import brings in — anun333 (2026-11-06 at `9c7ab7aeca`). +811/-68, 5 commits, closes a 2022 regression (#7197). New narrow `CoverageValidator::DATABASE_IMPORT_CONTEXT` + `InsuranceService::insertImported`/`updateImported`. 596-line DB-backed test (13 methods, 35 cases; 26 fail on master). HL7 FHIR validator confirms US Core 7.0.0 + 8.0.0 conformance of the imported Coverage read. Brief: `/home/brady2/git/pr-15030-review-brief.md`. **🚢 SHIPPED.**
 - #14924 — fix(ccda): import vital signs per date and in the Vitals form's units — anun333 (2026-11-06 at `514bf1851d`). **🔴→✅** — previously held on unresolved rabbit round-trip Major (29463-7 vs 3141-9) that turned out to be a pre-existing re-import `UPDATE` bug now shipped as #14939 (merged 2026-11-01). Both rabbit Majors resolved. +2034/-128 across 16 files. New shared `VitalsStorageUnits` service (hoisted from sjpadgett's #14217). doctorman independently verified on 8.5.0 (2026-10-30). Brief: `/home/brady2/git/pr-14924-review-brief.md`. **🚢 SHIPPED.**
 
+⏳ Awaiting 2026-11-07 shepherd review (non-draft, CI green, net-new or newly-promoted):
+- #15042 — fix(fhir): Coverage type and end dates, and save date_end on create — anun333. **Promoted from draft.** +543/-67, 11 files. Follows on from #15030 lane. Direct fix for #7676.
+- #15059 — fix(ccda): QRDA payer placeholder gets no invented address or type — anun333. **Promoted from draft.** +93/-4, 2 files. Follows on from #15030 lane.
+- #15038 — feat(insurance): one service for the coverage in force on a date — anun333. **NET-NEW.** +1573/-60, 17 files. New shared `EffectiveInsuranceRule` + wrapper rewrite of legacy `getEffectiveInsurances()`. Big refactor; stephenwaite + bradymiller tagged for review.
+- #14220 — fix(fhir): report deleted documents as entered-in-error in Media — namespaceMarcello. +422/-1, 3 files. Media vs DocumentReference symmetry fix (deleted document currently shows `completed` in Media but `entered-in-error` in DocumentReference).
+- #14629 — feat(api): record OAuth FHIR writes in audit ledger — shwetanktomar. **🔴→⏳ unblocked** 2026-11-07 after 6 CI-fixing commits; CI now green. Still needs rabbit incremental review on new commits; overlap with §8.3 Item L (token-mint audit).
+- #10926 — feat(fhir): add FHIR ServiceRequest write operations (POST/PUT) — jbaiad. **DEPENDS on #10925** (ancient, same author). +2227/-203, 34 files. Refs #10910.
+- #10925 — feat(lab): add ProcedureOrderValidator and ProcedureService write operations — jbaiad. Ancient but still open; the dep for #10926.
+
+🔶 Shepherd-reviewed, merge-ready with known residual:
+- #14730 — fix(fhir): `:missing=true/false` on token + string search parameters — oldrobotdev. State `CHANGES_REQUESTED`. Gender-ucfirst latent-400 residual; your A/B/C call. Brief: `/home/brady2/git/pr-14730-review-brief.md`.
+
+🔴 Held (author/CI blockers unaddressed):
+- #14615 — fix(fhir): save Patient.generalPractitioner as the patient's provider — marekl11. 2 rabbit Majors unaddressed since 2026-10-28. **CI regressed to FAIL** on new "License Headers" + "All Checks Passed" workflows 2026-11-06.
+- #10919 — test(care-team): add CareTeamService unit tests — craigrallen. State `CHANGES_REQUESTED`. +1093/-0. Author dormant since last push 2026-11-04; maintainer requested changes. Not blocking.
+
 ⏸️ Author-declared draft (not shippable yet):
-- #15042 — fix(fhir): Coverage type and end dates, and save date_end on create — anun333.
-- #15059 — fix(ccda): QRDA payer placeholder gets no invented address or type — anun333.
-- #15035 — feat(fhir): write laboratory results as Observations — anun333.
+- #15035 — feat(fhir): write laboratory results as Observations — anun333. **CI FAIL.** +2365/-53. Major feature, needs CI first.
+- #14442 — fix(orders): enforce encounter sensitivity on procedure order results — anun333. **CI FAIL.** +207/-48.
+- #14909 — feat(billing): let a module leave an encounter off a patient statement — anun333. CI OK; author-declared draft.
+
+Outside primary FHIR scope (FHIR-adjacent but not FHIR-contract):
+- #14510 — fix(immunizations): reject future administered dates — shwetanktomar. Legacy form fix, not FHIR-contract; would improve FHIR Immunization emit correctness incidentally.
+- #14967 — fix(orders): save the procedure order reason's description — anun333. CI FAIL. Orders write path.
+- #14457 — fix(immunizations): keep an edited shot's data, list every encounter — anun333. CI OK. Legacy form fix with FHIR Immunization downstream impact unclear.
+- #14027 — refactor(encounter): move encounter.inc.php lookups into EncounterService — namespaceMarcello. CI FAIL. Structural; could affect FHIR Encounter emit.
+- #13710 — fix(patient): improve medication terminology search in issues — doctorman. CI FAIL. Non-FHIR.
 
 **Shepherding approach:** review each PR for correctness + test coverage + alignment with register entries. For test-only PRs prioritize merge. For correctness fixes, verify locally + check rabbit history + raise concerns via private brief (not public PR comment per standing rule). For features, defer to project-owner judgment (sjpadgett for referrals, etc.). **Lessons from the 2026-11-04 pass:**
 1. Hold triage captured at morning snapshot can become stale by afternoon — re-check 24 hours later for responsive contributors (precedent: #15012 moved 🔴 → ✅ after 11 proactive afternoon commits).
