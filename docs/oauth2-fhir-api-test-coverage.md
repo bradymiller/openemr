@@ -1011,7 +1011,11 @@ Current OAuth2/API/portal/standard-api audit menu (§8.2) is drained. Rather tha
 
 **Infrastructure note (2026-11-05):** Inferno CI red since 2026-11-04 17:02 UTC. Root cause: PR #14953's C-CDA R2.1 fix (Allergy Concern Act LOINC→HL7ActClass `CONC`) changed CCDA output but the expected fixture `CCDA_Newman_Alice_expected.xml` lives in the private `openemr/inferno-files` submodule and was not updated. Tracked as [issue #15083](https://github.com/openemr/openemr/issues/15083) — admin update of the private submodule unblocks it. All other certification lanes still exercise the real paths; the master-red state is fixture-stale, not a functional regression.
 
-**Shipped since 2026-10-30 (21 FHIR / FHIR-adjacent PRs merged — 12 on 2026-11-04, 4 on 2026-11-06, 1 on 2026-11-07):**
+**Shipped since 2026-10-30 (23 FHIR / FHIR-adjacent PRs merged — 12 on 2026-11-04, 4 on 2026-11-06, 1 on 2026-11-07, 1 on 2026-11-08, 1 on 2026-11-10):**
+
+Additions since the 2026-11-07 snapshot:
+- **#14730** oldrobotdev `:missing=true/false` — merged 2026-11-08 at `8b742d76c7` (per 2026-11-08 shepherd pass; kojiromike's `CHANGES_REQUESTED` substantively addressed, admin-merged over stale state).
+- **#15146** batool-fariha FHIR Observation GET tests (#12343, first-time contributor) — merged 2026-11-10 at `403bc85a7c`. Clean sibling to the #12343 family (11th member); robust #15022 tearDown pattern; CI dispatch was the first-time-contributor gate. Does not advance the open 📏 cross-patient-exclusion sweep. Brief: `/home/brady2/git/pr-15146-review-brief.md`.
 
 Additions since 2026-11-05 batch 2 (five briefs from the 2026-11-05 shepherd pass all landed over 2026-11-06/07; details in the "shipped batch 2" subsection below):
 - #15034, #13598, #15030, #14924 all merged 2026-11-06
