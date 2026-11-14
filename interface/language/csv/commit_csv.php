@@ -85,10 +85,10 @@ if (!$errmsg) {
             $unchanged++;
         }
     }
-    if (!$preview) {
-        // verify_translation() may have inserted, updated or deleted definitions.
-        TranslationCache::bumpSharedVersion();
-    }
+    // verify_translation() may have inserted, updated or deleted definitions.
+    // Bump even in preview: its duplicate-constant cleanup deletes rows
+    // regardless of the preview flag.
+    TranslationCache::bumpSharedVersion();
 }
 
 if ($errmsg) {
