@@ -1367,6 +1367,143 @@ final class SmartLaunchQuestionnaireTest extends PantherTestCase
     }
 
     /**
+     * Portal-mode write-path round-trip. Mirror of the standalone
+     * `testStandaloneLaunchCompletesQuestionnaireWriteRoundTrip` but
+     * entered through the portal dashboard: portal patient signs in →
+     * clicks Launch → authorizes → lands on home.php → picks the seeded
+     * Questionnaire → index.php's `openemr_questionnaire.js` runtime
+     * takes over → fill the single required string item → Complete →
+     * assert the FHIR POST landed with a stamped QuestionnaireResponse
+     * uuid in the UI alert.
+     *
+     * What this closes: the standalone smoke has had the full
+     * questionnaire-submit journey for a while; A2's landing assertion
+     * proved the portal launch handshake works through the new gate,
+     * but didn't push the bearer through a FHIR POST. That's the actual
+     * user story openemr/openemr#7115 is about — portal patient fills
+     * out a form from the portal and the care team sees it. A regression
+     * that broke the `patient/QuestionnaireResponse.cu` scope on
+     * portal-issued bearers (or stripped the scope on consent) would
+     * leave A2 passing while silently blocking the write path. This
+     * test wires that gap closed.
+     *
+     * The standalone sibling does `driveStandaloneLaunchToAppIndex()` +
+     * picks from the index.php list. The portal sibling lands on
+     * home.php instead; home.php's Questionnaire list renders each
+     * entry as `a.list-group-item-action` with `href="index.php?lid=...
+     * &q=<id>"`. Clicking that navigates to index.php in
+     * questionnaire-form mode, from which the standalone test's
+     * `sq-new` + `input.form-control` + `sq-complete` DOM flow carries
+     * over unchanged. Any divergence would surface as a timeout at one
+     * of the explicit waitFor selectors.
+     */
+    #[Test]
+    public function testPortalLaunchCompletesQuestionnaireWriteRoundTrip(): void
+    {
+        $fixtures = new PortalPatientFixtureManager();
+        $this->sweepLingeringPortalArtifacts();
+
+        $suffix = bin2hex(random_bytes(3));
+        $username = 'portal-roundtrip-' . $suffix;
+        $password = 'PortalRoundtripSmoke1!';
+        $email = "{$username}@test.example";
+        $fname = 'Portia';
+        $lname = 'RoundtripSmoke-' . $suffix;
+
+        try {
+            $fixtures->installPortalPatient(
+                portalLoginUsername: $username,
+                plainPassword: $password,
+                email: $email,
+                fname: $fname,
+                lname: $lname,
+            );
+
+            // Enter via the portal dashboard — same chain A2 exercises
+            // (minted launch → authorize → portal-api login → consent →
+            // assertLaunchMatchesLogin passes → home.php landing). Both
+            // sub-helpers return the caller to home.php; the launch URL
+            // is captured but not needed again after authorize.
+            $launchHref = $this->signInToPortalAndCaptureLaunchHref($username, $password, $email);
+            $this->authorizeAsPortalPatient($launchHref, $username, $password, $email);
+            $this->panther->wait(30)->until(
+                static fn (WebDriver $d): bool => str_contains($d->getCurrentURL(), '/smart-questionnaire/home.php?lid='),
+            );
+
+            // Pick the seeded Questionnaire off home.php's picker. The
+            // picker renders each active Questionnaire as an
+            // `a.list-group-item-action` whose href navigates to
+            // index.php?q=<questionnaire-id>. Match by title because
+            // the DOM order is not a load-bearing guarantee.
+            $this->panther->waitFor('a.list-group-item-action', 15);
+            $picker = null;
+            foreach ($this->panther->findElements(WebDriverBy::cssSelector('a.list-group-item-action')) as $item) {
+                if (str_contains($item->getText(), self::SEEDED_QUESTIONNAIRE_TITLE)) {
+                    $picker = $item;
+                    break;
+                }
+            }
+            self::assertNotNull(
+                $picker,
+                'home.php Questionnaire picker should include the seeded Questionnaire — '
+                . 'without it the FHIR Questionnaire search under the portal bearer returned no results '
+                . '(scope regression) or the Questionnaire was not seeded (CI state regression)',
+            );
+            $picker->click();
+
+            // From here the DOM shape matches the standalone round-trip.
+            // openemr_questionnaire.js watches input/change/blur to mark
+            // the required string item answered; sendKeys alone is not
+            // enough so dispatch all three.
+            $this->panther->waitFor('button#sq-new', 15);
+            $this->panther->findElement(WebDriverBy::id('sq-new'))->click();
+            $this->panther->waitFor('input.form-control', 10);
+
+            $input = $this->panther->findElement(WebDriverBy::cssSelector('input.form-control'));
+            $input->sendKeys('Doing great from the portal');
+            $this->panther->executeScript(
+                'arguments[0].dispatchEvent(new Event("input", {bubbles: true}));'
+                . 'arguments[0].dispatchEvent(new Event("change", {bubbles: true}));'
+                . 'arguments[0].blur();',
+                [$input],
+            );
+
+            // Click Complete — fires POST api.php?action=save which the
+            // app's PHP forwards to OpenEMR's FHIR API as a POST
+            // QuestionnaireResponse with the portal-issued bearer. The
+            // `patient/QuestionnaireResponse.cu` scope on the portal
+            // PATIENT scope profile is what authorizes this; a regression
+            // on scope or on the assertLaunchMatchesLogin()-side binding
+            // would surface here as a non-2xx on the FHIR POST and the
+            // runtime would never flip #sq-status to "completed".
+            $this->panther->findElement(WebDriverBy::id('sq-complete'))->click();
+            $this->panther->wait(20)->until(
+                static fn (WebDriver $d): bool => str_contains(
+                    $d->findElement(WebDriverBy::id('sq-status'))->getText(),
+                    'completed',
+                ),
+            );
+
+            $bodyText = $this->panther->findElement(WebDriverBy::tagName('body'))->getText();
+            self::assertStringContainsString(
+                'Saved as completed',
+                $bodyText,
+                '#sq-alert should confirm the portal-mode save landed — missing it means the FHIR POST '
+                . 'from the companion app under the portal bearer returned non-2xx',
+            );
+            self::assertMatchesRegularExpression(
+                '~QuestionnaireResponse/[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}~',
+                $bodyText,
+                '#sq-working should name the created QuestionnaireResponse by FHIR uuid — proof the '
+                . 'portal-issued bearer carried enough scope for the create and the server stamped '
+                . 'a resource in response',
+            );
+        } finally {
+            $fixtures->removePortalPatientFixtures();
+        }
+    }
+
+    /**
      * Mirrors A1's defensive setUp sweep. `PortalPatientFixtureManager::removePortalPatientFixtures()`
      * joins on `patient_data.pid` when it cleans `patient_access_onsite`,
      * so a prior failed run that deleted the `patient_data` row but left
