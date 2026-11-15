@@ -477,7 +477,7 @@ Shipped since the pre-batch snapshot:
 - **#14732** (merge `6e75f51c7091`) — `GET /api/patient/{puuid}/insurance/$swap-insurance`
 - **#14733** (merge `7c2b21fe7de4`) — allergy POST/PUT/DELETE + medical_problem POST/PUT/DELETE + top-level `/api/allergy` and `/api/medical_problem`
 - **#14734** (merge `fc1e82bb190e`) — Appointment pid-scoping fix (patient-compartment single-GET)
-- **#14747** (OPEN) — Patient-compartment PUT pid-scoping sweep for allergy + medical_problem + insurance
+- **#14747** (merge `5a6fd28704`) — Patient-compartment PUT pid-scoping sweep for allergy + medical_problem + insurance
 - **#14749** (merge `c5d09ed9eb`) — `background_service` scope registry + route rename (`/run` → `/$run`) + api coverage
 
 **Zero remaining uncovered standard-api routes.** The route-pattern pass is complete.
